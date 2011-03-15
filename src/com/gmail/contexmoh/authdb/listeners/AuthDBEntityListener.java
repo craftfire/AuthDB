@@ -1,8 +1,8 @@
 package com.gmail.contexmoh.authdb.listeners;
 
-import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import com.gmail.contexmoh.authdb.AuthDB;
 
@@ -16,13 +16,10 @@ public AuthDBEntityListener(AuthDB instance)
    this.plugin = instance;
 }
 
-public void onBlockPlace(BlockPlaceEvent event) {
-    if (!this.plugin.isAuthorized(event.getPlayer().getEntityId()))
-     event.setCancelled(true);
-}
-
-public void onBlockDamage(BlockDamageEvent event) {
-    if (!this.plugin.isAuthorized(event.getPlayer().getEntityId()))
-     event.setCancelled(true);
-}
+public void onEntityDamage(EntityDamageEvent event) 
+	{
+	     if (((event.getEntity() instanceof Player)) && 
+	     (!this.plugin.isAuthorized(event.getEntity().getEntityId())))
+	      event.setCancelled(true);
+	}
 }

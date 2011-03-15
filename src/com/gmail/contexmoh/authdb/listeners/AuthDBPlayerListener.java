@@ -1,8 +1,14 @@
 package com.gmail.contexmoh.authdb.listeners;
 
 import java.awt.Color;
+import java.awt.Desktop.Action;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
@@ -16,11 +22,11 @@ import com.gmail.contexmoh.authdb.AuthDB;
 import com.gmail.contexmoh.authdb.utils.Messages;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
-
-
 public class AuthDBPlayerListener extends PlayerListener
 {
   private final AuthDB plugin;
+  int seconds = 5;
+  Timer IdleTimer;
 
   public AuthDBPlayerListener(AuthDB instance)
   {
@@ -40,11 +46,33 @@ public void onPlayerLogin(PlayerLoginEvent event)
 	    }
 	}
 }
+
+
+	  /*
+	Player player = event.getPlayer();
+	if (!this.plugin.isAuthorized(player.getEntityId()))
+	{
+		 Messages.SendMessage("kickPlayerIdleLoginMessage", player, null);
+	}
+	IdleTimer.cancel();
+	return null;
+	*/
+public TimerTask CheckIdle(Player player)
+{
+	if (!this.plugin.isAuthorized(player.getEntityId()))
+	{
+		 Messages.SendMessage("kickPlayerIdleLoginMessage", player, null);
+	}
+	IdleTimer.cancel();
+	return null;
+}
+
   public void onPlayerJoin(PlayerEvent event)
   {
 				Player player = event.getPlayer();
     try {
-					Messages.SendMessage("joinMessage", player,null);
+    	IdleTimer = new Timer(player.getName());
+    	IdleTimer.schedule(CheckIdle(player), seconds);
    if (this.plugin.isRegistered(player.getName())) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
          player.getInventory().clear();

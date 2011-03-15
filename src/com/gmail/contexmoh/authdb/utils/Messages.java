@@ -27,6 +27,7 @@ public class Messages
 	static String emailUnexpectedMessage = AuthDB.Config.getString("messages.core.email-unexpected-message", ChatColor.RED + "Email contains unexpected letters!");
 	static String checkUsernameCharactersMessage = AuthDB.Config.getString("messages.core.username-unexpected-message", "Username contains unexpected letters!");
 	static String changeUsernameMessage = AuthDB.Config.getString("messages.core.username-change", ChatColor.GREEN +"{PLAYER} renamed to {PLAYERNEW} due to illegal characters.");
+	static String kickPlayerIdleLoginMessage = AuthDB.Config.getString("messages.core.kick-idle-message", ChatColor.GREEN+"{PLAYER} was kicked due to idleing while authenticating");
 	public static void SendMessage(String type,Player player,PlayerLoginEvent event){
 		zCraftIRC.SendMessage(type,player);
 		if(type.equals("loginMessage")) 
@@ -88,6 +89,10 @@ public class Messages
 		else if(type.equals("changeUsernameMessage")) 
 		{
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, checkUsernameCharactersMessage);
+		}
+		else if(type.equals("kickPlayerIdleLoginMessage"))
+		{
+			player.kickPlayer("GO AWAY");
 		}
 	}
 }
