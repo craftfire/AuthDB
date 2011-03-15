@@ -32,6 +32,7 @@ import com.gmail.contexmoh.authdb.listeners.AuthDBBlockListener;
 import com.gmail.contexmoh.authdb.listeners.AuthDBEntityListener;
 import com.gmail.contexmoh.authdb.listeners.AuthDBPlayerListener;
 import com.gmail.contexmoh.authdb.plugins.zCraftIRC;
+import com.gmail.contexmoh.authdb.utils.Configa;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -65,10 +66,14 @@ public class AuthDB extends JavaPlugin {
 
 	public void onDisable() 
 	{
+		if(Configa.CheckConfigValue("messages","derp.derp.derp"))
+		{
+			Utils.Log("info","derp");
+		}
 		zCraftIRC.SendMessage("disconnect",null);
 		disableInventory();
 		this.authorizedIds.clear();
-		this.db.clear();;
+		this.db.clear();
 		MySQL.close();
 	 }
 
