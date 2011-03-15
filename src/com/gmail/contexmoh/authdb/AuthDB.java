@@ -45,6 +45,7 @@ public class AuthDB extends JavaPlugin {
 	private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
 	private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
 	private List<Integer> authorizedIds = new ArrayList();
+	//dadada
 	public static HashMap<String, String> db = new HashMap();
 	public static String dbFileName = "auths.db";
 	public static Logger log = Logger.getLogger("Minecraft");
