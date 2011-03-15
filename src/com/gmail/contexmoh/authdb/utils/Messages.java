@@ -7,8 +7,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import com.gmail.contexmoh.authdb.AuthDB;
 import com.gmail.contexmoh.authdb.plugins.zCraftIRC;
 
-
-
 public class Messages
 {
 	static String loginMessage = AuthDB.Config.getString("messages.core.login-message", "Please login with command /login <password>");
