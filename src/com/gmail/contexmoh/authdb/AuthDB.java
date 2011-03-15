@@ -44,7 +44,7 @@ public class AuthDB extends JavaPlugin {
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
 	private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
 	private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
-	private List<Integer> authorizedIds = new ArrayList();
+	private static List<Integer> authorizedIds = new ArrayList();
 	//dadada
 	public static HashMap<String, String> db = new HashMap();
 	public static String dbFileName = "auths.db";
@@ -120,9 +120,9 @@ public class AuthDB extends JavaPlugin {
 		Utils.Log("info", pluginname + " is developed by Contex | contexmoh@gmail.com");
 	}
 
-    public boolean isAuthorized(int id) { return this.authorizedIds.contains(Integer.valueOf(id)); }
-    public void unauthorize(int id) { this.authorizedIds.remove(Integer.valueOf(id)); } 
-    public void authorize(int id) { this.authorizedIds.add(Integer.valueOf(id)); }
+    public static boolean isAuthorized(int id) { return authorizedIds.contains(Integer.valueOf(id)); }
+    public void unauthorize(int id) { AuthDB.authorizedIds.remove(Integer.valueOf(id)); } 
+    public void authorize(int id) { AuthDB.authorizedIds.add(Integer.valueOf(id)); }
 	public boolean checkPassword(String player, String password) 
 	 {
 		try 

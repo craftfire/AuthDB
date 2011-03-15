@@ -16,7 +16,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	long timestamp = System.currentTimeMillis()/1000;
   	String salt = Utils.getRandomString2(8);
   	String hash = myBB1_6_hash("create",player,password, salt);
-  	//int userid;
+  	///int userid;
   	//
   	PreparedStatement ps;
   	//

@@ -17,12 +17,12 @@ public class AuthDBBlockListener extends BlockListener
   }
 
   public void onBlockPlace(BlockPlaceEvent event) {
-    if (!this.plugin.isAuthorized(event.getPlayer().getEntityId()))
+    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
       event.setCancelled(true);
   }
 
   public void onBlockDamage(BlockDamageEvent event) {
-   if (!this.plugin.isAuthorized(event.getPlayer().getEntityId()))
+   if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
       event.setCancelled(true);
   }
 }

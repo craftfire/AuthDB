@@ -6,10 +6,12 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.TimerTask;
 
 import org.bukkit.entity.Player;
 
 import com.gmail.contexmoh.authdb.AuthDB;
+import com.gmail.contexmoh.authdb.listeners.AuthDBPlayerListener;
 
 
 
@@ -22,7 +24,16 @@ public class Utils
 	public static String forumBoard = AuthDB.Config.getString("settings.forum-board", "phpBB3");
 	public static boolean specialCharactersKick = AuthDB.Config.getBoolean("illegal-characters.kick", true);
 	public static boolean specialCharactersChange = AuthDB.Config.getBoolean("illegal-characters.change", true);
+	
 	public static String specialCharactersList = AuthDB.Config.getString("illegal-characters.characters", "$^@(#)!+");
+	
+	public static void CheckIdle(Player player)
+	{
+		if (!AuthDB.isAuthorized(player.getEntityId()))
+		{
+			 Messages.SendMessage("kickPlayerIdleLoginMessage", player, null);
+		}
+	} 
 	
 	public static long IP2Long(String IP) {
 		long f1, f2, f3, f4;
@@ -89,9 +100,10 @@ public class Utils
 	{
 		string = string.replaceAll("\\{IP\\}", GetIP(player));
 		string = string.replaceAll("\\{PLAYER\\}", player.getName());
-		string = string.replaceAll("\\{NEWPLAYER\\", additional);
-		string = string.replaceAll("\\{PLUGIN_NAME\\", additional);
-		string = string.replaceAll("\\{PLUGIN_VERSION\\", additional);
+		string = string.replaceAll("\\{NEWPLAYER\\}", additional);
+		string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
+		string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
+		string = string.replaceAll("\\{IDLE_SECONDS\\}", additional);
 		return string;
 	}
 	

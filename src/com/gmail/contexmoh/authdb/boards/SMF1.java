@@ -28,7 +28,7 @@ public class SMF1 {
 	ps.setString(6, email); //emailAddress
 	ps.setString(7, ipAddress); //memberIP
 	ps.setString(8, ipAddress); //memberIP2
-	//need to add these, it's complaining about not default is set.
+	///need to add these, it's complaining about not default is set.
 	ps.setString(9, ""); //lngfile
 	ps.setString(10, ""); //buddy_list
 	ps.setString(11, ""); //pm_ignore_list

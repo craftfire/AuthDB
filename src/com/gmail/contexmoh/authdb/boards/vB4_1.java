@@ -18,7 +18,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	String passwordhashed = hash("create",player,password, salt);
   	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
   //	int userid;
-  	//
+  	///
   	PreparedStatement ps;
   	//
   	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);

@@ -45,7 +45,7 @@ public class phpBB3 {
 	ps.setString(14, ""); //user_sig
 	ps.setString(15, ""); //user_occ
 	ps.setString(16, ""); //user_interests
-	//
+	///
 	ps.setString(17, ipAddress); //user_ip
     ps.executeUpdate();
     

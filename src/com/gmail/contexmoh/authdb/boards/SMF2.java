@@ -18,7 +18,7 @@ public class SMF2 {
 	int userid;
 	//
 	PreparedStatement ps;
-	//
+	///
 	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"members"+"` (`member_name`,`date_registered`,`last_login`,`real_name`,`passwd`,`email_address`,`member_ip`,`member_ip2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`message_labels`,`personal_text`,`website_title`,`website_url`,`location`,`icq`,`msn`,`signature`,`avatar`,`usertitle`,`secret_question`,`additional_groups`,`openid_uri`,`ignore_boards`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, player); //member_name
     ps.setLong(2, timestamp); //date_registered
