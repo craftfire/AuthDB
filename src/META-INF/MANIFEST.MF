@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Class-Path: ../lib/mysql.jar ../lib/mysql-connector-java-bin.jar ../lib/mysql-connector-java-5.1.14-bin.jar ../lib/mysql-connector-java-5.1.15-bin.jar ../mysql.jar ../mysql-connector-java-bin.jar ../mysql-connector-java-5.1.14-bin.jar ../mysql-connector-java-5.1.15-bin.jarr

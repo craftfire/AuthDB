@@ -1,0 +1,4 @@
+name: AuthDB
+main: com.gmail.contexmoh.authdb.AuthDB
+version: 1.4
+author: Contex
