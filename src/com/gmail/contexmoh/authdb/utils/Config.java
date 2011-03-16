@@ -154,9 +154,9 @@ public class Config
 					///////////////////////////////////////////
 					//               badcharacters
 					///////////////////////////////////////////
-					badcharacters_kick = GetConfigBoolean("settings.badcharacters.commands", true);
-					badcharacters_remove = GetConfigBoolean("settings.badcharacters.movement", false);
-					badcharacters_characters = GetConfigString("settings.badcharacters.inventory", "$^@(#)!+\\-/");
+					badcharacters_kick = GetConfigBoolean("settings.badcharacters.kick", true);
+					badcharacters_remove = GetConfigBoolean("settings.badcharacters.remove", false);
+					badcharacters_characters = GetConfigString("settings.badcharacters.characters", "$^@(#)!+\\-/");
 					
 					///////////////////////////////////////////
 					//               geoip
