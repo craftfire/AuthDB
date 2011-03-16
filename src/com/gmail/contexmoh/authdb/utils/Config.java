@@ -81,14 +81,7 @@ public class Config
 		  template.load();
 			if(config.equals("config")) 
 			{
-				allowRegister = GetConfigBoolean("settings.allow-register", true);
-				forceRegister = GetConfigBoolean("settings.force-register", true);
-				kickOnBadPassword = GetConfigBoolean("settings.kick-on-bad-password", true);
-				forumBoard = GetConfigString("settings.forum-board", "phpBB3");
-				specialCharactersKick = GetConfigBoolean("illegal-characters.kick", true);
-				specialCharactersChange = GetConfigBoolean("illegal-characters.change", true);
-				specialCharactersList = GetConfigString("illegal-characters.characters", "$^@(#)!+");
-				
+			
 				///////////////////////////////////////////
 				//               Database
 				///////////////////////////////////////////
