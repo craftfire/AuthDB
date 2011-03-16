@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.contexmoh.authdb.AuthDB;
+import com.gmail.contexmoh.authdb.utils.Config;
 import com.gmail.contexmoh.authdb.utils.Messages;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -35,33 +36,23 @@ public class AuthDBPlayerListener extends PlayerListener
 
 public void onPlayerLogin(PlayerLoginEvent event)
 {
-	if(Utils.specialCharactersKick || Utils.specialCharactersChange)
+	if(Config.specialCharactersKick || Config.specialCharactersChange)
 	{
 		Player player = event.getPlayer();
 		String name = player.getName();
 		if (!Utils.checkUsernameCharacters(name))
 	    {
-	      if(Utils.specialCharactersKick) Messages.SendMessage("checkUsernameCharactersMessage", player, event);
-	      //else if(Utils.specialCharactersChange) Messages.SendMessage("changeUsernameMessage", player, event);
+	      if(Config.specialCharactersKick) Messages.SendMessage("AuthDB_message_username_badcharacters", player, event);
+	      //else if(UConfig.pecialCharactersChange) Messages.SendMessage("changeUsernameMessage", player, event);
 	    }
 	}
 }
 
-
-	  /*
-	Player player = event.getPlayer();
-	if (!this.plugin.isAuthorized(player.getEntityId()))
-	{
-		 Messages.SendMessage("kickPlayerIdleLoginMessage", player, null);
-	}
-	IdleTimer.cancel();
-	return null;
-	*/
 public TimerTask CheckIdle(Player player)
 {
-	if (!this.plugin.isAuthorized(player.getEntityId()))
+	if (!AuthDB.isAuthorized(player.getEntityId()))
 	{
-		 Messages.SendMessage("kickPlayerIdleLoginMessage", player, null);
+		 Messages.SendMessage("AuthDB_message_idle_kick", player, null);
 	}
 	IdleTimer.cancel();
 	return null;
@@ -76,11 +67,11 @@ public TimerTask CheckIdle(Player player)
    if (this.plugin.isRegistered(player.getName())) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
          player.getInventory().clear();
-       Messages.SendMessage("loginMessage", player,null);
-     } else if (Utils.forceRegister) {
+       Messages.SendMessage("AuthDB_message_welcome_user", player,null);
+     } else if (Config.forceRegister) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
        player.getInventory().clear();
-					Messages.SendMessage("registerMessage", player,null);
+					Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
       } else {
         this.plugin.authorize(event.getPlayer().getEntityId());
       }
@@ -110,40 +101,40 @@ public TimerTask CheckIdle(Player player)
               Player player = event.getPlayer();
     if (split[0].equals("/login")) {
       if (this.plugin.isAuthorized(player.getEntityId())) {			  
-				  Messages.SendMessage("authorizedMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
       }
       else if (split.length < 2) {
-				  Messages.SendMessage("loginUsageMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_login_usage", player,null);
       }
       else if (this.plugin.checkPassword(player.getName(), split[1])) {
          ItemStack[] inv = this.plugin.getInventory(player.getName());
         if (inv != null)
          player.getInventory().setContents(inv);
         this.plugin.authorize(player.getEntityId());
-			      Messages.SendMessage("passwordAcceptedMessage", player,null);
-				 } else if (Utils.kickOnBadPassword) {
+			      Messages.SendMessage("AuthDB_message_login_success", player,null);
+				 } else if (Config.kickOnBadPassword) {
        ItemStack[] inv = this.plugin.getInventory(player.getName());
       if (inv != null)
           player.getInventory().setContents(inv);
-				  Messages.SendMessage("badPasswordMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_login_failure", player,null);
       } else {
-				  Messages.SendMessage("badPasswordMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_login_failure", player,null);
       }
      event.setMessage("/login ******");
       event.setCancelled(true);
      }
 				else if (split[0].equals("/register")) {
       if (split.length < 2) {
-				  Messages.SendMessage("registerUsageMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_register_usage", player,null);
       }
       else if (this.plugin.isRegistered(player.getName()))
-				  Messages.SendMessage("alreadyRegisteredMessage", player,null);
-      else if (!Utils.allowRegister)
-				  Messages.SendMessage("registrationNotAllowedMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_register_registered", player,null);
+      else if (!Config.allowRegister)
+				  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
       else if (split.length < 3)
-				  Messages.SendMessage("emailRequiredMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_email_required", player,null);
        else if ((split.length >= 3) && (!this.plugin.checkEmail(split[2])))
-				  Messages.SendMessage("emailUnexpectedMessage", player,null);
+				  Messages.SendMessage("AuthDB_message_email_badcharacters", player,null);
       else {
         try {
            if (split.length >= 3)
@@ -153,13 +144,13 @@ public TimerTask CheckIdle(Player player)
           ItemStack[] inv = this.plugin.getInventory(player.getName());
          if (inv != null)
             player.getInventory().setContents(inv);
-					Messages.SendMessage("registeredMessage", player,null);
+					Messages.SendMessage("AuthDB_message_register_success", player,null);
           this.plugin.authorize(player.getEntityId());
         } catch (IOException e) {
-					Messages.SendMessage("registerErrorMessage", player,null);
+					Messages.SendMessage("AuthDB_message_register_failure", player,null);
           e.printStackTrace();
         } catch (SQLException e) {
-					Messages.SendMessage("registerErrorMessage", player,null);
+					Messages.SendMessage("AuthDB_message_register_failure", player,null);
           e.printStackTrace();
         }
       }
@@ -187,7 +178,7 @@ public TimerTask CheckIdle(Player player)
 
   public void onPlayerItem(PlayerItemEvent event)
   {
-    if (!this.plugin.isAuthorized(event.getPlayer().getEntityId()))
+    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
       event.setCancelled(true);
   }
 }

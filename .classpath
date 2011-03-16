@@ -2,8 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Skrivebord/Programmering/Bukkit/plugins/CraftIRC.jar"/>
-	<classpathentry kind="lib" path="C:/Skrivebord/Programmering/Bukkit/craftbukkit.jar"/>
-	<classpathentry kind="lib" path="C:/Skrivebord/Programmering/Bukkit/mysql-connector-java-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Skrivebord/Spill/Minecraft/Bukkit/plugins/CraftIRC.jar"/>
+	<classpathentry kind="lib" path="C:/Skrivebord/Spill/Minecraft/Bukkit/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="C:/Skrivebord/Spill/Minecraft/Bukkit/mysql-connector-java-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Skrivebord/Spill/Minecraft/Bukkit/yamlbeans-1.06.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

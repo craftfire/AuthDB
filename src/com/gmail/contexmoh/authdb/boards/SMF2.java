@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.gmail.contexmoh.authdb.utils.Config;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -19,7 +20,7 @@ public class SMF2 {
 	//
 	PreparedStatement ps;
 	///
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"members"+"` (`member_name`,`date_registered`,`last_login`,`real_name`,`passwd`,`email_address`,`member_ip`,`member_ip2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`message_labels`,`personal_text`,`website_title`,`website_url`,`location`,`icq`,`msn`,`signature`,`avatar`,`usertitle`,`secret_question`,`additional_groups`,`openid_uri`,`ignore_boards`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"members"+"` (`member_name`,`date_registered`,`last_login`,`real_name`,`passwd`,`email_address`,`member_ip`,`member_ip2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`message_labels`,`personal_text`,`website_title`,`website_url`,`location`,`icq`,`msn`,`signature`,`avatar`,`usertitle`,`secret_question`,`additional_groups`,`openid_uri`,`ignore_boards`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, player); //member_name
     ps.setLong(2, timestamp); //date_registered
     ps.setLong(3, timestamp); //last_login
@@ -48,27 +49,27 @@ public class SMF2 {
 	ps.setString(25, ""); //ignore_boards
 	ps.executeUpdate();
 	
-	userid = MySQL.countitall(MySQL.forumPrefix+"members");
-	ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
+	userid = MySQL.countitall(Config.database_prefix+"members");
+	ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
 	ps.executeUpdate();
-	ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
+	ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
 	ps.executeUpdate();
-	ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
+	ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
 	ps.executeUpdate();
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
+    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
     ps.executeUpdate();
   }
   
   public static boolean checkpassword(String player, String password) throws SQLException
   {	
-	String hash = MySQL.getfromtable(MySQL.forumPrefix+"members", "`passwd`", "real_name", player);
+	String hash = MySQL.getfromtable(Config.database_prefix+"members", "`passwd`", "real_name", player);
 	if(SMF2_check_hash(SMF2_hash(player, password),hash)) { return true; }
 	else { return false; }
   }
   
   public static boolean checkuser(String player) throws SQLException
   {	
-	String check = MySQL.getfromtable(MySQL.forumPrefix+"members", "*", "real_name", player);
+	String check = MySQL.getfromtable(Config.database_prefix+"members", "*", "real_name", player);
 	if(check != "fail") { return true; }
 	return false;
   }

@@ -13,7 +13,7 @@ public class AuthDBBlockListener extends BlockListener
 
   public AuthDBBlockListener(AuthDB instance)
   {
- this.plugin = instance;
+	  plugin = instance;
   }
 
   public void onBlockPlace(BlockPlaceEvent event) {

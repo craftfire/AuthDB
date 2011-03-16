@@ -6,27 +6,12 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
-import java.util.TimerTask;
-
 import org.bukkit.entity.Player;
 
 import com.gmail.contexmoh.authdb.AuthDB;
-import com.gmail.contexmoh.authdb.listeners.AuthDBPlayerListener;
-
-
 
 public class Utils
 {  
-	
-	public static boolean allowRegister = AuthDB.Config.getBoolean("settings.allow-register", true);
-	public static boolean forceRegister = AuthDB.Config.getBoolean("settings.force-register", true);
-	public static boolean kickOnBadPassword = AuthDB.Config.getBoolean("settings.kick-on-bad-password", true);
-	public static String forumBoard = AuthDB.Config.getString("settings.forum-board", "phpBB3");
-	public static boolean specialCharactersKick = AuthDB.Config.getBoolean("illegal-characters.kick", true);
-	public static boolean specialCharactersChange = AuthDB.Config.getBoolean("illegal-characters.change", true);
-	
-	public static String specialCharactersList = AuthDB.Config.getString("illegal-characters.characters", "$^@(#)!+");
-	
 	public static void CheckIdle(Player player)
 	{
 		if (!AuthDB.isAuthorized(player.getEntityId()))
@@ -55,7 +40,7 @@ public class Utils
 	public static boolean stripUsernameCharacters(String username)
 	{
 		int lengtha = username.length();
-		int lengthb = specialCharactersList.length();
+		int lengthb = Config.specialCharactersList.length();
 	    int i = 0;
 	    char thechar1, thechar2;
 	    while(i < lengtha)
@@ -65,7 +50,7 @@ public class Utils
 	    	int a = 0;
 	    	while(a < lengthb)
 	    	{
-	    		thechar2 = specialCharactersList.charAt(a);
+	    		thechar2 = Config.specialCharactersList.charAt(a);
 	    		Log("info",""+thechar2);
 	    		if(thechar1 == thechar2) { return false; }
 	    		a++;
@@ -78,7 +63,7 @@ public class Utils
 	public static boolean checkUsernameCharacters(String username)
 	{
 		int lengtha = username.length();
-		int lengthb = specialCharactersList.length();
+		int lengthb = Config.specialCharactersList.length();
 	    int i = 0;
 	    char thechar1, thechar2;
 	    while(i < lengtha)
@@ -87,7 +72,7 @@ public class Utils
 	    	int a = 0;
 	    	while(a < lengthb)
 	    	{
-	    		thechar2 = specialCharactersList.charAt(a);
+	    		thechar2 = Config.specialCharactersList.charAt(a);
 	    		if(thechar1 == thechar2) { return false; }
 	    		a++;
 	    	}

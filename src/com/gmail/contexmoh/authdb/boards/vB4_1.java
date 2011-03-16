@@ -5,6 +5,7 @@
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
 
+import com.gmail.contexmoh.authdb.utils.Config;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -21,7 +22,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	///
   	PreparedStatement ps;
   	//
-  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, "2"); //usergroupid
   	ps.setString(2, passwordhashed); // password
     ps.setString(3, passworddate); //passworddate
@@ -112,7 +113,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     }
     public static boolean checkpassword(String player, String password) throws SQLException
     {
-  	String hash = MySQL.getfromtable(MySQL.forumPrefix+"user", "`password`", "username", player);
+  	String hash = MySQL.getfromtable(Config.database_prefix+"user", "`password`", "username", player);
   	String salt = "";
   	if(check_hash(hash("find",player,password, salt),hash)) { return true; }
   	else { return false; }
@@ -120,7 +121,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     
     public static boolean checkuser(String player) throws SQLException
     {	
-  	String check = MySQL.getfromtable(MySQL.forumPrefix+"user", "*", "username", player);
+  	String check = MySQL.getfromtable(Config.database_prefix+"user", "*", "username", player);
   	if(check != "fail") { return true; }
   	return false;
     }
@@ -129,7 +130,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     	if(action.equals("find"))
     	{
   	try {
-  		String salt = MySQL.getfromtable(MySQL.forumPrefix+"user", "`salt`", "username", player);
+  		String salt = MySQL.getfromtable(Config.database_prefix+"user", "`salt`", "username", player);
   		Utils.Log("info", salt);
   		Utils.Log("info", passwordHash(password, salt));
   		return passwordHash(password, salt);

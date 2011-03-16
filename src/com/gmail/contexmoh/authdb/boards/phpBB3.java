@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.gmail.contexmoh.authdb.AuthDB;
+import com.gmail.contexmoh.authdb.utils.Config;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -27,7 +28,7 @@ public class phpBB3 {
 	//
 	PreparedStatement ps;
 	//
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"users"+"` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, player);
 	ps.setString(2, player.toLowerCase());
     ps.setString(3, hash);
@@ -49,40 +50,40 @@ public class phpBB3 {
 	ps.setString(17, ipAddress); //user_ip
     ps.executeUpdate();
     
-    userid = MySQL.countitall(MySQL.forumPrefix+"users");
+    userid = MySQL.countitall(Config.database_prefix+"users");
     
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
     ps.setInt(1, 2);
 	ps.setInt(2, userid);
     ps.setInt(3, 0);
     ps.setInt(4, 0);
     ps.executeUpdate();
     
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
     ps.setInt(1, 7);
 	ps.setInt(2, userid);
     ps.setInt(3, 0);
     ps.setInt(4, 0);
     ps.executeUpdate();
     
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
+    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
     ps.executeUpdate();
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
+    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
     ps.executeUpdate();
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
     ps.executeUpdate();
   }
   
   public static boolean checkpassword(String player, String password) throws SQLException
   {	
-	String hash = MySQL.getfromtable(MySQL.forumPrefix+"users", "`user_password`", "username_clean", player);
+	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username_clean", player);
 	if(phpbb_check_hash(password,hash)) { return true; }
 	else { return false; }
   }
   
   public static boolean checkuser(String player) throws SQLException
   {	
-	String check = MySQL.getfromtable(MySQL.forumPrefix+"users", "*", "username_clean", player);
+	String check = MySQL.getfromtable(Config.database_prefix+"users", "*", "username_clean", player);
 	if(check != "fail") { return true; }
 	return false;
   }

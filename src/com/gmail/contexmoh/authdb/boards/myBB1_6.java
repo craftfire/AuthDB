@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
 
+import com.gmail.contexmoh.authdb.utils.Config;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -20,7 +21,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	//
   	PreparedStatement ps;
   	//
-  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+MySQL.forumPrefix+"users"+"` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, player); //username
   	ps.setString(2, hash); // password
     ps.setString(3, salt); //salt
@@ -41,8 +42,8 @@ import com.gmail.contexmoh.authdb.utils.Utils;
 	ps.setString(16, "5");//usergroup
     ps.executeUpdate();
  
-    /*userid = MySQL.countitall(MySQL.forumPrefix+"users");
-    String oldcache =  MySQL.getfromtable(MySQL.forumPrefix+"datacache", "`cache`", "title", "stats");
+    /*userid = MySQL.countitall(Config.database_prefix+"users");
+    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datacache", "`cache`", "title", "stats");
     StringTokenizer st = new StringTokenizer(oldcache,":");
     int i = 0, usernamelength = player.length();
     String numusers, lastuid, lastusername, totalusers = "", newcache = "";
@@ -108,13 +109,13 @@ import com.gmail.contexmoh.authdb.utils.Utils;
       	  newcache2 += st.nextToken()+":"; 
         }
     }
-      //ps = MySQL.mysql.prepareStatement("UPDATE `"+MySQL.forumPrefix+"datacache"+"` SET `cache` = '" + newcache2 + "' WHERE `title` = 'stats'");
+      //ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datacache"+"` SET `cache` = '" + newcache2 + "' WHERE `title` = 'stats'");
      // ps.executeUpdate();
       */
     }
     public static boolean checkpassword(String player, String password) throws SQLException
     {
-  	String hash = MySQL.getfromtable(MySQL.forumPrefix+"users", "`password`", "username", player);
+  	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`password`", "username", player);
   	String salt = "";
   	if(myBB1_6_check_hash(myBB1_6_hash("find",player,password, salt),hash)) { return true; }
   	else { return false; }
@@ -122,7 +123,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     
     public static boolean checkuser(String player) throws SQLException
     {	
-  	String check = MySQL.getfromtable(MySQL.forumPrefix+"users", "*", "username", player);
+  	String check = MySQL.getfromtable(Config.database_prefix+"users", "*", "username", player);
   	if(check != "fail") { return true; }
   	return false;
     }
@@ -131,7 +132,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     	if(action.equals("find"))
     	{
   	try {
-  		String salt = MySQL.getfromtable(MySQL.forumPrefix+"users", "`salt`", "username", player);
+  		String salt = MySQL.getfromtable(Config.database_prefix+"users", "`salt`", "username", player);
   		return passwordHash(password, salt);
   	} catch (NoSuchAlgorithmException e) {
   		e.printStackTrace();

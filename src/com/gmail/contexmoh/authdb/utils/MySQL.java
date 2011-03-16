@@ -12,30 +12,20 @@ import com.mysql.jdbc.PreparedStatement;
 
 public class MySQL
 {
-	public static boolean dbPostTopic = AuthDB.Config.getBoolean("settings.post-topic", true);
-	public static String dbDriver =  AuthDB.Config.getString("database.driver", "com.mysql.jdbc.Driver");
-	public static String dbUsername =  AuthDB.Config.getString("database.username", "root");
-	public static String dbPassword =  AuthDB.Config.getString("database.password", "");
-	public static String dbPort =  AuthDB.Config.getString("database.port", "3306");
-	public static String dbHost =  AuthDB.Config.getString("database.host", "localhost");
-	public static String dbDatabase = AuthDB.Config.getString("database.database", "minecraft_forum");
-	public static String forumPrefix = AuthDB.Config.getString("database.prefix", "");
-	public static String dbDb = "jdbc:mysql://"+dbHost+":"+dbPort+"/"+dbDatabase;
-	
 	public static Connection mysql = null;
 	
 	public static void close() { if (mysql != null) try { mysql.close(); } catch (SQLException localSQLException) { } }
 	
 	public static void connect() throws ClassNotFoundException, SQLException
 	{
-		Class.forName(dbDriver);
-		mysql = DriverManager.getConnection(dbDb + "?autoReconnect=true&user=" + dbUsername + "&password=" + dbPassword);
+		Class.forName(Config.database_driver);
+		mysql = DriverManager.getConnection(Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
 		PreparedStatement ps = null;
-		if(AuthDB.forumBoard.equals(AuthDB.forumBoard1)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+forumPrefix+"users"+"`"); }
-		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard2)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+forumPrefix+"members"+"`"); }
-		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard3)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+forumPrefix+"members"+"`"); }
-		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard4)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+forumPrefix+"users"+"`"); }
-		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard5)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+forumPrefix+"user"+"`"); }
+		if(AuthDB.forumBoard.equals(AuthDB.forumBoard1)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
+		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard2)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
+		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard3)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
+		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard4)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
+		else if(AuthDB.forumBoard.equals(AuthDB.forumBoard5)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"user"+"`"); }
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) { Utils.Log("info", rs.getInt("countit") + " user registrations in database"); }
 	}

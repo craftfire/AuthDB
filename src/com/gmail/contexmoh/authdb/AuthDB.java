@@ -2,6 +2,8 @@ package com.gmail.contexmoh.authdb;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -23,6 +26,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
+import com.esotericsoftware.yamlbeans.YamlException;
+import com.esotericsoftware.yamlbeans.YamlReader;
 import com.gmail.contexmoh.authdb.boards.SMF1;
 import com.gmail.contexmoh.authdb.boards.SMF2;
 import com.gmail.contexmoh.authdb.boards.myBB1_6;
@@ -32,7 +37,7 @@ import com.gmail.contexmoh.authdb.listeners.AuthDBBlockListener;
 import com.gmail.contexmoh.authdb.listeners.AuthDBEntityListener;
 import com.gmail.contexmoh.authdb.listeners.AuthDBPlayerListener;
 import com.gmail.contexmoh.authdb.plugins.zCraftIRC;
-import com.gmail.contexmoh.authdb.utils.Configa;
+import com.gmail.contexmoh.authdb.utils.Config;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -60,16 +65,11 @@ public class AuthDB extends JavaPlugin {
 	public static String forumBoard5 = "vB4_1";
 	//
 	public static int PHP_VERSION = 5;
-	public static Configuration Config;
 	//
 	public static CraftIRC craftircHandle;
 
 	public void onDisable() 
 	{
-		if(Configa.CheckConfigValue("messages","derp.derp.derp"))
-		{
-			Utils.Log("info","derp");
-		}
 		zCraftIRC.SendMessage("disconnect",null);
 		disableInventory();
 		this.authorizedIds.clear();
@@ -77,16 +77,20 @@ public class AuthDB extends JavaPlugin {
 		MySQL.close();
 	 }
 
+
 	public void onEnable() 
 	{
-		if (null == getConfiguration().getKeys("settings")) 
+		Config Config = new Config("plugins/"+pluginname+"/", "messages.yml");
+		//Utils.Log("info", Config.GetConfigString("commands.help.face"));
+		//Config.DeleteConfigValue("commands.help.face");
+
+		if (null == getConfiguration().getKeys("commands")) 
 		{
 		    Utils.Log("info", "config.yml could not be found in plugins/AuthDB/ -- disabling!");
 		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
 		    return;
 		}
-		Config = getConfiguration();
-		forumBoard = getConfiguration().getString("settings.forum-board", "phpBB3");
+		//forumBoard = getConfiguration().getString("settings.forum-board", "phpBB3");
 		Plugin checkCraftIRC = this.getServer().getPluginManager().getPlugin("CraftIRC");
 		if (checkCraftIRC != null) {
 		    try {
