@@ -93,7 +93,7 @@ public class AuthDB extends JavaPlugin {
 		}
 		//forumBoard = getConfiguration().getString("settings.forum-board", "phpBB3");
 		Plugin checkCraftIRC = this.getServer().getPluginManager().getPlugin("CraftIRC");
-		if (checkCraftIRC != null) {
+		if (checkCraftIRC != null && CraftIRC_enabled) {
 		    try {
 		        	Utils.Log("info", "CraftIRC Support Enabled"); 
 		        	craftircHandle = (CraftIRC) checkCraftIRC;
