@@ -80,7 +80,8 @@ public class AuthDB extends JavaPlugin {
 
 	public void onEnable() 
 	{
-		Config Config = new Config("plugins/"+pluginname+"/", "messages.yml");
+		Config Messages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
+		Config Config = new Config("config","plugins/"+pluginname+"/", "config.yml");
 		//Utils.Log("info", Config.GetConfigString("commands.help.face"));
 		//Config.DeleteConfigValue("commands.help.face");
 
