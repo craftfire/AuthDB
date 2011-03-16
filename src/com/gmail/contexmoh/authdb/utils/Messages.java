@@ -1,3 +1,10 @@
+/**
+ * Copyright (C) 2011 Contex <contexmoh@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
 package com.gmail.contexmoh.authdb.utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -41,7 +48,7 @@ public class Messages
 		///////////////////////////////////////////
 		//               username
 		///////////////////////////////////////////
-		public static String AuthDB_message_username_renamed,AuthDB_message_username_badcharacters;
+		public static String AuthDB_message_badcharacters_renamed,AuthDB_message_badcharacters_kicked,AuthDB_message_badcharacters_whitelist;
 		
 		///////////////////////////////////////////
 		//               password
@@ -70,14 +77,15 @@ public class Messages
 		///////////////////////////////////////////
 		//               username
 		///////////////////////////////////////////
-		public static String CraftIRC_message_username_renamed,CraftIRC_message_username_badcharacters;
+		public static String CraftIRC_message_badcharacters_renamed,CraftIRC_message_badcharacters_kicked,CraftIRC_message_badcharacters_whitelist;
 		
 		///////////////////////////////////////////
 		//               password
 		///////////////////////////////////////////
 		public static String CraftIRC_message_password_success,CraftIRC_message_password_failure;
 		
-	public static void SendMessage(String type,Player player,PlayerLoginEvent event){
+	public static void SendMessage(String type,Player player,PlayerLoginEvent event)
+	{
 		zCraftIRC.SendMessage(type,player);
 		if(type.equals("AuthDB_message_welcome_guest")) 
 		{
@@ -143,14 +151,18 @@ public class Messages
 		{
 			player.sendMessage(AuthDB_message_email_badcharacters);
 		}
-		else if(type.equals("AuthDB_message_username_renamed")) 
+		else if(type.equals("AuthDB_message_badcharacters_renamed")) 
 		{
-			player.setDisplayName(ChangeUsernameCharacters(player.getName()));
-			player.sendMessage(Message.AuthDB_message_username_renamed);
+			player.setDisplayName(Utils.ChangeUsernameCharacters(player.getName()));
+			player.sendMessage(Messages.AuthDB_message_badcharacters_renamed);
 		}
-		else if(type.equals("AuthDB_message_username_badcharacters")) 
+		else if(type.equals("AuthDB_message_badcharacters_kicked")) 
 		{
-			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, AuthDB_message_username_badcharacters);
+			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, AuthDB_message_badcharacters_renamed);
+		}
+		else if(type.equals("AuthDB_message_badcharacters_whitelist")) 
+		{
+			player.sendMessage(Messages.CraftIRC_message_badcharacters_whitelist);
 		}
 		else if(type.equals("AuthDB_message_password_success")) 
 		{

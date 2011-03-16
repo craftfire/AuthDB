@@ -1,9 +1,14 @@
+/**
+ * Copyright (C) 2011 Contex <contexmoh@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
 package com.gmail.contexmoh.authdb;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,11 +28,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
-import com.esotericsoftware.yamlbeans.YamlException;
-import com.esotericsoftware.yamlbeans.YamlReader;
 import com.gmail.contexmoh.authdb.boards.SMF1;
 import com.gmail.contexmoh.authdb.boards.SMF2;
 import com.gmail.contexmoh.authdb.boards.myBB1_6;
@@ -38,6 +40,7 @@ import com.gmail.contexmoh.authdb.listeners.AuthDBEntityListener;
 import com.gmail.contexmoh.authdb.listeners.AuthDBPlayerListener;
 import com.gmail.contexmoh.authdb.plugins.zCraftIRC;
 import com.gmail.contexmoh.authdb.utils.Config;
+import com.gmail.contexmoh.authdb.utils.Messages;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -46,6 +49,7 @@ public class AuthDB extends JavaPlugin {
 	//
 	public static String pluginname = "AuthDB";
 	public static String pluginversion = "1.4";
+	public static CraftIRC craftircHandle = null;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
 	private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
@@ -56,17 +60,6 @@ public class AuthDB extends JavaPlugin {
 	public static String dbFileName = "auths.db";
 	public static Logger log = Logger.getLogger("Minecraft");
 	public HashMap<String, ItemStack[]> inventories = new HashMap();
-	public static String forumBoard;
-	//
-	public static String forumBoard1 = "phpBB3";
-	public static String forumBoard2 = "SMF1";
-	public static String forumBoard3 = "SMF2";
-	public static String forumBoard4 = "myBB1_6";
-	public static String forumBoard5 = "vB4_1";
-	//
-	public static int PHP_VERSION = 5;
-	//
-	public static CraftIRC craftircHandle;
 
 	public void onDisable() 
 	{
@@ -80,20 +73,22 @@ public class AuthDB extends JavaPlugin {
 
 	public void onEnable() 
 	{
-		Config Messages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
-		Config Config = new Config("config","plugins/"+pluginname+"/", "config.yml");
-		//Utils.Log("info", Config.GetConfigString("commands.help.face"));
-		//Config.DeleteConfigValue("commands.help.face");
-
-		if (null == getConfiguration().getKeys("commands")) 
+		Config TheMessages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
+		/*if (null == getConfiguration().getKeys("messages")) 
+		{
+		    Utils.Log("info", "messages.yml could not be found in plugins/AuthDB/ -- disabling!");
+		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
+		    return;
+		}*/
+		Config TheConfig = new Config("config","plugins/"+pluginname+"/", "config.yml");
+		if (null == getConfiguration().getKeys("settings")) 
 		{
 		    Utils.Log("info", "config.yml could not be found in plugins/AuthDB/ -- disabling!");
 		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
 		    return;
 		}
-		//forumBoard = getConfiguration().getString("settings.forum-board", "phpBB3");
-		Plugin checkCraftIRC = this.getServer().getPluginManager().getPlugin("CraftIRC");
-		if (checkCraftIRC != null && CraftIRC_enabled) {
+		Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
+		if (checkCraftIRC != null && Config.CraftIRC_enabled == true) {
 		    try {
 		        	Utils.Log("info", "CraftIRC Support Enabled"); 
 		        	craftircHandle = (CraftIRC) checkCraftIRC;
@@ -103,17 +98,6 @@ public class AuthDB extends JavaPlugin {
 		    	ex.printStackTrace();
 		    	Stop("Error in looking for CraftIRC");
 		    }
-		}
-		try { MySQL.connect(); } 
-		catch (ClassNotFoundException e) 
-		{
-			e.printStackTrace();
-			Stop("ERRORS in the ClassNotFoundException. Plugin will NOT work. Disabling it.");
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-			Stop("ERRORS in the SQLException. Plugin will NOT work. Disabling it.");
 		}
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Lowest, this);
@@ -126,7 +110,19 @@ public class AuthDB extends JavaPlugin {
 		pm.registerEvent(Event.Type.BLOCK_PLACED, this.blockListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGED, this.blockListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGED, this.entityListener, Event.Priority.Lowest, this);
+		try { MySQL.connect(); } 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+			Stop("ERRORS in the ClassNotFoundException. Plugin will NOT work. Disabling it.");
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			Stop("ERRORS in the SQLException. Plugin will NOT work. Disabling it.");
+		}
 		Utils.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
+		if(Config.debug_enable) Utils.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		Utils.Log("info", pluginname + " is developed by Contex | contexmoh@gmail.com");
 	}
 
@@ -137,11 +133,11 @@ public class AuthDB extends JavaPlugin {
 	 {
 		try 
 		{
-			if(forumBoard.equals(forumBoard1))  { if(phpBB3.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(forumBoard.equals(forumBoard2))  { if(SMF1.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(forumBoard.equals(forumBoard3))  { if(SMF2.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(forumBoard.equals(forumBoard4))  { if(myBB1_6.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(forumBoard.equals(forumBoard5))  { if(vB4_1.checkpassword(player.toLowerCase(), password)) return true; }
+			if(Config.script_name.equals(Config.script_name1))  { if(phpBB3.checkpassword(player.toLowerCase(), password)) return true; }
+			else if(Config.script_name.equals(Config.script_name2))  { if(SMF1.checkpassword(player.toLowerCase(), password)) return true; }
+			else if(Config.script_name.equals(Config.script_name3))  { if(SMF2.checkpassword(player.toLowerCase(), password)) return true; }
+			else if(Config.script_name.equals(Config.script_name4))  { if(myBB1_6.checkpassword(player.toLowerCase(), password)) return true; }
+			else if(Config.script_name.equals(Config.script_name5))  { if(vB4_1.checkpassword(player.toLowerCase(), password)) return true; }
 			else { Stop("Can't check password, stopping plugin."); }
 		} 
 		catch (SQLException e) 
@@ -162,21 +158,21 @@ public class AuthDB extends JavaPlugin {
 
 	public void register(String player, String password, String email, String ipAddress) throws IOException, SQLException 
 	{
-		if(forumBoard.equals(forumBoard1)) { phpBB3.adduser(player, email, password, ipAddress); }
-		else if(forumBoard.equals(forumBoard2)) { SMF1.adduser(player, email, password, ipAddress); }
-		else if(forumBoard.equals(forumBoard3)) { SMF2.adduser(player, email, password, ipAddress); }
-		else if(forumBoard.equals(forumBoard4)) { myBB1_6.adduser(player, email, password, ipAddress); }
-		else if(forumBoard.equals(forumBoard5)) { vB4_1.adduser(player, email, password, ipAddress); }
+		if(Config.script_name.equals(Config.script_name1)) { phpBB3.adduser(player, email, password, ipAddress); }
+		else if(Config.script_name.equals(Config.script_name2)) { SMF1.adduser(player, email, password, ipAddress); }
+		else if(Config.script_name.equals(Config.script_name3)) { SMF2.adduser(player, email, password, ipAddress); }
+		else if(Config.script_name.equals(Config.script_name4)) { myBB1_6.adduser(player, email, password, ipAddress); }
+		else if(Config.script_name.equals(Config.script_name5)) { vB4_1.adduser(player, email, password, ipAddress); }
 		else { Stop("Can't register user, disabling plugin.");  }
 	}
 
 	public boolean isRegistered(String player) {
 		try {
-			if(forumBoard.equals(forumBoard1)) { if(phpBB3.checkuser(player.toLowerCase())) { return true; } }
-			else if(forumBoard.equals(forumBoard2)) { if(SMF1.checkuser(player.toLowerCase())) { return true; } }
-			else if(forumBoard.equals(forumBoard3)) { if(SMF2.checkuser(player.toLowerCase())) { return true; } }
-			else if(forumBoard.equals(forumBoard4)) { if(myBB1_6.checkuser(player.toLowerCase())) { return true; } }
-			else if(forumBoard.equals(forumBoard5)) { if(vB4_1.checkuser(player.toLowerCase())) { return true; } }
+			if(Config.script_name.equals(Config.script_name1)) { if(phpBB3.checkuser(player.toLowerCase())) { return true; } }
+			else if(Config.script_name.equals(Config.script_name2)) { if(SMF1.checkuser(player.toLowerCase())) { return true; } }
+			else if(Config.script_name.equals(Config.script_name3)) { if(SMF2.checkuser(player.toLowerCase())) { return true; } }
+			else if(Config.script_name.equals(Config.script_name4)) { if(myBB1_6.checkuser(player.toLowerCase())) { return true; } }
+			else if(Config.script_name.equals(Config.script_name5)) { if(vB4_1.checkuser(player.toLowerCase())) { return true; } }
 			else { Stop("Can't find a forum board, stopping the plugin."); }
 		} catch (SQLException e) 
 		{

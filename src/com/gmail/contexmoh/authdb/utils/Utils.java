@@ -1,26 +1,70 @@
-package com.gmail.contexmoh.authdb.utils;
+/**
+ * Copyright (C) 2011 Contex <contexmoh@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
 
+package com.gmail.contexmoh.authdb.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.StringTokenizer;
+
 import org.bukkit.entity.Player;
 
 import com.gmail.contexmoh.authdb.AuthDB;
 
 public class Utils
 {  
+	public static int ToSeconds(String time, String length) {
+		if(Config.debug_enable) Log("info","Launching function: ToSeconds(String time, String length)");
+		time = time.toLowerCase();
+		int lengthint = Integer.parseInt( length );
+		if(time.equals("days")) 
+			return lengthint * 86400;
+		else if(time.equals("hours")) 
+			return lengthint * 3600;
+		else if(time.equals("minutes")) 
+			return lengthint * 60;
+		else if(time.equals("seconds")) 
+			return lengthint;
+		return 30;
+	}
+	
+	public static String ToDriver(String dataname)
+	{
+		dataname = dataname.toLowerCase();
+		if(dataname.equals("mysql")) 
+			return "com.mysql.jdbc.Driver";
+		
+		return "com.mysql.jdbc.Driver";
+	}
+	
+	public static boolean CheckWhitelist(String username)
+	{
+		if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String username)");
+	    StringTokenizer st = new StringTokenizer(Config.idle_whitelist,",");
+	    while (st.hasMoreTokens()) { if(st.nextToken().equals(username)) return true; }
+	    return false;
+	}
+	
 	public static void CheckIdle(Player player)
 	{
+		if(Config.debug_enable) Debug("Launching function: CheckIdle(Player player)");
 		if (!AuthDB.isAuthorized(player.getEntityId()))
 		{
 			 Messages.SendMessage("kickPlayerIdleLoginMessage", player, null);
 		}
 	} 
 	
-	public static long IP2Long(String IP) {
+	public static long IP2Long(String IP) 
+	{
+		if(Config.debug_enable) Debug("Launching function: IP2Long(String IP) ");
 		long f1, f2, f3, f4;
 		String tokens[] = IP.split("\\.");
 		if (tokens.length != 4) return -1;
@@ -37,18 +81,19 @@ public class Utils
 	}
 
 	
-	public static boolean ChangeUsernameCharacters(String username)
+	public static String ChangeUsernameCharacters(String username)
 	{
+		if(Config.debug_enable) Debug("Launching function: ChangeUsernameCharacters(String username)");
 		int lengtha = username.length();
 		int lengthb = Config.badcharacters_characters.length();
 	    int i = 0;
 	    char thechar1, thechar2;
-		String newusername;
+		String newusername = "";
 		String newusernamedupe;
 	    while(i < lengtha)
 	    {
 	    	thechar1 = username.charAt(i);
-			newusernamedupe = thechar1;
+			newusernamedupe = ""+thechar1;
 	    	int a = 0;
 	    	while(a < lengthb)
 	    	{
@@ -64,6 +109,7 @@ public class Utils
 	
 	public static boolean checkUsernameCharacters(String username)
 	{
+		if(Config.debug_enable) Debug("Launching function: checkUsernameCharacters(String username)");
 		int lengtha = username.length();
 		int lengthb = Config.badcharacters_characters.length();
 	    int i = 0;
@@ -83,19 +129,24 @@ public class Utils
 		return true;
 	}
 	
+	public static void Debug(String message) { Log("info",message); }
+	
 	public static String replaceStrings(String string, Player player, String additional)
 	{
+		if(Config.debug_enable) Debug("Launching function: replaceStrings(String string, Player player, String additional)");
 		string = string.replaceAll("\\{IP\\}", GetIP(player));
 		string = string.replaceAll("\\{PLAYER\\}", player.getName());
-		string = string.replaceAll("\\{NEWPLAYER\\}", additional);
-		string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
-		string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
-		string = string.replaceAll("\\{IDLE_SECONDS\\}", additional);
+		string = string.replaceAll("\\{NEWPLAYER}\\}", additional);
+		string = string.replaceAll("\\{PLUGIN}\\}", AuthDB.pluginname);
+		string = string.replaceAll("\\{VERSION}\\}", AuthDB.pluginversion);
+		string = string.replaceAll("\\{IDLESECONDS}\\}", additional);
+		string = string.replaceAll("\\{BADCHARACTERS}\\}", Config.badcharacters_characters);
 		return string;
 	}
 	
 	public static String removeColors(String toremove)
 	{
+		if(Config.debug_enable) Debug("Launching function: CheckWhitelist");
 		toremove = toremove.replace("?0", "");
 		toremove = toremove.replace("?2", "");
 		toremove = toremove.replace("?3", "");
@@ -114,16 +165,18 @@ public class Utils
 		return toremove;
 	}
 	
-	public static String removeChar(String s, char c) {
-		  StringBuffer r = new StringBuffer( s.length() );
-		  r.setLength( s.length() );
-		  int current = 0;
-		  for (int i = 0; i < s.length(); i ++) {
-		     char cur = s.charAt(i);
-		     if (cur != c) r.setCharAt( current++, cur );
-		  }
-		  return r.toString();
-		}
+	public static String removeChar(String s, char c) 
+	{
+		if(Config.debug_enable) Debug("Launching function: removeChar(String s, char c)");
+	  StringBuffer r = new StringBuffer( s.length() );
+	  r.setLength( s.length() );
+	  int current = 0;
+	  for (int i = 0; i < s.length(); i ++) {
+	     char cur = s.charAt(i);
+	     if (cur != c) r.setCharAt( current++, cur );
+	  }
+	  return r.toString();
+	}
 	
 	private static final String charset = "0123456789abcdefghijklmnopqrstuvwxyz";
 	public static String getRandomString(int length) {

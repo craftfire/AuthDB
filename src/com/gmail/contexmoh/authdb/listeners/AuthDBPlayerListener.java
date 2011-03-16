@@ -1,3 +1,11 @@
+/**
+ * Copyright (C) 2011 Contex <contexmoh@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
+
 package com.gmail.contexmoh.authdb.listeners;
 
 import java.awt.Color;
@@ -26,7 +34,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
 public class AuthDBPlayerListener extends PlayerListener
 {
   private final AuthDB plugin;
-  int seconds = 5;
+  int seconds = Utils.ToSeconds(Config.idle_time,Config.idle_length);
   Timer IdleTimer;
 
   public AuthDBPlayerListener(AuthDB instance)
@@ -40,7 +48,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		Player player = event.getPlayer();
 		String name = player.getName();
-		if (!Utils.checkUsernameCharacters(name))
+		if (Utils.checkUsernameCharacters(name) == false && Utils.CheckWhitelist(name) == false)
 	    {
 	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_username_badcharacters", player, event);
 	      else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_username_renamed", player, event);
@@ -50,7 +58,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
 
 public TimerTask CheckIdle(Player player)
 {
-	if (!AuthDB.isAuthorized(player.getEntityId()))
+	if (!AuthDB.isAuthorized(player.getEntityId()) && Utils.CheckWhitelist(player.getDisplayName()) == false)
 	{
 		 Messages.SendMessage("AuthDB_message_idle_kick", player, null);
 	}
@@ -68,7 +76,7 @@ public TimerTask CheckIdle(Player player)
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
          player.getInventory().clear();
        Messages.SendMessage("AuthDB_message_welcome_user", player,null);
-     } else if (Config.forceRegister) {
+     } else if (Config.register_force) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
        player.getInventory().clear();
 					Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
@@ -112,7 +120,7 @@ public TimerTask CheckIdle(Player player)
          player.getInventory().setContents(inv);
         this.plugin.authorize(player.getEntityId());
 			      Messages.SendMessage("AuthDB_message_login_success", player,null);
-				 } else if (Config.kickOnBadPassword) {
+				 } else if (Config.password_kick) {
        ItemStack[] inv = this.plugin.getInventory(player.getName());
       if (inv != null)
           player.getInventory().setContents(inv);
@@ -129,7 +137,7 @@ public TimerTask CheckIdle(Player player)
       }
       else if (this.plugin.isRegistered(player.getName()))
 				  Messages.SendMessage("AuthDB_message_register_registered", player,null);
-      else if (!Config.allowRegister)
+      else if (!Config.register_enabled)
 				  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
       else if (split.length < 3)
 				  Messages.SendMessage("AuthDB_message_email_required", player,null);

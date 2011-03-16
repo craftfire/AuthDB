@@ -1,3 +1,10 @@
+/**
+ * Copyright (C) 2011 Contex <contexmoh@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
 package com.gmail.contexmoh.authdb.boards;
 
 import java.sql.PreparedStatement;
@@ -119,9 +126,6 @@ public class phpBB3 {
     return unique_id("c");
   }
 
-  // global $config;
-  // private boolean dss_seeded = false;
-
   private static String unique_id(String extra) {
     return "1234567890abcdef";
   }
@@ -137,10 +141,10 @@ public class phpBB3 {
 		{
 			iteration_count_log2 = 8;
 		}
-
+		int PHP_VERSION = 5;
 		String output = "$H$";
 		output += itoa64.charAt(Math.min(iteration_count_log2
-				+ ((AuthDB.PHP_VERSION >= 5) ? 5 : 3), 30));
+				+ ((PHP_VERSION >= 5) ? 5 : 3), 30));
 		output += _hash_encode64(input, 6);
 
 		return output;
