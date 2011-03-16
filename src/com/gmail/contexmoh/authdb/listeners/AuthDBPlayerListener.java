@@ -58,6 +58,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
 
 public TimerTask CheckIdle(Player player)
 {
+	
 	if (!AuthDB.isAuthorized(player.getEntityId()) && Utils.CheckWhitelist(player.getDisplayName()) == false)
 	{
 		 Messages.SendMessage("AuthDB_message_idle_kick", player, null);
@@ -70,8 +71,11 @@ public TimerTask CheckIdle(Player player)
   {
 				Player player = event.getPlayer();
     try {
-    	IdleTimer = new Timer(player.getName());
-    	IdleTimer.schedule(CheckIdle(player), seconds);
+	    if(Config.idle_kick)
+	    {
+	    	IdleTimer = new Timer(player.getName());
+	    	IdleTimer.schedule(CheckIdle(player), seconds);
+	    }
    if (this.plugin.isRegistered(player.getName())) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
          player.getInventory().clear();
