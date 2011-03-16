@@ -36,14 +36,14 @@ public class AuthDBPlayerListener extends PlayerListener
 
 public void onPlayerLogin(PlayerLoginEvent event)
 {
-	if(Config.specialCharactersKick || Config.specialCharactersChange)
+	if(Config.badcharacters_kick || Config.badcharacters_remove)
 	{
 		Player player = event.getPlayer();
 		String name = player.getName();
 		if (!Utils.checkUsernameCharacters(name))
 	    {
-	      if(Config.specialCharactersKick) Messages.SendMessage("AuthDB_message_username_badcharacters", player, event);
-	      //else if(UConfig.pecialCharactersChange) Messages.SendMessage("changeUsernameMessage", player, event);
+	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_username_badcharacters", player, event);
+	      else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_username_renamed", player, event);
 	    }
 	}
 }
