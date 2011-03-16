@@ -145,9 +145,10 @@ public class Messages
 		}
 		else if(type.equals("AuthDB_message_username_renamed")) 
 		{
-			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, AuthDB_message_username_renamed);
+			player.setDisplayName(ChangeUsernameCharacters(player.getName()));
+			player.sendMessage(Message.AuthDB_message_username_renamed);
 		}
-				else if(type.equals("AuthDB_message_username_badcharacters")) 
+		else if(type.equals("AuthDB_message_username_badcharacters")) 
 		{
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, AuthDB_message_username_badcharacters);
 		}
