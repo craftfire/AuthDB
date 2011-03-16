@@ -37,33 +37,35 @@ public class Utils
 	}
 
 	
-	public static boolean stripUsernameCharacters(String username)
+	public static boolean ChangeUsernameCharacters(String username)
 	{
 		int lengtha = username.length();
-		int lengthb = Config.specialCharactersList.length();
+		int lengthb = Config.badcharacters_characters.length();
 	    int i = 0;
 	    char thechar1, thechar2;
+		String newusername;
+		String newusernamedupe;
 	    while(i < lengtha)
 	    {
 	    	thechar1 = username.charAt(i);
-	    	Log("info",""+thechar1);
+			newusernamedupe = thechar1;
 	    	int a = 0;
 	    	while(a < lengthb)
 	    	{
-	    		thechar2 = Config.specialCharactersList.charAt(a);
-	    		Log("info",""+thechar2);
-	    		if(thechar1 == thechar2) { return false; }
+	    		thechar2 = Config.badcharacters_characters.charAt(a);
+	    		if(thechar1 == thechar2) { newusernamedupe = ""; }
 	    		a++;
 	    	}
+			newusername += newusernamedupe;
 		    i++;
 	    }
-		return true;
+		return newusername;
 	}
 	
 	public static boolean checkUsernameCharacters(String username)
 	{
 		int lengtha = username.length();
-		int lengthb = Config.specialCharactersList.length();
+		int lengthb = Config.badcharacters_characters.length();
 	    int i = 0;
 	    char thechar1, thechar2;
 	    while(i < lengtha)
@@ -72,7 +74,7 @@ public class Utils
 	    	int a = 0;
 	    	while(a < lengthb)
 	    	{
-	    		thechar2 = Config.specialCharactersList.charAt(a);
+	    		thechar2 = Config.badcharacters_characters.charAt(a);
 	    		if(thechar1 == thechar2) { return false; }
 	    		a++;
 	    	}
@@ -94,21 +96,21 @@ public class Utils
 	
 	public static String removeColors(String toremove)
 	{
-		toremove = toremove.replace("�0", "");
-		toremove = toremove.replace("�2", "");
-		toremove = toremove.replace("�3", "");
-		toremove = toremove.replace("�4", "");
-		toremove = toremove.replace("�5", "");
-		toremove = toremove.replace("�6", "");
-		toremove = toremove.replace("�7", "");
-		toremove = toremove.replace("�8", "");
-		toremove = toremove.replace("�9", "");
-		toremove = toremove.replace("�a", "");
-		toremove = toremove.replace("�b", "");
-		toremove = toremove.replace("�c", "");
-		toremove = toremove.replace("�d", "");
-		toremove = toremove.replace("�e", "");
-		toremove = toremove.replace("�f", "");
+		toremove = toremove.replace("?0", "");
+		toremove = toremove.replace("?2", "");
+		toremove = toremove.replace("?3", "");
+		toremove = toremove.replace("?4", "");
+		toremove = toremove.replace("?5", "");
+		toremove = toremove.replace("?6", "");
+		toremove = toremove.replace("?7", "");
+		toremove = toremove.replace("?8", "");
+		toremove = toremove.replace("?9", "");
+		toremove = toremove.replace("?a", "");
+		toremove = toremove.replace("?b", "");
+		toremove = toremove.replace("?c", "");
+		toremove = toremove.replace("?d", "");
+		toremove = toremove.replace("?e", "");
+		toremove = toremove.replace("?f", "");
 		return toremove;
 	}
 	
