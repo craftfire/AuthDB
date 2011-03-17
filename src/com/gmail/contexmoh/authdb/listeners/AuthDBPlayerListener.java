@@ -9,9 +9,6 @@
 package com.gmail.contexmoh.authdb.listeners;
 
 import java.awt.Color;
-import java.awt.Desktop.Action;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Timer;
@@ -59,11 +56,12 @@ public void onPlayerLogin(PlayerLoginEvent event)
 public TimerTask CheckIdle(Player player)
 {
 	
-	if (!AuthDB.isAuthorized(player.getEntityId()) && Utils.CheckWhitelist(player.getDisplayName()) == false)
+	if (AuthDB.isAuthorized(player.getEntityId()) == false)
 	{
 		 Messages.SendMessage("AuthDB_message_idle_kick", player, null);
+		 IdleTimer.cancel();
 	}
-	IdleTimer.cancel();
+	else { IdleTimer.cancel(); }
 	return null;
 }
 
@@ -71,8 +69,9 @@ public TimerTask CheckIdle(Player player)
   {
 				Player player = event.getPlayer();
     try {
-	    if(Config.idle_kick)
+	    if(Config.idle_kick == true && Utils.CheckWhitelist(player.getDisplayName()) == false)
 	    {
+	    	if(Config.debug_enable) Utils.Debug("Idle time is: "+seconds);
 	    	IdleTimer = new Timer(player.getName());
 	    	IdleTimer.schedule(CheckIdle(player), seconds);
 	    }

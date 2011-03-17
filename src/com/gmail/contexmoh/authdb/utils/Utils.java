@@ -47,9 +47,19 @@ public class Utils
 	
 	public static boolean CheckWhitelist(String username)
 	{
-		if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String username)");
+		username = username.toLowerCase();
+		if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String username) - "+username);
 	    StringTokenizer st = new StringTokenizer(Config.idle_whitelist,",");
-	    while (st.hasMoreTokens()) { if(st.nextToken().equals(username)) return true; }
+	    while (st.hasMoreTokens()) 
+	    { 
+	    	String whitelistname = st.nextToken().toLowerCase();
+	    	if(Config.debug_enable) Debug("Whitelist: "+whitelistname);
+	    	if(whitelistname.equals(username)) 
+	    	{
+	    		if(Config.debug_enable) Debug("FOUND USER IN WHITELIST: "+whitelistname);
+	    		return true; 
+	    	}
+	    }
 	    return false;
 	}
 	
