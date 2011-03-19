@@ -65,7 +65,7 @@ public class AuthDB extends JavaPlugin {
 	//
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "1.4";
+	public static String pluginversion = "2.0.0";
 	public static CraftIRC craftircHandle = null;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -89,6 +89,12 @@ public class AuthDB extends JavaPlugin {
 
 	public void onEnable() 
 	{
+		if(Config.usagestats_enabled)
+		{
+			try { Util.PostInfo(getServer().getName(),getServer().getVersion(),pluginversion); } 
+			catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send data to main server."); }
+		}
+		
 		Config TheMessages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
 		/*if (null == getConfiguration().getKeys("messages")) 
 		{
@@ -144,7 +150,7 @@ public class AuthDB extends JavaPlugin {
 		}
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
-		Util.Log("info", pluginname + " is developed by Contex | contexmoh@gmail.com");
+		Util.Log("info", pluginname + " is developed by Contex <contex@authdb.com> and Wulfspider <wulfspider@authdb.com>");
 	}
 
     public static boolean isAuthorized(int id) { return authorizedIds.contains(Integer.valueOf(id)); }

@@ -42,13 +42,13 @@ public class Config
 	public static String database_driver, database_username,database_password,database_port,database_host,database_database,database_prefix,dbDb;
 	
 	///////////////////////////////////////////
-	//               settings
+	//               Core
 	///////////////////////////////////////////
 	
 		///////////////////////////////////////////
-		//               debug
+		//               plugin
 		///////////////////////////////////////////
-		public static boolean debug_enable;
+		public static boolean autoupdate_enable,debug_enable,usagestats_enabled;
 	
 		///////////////////////////////////////////
 		//               script
@@ -120,85 +120,87 @@ public class Config
 			{
 			
 				///////////////////////////////////////////
-				//               settings
+				//               Core
 				///////////////////////////////////////////
 				
 					///////////////////////////////////////////
-					//               script
+					//               plugin
 					///////////////////////////////////////////
-					debug_enable = GetConfigBoolean("settings.debug.enabled", false);
+				    autoupdate_enable = GetConfigBoolean("Core.plugin.autoupdate", false);
+					debug_enable = GetConfigBoolean("Core.plugin.debugmode", false);
+					usagestats_enabled = GetConfigBoolean("Core.plugin.usagestats", true);
 				
 					///////////////////////////////////////////
 					//               script
 					///////////////////////////////////////////
-					script_name = GetConfigString("settings.script.name", "phpbb3").toLowerCase();
-					script_updatestatus = GetConfigBoolean("settings.script.updatestatus", true);
+					script_name = GetConfigString("Core.script.name", "phpbb3").toLowerCase();
+					script_updatestatus = GetConfigBoolean("Core.script.updatestatus", true);
 					
 					///////////////////////////////////////////
 					//               database
 					///////////////////////////////////////////
-					database_driver =  GetConfigString("settings.database.driver", "mysql");
-					database_username =  GetConfigString("settings.database.username", "root");
-					database_password =  GetConfigString("settings.database.password", "");
-					database_port =  GetConfigString("settings.database.port", "3306");
-					database_host =  GetConfigString("settings.database.host", "localhost");
-					database_database = GetConfigString("settings.database.database", "minecraft_forum");
-					database_prefix = GetConfigString("settings.database.prefix", "");
+					database_driver =  GetConfigString("Core.database.driver", "mysql");
+					database_username =  GetConfigString("Core.database.username", "root");
+					database_password =  GetConfigString("Core.database.password", "");
+					database_port =  GetConfigString("Core.database.port", "3306");
+					database_host =  GetConfigString("Core.database.host", "localhost");
+					database_database = GetConfigString("Core.database.database", "minecraft_forum");
+					database_prefix = GetConfigString("Core.database.prefix", "");
 					dbDb = "jdbc:mysql://"+database_host+":"+database_port+"/"+database_database;
 					
 					
 					///////////////////////////////////////////
 					//               register
 					///////////////////////////////////////////
-					register_enabled = GetConfigBoolean("settings.register.enabled", true);
-					register_force = GetConfigBoolean("settings.register.force", true);
+					register_enabled = GetConfigBoolean("Core.register.enabled", true);
+					register_force = GetConfigBoolean("Core.register.force", true);
 					
 					///////////////////////////////////////////
 					//               password
 					///////////////////////////////////////////
-					password_tries = GetConfigString("settings.password.tries", "3");
-					password_kick = GetConfigBoolean("settings.password.false", true);
-					password_ban = GetConfigBoolean("settings.password.ban", false);
+					password_tries = GetConfigString("Core.password.tries", "3");
+					password_kick = GetConfigBoolean("Core.password.false", true);
+					password_ban = GetConfigBoolean("Core.password.ban", false);
 					
 					///////////////////////////////////////////
 					//               session
 					///////////////////////////////////////////
-					session_time = GetConfigString("settings.session.time", "minutes");
-					session_length = GetConfigString("settings.session.length", "60");
+					session_time = GetConfigString("Core.session.time", "minutes");
+					session_length = GetConfigString("Core.session.length", "60");
 					
 					///////////////////////////////////////////
 					//               idle
 					///////////////////////////////////////////
-					idle_time = GetConfigString("settings.idle.time", "seconds");
-					idle_length= GetConfigString("settings.idle.length", "30");
-					idle_kick= GetConfigBoolean("settings.idle.kick", true);
-					idle_whitelist= GetConfigString("settings.idle.whitelist", "");
+					idle_time = GetConfigString("Core.idle.time", "seconds");
+					idle_length= GetConfigString("Core.idle.length", "30");
+					idle_kick= GetConfigBoolean("Core.idle.kick", true);
+					idle_whitelist= GetConfigString("Core.idle.whitelist", "");
 					idle_ticks = Util.ToTicks(Config.idle_time,Config.idle_length);
 			  
 					///////////////////////////////////////////
 					//               guests
 					///////////////////////////////////////////
-					guests_commands = GetConfigBoolean("settings.guests.commands", true);
-					guests_movement = GetConfigBoolean("settings.guests.movement", true);
-					guests_inventory = GetConfigBoolean("settings.guests.inventory", true);
-					guests_drops = GetConfigBoolean("settings.guests.drops", true);
-					guests_health = GetConfigBoolean("settings.guests.health", true);
-					guests_damage = GetConfigBoolean("settings.guests.damage", true);
-					guests_interact = GetConfigBoolean("settings.guests.interact", true);
-					guests_build = GetConfigBoolean("settings.guests.build", true);
-					guests_chat= GetConfigBoolean("settings.guests.chat", true);
+					guests_commands = GetConfigBoolean("Core.guests.commands", true);
+					guests_movement = GetConfigBoolean("Core.guests.movement", true);
+					guests_inventory = GetConfigBoolean("Core.guests.inventory", true);
+					guests_drops = GetConfigBoolean("Core.guests.drops", true);
+					guests_health = GetConfigBoolean("Core.guests.health", true);
+					guests_damage = GetConfigBoolean("Core.guests.damage", true);
+					guests_interact = GetConfigBoolean("Core.guests.interact", true);
+					guests_build = GetConfigBoolean("Core.guests.build", true);
+					guests_chat= GetConfigBoolean("Core.guests.chat", true);
 			  
 					///////////////////////////////////////////
 					//               badcharacters
 					///////////////////////////////////////////
-					badcharacters_kick = GetConfigBoolean("settings.badcharacters.kick", true);
-					badcharacters_remove = GetConfigBoolean("settings.badcharacters.remove", false);
-					badcharacters_characters = GetConfigString("settings.badcharacters.characters", "$^@(#)!+\\-/");
+					badcharacters_kick = GetConfigBoolean("Core.badcharacters.kick", true);
+					badcharacters_remove = GetConfigBoolean("Core.badcharacters.remove", false);
+					badcharacters_characters = GetConfigString("Core.badcharacters.characters", "$^@(#)!+\\-/");
 					
 					///////////////////////////////////////////
 					//               geoip
 					///////////////////////////////////////////
-					geoip_enabled = GetConfigBoolean("settings.geopip.enabled", true);
+					geoip_enabled = GetConfigBoolean("Core.geopip.enabled", true);
 			  
 				///////////////////////////////////////////
 				//               plugins
@@ -207,22 +209,22 @@ public class Config
 					///////////////////////////////////////////
 					//               CraftIRC
 					///////////////////////////////////////////
-					CraftIRC_enabled = GetConfigBoolean("plugins.CraftIRC.enabled", true);
-					CraftIRC_tag = GetConfigString("plugins.CraftIRC.tag", "admin");
-					CraftIRC_prefix = GetConfigString("plugins.CraftIRC.prefix", "%b%%green%[{PLUGIN}]%k%%b%");
+					CraftIRC_enabled = GetConfigBoolean("Plugins.CraftIRC.enabled", true);
+					CraftIRC_tag = GetConfigString("Plugins.CraftIRC.tag", "admin");
+					CraftIRC_prefix = GetConfigString("Plugins.CraftIRC.prefix", "%b%%green%[{PLUGIN}]%k%%b%");
 
 						///////////////////////////////////////////
 						//               messages
 						///////////////////////////////////////////
-						CraftIRC_messages_enabled = GetConfigBoolean("plugins.CraftIRC.messages.enabled", true);
-						CraftIRC_messages_welcome_enabled = GetConfigBoolean("plugins.CraftIRC.messages.welcome", true);
-						CraftIRC_messages_register_enabled = GetConfigBoolean("plugins.CraftIRC.messages.register", true);
-						CraftIRC_messages_unregister_enabled = GetConfigBoolean("plugins.CraftIRC.messages.unregister", true);
-						CraftIRC_messages_login_enabled = GetConfigBoolean("plugins.CraftIRC.messages.login", true);
-						CraftIRC_messages_email_enabled = GetConfigBoolean("plugins.CraftIRC.messages.email", true);
-						CraftIRC_messages_username_enabled = GetConfigBoolean("plugins.CraftIRC.messages.username", true);
-						CraftIRC_messages_password_enabled = GetConfigBoolean("plugins.CraftIRC.messages.password", true);
-						CraftIRC_messages_idle_enabled = GetConfigBoolean("plugins.CraftIRC.messages.idle", true);
+						CraftIRC_messages_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.enabled", true);
+						CraftIRC_messages_welcome_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.welcome", true);
+						CraftIRC_messages_register_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.register", true);
+						CraftIRC_messages_unregister_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.unregister", true);
+						CraftIRC_messages_login_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.login", true);
+						CraftIRC_messages_email_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.email", true);
+						CraftIRC_messages_username_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.username", true);
+						CraftIRC_messages_password_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.password", true);
+						CraftIRC_messages_idle_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.idle", true);
 						
 			}
 			else if(config.equals("messages")) 

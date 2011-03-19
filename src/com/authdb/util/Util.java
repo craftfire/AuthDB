@@ -16,7 +16,14 @@
 
 package com.authdb.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,6 +37,35 @@ import com.authdb.AuthDB;
 
 public class Util
 {  
+	
+	public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f) throws IOException {
+		//Create Post String
+		String e5544ab05d8c25c1a5da5cd59144fb = Util.md5(b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
+		String data = URLEncoder.encode("b407f35cb00b96936a585c4191fc267a", "UTF-8") + "=" + URLEncoder.encode(b407f35cb00b96936a585c4191fc267a, "UTF-8");
+		data += "&" + URLEncoder.encode("f13a437cb9b1ac68b49d597ed7c4bfde", "UTF-8") + "=" + URLEncoder.encode(f13a437cb9b1ac68b49d597ed7c4bfde, "UTF-8");
+		data += "&" + URLEncoder.encode("9cafd6e81e3a478a7fe0b40e7502bf1f", "UTF-8") + "=" + URLEncoder.encode(cafd6e81e3a478a7fe0b40e7502bf1f, "UTF-8");
+		data += "&" + URLEncoder.encode("58e5544ab05d8c25c1a5da5cd59144fb", "UTF-8") + "=" + URLEncoder.encode(e5544ab05d8c25c1a5da5cd59144fb, "UTF-8");
+		               
+		         
+		// Send Data To Page
+		URL url = new URL("http://moincraft.com/plugins/AuthDB/stats.php");
+		URLConnection conn = url.openConnection();
+		conn.setRequestProperty("X-AuthDB", e5544ab05d8c25c1a5da5cd59144fb);
+		conn.setDoOutput(true);
+		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+		wr.write(data);
+		wr.flush();
+		   
+		// Get The Response
+		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String line;
+		while ((line = rd.readLine()) != null) {
+		        System.out.println(line);
+		        //you Can Break The String Down Here
+		}
+		
+	}
+	
 	public static int ToTicks(String time, String length) {
 		if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
 		time = time.toLowerCase();
