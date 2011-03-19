@@ -21,6 +21,8 @@ import org.bukkit.event.player.PlayerItemEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.contexmoh.authdb.AuthDB;
@@ -31,8 +33,6 @@ import com.gmail.contexmoh.authdb.utils.Utils;
 public class AuthDBPlayerListener extends PlayerListener
 {
   private final AuthDB plugin;
-  int seconds = Utils.ToSeconds(Config.idle_time,Config.idle_length);
-  Timer IdleTimer;
 
   public AuthDBPlayerListener(AuthDB instance)
   {
@@ -43,37 +43,51 @@ public void onPlayerLogin(PlayerLoginEvent event)
 {
 	if(Config.badcharacters_kick || Config.badcharacters_remove)
 	{
+		if(Config.debug_enable) Utils.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
 		Player player = event.getPlayer();
 		String name = player.getName();
 		if (Utils.checkUsernameCharacters(name) == false && Utils.CheckWhitelist(name) == false)
 	    {
-	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_username_badcharacters", player, event);
-	      else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_username_renamed", player, event);
+		  if(Config.debug_enable) Utils.Debug("The player is not in the whitelist and has bad characters in his/her name");
+	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_badcharacters_kicked", player, event);
+	      else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_badcharacters_renamed", player, event);
 	    }
 	}
 }
+int Schedule;
 
-public TimerTask CheckIdle(Player player)
+public boolean CheckIdle(Player player) throws IOException
 {
-	
-	if (AuthDB.isAuthorized(player.getEntityId()) == false)
+	if(Config.debug_enable) Utils.Debug("Launching function: CheckIdle(Player player))");
+	if (AuthDB.isAuthorized(player.getEntityId()) == false && this.plugin.IdleTask("check",player, ""+Schedule))
 	{
-		 Messages.SendMessage("AuthDB_message_idle_kick", player, null);
-		 IdleTimer.cancel();
+		Messages.SendMessage("AuthDB_message_idle_kick", player, null);
+		return true;
 	}
-	else { IdleTimer.cancel(); }
-	return null;
+	return false;
 }
 
   public void onPlayerJoin(PlayerEvent event)
   {
-				Player player = event.getPlayer();
+	final Player player = event.getPlayer();
     try {
 	    if(Config.idle_kick == true && Utils.CheckWhitelist(player.getDisplayName()) == false)
 	    {
-	    	if(Config.debug_enable) Utils.Debug("Idle time is: "+seconds);
-	    	IdleTimer = new Timer(player.getName());
-	    	IdleTimer.schedule(CheckIdle(player), seconds);
+	    	if(Config.debug_enable) Utils.Debug("Idle time is: "+Config.idle_ticks);
+	    	Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    		@Override
+	    		public void run() 
+	    		{ 
+	    			try {
+						CheckIdle(player);
+					} catch (IOException e) {
+						Utils.Log("warning", "Error checking if player was in the idle list");
+						e.printStackTrace();
+					} 
+	    		} }, Config.idle_ticks);
+	    	if(this.plugin.IdleTask("add",player, ""+Schedule))
+	    		if(Config.debug_enable) Utils.Debug(player.getName()+" added to the IdleTaskList");
+	    	this.plugin.updateDb();
 	    }
    if (this.plugin.isRegistered(player.getName())) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
@@ -82,8 +96,10 @@ public TimerTask CheckIdle(Player player)
      } else if (Config.register_force) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
        player.getInventory().clear();
-					Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
-      } else {
+		Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
+      }
+     else if (!Config.register_force) { Messages.SendMessage("AuthDB_message_welcome_guest", player,null); }
+     else {
         this.plugin.authorize(event.getPlayer().getEntityId());
       }
     } catch (IOException e) {
@@ -96,22 +112,40 @@ public TimerTask CheckIdle(Player player)
 
   public void onPlayerQuit(PlayerEvent event)
   {
+	// plugin.getServer().getScheduler().scheduleSyncDelayedTask;
      Player player = event.getPlayer();
+     try {
+		if(this.plugin.IdleTask("check",player, "0"))
+		 {
+			int TaskID = Integer.parseInt(this.plugin.IdleGetTaskID(player));
+			if(Config.debug_enable) Utils.Debug(player.getName()+" is in the IdleTaskList with ID: "+TaskID);
+			if(this.plugin.IdleTask("remove",player, "0"))
+			{
+				if(Config.debug_enable) Utils.Debug(player.getName()+" was removed from the IdleTaskList");
+				plugin.getServer().getScheduler().cancelTask(TaskID);
+			}
+			else { if(Config.debug_enable) Utils.Debug("Could not remove "+player.getName()+" from the idle list."); }
+		 }
+		else { if(Config.debug_enable) Utils.Debug("Could not find "+player.getName()+" in the idle list, no need to remove."); }
+		this.plugin.updateDb();
+	} catch (IOException e) {
+		if(Config.debug_enable) Utils.Debug("Error with the Idle list, can't cancel task?");
+		e.printStackTrace();
+	}
    ItemStack[] inv = this.plugin.getInventory(player.getName());
-    if ((inv != null) && (!this.plugin.isAuthorized(player.getEntityId()))) {
-     player.getInventory().setContents(inv);
-     player.kickPlayer("inventory protection kicked");
+    if ((inv != null) && (!AuthDB.isAuthorized(player.getEntityId()))) {
+     //player.getInventory().setContents(inv);
+     //player.kickPlayer("inventory protection kicked");
     }
-    this.plugin.unauthorize(player.getEntityId());
+    //this.plugin.unauthorize(player.getEntityId());
   }
 
   public void onPlayerCommandPreprocess(PlayerChatEvent event)
   {
     String[] split = event.getMessage().split(" ");
-			//int derp = split[0].compareTo("login");
-              Player player = event.getPlayer();
+	Player player = event.getPlayer();
     if (split[0].equals("/login")) {
-      if (this.plugin.isAuthorized(player.getEntityId())) {			  
+      if (AuthDB.isAuthorized(player.getEntityId())) {			  
 				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
       }
       else if (split.length < 2) {
@@ -122,13 +156,11 @@ public TimerTask CheckIdle(Player player)
         if (inv != null)
          player.getInventory().setContents(inv);
         this.plugin.authorize(player.getEntityId());
-			      Messages.SendMessage("AuthDB_message_login_success", player,null);
-				 } else if (Config.password_kick) {
+	    Messages.SendMessage("AuthDB_message_login_success", player,null);
+	} else if (Config.password_kick) {
        ItemStack[] inv = this.plugin.getInventory(player.getName());
       if (inv != null)
           player.getInventory().setContents(inv);
-				  Messages.SendMessage("AuthDB_message_login_failure", player,null);
-      } else {
 				  Messages.SendMessage("AuthDB_message_login_failure", player,null);
       }
      event.setMessage("/login ******");
@@ -167,7 +199,7 @@ public TimerTask CheckIdle(Player player)
       }
       event.setMessage("/register *****");
        event.setCancelled(true);
-     } else if (!this.plugin.isAuthorized(player.getEntityId())) {
+     } else if (!AuthDB.isAuthorized(player.getEntityId())) {
       event.setCancelled(true);
      event.setMessage("");
     }
@@ -175,7 +207,7 @@ public TimerTask CheckIdle(Player player)
 
   public void onPlayerMove(PlayerMoveEvent event)
   {
-    if (!this.plugin.isAuthorized(event.getPlayer().getEntityId())) {
+    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId())) {
       event.setCancelled(true);
      event.getPlayer().teleportTo(event.getFrom());
     }
@@ -183,7 +215,7 @@ public TimerTask CheckIdle(Player player)
 
   public void onPlayerChat(PlayerChatEvent event)
   {
-    if (!this.plugin.isAuthorized(event.getPlayer().getEntityId()))
+    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
        event.setCancelled(true);
   }
 
@@ -191,5 +223,15 @@ public TimerTask CheckIdle(Player player)
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
       event.setCancelled(true);
+  }
+  public void onPlayerPickupItem(PlayerPickupItemEvent event) 
+  {
+	    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+	      event.setCancelled(true);
+  }
+
+  public void onPlayerRespawn(PlayerRespawnEvent event) 
+  {
+	 // AuthDB.deleteInventory(event.getPlayer().getName());
   }
 }

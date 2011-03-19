@@ -31,8 +31,10 @@ public class MySQL
 		}
 		
 		if(Config.debug_enable) Utils.Debug("MySQL: "+Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
-		Utils.Log("info", Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
-		mysql = DriverManager.getConnection(Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
+		//mysql = DriverManager.getConnection(Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
+        //Class.forName("com.mysql.jdbc.Driver");
+        mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
+        mysql.setAutoCommit(true);
 		PreparedStatement ps = null;
 		if(Config.script_name.equals(Config.script_name1)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
 		else if(Config.script_name.equals(Config.script_name2)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }

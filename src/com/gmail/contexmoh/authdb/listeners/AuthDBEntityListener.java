@@ -7,14 +7,16 @@
  **/
 package com.gmail.contexmoh.authdb.listeners;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.gmail.contexmoh.authdb.AuthDB;
 
 
-public class AuthDBEntityListener extends BlockListener
+public class AuthDBEntityListener extends EntityListener
 {
 private final AuthDB plugin;
 
@@ -23,10 +25,15 @@ public AuthDBEntityListener(AuthDB instance)
    this.plugin = instance;
 }
 
+public void onEntityTarget(EntityTargetEvent event)
+{
+  if (((event.getEntity() instanceof Player)) && AuthDB.isAuthorized(event.getEntity().getEntityId()) == false)
+	   event.setCancelled(true);
+}
+
 public void onEntityDamage(EntityDamageEvent event) 
 	{
-	     if (((event.getEntity() instanceof Player)) && 
-	     (!this.plugin.isAuthorized(event.getEntity().getEntityId())))
-	      event.setCancelled(true);
+	   if (((event.getEntity() instanceof Player)) && AuthDB.isAuthorized(event.getEntity().getEntityId()) == false)
+		   event.setCancelled(true);
 	}
 }

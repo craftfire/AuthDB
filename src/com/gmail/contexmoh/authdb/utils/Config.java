@@ -64,6 +64,7 @@ public class Config
 		///////////////////////////////////////////
 		public static String idle_time = "seconds",idle_length = "30",idle_whitelist="";
 		public static boolean idle_kick;
+		public static int idle_ticks;
   
 		///////////////////////////////////////////
 		//               guests
@@ -159,6 +160,7 @@ public class Config
 					idle_length= GetConfigString("settings.idle.length", "30");
 					idle_kick= GetConfigBoolean("settings.idle.kick", true);
 					idle_whitelist= GetConfigString("settings.idle.whitelist", "");
+					idle_ticks = Utils.ToTicks(Config.idle_time,Config.idle_length);
 			  
 					///////////////////////////////////////////
 					//               guests
@@ -247,7 +249,8 @@ public class Config
 					///////////////////////////////////////////
 					Messages.AuthDB_message_login_success = Config.GetConfigString("messages.AuthDB.login.success", "&2Password accepted. Welcome!");
 					Messages.AuthDB_message_login_failure = Config.GetConfigString("messages.AuthDB.login.failure", "&4Password incorrect, please try again.");
-					Messages.AuthDB_message_login_authorized = Config.GetConfigString("messages.AuthDB.login.authorized", "&2Hey, I remember you! You are logged in.");
+					Messages.AuthDB_message_login_authorized = Config.GetConfigString("messages.AuthDB.login.authorized", "&2You are already logged in!");
+					Messages.AuthDB_message_login_session= Config.GetConfigString("messages.AuthDB.login.session", "&2Hey, I remember you! You are logged in!");
 					Messages.AuthDB_message_login_usage = Config.GetConfigString("messages.AuthDB.login.usage", "&4Correct usage is: /login <password>");
 					
 					///////////////////////////////////////////

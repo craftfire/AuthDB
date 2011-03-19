@@ -7,7 +7,10 @@
  **/
 package com.gmail.contexmoh.authdb.listeners;
 
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockInteractEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
@@ -30,6 +33,13 @@ public class AuthDBBlockListener extends BlockListener
 
   public void onBlockDamage(BlockDamageEvent event) {
    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+      event.setCancelled(true);
+  }
+  
+  public void onBlockInteract(BlockInteractEvent event) {
+    LivingEntity e = event.getEntity();
+    if ((e != null) && ((e instanceof HumanEntity)) && 
+      (!AuthDB.isAuthorized(e.getEntityId())))
       event.setCancelled(true);
   }
 }

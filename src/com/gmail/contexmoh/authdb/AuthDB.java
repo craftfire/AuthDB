@@ -7,8 +7,12 @@
  **/
 package com.gmail.contexmoh.authdb;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,7 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -40,7 +48,6 @@ import com.gmail.contexmoh.authdb.listeners.AuthDBEntityListener;
 import com.gmail.contexmoh.authdb.listeners.AuthDBPlayerListener;
 import com.gmail.contexmoh.authdb.plugins.zCraftIRC;
 import com.gmail.contexmoh.authdb.utils.Config;
-import com.gmail.contexmoh.authdb.utils.Messages;
 import com.gmail.contexmoh.authdb.utils.MySQL;
 import com.gmail.contexmoh.authdb.utils.Utils;
 
@@ -55,9 +62,8 @@ public class AuthDB extends JavaPlugin {
 	private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
 	private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
 	private static List<Integer> authorizedIds = new ArrayList();
-	//dadada
 	public static HashMap<String, String> db = new HashMap();
-	public static String dbFileName = "auths.db";
+	public static String idleFileName = "idle.db";
 	public static Logger log = Logger.getLogger("Minecraft");
 	public HashMap<String, ItemStack[]> inventories = new HashMap();
 
@@ -65,8 +71,8 @@ public class AuthDB extends JavaPlugin {
 	{
 		zCraftIRC.SendMessage("disconnect",null);
 		disableInventory();
-		this.authorizedIds.clear();
-		this.db.clear();
+		authorizedIds.clear();
+		db.clear();
 		MySQL.close();
 	 }
 
@@ -103,7 +109,7 @@ public class AuthDB extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Priority.High, this);
+		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Priority.Monitor, this);
 		pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_ITEM, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Lowest, this);
@@ -168,12 +174,14 @@ public class AuthDB extends JavaPlugin {
 
 	public boolean isRegistered(String player) {
 		try {
+			Utils.Debug("Running function: isRegistered(String player)");
 			if(Config.script_name.equals(Config.script_name1)) { if(phpBB3.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name2)) { if(SMF1.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name3)) { if(SMF2.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name4)) { if(myBB1_6.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name5)) { if(vB4_1.checkuser(player.toLowerCase())) { return true; } }
 			else { Stop("Can't find a forum board, stopping the plugin."); }
+			Utils.Debug("No user!");
 		} catch (SQLException e) 
 		{
 			e.printStackTrace();
@@ -185,7 +193,13 @@ public class AuthDB extends JavaPlugin {
 
 	public boolean checkEmail(String email)
 	{
-		return !email.contains("'");
+	      Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
+	      Matcher m = p.matcher(email);
+	      boolean Matches = m.matches();
+	      if (Matches)
+	        return true;
+	      else
+	        return false;
 	}
 	
 	public void storeInventory(String player, ItemStack[] inventory) throws IOException {
@@ -216,18 +230,101 @@ public class AuthDB extends JavaPlugin {
 		inventories.clear();
 	}
 	
-	public void updateDb() throws IOException 
+	public String IdleGetTaskID(Player player)
 	{
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), this.dbFileName)));
-		Set keys = AuthDB.db.keySet();
-		Iterator i = keys.iterator();
-		while (i.hasNext()) 
+		/*BufferedReader reader = new BufferedReader(new FileReader(new File(getDataFolder(), idleFileName)));
+		String currentLine;
+
+		while((currentLine = reader.readLine()) != null) 
 		{
-			String key = (String)i.next();
-			bw.append(key + ":" + (String)AuthDB.db.get(key));
-			bw.newLine();
+			String[] thelinearray = currentLine.split(":");
+			  if(thelinearray[0].equals(player.getName()))
+				  return thelinearray[1];
 		}
-		bw.close();
+		return "no";*/
+		/*int length = IdleNames.size();
+		int counter = 0;
+		int dupe = 99999999;
+		while(length > counter)
+		{
+			Utils.Debug("DERP: "+counter+"-"+IdleNames.get(counter));
+			if(IdleNames.get(counter).equals(String.valueOf(player.getName())))
+				dupe = counter;
+			counter++;
+		}
+		return IdleIds.get(dupe); */
+		return (String)this.db.get(player.getName().toLowerCase());
+	} 
+	
+	  public void updateDb() throws IOException {
+		    BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), idleFileName)));
+		    Set keys = this.db.keySet();
+		    Iterator i = keys.iterator();
+		    while (i.hasNext()) {
+		      String key = (String)i.next();
+		      bw.append(key + ":" + (String)this.db.get(key));
+		      bw.newLine();
+		    }
+		    bw.close();
+		  }
+
+	
+	public boolean IdleTask(String type,Player player, String TaskID) throws IOException 
+	{
+		if(type.equals("add"))
+		{
+			/*BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), idleFileName)));
+			bw.append(player.getName() + ":" + TaskID);
+			bw.newLine();
+			bw.close();
+			return true;*/
+			//IdleIds.add(Integer.valueOf(TaskID));
+			//IdleNames.add(String.valueOf(player.getName()));
+			this.db.put(player.getName().toLowerCase(), TaskID);
+			//((HashMap<String, String>) IdleIds).put(player.getName().toLowerCase(), TaskID);
+			return true;
+			
+		}
+		
+		else if(type.equals("remove"))
+		{
+			/*File tempFile = new File(getDataFolder(),"temp.db");
+			File realFile = new File(getDataFolder(),idleFileName);
+			BufferedReader reader = new BufferedReader(new FileReader(realFile));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+			String currentLine;
+
+			while((currentLine = reader.readLine()) != null) {
+			    String[] thelinearray = currentLine.split(":");
+				  if(thelinearray[0].equals(player.getName())) continue;
+			    writer.write(currentLine);
+			}
+
+			tempFile.renameTo(realFile);
+			return true;*/
+			this.db.remove(player.getName());
+		//	IdleIds.remove(Integer.valueOf(IdleGetTaskID(player)));
+			//IdleNames.remove(String.valueOf(player.getName()));
+			return true;
+		}
+		else if(type.equals("check"))
+		{
+			/*BufferedReader reader = new BufferedReader(new FileReader(new File(getDataFolder(), idleFileName)));
+			String currentLine;
+
+			while((currentLine = reader.readLine()) != null) 
+			{
+				if(Config.debug_enable) Utils.Debug("Current line: "+currentLine);
+				String[] thelinearray = currentLine.split(":");
+				if(Config.debug_enable) Utils.Debug("Name: "+thelinearray[0]+" TaskID: "+thelinearray[1]);
+				  if(thelinearray[0].equals(player.getName())) 
+			        	return true;
+			}
+			*/
+			if(this.db.containsKey(player.getName().toLowerCase()))
+				return true;
+		}
+		return false;
 	}
 	
 	public ItemStack[] getInventory(String player) 
@@ -271,4 +368,11 @@ public class AuthDB extends JavaPlugin {
 		}
 		return null;
 	}
+	
+	/*  public void deleteInventory(String player) {
+		    File f = new File(getDataFolder(),player + "_inv");
+		    if (f.exists())
+		      f.delete();
+		  }
+		  */
 }

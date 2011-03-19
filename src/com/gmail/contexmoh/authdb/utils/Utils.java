@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 
 import org.bukkit.entity.Player;
 
@@ -21,19 +22,19 @@ import com.gmail.contexmoh.authdb.AuthDB;
 
 public class Utils
 {  
-	public static int ToSeconds(String time, String length) {
-		if(Config.debug_enable) Log("info","Launching function: ToSeconds(String time, String length)");
+	public static int ToTicks(String time, String length) {
+		if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
 		time = time.toLowerCase();
 		int lengthint = Integer.parseInt( length );
 		if(time.equals("days")) 
-			return lengthint * 86400;
+			return lengthint * 1728000;
 		else if(time.equals("hours")) 
-			return lengthint * 3600;
+			return lengthint * 72000;
 		else if(time.equals("minutes")) 
-			return lengthint * 60;
+			return lengthint * 1200;
 		else if(time.equals("seconds")) 
-			return lengthint;
-		return 30;
+			return lengthint * 20;
+		return 600;
 	}
 	
 	public static String ToDriver(String dataname)
@@ -119,7 +120,7 @@ public class Utils
 	
 	public static boolean checkUsernameCharacters(String username)
 	{
-		if(Config.debug_enable) Debug("Launching function: checkUsernameCharacters(String username)");
+		if(Config.debug_enable) Debug("Launching function: checkUsernameCharacters(String username) - "+Config.badcharacters_characters);
 		int lengtha = username.length();
 		int lengthb = Config.badcharacters_characters.length();
 	    int i = 0;
@@ -131,7 +132,12 @@ public class Utils
 	    	while(a < lengthb)
 	    	{
 	    		thechar2 = Config.badcharacters_characters.charAt(a);
-	    		if(thechar1 == thechar2) { return false; }
+	    		if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
+	    		if(thechar1 == thechar2) 
+	    		{ 
+	    			if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
+	    			return false; 
+	    		}
 	    		a++;
 	    	}
 		    i++;
@@ -146,11 +152,52 @@ public class Utils
 		if(Config.debug_enable) Debug("Launching function: replaceStrings(String string, Player player, String additional)");
 		string = string.replaceAll("\\{IP\\}", GetIP(player));
 		string = string.replaceAll("\\{PLAYER\\}", player.getName());
-		string = string.replaceAll("\\{NEWPLAYER}\\}", additional);
-		string = string.replaceAll("\\{PLUGIN}\\}", AuthDB.pluginname);
-		string = string.replaceAll("\\{VERSION}\\}", AuthDB.pluginversion);
-		string = string.replaceAll("\\{IDLESECONDS}\\}", additional);
-		string = string.replaceAll("\\{BADCHARACTERS}\\}", Config.badcharacters_characters);
+		string = string.replaceAll("\\{NEWPLAYER\\}", "");
+		string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
+		string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
+		string = string.replaceAll("\\{IDLELENGTH\\}", Config.idle_length);
+		string = string.replaceAll("\\{IDLETIME\\}", Config.idle_time);
+		string = string.replaceAll("\\{BADCHARACTERS\\}",Matcher.quoteReplacement(Config.badcharacters_characters));
+		string = string.replaceAll("\\{PROVINCE\\}", "");
+		string = string.replaceAll("\\{STATE\\}", "");
+		string = string.replaceAll("\\{COUNTRY\\}", "");
+		string = string.replaceAll("\\{AGE\\}", "");
+		string = string.replaceAll("&", "§");
+		///COLORS
+		string = string.replaceAll("\\<BLACK\\>", "§0");
+		string = string.replaceAll("\\<NAVY\\>", "§1");
+		string = string.replaceAll("\\<GREEN\\>", "§2");
+		string = string.replaceAll("\\<BLUE\\>", "§3");
+		string = string.replaceAll("\\<RED\\>", "§4");
+		string = string.replaceAll("\\<PURPLE\\>", "§5");
+		string = string.replaceAll("\\<GOLD\\>", "§6");
+		string = string.replaceAll("\\<LIGHTGRAY\\>", "§7");
+		string = string.replaceAll("\\<GRAY\\>", "§8");
+		string = string.replaceAll("\\<DARKPURPLE\\>", "§9");
+		string = string.replaceAll("\\<LIGHTGREEN\\>", "§a");
+		string = string.replaceAll("\\<LIGHTBLUE\\>", "§b");
+		string = string.replaceAll("\\<ROSE\\>", "§c");
+		string = string.replaceAll("\\<LIGHTPURPLE\\>", "§d");
+		string = string.replaceAll("\\<YELLOW\\>", "§e");
+		string = string.replaceAll("\\<WHITE\\>", "§f");
+		
+		///colors
+		string = string.replaceAll("\\<black\\>", "§0");
+		string = string.replaceAll("\\<navy\\>", "§1");
+		string = string.replaceAll("\\<green\\>", "§2");
+		string = string.replaceAll("\\<blue\\>", "§3");
+		string = string.replaceAll("\\<red\\>", "§4");
+		string = string.replaceAll("\\<purple\\>", "§5");
+		string = string.replaceAll("\\<gold\\>", "§6");
+		string = string.replaceAll("\\<lightgray\\>", "§7");
+		string = string.replaceAll("\\<gray\\>", "§8");
+		string = string.replaceAll("\\<darkpurple\\>", "§9");
+		string = string.replaceAll("\\<lightgreen\\>", "§a");
+		string = string.replaceAll("\\<lightblue\\>", "§b");
+		string = string.replaceAll("\\<rose\\>", "§c");
+		string = string.replaceAll("\\<lightpurple\\>", "§d");
+		string = string.replaceAll("\\<yellow\\>", "§e");
+		string = string.replaceAll("\\<white\\>", "§f");
 		return string;
 	}
 	
