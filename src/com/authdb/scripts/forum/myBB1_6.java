@@ -1,20 +1,28 @@
-/**
- * Copyright (C) 2011 Contex <contexmoh@gmail.com>
- * 
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
- * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- **/  
-package com.gmail.contexmoh.authdb.boards;
+/**          © Copyright 2011 Contex <contexmoh@gmail.com>
+	
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+package com.authdb.scripts.forum;
 
   import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
 
-import com.gmail.contexmoh.authdb.utils.Config;
-import com.gmail.contexmoh.authdb.utils.MySQL;
-import com.gmail.contexmoh.authdb.utils.Utils;
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
 
 
   public class myBB1_6 {
@@ -22,7 +30,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
     {
   	long timestamp = System.currentTimeMillis()/1000;
-  	String salt = Utils.getRandomString2(8);
+  	String salt = Util.getRandomString2(8);
   	String hash = myBB1_6_hash("create",player,password, salt);
   	///int userid;
   	//
@@ -37,7 +45,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	ps.setLong(6, timestamp); //lastactive
   	ps.setLong(7, timestamp); //lastvisit
   	ps.setString(8, ipAddress); //regip
-  	//ps.setLong(9, Utils.IP2Long(ipAddress)); //longregip
+  	//ps.setLong(9, Util.IP2Long(ipAddress)); //longregip
 	ps.setString(9, "2130706433");
   	//need to add these, it's complaining about not default is set.
 	ps.setString(10, ""); //signature
@@ -63,9 +71,9 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     	else if(i == 6) 
     	{ 
     		numusers = st.nextToken();
-    		numusers = Utils.removeChar(numusers,'"');
-			numusers = Utils.removeChar(numusers,'s');
-			numusers = Utils.removeChar(numusers,';');
+    		numusers = Util.removeChar(numusers,'"');
+			numusers = Util.removeChar(numusers,'s');
+			numusers = Util.removeChar(numusers,';');
 			numusers = numusers.trim();
 			int numuserNumber = Integer.parseInt(numusers) + 1;
 			totalusers += numuserNumber;
@@ -100,7 +108,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
       {  
     	  newcache += st.nextToken()+":"; 
       }
-     Utils.Log("info",i+"-"+st.nextToken()+":"); 
+     Util.Log("info",i+"-"+st.nextToken()+":"); 
       i++;
     }
   StringTokenizer st2 = new StringTokenizer(newcache,":");
@@ -170,6 +178,6 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	
   	public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
   	{
-  	return Utils.md5Hash(Utils.md5Hash(salt) + Utils.md5Hash(password));
+  	return Util.md5Hash(Util.md5Hash(salt) + Util.md5Hash(password));
   	}
 }

@@ -1,4 +1,19 @@
-package com.gmail.contexmoh.authdb.utils;
+/**          © Copyright 2011 Contex <contexmoh@gmail.com>
+	
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+package com.authdb.util.databases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +21,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+
+import com.authdb.util.Config;
+import com.authdb.util.Util;
 
 
 public class MySQL
@@ -16,21 +34,21 @@ public class MySQL
 	
 	public static void connect() throws ClassNotFoundException, SQLException
 	{
-		Class.forName(Utils.ToDriver(Config.database_driver));
+		Class.forName(Util.ToDriver(Config.database_driver));
 		if(Config.debug_enable)
 		{
-			Utils.Debug("Lauching function: connect()");
-			Utils.Debug("MySQL: "+Config.dbDb);
-			Utils.Debug("MySQL driver: "+Config.database_driver);
-			Utils.Debug("MySQL username: "+Config.database_username);
-			Utils.Debug("MySQL password: "+Config.database_password);
-			Utils.Debug("MySQL host: "+Config.database_host);
-			Utils.Debug("MySQL port: "+Config.database_port);
-			Utils.Debug("MySQL database: "+Config.database_database);
-			Utils.Debug("MySQL prefix: "+Config.database_prefix);
+			Util.Debug("Lauching function: connect()");
+			Util.Debug("MySQL: "+Config.dbDb);
+			Util.Debug("MySQL driver: "+Config.database_driver);
+			Util.Debug("MySQL username: "+Config.database_username);
+			Util.Debug("MySQL password: "+Config.database_password);
+			Util.Debug("MySQL host: "+Config.database_host);
+			Util.Debug("MySQL port: "+Config.database_port);
+			Util.Debug("MySQL database: "+Config.database_database);
+			Util.Debug("MySQL prefix: "+Config.database_prefix);
 		}
 		
-		if(Config.debug_enable) Utils.Debug("MySQL: "+Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
+		if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
 		//mysql = DriverManager.getConnection(Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
         //Class.forName("com.mysql.jdbc.Driver");
         mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
@@ -42,7 +60,7 @@ public class MySQL
 		else if(Config.script_name.equals(Config.script_name4)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
 		else if(Config.script_name.equals(Config.script_name5)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"user"+"`"); }
 		ResultSet rs = ps.executeQuery();
-		if (rs.next()) { Utils.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
 	}
 	
 	public static int countitall(String table) throws SQLException

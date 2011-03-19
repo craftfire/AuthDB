@@ -1,20 +1,28 @@
-/**
- * Copyright (C) 2011 Contex <contexmoh@gmail.com>
- * 
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
- * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- **/  
-package com.gmail.contexmoh.authdb.boards;
+/**          © Copyright 2011 Contex <contexmoh@gmail.com>
+	
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+package com.authdb.scripts.forum;
 
   import java.io.UnsupportedEncodingException;
   import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
 
-import com.gmail.contexmoh.authdb.utils.Config;
-import com.gmail.contexmoh.authdb.utils.MySQL;
-import com.gmail.contexmoh.authdb.utils.Utils;
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
 
 
   public class vB4_1 {
@@ -22,7 +30,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
     {
   	long timestamp = System.currentTimeMillis()/1000;
-  	String salt = Utils.fetch_user_salt(30);
+  	String salt = Util.fetch_user_salt(30);
   	String passwordhashed = hash("create",player,password, salt);
   	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
   //	int userid;
@@ -40,14 +48,14 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	ps.setLong(8, timestamp); //lastactivity
   	ps.setString(9, "5"); //reputationlevelid
 	ps.setString(10, "45108311"); //options
-	ps.setLong(11, Utils.IP2Long(ipAddress)); //ipaddress
+	ps.setLong(11, Util.IP2Long(ipAddress)); //ipaddress
 	ps.setString(12, salt); //salt
 	ps.setString(13, player); //username
     ps.executeUpdate();
      
    /*  userid = MySQL.countitall(ForumAuth.forumPrefix+"user");
     String oldcache =  MySQL.getfromtable(ForumAuth.forumPrefix+"datastore", "`data`", "title", "userstats");
-    Utils.Log("info",oldcache);
+    Util.Log("info",oldcache);
     StringTokenizer st = new StringTokenizer(oldcache,":");
     int i = 0, usernamelength = player.length();
     String numusers, lastuid, lastusername, totalusers = "", newcache = "";
@@ -60,9 +68,9 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     	else if(i == 6) 
     	{ 
     		numusers = st.nextToken();
-    		numusers = Utils.removeChar(numusers,'"');
-			numusers = Utils.removeChar(numusers,'s');
-			numusers = Utils.removeChar(numusers,';');
+    		numusers = Util.removeChar(numusers,'"');
+			numusers = Util.removeChar(numusers,'s');
+			numusers = Util.removeChar(numusers,';');
 			numusers = numusers.trim();
 			int numuserNumber = Integer.parseInt(numusers) + 1;
 			totalusers += numuserNumber;
@@ -97,7 +105,7 @@ import com.gmail.contexmoh.authdb.utils.Utils;
       {  
     	  newcache += st.nextToken()+":"; 
       }
-   //   Utils.Log("info",i+"-"+st.nextToken()+":"); 
+   //   Util.Log("info",i+"-"+st.nextToken()+":"); 
       i++;
     }
     StringTokenizer st2 = new StringTokenizer(newcache,":");
@@ -138,8 +146,8 @@ import com.gmail.contexmoh.authdb.utils.Utils;
     	{
   	try {
   		String salt = MySQL.getfromtable(Config.database_prefix+"user", "`salt`", "username", player);
-  		Utils.Log("info", salt);
-  		Utils.Log("info", passwordHash(password, salt));
+  		Util.Log("info", salt);
+  		Util.Log("info", passwordHash(password, salt));
   		return passwordHash(password, salt);
   	} catch (NoSuchAlgorithmException e) {
   		e.printStackTrace();
@@ -170,6 +178,6 @@ import com.gmail.contexmoh.authdb.utils.Utils;
   	
   	public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
   	{
-  	return Utils.md5Hash(Utils.md5Hash(password)+salt);
+  	return Util.md5Hash(Util.md5Hash(password)+salt);
   	}
 }

@@ -1,11 +1,19 @@
-/**
- * Copyright (C) 2011 Contex <contexmoh@gmail.com>
- * 
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
- * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- **/
-package com.gmail.contexmoh.authdb;
+/**          © Copyright 2011 Contex <contexmoh@gmail.com>
+	
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+package com.authdb;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,26 +42,28 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.authdb.listeners.AuthDBBlockListener;
+import com.authdb.listeners.AuthDBEntityListener;
+import com.authdb.listeners.AuthDBPlayerListener;
+import com.authdb.plugins.zCraftIRC;
+import com.authdb.scripts.forum.SMF1;
+import com.authdb.scripts.forum.SMF2;
+import com.authdb.scripts.forum.myBB1_6;
+import com.authdb.scripts.forum.phpBB3;
+import com.authdb.scripts.forum.vB4_1;
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
 import com.ensifera.animosity.craftirc.CraftIRC;
-import com.gmail.contexmoh.authdb.boards.SMF1;
-import com.gmail.contexmoh.authdb.boards.SMF2;
-import com.gmail.contexmoh.authdb.boards.myBB1_6;
-import com.gmail.contexmoh.authdb.boards.phpBB3;
-import com.gmail.contexmoh.authdb.boards.vB4_1;
-import com.gmail.contexmoh.authdb.listeners.AuthDBBlockListener;
-import com.gmail.contexmoh.authdb.listeners.AuthDBEntityListener;
-import com.gmail.contexmoh.authdb.listeners.AuthDBPlayerListener;
-import com.gmail.contexmoh.authdb.plugins.zCraftIRC;
-import com.gmail.contexmoh.authdb.utils.Config;
-import com.gmail.contexmoh.authdb.utils.MySQL;
-import com.gmail.contexmoh.authdb.utils.Utils;
 
 
 public class AuthDB extends JavaPlugin {
 	//
+	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
 	public static String pluginversion = "1.4";
 	public static CraftIRC craftircHandle = null;
@@ -82,21 +92,21 @@ public class AuthDB extends JavaPlugin {
 		Config TheMessages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
 		/*if (null == getConfiguration().getKeys("messages")) 
 		{
-		    Utils.Log("info", "messages.yml could not be found in plugins/AuthDB/ -- disabling!");
+		    Util.Log("info", "messages.yml could not be found in plugins/AuthDB/ -- disabling!");
 		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
 		    return;
 		}*/
 		Config TheConfig = new Config("config","plugins/"+pluginname+"/", "config.yml");
 		if (null == getConfiguration().getKeys("settings")) 
 		{
-		    Utils.Log("info", "config.yml could not be found in plugins/AuthDB/ -- disabling!");
+		    Util.Log("info", "config.yml could not be found in plugins/AuthDB/ -- disabling!");
 		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
 		    return;
 		}
 		Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
 		if (checkCraftIRC != null && Config.CraftIRC_enabled == true) {
 		    try {
-		        	Utils.Log("info", "CraftIRC Support Enabled"); 
+		        	Util.Log("info", "CraftIRC Support Enabled"); 
 		        	craftircHandle = (CraftIRC) checkCraftIRC;
 		        	zCraftIRC.SendMessage("connect",null);
 		        } 
@@ -113,9 +123,14 @@ public class AuthDB extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_ITEM, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Lowest, this);
+	    pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, this.playerListener, Event.Priority.Lowest, this);
+	    pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACED, this.blockListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGED, this.blockListener, Event.Priority.Lowest, this);
+		pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Lowest, this);
+		pm.registerEvent(Event.Type.BLOCK_INTERACT, this.blockListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGED, this.entityListener, Event.Priority.Lowest, this);
+		
 		try { MySQL.connect(); } 
 		catch (ClassNotFoundException e) 
 		{
@@ -127,9 +142,9 @@ public class AuthDB extends JavaPlugin {
 			e.printStackTrace();
 			Stop("ERRORS in the SQLException. Plugin will NOT work. Disabling it.");
 		}
-		Utils.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
-		if(Config.debug_enable) Utils.Log("info", "Debug is ENABLED, get ready for some heavy spam");
-		Utils.Log("info", pluginname + " is developed by Contex | contexmoh@gmail.com");
+		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
+		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
+		Util.Log("info", pluginname + " is developed by Contex | contexmoh@gmail.com");
 	}
 
     public static boolean isAuthorized(int id) { return authorizedIds.contains(Integer.valueOf(id)); }
@@ -156,7 +171,7 @@ public class AuthDB extends JavaPlugin {
 	
 	void Stop(String error)
 	{
-		Utils.Log("warning",error);
+		Util.Log("warning",error);
 		getServer().getPluginManager().disablePlugin(((org.bukkit.plugin.Plugin) (this)));
 	}
 	
@@ -174,14 +189,14 @@ public class AuthDB extends JavaPlugin {
 
 	public boolean isRegistered(String player) {
 		try {
-			Utils.Debug("Running function: isRegistered(String player)");
+			Util.Debug("Running function: isRegistered(String player)");
 			if(Config.script_name.equals(Config.script_name1)) { if(phpBB3.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name2)) { if(SMF1.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name3)) { if(SMF2.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name4)) { if(myBB1_6.checkuser(player.toLowerCase())) { return true; } }
 			else if(Config.script_name.equals(Config.script_name5)) { if(vB4_1.checkuser(player.toLowerCase())) { return true; } }
 			else { Stop("Can't find a forum board, stopping the plugin."); }
-			Utils.Debug("No user!");
+			Util.Debug("No user!");
 		} catch (SQLException e) 
 		{
 			e.printStackTrace();
@@ -247,7 +262,7 @@ public class AuthDB extends JavaPlugin {
 		int dupe = 99999999;
 		while(length > counter)
 		{
-			Utils.Debug("DERP: "+counter+"-"+IdleNames.get(counter));
+			Util.Debug("DERP: "+counter+"-"+IdleNames.get(counter));
 			if(IdleNames.get(counter).equals(String.valueOf(player.getName())))
 				dupe = counter;
 			counter++;
@@ -314,9 +329,9 @@ public class AuthDB extends JavaPlugin {
 
 			while((currentLine = reader.readLine()) != null) 
 			{
-				if(Config.debug_enable) Utils.Debug("Current line: "+currentLine);
+				if(Config.debug_enable) Util.Debug("Current line: "+currentLine);
 				String[] thelinearray = currentLine.split(":");
-				if(Config.debug_enable) Utils.Debug("Name: "+thelinearray[0]+" TaskID: "+thelinearray[1]);
+				if(Config.debug_enable) Util.Debug("Name: "+thelinearray[0]+" TaskID: "+thelinearray[1]);
 				  if(thelinearray[0].equals(player.getName())) 
 			        	return true;
 			}
@@ -333,7 +348,7 @@ public class AuthDB extends JavaPlugin {
 		if (inventories.containsKey(player.toLowerCase())) 
 		{
 			if ((f.exists()) && (!f.delete()))
-				Utils.Log("warning", "Unable to delete user inventory file: " + player + "_inv");
+				Util.Log("warning", "Unable to delete user inventory file: " + player + "_inv");
 			return (ItemStack[])inventories.remove(player.toLowerCase());
 		}
 		if (f.exists()) 
@@ -357,7 +372,7 @@ public class AuthDB extends JavaPlugin {
 			}
 			s.close();
 			if (!f.delete())
-			Utils.Log("warning", "Unable to delete user inventory file: " + player + "_inv");
+			Util.Log("warning", "Unable to delete user inventory file: " + player + "_inv");
 			} 
 			catch (IOException e) 
 			{

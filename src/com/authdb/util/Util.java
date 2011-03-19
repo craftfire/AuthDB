@@ -1,12 +1,20 @@
-/**
- * Copyright (C) 2011 Contex <contexmoh@gmail.com>
- * 
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
- * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- **/
+/**          © Copyright 2011 Contex <contexmoh@gmail.com>
+	
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-package com.gmail.contexmoh.authdb.utils;
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+
+package com.authdb.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -18,9 +26,9 @@ import java.util.regex.Matcher;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.contexmoh.authdb.AuthDB;
+import com.authdb.AuthDB;
 
-public class Utils
+public class Util
 {  
 	public static int ToTicks(String time, String length) {
 		if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
@@ -136,12 +144,14 @@ public class Utils
 	    		if(thechar1 == thechar2) 
 	    		{ 
 	    			if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
+	    			Config.has_badcharacters = true;
 	    			return false; 
 	    		}
 	    		a++;
 	    	}
 		    i++;
 	    }
+	    Config.has_badcharacters = false;
 		return true;
 	}
 	
@@ -150,9 +160,12 @@ public class Utils
 	public static String replaceStrings(String string, Player player, String additional)
 	{
 		if(Config.debug_enable) Debug("Launching function: replaceStrings(String string, Player player, String additional)");
-		string = string.replaceAll("\\{IP\\}", GetIP(player));
-		string = string.replaceAll("\\{PLAYER\\}", player.getName());
-		string = string.replaceAll("\\{NEWPLAYER\\}", "");
+		if(!Config.has_badcharacters)
+		{
+			string = string.replaceAll("\\{IP\\}", GetIP(player));
+			string = string.replaceAll("\\{PLAYER\\}", player.getName());
+			string = string.replaceAll("\\{NEWPLAYER\\}", "");
+		}
 		string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
 		string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
 		string = string.replaceAll("\\{IDLELENGTH\\}", Config.idle_length);

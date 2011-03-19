@@ -1,19 +1,27 @@
-/**
- * Copyright (C) 2011 Contex <contexmoh@gmail.com>
- * 
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
- * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- **/
-package com.gmail.contexmoh.authdb.boards;
+/**          © Copyright 2011 Contex <contexmoh@gmail.com>
+	
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+package com.authdb.scripts.forum;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.gmail.contexmoh.authdb.AuthDB;
-import com.gmail.contexmoh.authdb.utils.Config;
-import com.gmail.contexmoh.authdb.utils.MySQL;
-import com.gmail.contexmoh.authdb.utils.Utils;
+import com.authdb.AuthDB;
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
 
 
 
@@ -108,8 +116,8 @@ public class phpBB3 {
 
 		for (int i = 0; i < count; i += 16)
 		{
-			random_state = Utils.md5(unique_id() + random_state);
-			random += Utils.pack(Utils.md5(random_state));
+			random_state = Util.md5(unique_id() + random_state);
+			random += Util.pack(Util.md5(random_state));
 		}
 		random = random.substring(0, count);
 	}
@@ -119,7 +127,7 @@ public class phpBB3 {
 	if (hash.length() == 34)
 		return hash;
 
-	return Utils.md5(password);
+	return Util.md5(password);
   }
 
   private static String unique_id() {
@@ -204,11 +212,11 @@ public class phpBB3 {
 		if (salt.length() != 8)
 			return output;
 
-		String m1 = Utils.md5(salt + password);
-		String hash = Utils.pack(m1);
+		String m1 = Util.md5(salt + password);
+		String hash = Util.pack(m1);
 		do
 		{
-			hash = Utils.pack(Utils.md5(hash + password));
+			hash = Util.pack(Util.md5(hash + password));
 		}
 		while (--count > 0);
 
@@ -223,6 +231,6 @@ public class phpBB3 {
 		if (hash.length() == 34)
 			return _hash_crypt_private(password, hash).equals(hash);
 		else
-			return Utils.md5(password).equals(hash);
+			return Util.md5(password).equals(hash);
 	}
 }

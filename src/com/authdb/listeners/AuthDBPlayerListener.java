@@ -1,12 +1,20 @@
-/**
- * Copyright (C) 2011 Contex <contexmoh@gmail.com>
- * 
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
- * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- **/
+/**          © Copyright 2011 Contex <contexmoh@gmail.com>
+	
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-package com.gmail.contexmoh.authdb.listeners;
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+
+package com.authdb.listeners;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -25,10 +33,10 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.gmail.contexmoh.authdb.AuthDB;
-import com.gmail.contexmoh.authdb.utils.Config;
-import com.gmail.contexmoh.authdb.utils.Messages;
-import com.gmail.contexmoh.authdb.utils.Utils;
+import com.authdb.AuthDB;
+import com.authdb.util.Config;
+import com.authdb.util.Messages;
+import com.authdb.util.Util;
 
 public class AuthDBPlayerListener extends PlayerListener
 {
@@ -43,12 +51,12 @@ public void onPlayerLogin(PlayerLoginEvent event)
 {
 	if(Config.badcharacters_kick || Config.badcharacters_remove)
 	{
-		if(Config.debug_enable) Utils.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
+		if(Config.debug_enable) Util.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
 		Player player = event.getPlayer();
 		String name = player.getName();
-		if (Utils.checkUsernameCharacters(name) == false && Utils.CheckWhitelist(name) == false)
+		if (Util.checkUsernameCharacters(name) == false && Util.CheckWhitelist(name) == false)
 	    {
-		  if(Config.debug_enable) Utils.Debug("The player is not in the whitelist and has bad characters in his/her name");
+		  if(Config.debug_enable) Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
 	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_badcharacters_kicked", player, event);
 	      else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_badcharacters_renamed", player, event);
 	    }
@@ -58,7 +66,7 @@ int Schedule;
 
 public boolean CheckIdle(Player player) throws IOException
 {
-	if(Config.debug_enable) Utils.Debug("Launching function: CheckIdle(Player player))");
+	if(Config.debug_enable) Util.Debug("Launching function: CheckIdle(Player player))");
 	if (AuthDB.isAuthorized(player.getEntityId()) == false && this.plugin.IdleTask("check",player, ""+Schedule))
 	{
 		Messages.SendMessage("AuthDB_message_idle_kick", player, null);
@@ -71,9 +79,9 @@ public boolean CheckIdle(Player player) throws IOException
   {
 	final Player player = event.getPlayer();
     try {
-	    if(Config.idle_kick == true && Utils.CheckWhitelist(player.getDisplayName()) == false)
+	    if(Config.idle_kick == true && Util.CheckWhitelist(player.getDisplayName()) == false)
 	    {
-	    	if(Config.debug_enable) Utils.Debug("Idle time is: "+Config.idle_ticks);
+	    	if(Config.debug_enable) Util.Debug("Idle time is: "+Config.idle_ticks);
 	    	Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    		@Override
 	    		public void run() 
@@ -81,12 +89,12 @@ public boolean CheckIdle(Player player) throws IOException
 	    			try {
 						CheckIdle(player);
 					} catch (IOException e) {
-						Utils.Log("warning", "Error checking if player was in the idle list");
+						Util.Log("warning", "Error checking if player was in the idle list");
 						e.printStackTrace();
 					} 
 	    		} }, Config.idle_ticks);
 	    	if(this.plugin.IdleTask("add",player, ""+Schedule))
-	    		if(Config.debug_enable) Utils.Debug(player.getName()+" added to the IdleTaskList");
+	    		if(Config.debug_enable) Util.Debug(player.getName()+" added to the IdleTaskList");
 	    	this.plugin.updateDb();
 	    }
    if (this.plugin.isRegistered(player.getName())) {
@@ -103,7 +111,7 @@ public boolean CheckIdle(Player player) throws IOException
         this.plugin.authorize(event.getPlayer().getEntityId());
       }
     } catch (IOException e) {
-      Utils.Log("severe","["+AuthDB.pluginname+"] Inventory file error:");
+      Util.Log("severe","["+AuthDB.pluginname+"] Inventory file error:");
       player.kickPlayer("inventory protection kicked");
        e.printStackTrace();
     player.sendMessage(Color.red + "Error happend, report to admins!");
@@ -118,18 +126,18 @@ public boolean CheckIdle(Player player) throws IOException
 		if(this.plugin.IdleTask("check",player, "0"))
 		 {
 			int TaskID = Integer.parseInt(this.plugin.IdleGetTaskID(player));
-			if(Config.debug_enable) Utils.Debug(player.getName()+" is in the IdleTaskList with ID: "+TaskID);
+			if(Config.debug_enable) Util.Debug(player.getName()+" is in the IdleTaskList with ID: "+TaskID);
 			if(this.plugin.IdleTask("remove",player, "0"))
 			{
-				if(Config.debug_enable) Utils.Debug(player.getName()+" was removed from the IdleTaskList");
+				if(Config.debug_enable) Util.Debug(player.getName()+" was removed from the IdleTaskList");
 				plugin.getServer().getScheduler().cancelTask(TaskID);
 			}
-			else { if(Config.debug_enable) Utils.Debug("Could not remove "+player.getName()+" from the idle list."); }
+			else { if(Config.debug_enable) Util.Debug("Could not remove "+player.getName()+" from the idle list."); }
 		 }
-		else { if(Config.debug_enable) Utils.Debug("Could not find "+player.getName()+" in the idle list, no need to remove."); }
+		else { if(Config.debug_enable) Util.Debug("Could not find "+player.getName()+" in the idle list, no need to remove."); }
 		this.plugin.updateDb();
 	} catch (IOException e) {
-		if(Config.debug_enable) Utils.Debug("Error with the Idle list, can't cancel task?");
+		if(Config.debug_enable) Util.Debug("Error with the Idle list, can't cancel task?");
 		e.printStackTrace();
 	}
    ItemStack[] inv = this.plugin.getInventory(player.getName());
@@ -181,9 +189,9 @@ public boolean CheckIdle(Player player) throws IOException
       else {
         try {
            if (split.length >= 3)
-             this.plugin.register(player.getName(), split[1], split[2],Utils.GetIP(player));
+             this.plugin.register(player.getName(), split[1], split[2],Util.GetIP(player));
           else
-            this.plugin.register(player.getName(), split[1],Utils.GetIP(player));
+            this.plugin.register(player.getName(), split[1],Util.GetIP(player));
           ItemStack[] inv = this.plugin.getInventory(player.getName());
          if (inv != null)
             player.getInventory().setContents(inv);

@@ -1,6 +1,6 @@
 name: AuthDB
 version: 1.4
-main: com.gmail.contexmoh.authdb.AuthDB
+main: com.authdb.AuthDB
 website: https://github.com/contex/AuthDB/
 description: Enables Minecraft server authentication through an external authentication method (such as Joomla, phpBB3, OpenID, and so on)
 authors:
