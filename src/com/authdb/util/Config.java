@@ -43,6 +43,7 @@ public class Config
 	public static String Script4_versions = "4.1";
 	public static String Script4_name = "vb";
 	///
+	public static boolean WorldEdit;
 	
 	///////////////////////////////////////////
 	//               GLOBAL
@@ -137,7 +138,7 @@ public class Config
 		  template.load();
 			if(config.equals("config")) 
 			{
-			
+				WorldEdit = false;
 				///////////////////////////////////////////
 				//               Core
 				///////////////////////////////////////////
@@ -270,59 +271,65 @@ public class Config
 					///////////////////////////////////////////
 					//               welcome
 					///////////////////////////////////////////
-					Messages.AuthDB_message_welcome_guest = (String)Config.GetConfigString("messages.AuthDB.welcome.guest", "&4Welcome guest! Please register with /register <password> <email>");
-					Messages.AuthDB_message_welcome_user = (String)Config.GetConfigString("messages.AuthDB.welcome.user", "&4Welcome back {PLAYER}! Please login with /login <password>");
+					Messages.AuthDB_message_welcome_guest = (String)Config.GetConfigString("Core.AuthDB.welcome.guest", "&4Welcome guest! Please register with /register <password> <email>");
+					Messages.AuthDB_message_welcome_user = (String)Config.GetConfigString("Core.AuthDB.welcome.user", "&4Welcome back {PLAYER}! Please login with /login <password>");
+					
+					///////////////////////////////////////////
+					//               guest
+					///////////////////////////////////////////
+					Messages.AuthDB_message_guest_notauthorized = Config.GetConfigString("Core.AuthDB.guest.notauthorized", "&4You are not authorized to do that!");
 					
 					///////////////////////////////////////////
 					//               register
 					///////////////////////////////////////////
-					Messages.AuthDB_message_register_success = Config.GetConfigString("messages.AuthDB.register.success", "&4You have been registered!");
-					Messages.AuthDB_message_register_failure = Config.GetConfigString("messages.AuthDB.register.failure", "&4Error while registering!");
-					Messages.AuthDB_message_register_registered = Config.GetConfigString("messages.AuthDB.register.registered", "&4You are already registered!");
-					Messages.AuthDB_message_register_disabled = Config.GetConfigString("messages.AuthDB.register.disabled", "&4Registration not allowed!");
-					Messages.AuthDB_message_register_usage = Config.GetConfigString("messages.AuthDB.register.usage", "&4Correct usage is: /register <password> <email>");
+					Messages.AuthDB_message_register_success = Config.GetConfigString("Core.AuthDB.register.success", "&4You have been registered!");
+					Messages.AuthDB_message_register_failure = Config.GetConfigString("Core.AuthDB.register.failure", "&4Error while registering!");
+					Messages.AuthDB_message_register_registered = Config.GetConfigString("Core.AuthDB.register.registered", "&4You are already registered!");
+					Messages.AuthDB_message_register_disabled = Config.GetConfigString("Core.AuthDB.register.disabled", "&4Registration not allowed!");
+					Messages.AuthDB_message_register_usage = Config.GetConfigString("Core.AuthDB.register.usage", "&4Correct usage is: /register <password> <email>");
 					
 					///////////////////////////////////////////
 					//               unregister
 					///////////////////////////////////////////
-					Messages.AuthDB_message_unregister_success = Config.GetConfigString("messages.AuthDB.unregister.success", "&2Unregistered successfully!");
-					Messages.AuthDB_message_unregister_failure = Config.GetConfigString("messages.AuthDB.unregister.failure", "&4An error occurred while unregistering!");
-					Messages.AuthDB_message_unregister_usage = Config.GetConfigString("messages.AuthDB.unregister.usage", "&4Correct usage is: /unregister <password>");
+					Messages.AuthDB_message_unregister_success = Config.GetConfigString("Core.AuthDB.unregister.success", "&2Unregistered successfully!");
+					Messages.AuthDB_message_unregister_failure = Config.GetConfigString("Core.AuthDB.unregister.failure", "&4An error occurred while unregistering!");
+					Messages.AuthDB_message_unregister_usage = Config.GetConfigString("Core.AuthDB.unregister.usage", "&4Correct usage is: /unregister <password>");
 					
 					///////////////////////////////////////////
 					//               login
 					///////////////////////////////////////////
-					Messages.AuthDB_message_login_success = Config.GetConfigString("messages.AuthDB.login.success", "&2Password accepted. Welcome!");
-					Messages.AuthDB_message_login_failure = Config.GetConfigString("messages.AuthDB.login.failure", "&4Password incorrect, please try again.");
-					Messages.AuthDB_message_login_authorized = Config.GetConfigString("messages.AuthDB.login.authorized", "&2You are already logged in!");
-					Messages.AuthDB_message_login_session= Config.GetConfigString("messages.AuthDB.login.session", "&2Hey, I remember you! You are logged in!");
-					Messages.AuthDB_message_login_usage = Config.GetConfigString("messages.AuthDB.login.usage", "&4Correct usage is: /login <password>");
+					Messages.AuthDB_message_login_success = Config.GetConfigString("Core.AuthDB.login.success", "&2Password accepted. Welcome!");
+					Messages.AuthDB_message_login_failure = Config.GetConfigString("Core.AuthDB.login.failure", "&4Password incorrect, please try again.");
+					Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.AuthDB.login.authorized", "&2You are already logged in!");;
+					Messages.AuthDB_message_login_notregistered = Config.GetConfigString("Core.AuthDB.login.notregistered", "&4You are not registred yet!");
+					Messages.AuthDB_message_login_session= Config.GetConfigString("Core.AuthDB.login.session", "&2Hey, I remember you! You are logged in!");
+					Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.AuthDB.login.usage", "&4Correct usage is: /login <password>");
 					
 					///////////////////////////////////////////
 					//               email
 					///////////////////////////////////////////
-					Messages.AuthDB_message_email_required = Config.GetConfigString("messages.AuthDB.email.required", "&4Email required for registration!");
-					Messages.AuthDB_message_email_badcharacters = Config.GetConfigString("messages.AuthDB.email.badcharacters", "&4Email contains bad characters: {BADCHARACTERS}!");
+					Messages.AuthDB_message_email_required = Config.GetConfigString("Core.AuthDB.email.required", "&4Email required for registration!");
+					Messages.AuthDB_message_email_badcharacters = Config.GetConfigString("Core.AuthDB.email.badcharacters", "&4Email contains bad characters: {BADCHARACTERS}!");
 					
 					///////////////////////////////////////////
 					//               username
 					///////////////////////////////////////////
-					Messages.AuthDB_message_badcharacters_renamed = Config.GetConfigString("messages.AuthDB.badcharacters.renamed", "&2{PLAYER} renamed to {PLAYERNEW} due to bad characters: {BADCHARACTERS}.");
-					Messages.AuthDB_message_badcharacters_kicked = Config.GetConfigString("messages.AuthDB.badcharacters.kicked", "Username contains bad characters: {BADCHARACTERS}!");
-					Messages.AuthDB_message_badcharacters_whitelist = Config.GetConfigString("messages.AuthDB.badcharacters.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
+					Messages.AuthDB_message_badcharacters_renamed = Config.GetConfigString("Core.AuthDB.badcharacters.renamed", "&2{PLAYER} renamed to {PLAYERNEW} due to bad characters: {BADCHARACTERS}.");
+					Messages.AuthDB_message_badcharacters_kicked = Config.GetConfigString("Core.AuthDB.badcharacters.kicked", "Username contains bad characters: {BADCHARACTERS}!");
+					Messages.AuthDB_message_badcharacters_whitelist = Config.GetConfigString("Core.AuthDB.badcharacters.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
 					
 					///////////////////////////////////////////
 					//               password
 					///////////////////////////////////////////
-					Messages.AuthDB_message_password_success = Config.GetConfigString("messages.AuthDB.password.success", "&2Password changed successfully!");
-					Messages.AuthDB_message_password_failure = Config.GetConfigString("messages.AuthDB.password.failure", "&4Error! Password change failed!");
-					Messages.AuthDB_message_password_notregistered = Config.GetConfigString("messages.AuthDB.password.notregistered", "&4Register first!");
-					Messages.AuthDB_message_password_usage = Config.GetConfigString("messages.AuthDB.password.usage", "&4Correct usage is: /password <oldpassword> <password>");
+					Messages.AuthDB_message_password_success = Config.GetConfigString("Core.AuthDB.password.success", "&2Password changed successfully!");
+					Messages.AuthDB_message_password_failure = Config.GetConfigString("Core.AuthDB.password.failure", "&4Error! Password change failed!");
+					Messages.AuthDB_message_password_notregistered = Config.GetConfigString("Core.AuthDB.password.notregistered", "&4Register first!");
+					Messages.AuthDB_message_password_usage = Config.GetConfigString("Core.AuthDB.password.usage", "&4Correct usage is: /password <oldpassword> <password>");
 					
 					///////////////////////////////////////////
 					//               idle
 					///////////////////////////////////////////
-					Messages.AuthDB_message_idle_kick = Config.GetConfigString("messages.AuthDB.idle.kick", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
+					Messages.AuthDB_message_idle_kick = Config.GetConfigString("Core.AuthDB.idle.kick", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
 					
 				///////////////////////////////////////////
 				//               CraftIRC
@@ -331,28 +338,28 @@ public class Config
 					///////////////////////////////////////////
 					//               status
 					///////////////////////////////////////////
-					Messages.CraftIRC_message_status_join = Config.GetConfigString("messages.CraftIRC.status.guest", "{PLAYER} has joined the server from {PROVINCE}{STATE}, {COUNTRY} ({IP}).");
-					Messages.CraftIRC_message_status_quit = Config.GetConfigString("messages.CraftIRC.status.user", "{PLAYER} has quit the server.");
+					Messages.CraftIRC_message_status_join = Config.GetConfigString("Plugins.CraftIRC.status.guest", "{PLAYER} has joined the server from {PROVINCE}{STATE}, {COUNTRY} ({IP}).");
+					Messages.CraftIRC_message_status_quit = Config.GetConfigString("Plugins.CraftIRC.status.user", "{PLAYER} has quit the server.");
 					
 					///////////////////////////////////////////
 					//               register
 					///////////////////////////////////////////
-					Messages.CraftIRC_message_register_success = Config.GetConfigString("messages.CraftIRC.register.success", "{PLAYER} just registered successfully!");
-					Messages.CraftIRC_message_register_failure = Config.GetConfigString("messages.CraftIRC.register.failure", "{PLAYER} had some errors while registering!");
-					Messages.CraftIRC_message_register_registered = Config.GetConfigString("messages.CraftIRC.register.registered", "{PLAYER} had a lapse in memory and tried to register again.");
+					Messages.CraftIRC_message_register_success = Config.GetConfigString("Plugins.CraftIRC.register.success", "{PLAYER} just registered successfully!");
+					Messages.CraftIRC_message_register_failure = Config.GetConfigString("Plugins.CraftIRC.register.failure", "{PLAYER} had some errors while registering!");
+					Messages.CraftIRC_message_register_registered = Config.GetConfigString("Plugins.CraftIRC.register.registered", "{PLAYER} had a lapse in memory and tried to register again.");
 					
 					///////////////////////////////////////////
 					//               badcharacters
 					///////////////////////////////////////////
-					Messages.CraftIRC_message_badcharacters_renamed = Config.GetConfigString("messages.CraftIRC.badcharacters.renamed", "{PLAYER} renamed to {PLAYERNEW} due to bad characters.");
-					Messages.CraftIRC_message_badcharacters_kicked = Config.GetConfigString("messages.CraftIRC.badcharacters.kicked", "{PLAYER} was kicked due to bad characters in username!");
-					Messages.CraftIRC_message_badcharacters_whitelist = Config.GetConfigString("messages.CraftIRC.badcharacters.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
+					Messages.CraftIRC_message_badcharacters_renamed = Config.GetConfigString("Plugins.CraftIRC.badcharacters.renamed", "{PLAYER} renamed to {PLAYERNEW} due to bad characters.");
+					Messages.CraftIRC_message_badcharacters_kicked = Config.GetConfigString("Plugins.CraftIRC.badcharacters.kicked", "{PLAYER} was kicked due to bad characters in username!");
+					Messages.CraftIRC_message_badcharacters_whitelist = Config.GetConfigString("Plugins.CraftIRC.badcharacters.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
 					
 					///////////////////////////////////////////
 					//               password
 					///////////////////////////////////////////
-					Messages.CraftIRC_message_password_success = Config.GetConfigString("messages.CraftIRC.password.success", "{PLAYER} logged in successfully!");
-					Messages.CraftIRC_message_password_failure = Config.GetConfigString("messages.CraftIRC.password.failure", "{PLAYER} tried to login with the wrong password!");
+					Messages.CraftIRC_message_password_success = Config.GetConfigString("Plugins.CraftIRC.password.success", "{PLAYER} logged in successfully!");
+					Messages.CraftIRC_message_password_failure = Config.GetConfigString("Plugins.CraftIRC.password.failure", "{PLAYER} tried to login with the wrong password!");
 					
 			}
 

@@ -35,6 +35,11 @@ public class Messages
 		public static String AuthDB_message_welcome_guest,AuthDB_message_welcome_user;
 		
 		///////////////////////////////////////////
+		//               guest
+		///////////////////////////////////////////
+		public static String AuthDB_message_guest_notauthorized;
+		
+		///////////////////////////////////////////
 		//               register
 		///////////////////////////////////////////
 		public static String AuthDB_message_register_success,AuthDB_message_register_failure,AuthDB_message_register_registered,AuthDB_message_register_disabled,AuthDB_message_register_usage;
@@ -47,7 +52,7 @@ public class Messages
 		///////////////////////////////////////////
 		//               login
 		///////////////////////////////////////////
-		public static String AuthDB_message_login_success,AuthDB_message_login_failure,AuthDB_message_login_authorized,AuthDB_message_login_session,AuthDB_message_login_usage;
+		public static String AuthDB_message_login_success,AuthDB_message_login_failure,AuthDB_message_login_authorized,AuthDB_message_login_notregistered,AuthDB_message_login_session,AuthDB_message_login_usage;
 		
 		///////////////////////////////////////////
 		//               email
@@ -104,6 +109,10 @@ public class Messages
 		{
 			player.sendMessage(Util.replaceStrings(AuthDB_message_welcome_user,player,null));
 		}
+		else if(type.equals("AuthDB_message_guest_notauthorized")) 
+		{
+			player.sendMessage(Util.replaceStrings(AuthDB_message_guest_notauthorized,player,null));
+		}
 		else if(type.equals("AuthDB_message_register_success")) 
 		{
 			player.sendMessage(Util.replaceStrings(AuthDB_message_register_success,player,null));
@@ -147,6 +156,10 @@ public class Messages
 		else if(type.equals("AuthDB_message_login_authorized")) 
 		{
 			player.sendMessage(Util.replaceStrings(AuthDB_message_login_authorized,player,null));
+		}
+		else if(type.equals("AuthDB_message_login_notregistered")) 
+		{
+			player.sendMessage(Util.replaceStrings(AuthDB_message_login_notregistered,player,null));
 		}
 		else if(type.equals("AuthDB_message_login_session")) 
 		{

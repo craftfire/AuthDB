@@ -195,10 +195,11 @@ public class Util
 	
 	public static String CheckVersion(String script,String latest, int length)
 	{
-		String[] latestsplit= Pattern.compile(".").split(Config.script_version);
+		String version = Config.script_version;
+		String[] latestsplit= version.split(".");
 		if(latestsplit.length != length)
 		{
-			Util.Debug("The length of the version number is not equal to the length of what is required: "+length+". Setting to latest version of script: "+script+" "+latest);
+			Util.Debug("The length of the version number is not equal to the length of what is required: "+length+" | Length: "+latestsplit.length+" | Version: "+version+" |. Setting to latest version of script: "+script+" "+latest);
 			return latest;
 		}
 		return Config.script_version;
@@ -357,6 +358,7 @@ public class Util
 			string = string.replaceAll("\\{NEWPLAYER\\}", "");      
 			string = string.replaceAll("&", "§"); 
 		}
+		else { string = string.replaceAll("&",Matcher.quoteReplacement("§"));  }
 		string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
 		string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
 		string = string.replaceAll("\\{IDLELENGTH\\}", Config.idle_length);

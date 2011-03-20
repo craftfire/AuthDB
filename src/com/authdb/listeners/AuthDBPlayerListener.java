@@ -152,9 +152,12 @@ public boolean CheckIdle(Player player) throws IOException
   public void onPlayerCommandPreprocess(PlayerChatEvent event)
   {
     String[] split = event.getMessage().split(" ");
+    Util.Log("info", "COMMAND: "+split[0]);
 	Player player = event.getPlayer();
     if (split[0].equals("/login")) {
-      if (AuthDB.isAuthorized(player.getEntityId())) {			  
+      if (!this.plugin.isRegistered(player.getName()))
+  		  Messages.SendMessage("AuthDB_message_login_ notregistered", player,null);
+  	  else if (AuthDB.isAuthorized(player.getEntityId())) {			  
 				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
       }
       else if (split.length < 2) {
@@ -175,14 +178,14 @@ public boolean CheckIdle(Player player) throws IOException
      event.setMessage("/login ******");
       event.setCancelled(true);
      }
-				else if (split[0].equals("/register")) {
-      if (split.length < 2) {
+	  else if (split[0].equals("/register")) {
+      if (!Config.register_enabled)
+		  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
+      else if (this.plugin.isRegistered(player.getName()))
+		  Messages.SendMessage("AuthDB_message_register_registered", player,null);
+      else if (split.length < 2) {
 				  Messages.SendMessage("AuthDB_message_register_usage", player,null);
       }
-      else if (this.plugin.isRegistered(player.getName()))
-				  Messages.SendMessage("AuthDB_message_register_registered", player,null);
-      else if (!Config.register_enabled)
-				  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
       else if (split.length < 3)
 				  Messages.SendMessage("AuthDB_message_email_required", player,null);
        else if ((split.length >= 3) && (!this.plugin.checkEmail(split[2])))
@@ -209,8 +212,9 @@ public boolean CheckIdle(Player player) throws IOException
       event.setMessage("/register *****");
        event.setCancelled(true);
      } else if (!AuthDB.isAuthorized(player.getEntityId())) {
-      event.setCancelled(true);
+    Util.Debug("HERE");
      event.setMessage("");
+     event.setCancelled(true);
     }
   }
 
@@ -225,7 +229,10 @@ public boolean CheckIdle(Player player) throws IOException
   public void onPlayerChat(PlayerChatEvent event)
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
-       event.setCancelled(true);
+    {
+    	event.setMessage("");
+        event.setCancelled(true);
+    }
   }
 
   public void onPlayerItem(PlayerItemEvent event)
