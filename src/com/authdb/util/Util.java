@@ -27,27 +27,53 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
+import com.authdb.util.databases.MySQL;
 
 public class Util
 {  
 	
+	public static void NumberUsers() throws ClassNotFoundException, SQLException
+	{
+        MySQL.connect();
+		PreparedStatement ps = null;
+		if(Config.script_name.equals(Config.script_name1)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
+		else if(Config.script_name.equals(Config.script_name2)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
+		else if(Config.script_name.equals(Config.script_name3)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
+		else if(Config.script_name.equals(Config.script_name4)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
+		else if(Config.script_name.equals(Config.script_name5)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"user"+"`"); }
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		MySQL.close();
+	}
+	public static String CheckVersion(String script,String latest, int length)
+	{
+		String[] latestsplit= Pattern.compile(".").split(Config.script_version);
+		if(latestsplit.length != length)
+		{
+			Util.Debug("The length of the version number is not equal to the length of what is required: "+length+". Setting to latest version of script: "+script+" "+latest);
+			return latest;
+		}
+		return Config.script_version;
+	}
+	
 	public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f) throws IOException {
-		//Create Post String
 		String e5544ab05d8c25c1a5da5cd59144fb = Util.md5(b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
 		String data = URLEncoder.encode("b407f35cb00b96936a585c4191fc267a", "UTF-8") + "=" + URLEncoder.encode(b407f35cb00b96936a585c4191fc267a, "UTF-8");
 		data += "&" + URLEncoder.encode("f13a437cb9b1ac68b49d597ed7c4bfde", "UTF-8") + "=" + URLEncoder.encode(f13a437cb9b1ac68b49d597ed7c4bfde, "UTF-8");
 		data += "&" + URLEncoder.encode("9cafd6e81e3a478a7fe0b40e7502bf1f", "UTF-8") + "=" + URLEncoder.encode(cafd6e81e3a478a7fe0b40e7502bf1f, "UTF-8");
 		data += "&" + URLEncoder.encode("58e5544ab05d8c25c1a5da5cd59144fb", "UTF-8") + "=" + URLEncoder.encode(e5544ab05d8c25c1a5da5cd59144fb, "UTF-8");
-		               
-		         
-		// Send Data To Page
 		URL url = new URL("http://moincraft.com/plugins/AuthDB/stats.php");
 		URLConnection conn = url.openConnection();
 		conn.setRequestProperty("X-AuthDB", e5544ab05d8c25c1a5da5cd59144fb);
@@ -55,15 +81,7 @@ public class Util
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(data);
 		wr.flush();
-		   
-		// Get The Response
-		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line;
-		while ((line = rd.readLine()) != null) {
-		        System.out.println(line);
-		        //you Can Break The String Down Here
-		}
-		
+		//BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 	}
 	
 	public static int ToTicks(String time, String length) {

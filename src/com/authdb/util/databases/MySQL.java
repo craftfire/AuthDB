@@ -32,7 +32,7 @@ public class MySQL
 	
 	public static void close() { if (mysql != null) try { mysql.close(); } catch (SQLException localSQLException) { } }
 	
-	public static void connect() throws ClassNotFoundException, SQLException
+	public static void connect() throws SQLException, ClassNotFoundException
 	{
 		Class.forName(Util.ToDriver(Config.database_driver));
 		if(Config.debug_enable)
@@ -49,18 +49,7 @@ public class MySQL
 		}
 		
 		if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
-		//mysql = DriverManager.getConnection(Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
-        //Class.forName("com.mysql.jdbc.Driver");
-        mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
-        mysql.setAutoCommit(true);
-		PreparedStatement ps = null;
-		if(Config.script_name.equals(Config.script_name1)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
-		else if(Config.script_name.equals(Config.script_name2)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
-		else if(Config.script_name.equals(Config.script_name3)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
-		else if(Config.script_name.equals(Config.script_name4)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
-		else if(Config.script_name.equals(Config.script_name5)) { ps = (PreparedStatement) mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"user"+"`"); }
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		mysql = DriverManager.getConnection(Config.dbDb + "?connectTimeout=0&socketTimeout=0&autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
 	}
 	
 	public static int countitall(String table) throws SQLException
@@ -68,15 +57,24 @@ public class MySQL
 		String query = "SELECT LAST_INSERT_ID() FROM `"+table+"` LIMIT 1";
 		Statement stmt = mysql.createStatement();
 		ResultSet rs = stmt.executeQuery( query );
-		if (rs.next()) { return rs.getInt(1); }
-		else { return 0; }
+		int dupe = 0;
+		if (rs.next()) { dupe = rs.getInt(1); }
+		return dupe;
 	}
 	public static String getfromtable(String table,String column1,String column2,String value) throws SQLException
 	{
+		try {
+			MySQL.connect();
+		} catch (ClassNotFoundException e) {
+			Util.Debug("Cannot connect to MySQL server:");
+			e.printStackTrace();
+		}
 		String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"'";
 		Statement stmt = mysql.createStatement();
 		ResultSet rs = stmt.executeQuery( query );
-		if (rs.next()) { return rs.getString(1); }
-		else { return "fail"; }
+		String dupe = "fail";
+		if (rs.next()) { dupe = rs.getString(1); }
+		close();
+		return dupe;
 	}
 }

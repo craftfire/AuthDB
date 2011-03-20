@@ -17,6 +17,8 @@ package com.authdb.scripts.forum;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
@@ -38,11 +40,21 @@ public class phpBB3 {
   public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
   {
 	long timestamp = System.currentTimeMillis()/1000;
+	//String[] SupportVersions = ["3.0.8"];
+	//String Version = Util.CheckVersion("phpBB","3.0.8", 3);
+	//if(SupportVersions.
+		//.asList(...).contains(...)
 	String hash = phpbb_hash(password);
 	int userid;
 	//
 	PreparedStatement ps;
 	//
+	try {
+		MySQL.connect();
+	} catch (ClassNotFoundException e) {
+		Util.Debug("Cannot connect to MySQL server:");
+		e.printStackTrace();
+	}
 	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, player);
 	ps.setString(2, player.toLowerCase());
@@ -87,6 +99,7 @@ public class phpBB3 {
     ps.executeUpdate();
     ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
     ps.executeUpdate();
+    MySQL.close();
   }
   
   public static boolean checkpassword(String player, String password) throws SQLException

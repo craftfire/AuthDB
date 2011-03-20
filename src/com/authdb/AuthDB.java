@@ -96,14 +96,14 @@ public class AuthDB extends JavaPlugin {
 		}
 		
 		Config TheMessages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
-		/*if (null == getConfiguration().getKeys("messages")) 
+		if (null == TheMessages.GetConfigString("messages", "")) 
 		{
 		    Util.Log("info", "messages.yml could not be found in plugins/AuthDB/ -- disabling!");
 		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
 		    return;
-		}*/
+		}
 		Config TheConfig = new Config("config","plugins/"+pluginname+"/", "config.yml");
-		if (null == getConfiguration().getKeys("settings")) 
+		if (null == getConfiguration().getKeys("Core")) 
 		{
 		    Util.Log("info", "config.yml could not be found in plugins/AuthDB/ -- disabling!");
 		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
@@ -160,12 +160,19 @@ public class AuthDB extends JavaPlugin {
 	 {
 		try 
 		{
+			try {
+				MySQL.connect();
+			} catch (ClassNotFoundException e) {
+				Util.Debug("Cannot connect to MySQL server:");
+				e.printStackTrace();
+			}
 			if(Config.script_name.equals(Config.script_name1))  { if(phpBB3.checkpassword(player.toLowerCase(), password)) return true; }
 			else if(Config.script_name.equals(Config.script_name2))  { if(SMF1.checkpassword(player.toLowerCase(), password)) return true; }
 			else if(Config.script_name.equals(Config.script_name3))  { if(SMF2.checkpassword(player.toLowerCase(), password)) return true; }
 			else if(Config.script_name.equals(Config.script_name4))  { if(myBB1_6.checkpassword(player.toLowerCase(), password)) return true; }
 			else if(Config.script_name.equals(Config.script_name5))  { if(vB4_1.checkpassword(player.toLowerCase(), password)) return true; }
 			else { Stop("Can't check password, stopping plugin."); }
+			MySQL.close();
 		} 
 		catch (SQLException e) 
 		{
@@ -185,24 +192,41 @@ public class AuthDB extends JavaPlugin {
 
 	public void register(String player, String password, String email, String ipAddress) throws IOException, SQLException 
 	{
+		try {
+			MySQL.connect();
+		} catch (ClassNotFoundException e) {
+			Util.Debug("Cannot connect to MySQL server:");
+			e.printStackTrace();
+		}
 		if(Config.script_name.equals(Config.script_name1)) { phpBB3.adduser(player, email, password, ipAddress); }
 		else if(Config.script_name.equals(Config.script_name2)) { SMF1.adduser(player, email, password, ipAddress); }
 		else if(Config.script_name.equals(Config.script_name3)) { SMF2.adduser(player, email, password, ipAddress); }
 		else if(Config.script_name.equals(Config.script_name4)) { myBB1_6.adduser(player, email, password, ipAddress); }
 		else if(Config.script_name.equals(Config.script_name5)) { vB4_1.adduser(player, email, password, ipAddress); }
 		else { Stop("Can't register user, disabling plugin.");  }
+		MySQL.close();
 	}
 
 	public boolean isRegistered(String player) {
 		try {
+			
 			Util.Debug("Running function: isRegistered(String player)");
-			if(Config.script_name.equals(Config.script_name1)) { if(phpBB3.checkuser(player.toLowerCase())) { return true; } }
-			else if(Config.script_name.equals(Config.script_name2)) { if(SMF1.checkuser(player.toLowerCase())) { return true; } }
-			else if(Config.script_name.equals(Config.script_name3)) { if(SMF2.checkuser(player.toLowerCase())) { return true; } }
-			else if(Config.script_name.equals(Config.script_name4)) { if(myBB1_6.checkuser(player.toLowerCase())) { return true; } }
-			else if(Config.script_name.equals(Config.script_name5)) { if(vB4_1.checkuser(player.toLowerCase())) { return true; } }
+			boolean dupe = false;
+			try {
+				MySQL.connect();
+			} catch (ClassNotFoundException e) {
+				Util.Debug("Cannot connect to MySQL server:");
+				e.printStackTrace();
+			}
+			if(Config.script_name.equals(Config.script_name1)) { if(phpBB3.checkuser(player.toLowerCase())) { dupe = true; } }
+			else if(Config.script_name.equals(Config.script_name2)) { if(SMF1.checkuser(player.toLowerCase())) { dupe = true; } }
+			else if(Config.script_name.equals(Config.script_name3)) { if(SMF2.checkuser(player.toLowerCase())) { dupe = true; } }
+			else if(Config.script_name.equals(Config.script_name4)) { if(myBB1_6.checkuser(player.toLowerCase())) { dupe = true; } }
+			else if(Config.script_name.equals(Config.script_name5)) { if(vB4_1.checkuser(player.toLowerCase())) { dupe = true; } }
 			else { Stop("Can't find a forum board, stopping the plugin."); }
 			Util.Debug("No user!");
+			MySQL.close();
+			return dupe;
 		} catch (SQLException e) 
 		{
 			e.printStackTrace();

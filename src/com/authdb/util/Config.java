@@ -53,7 +53,7 @@ public class Config
 		///////////////////////////////////////////
 		//               script
 		///////////////////////////////////////////
-		public static String script_name;
+		public static String script_name,script_version;
 		public static boolean script_updatestatus;
 		
 		///////////////////////////////////////////
@@ -133,7 +133,8 @@ public class Config
 					///////////////////////////////////////////
 					//               script
 					///////////////////////////////////////////
-					script_name = GetConfigString("Core.script.name", "phpbb3").toLowerCase();
+					script_name = GetConfigString("Core.script.name", "phpbb").toLowerCase();
+					script_version = GetConfigString("Core.script.version", "3.0.8");
 					script_updatestatus = GetConfigBoolean("Core.script.updatestatus", true);
 					
 					///////////////////////////////////////////
