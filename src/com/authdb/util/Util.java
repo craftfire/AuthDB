@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
+import com.authdb.scripts.Custom;
 import com.authdb.scripts.forum.SMF;
 import com.authdb.scripts.forum.myBB;
 import com.authdb.scripts.forum.phpBB;
@@ -50,7 +51,8 @@ public class Util
 	
     public static boolean AddUser(String player, String email, String password, String ipAddress) throws SQLException
     {
-		if(Config.script_name.equals(Config.Script1_name)) { phpBB.adduser(player, email, password, ipAddress); }
+    	if(Config.custom_enabled) { Custom.adduser(player, email, password, ipAddress); }
+    	else if(Config.script_name.equals(Config.Script1_name)) { phpBB.adduser(player, email, password, ipAddress); }
 		else if(Config.script_name.equals(Config.Script2_name)) { SMF.adduser(player, email, password, ipAddress); }
 		else if(Config.script_name.equals(Config.Script3_name)) { myBB.adduser(player, email, password, ipAddress); }
 		else if(Config.script_name.equals(Config.Script4_name)) { vB.adduser(player, email, password, ipAddress); }
@@ -59,7 +61,12 @@ public class Util
 	
     public static boolean CheckPassword(String script,String player, String password) throws SQLException
     {
-      if(script.equals(Config.Script1_name))
+    	if(Config.custom_enabled)
+    	{
+	    	String hash = MySQL.getfromtable(Config.custom_table, "`"+Config.custom_passfield+"`", ""+Config.custom_userfield+"", player);
+	  		if(phpBB.check_hash(password,hash)) { return true; }
+    	}
+    	else if(script.equals(Config.Script1_name))
       {
     	  if(phpBB.check())
     	  {
@@ -102,7 +109,13 @@ public class Util
     public static boolean CheckUser(String script,String player) throws SQLException
     {
     String usertable = null,usernamefield = null;
-      if(script.equals(Config.Script1_name))
+    if(Config.custom_enabled)
+    {
+    	String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
+    	if(check != "fail") { return true; }
+    	return false;
+    }
+    else if(script.equals(Config.Script1_name))
       {
     	  if(phpBB.check())
     	  {
@@ -148,7 +161,13 @@ public class Util
         MySQL.connect();
 		PreparedStatement ps = null;
 		String usertable = null;
-		if(Config.script_name.equals(Config.Script1_name))
+		if(Config.custom_enabled)
+		{
+			ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		}
+		else if(Config.script_name.equals(Config.Script1_name))
 		{
 			if(phpBB.check()) { usertable = "users"; }
 		}

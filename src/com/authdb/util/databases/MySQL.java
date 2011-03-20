@@ -48,8 +48,8 @@ public class MySQL
 			Util.Debug("MySQL prefix: "+Config.database_prefix);
 		}
 		
-		if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
-		mysql = DriverManager.getConnection(Config.dbDb + "?connectTimeout=0&socketTimeout=0&autoReconnect=true&user=" + Config.database_username + "&password=" + Config.database_password);
+		if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+		mysql = DriverManager.getConnection(Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
 	}
 	
 	public static int countitall(String table) throws SQLException

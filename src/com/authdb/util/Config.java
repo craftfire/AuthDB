@@ -70,6 +70,12 @@ public class Config
 		public static boolean script_updatestatus;
 		
 		///////////////////////////////////////////
+		//               custom
+		///////////////////////////////////////////
+		public static String custom_table,custom_userfield,custom_passfield,custom_encryption;
+		public static boolean custom_enabled;
+		
+		///////////////////////////////////////////
 		//               register
 		///////////////////////////////////////////
 		public static boolean register_enabled,register_force;
@@ -149,6 +155,16 @@ public class Config
 					script_name = GetConfigString("Core.script.name", "phpbb").toLowerCase();
 					script_version = GetConfigString("Core.script.version", "3.0.8");
 					script_updatestatus = GetConfigBoolean("Core.script.updatestatus", true);
+					
+					///////////////////////////////////////////
+					//               custom
+					///////////////////////////////////////////
+					custom_enabled = GetConfigBoolean("Core.custom.enabled", false);
+					custom_table = GetConfigString("Core.custom.table", "users");
+					custom_userfield = GetConfigString("Core.custom.userfield", "username");
+					custom_passfield = GetConfigString("Core.custom.passfield", "password");
+					custom_encryption = GetConfigString("Core.custom.encryption", "").toLowerCase();
+					
 					
 					///////////////////////////////////////////
 					//               database

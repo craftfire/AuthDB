@@ -97,6 +97,7 @@ public boolean CheckIdle(Player player) throws IOException
 	    		if(Config.debug_enable) Util.Debug(player.getName()+" added to the IdleTaskList");
 	    	this.plugin.updateDb();
 	    }
+	if(Config.custom_enabled) if(Config.custom_encryption == null) { player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT."); }
    if (this.plugin.isRegistered(player.getName())) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
          player.getInventory().clear();

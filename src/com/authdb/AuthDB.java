@@ -152,6 +152,7 @@ public class AuthDB extends JavaPlugin {
 		}
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
+		if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
 		Util.Log("info", pluginname + " is developed by Contex <contex@authdb.com> and Wulfspider <wulfspider@authdb.com>");
 	}
 
@@ -266,27 +267,6 @@ public class AuthDB extends JavaPlugin {
 	
 	public String IdleGetTaskID(Player player)
 	{
-		/*BufferedReader reader = new BufferedReader(new FileReader(new File(getDataFolder(), idleFileName)));
-		String currentLine;
-
-		while((currentLine = reader.readLine()) != null) 
-		{
-			String[] thelinearray = currentLine.split(":");
-			  if(thelinearray[0].equals(player.getName()))
-				  return thelinearray[1];
-		}
-		return "no";*/
-		/*int length = IdleNames.size();
-		int counter = 0;
-		int dupe = 99999999;
-		while(length > counter)
-		{
-			Util.Debug("DERP: "+counter+"-"+IdleNames.get(counter));
-			if(IdleNames.get(counter).equals(String.valueOf(player.getName())))
-				dupe = counter;
-			counter++;
-		}
-		return IdleIds.get(dupe); */
 		return (String)this.db.get(player.getName().toLowerCase());
 	} 
 	
@@ -307,54 +287,17 @@ public class AuthDB extends JavaPlugin {
 	{
 		if(type.equals("add"))
 		{
-			/*BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), idleFileName)));
-			bw.append(player.getName() + ":" + TaskID);
-			bw.newLine();
-			bw.close();
-			return true;*/
-			//IdleIds.add(Integer.valueOf(TaskID));
-			//IdleNames.add(String.valueOf(player.getName()));
 			this.db.put(player.getName().toLowerCase(), TaskID);
-			//((HashMap<String, String>) IdleIds).put(player.getName().toLowerCase(), TaskID);
 			return true;
-			
 		}
 		
 		else if(type.equals("remove"))
 		{
-			/*File tempFile = new File(getDataFolder(),"temp.db");
-			File realFile = new File(getDataFolder(),idleFileName);
-			BufferedReader reader = new BufferedReader(new FileReader(realFile));
-			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-			String currentLine;
-
-			while((currentLine = reader.readLine()) != null) {
-			    String[] thelinearray = currentLine.split(":");
-				  if(thelinearray[0].equals(player.getName())) continue;
-			    writer.write(currentLine);
-			}
-
-			tempFile.renameTo(realFile);
-			return true;*/
 			this.db.remove(player.getName());
-		//	IdleIds.remove(Integer.valueOf(IdleGetTaskID(player)));
-			//IdleNames.remove(String.valueOf(player.getName()));
 			return true;
 		}
 		else if(type.equals("check"))
 		{
-			/*BufferedReader reader = new BufferedReader(new FileReader(new File(getDataFolder(), idleFileName)));
-			String currentLine;
-
-			while((currentLine = reader.readLine()) != null) 
-			{
-				if(Config.debug_enable) Util.Debug("Current line: "+currentLine);
-				String[] thelinearray = currentLine.split(":");
-				if(Config.debug_enable) Util.Debug("Name: "+thelinearray[0]+" TaskID: "+thelinearray[1]);
-				  if(thelinearray[0].equals(player.getName())) 
-			        	return true;
-			}
-			*/
 			if(this.db.containsKey(player.getName().toLowerCase()))
 				return true;
 		}
