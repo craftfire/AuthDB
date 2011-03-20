@@ -31,12 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -50,11 +48,6 @@ import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
 import com.authdb.plugins.zCraftIRC;
-import com.authdb.scripts.forum.SMF1;
-import com.authdb.scripts.forum.SMF2;
-import com.authdb.scripts.forum.myBB1_6;
-import com.authdb.scripts.forum.phpBB3;
-import com.authdb.scripts.forum.vB4_1;
 import com.authdb.util.Config;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
@@ -148,6 +141,15 @@ public class AuthDB extends JavaPlugin {
 			e.printStackTrace();
 			Stop("ERRORS in the SQLException. Plugin will NOT work. Disabling it.");
 		}
+		try {
+			Util.NumberUsers();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		Util.Log("info", pluginname + " is developed by Contex <contex@authdb.com> and Wulfspider <wulfspider@authdb.com>");
@@ -166,11 +168,7 @@ public class AuthDB extends JavaPlugin {
 				Util.Debug("Cannot connect to MySQL server:");
 				e.printStackTrace();
 			}
-			if(Config.script_name.equals(Config.script_name1))  { if(phpBB3.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(Config.script_name.equals(Config.script_name2))  { if(SMF1.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(Config.script_name.equals(Config.script_name3))  { if(SMF2.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(Config.script_name.equals(Config.script_name4))  { if(myBB1_6.checkpassword(player.toLowerCase(), password)) return true; }
-			else if(Config.script_name.equals(Config.script_name5))  { if(vB4_1.checkpassword(player.toLowerCase(), password)) return true; }
+			if(Util.CheckPassword(Config.script_name, player.toLowerCase(), password)) return true;
 			else { Stop("Can't check password, stopping plugin."); }
 			MySQL.close();
 		} 
@@ -198,12 +196,7 @@ public class AuthDB extends JavaPlugin {
 			Util.Debug("Cannot connect to MySQL server:");
 			e.printStackTrace();
 		}
-		if(Config.script_name.equals(Config.script_name1)) { phpBB3.adduser(player, email, password, ipAddress); }
-		else if(Config.script_name.equals(Config.script_name2)) { SMF1.adduser(player, email, password, ipAddress); }
-		else if(Config.script_name.equals(Config.script_name3)) { SMF2.adduser(player, email, password, ipAddress); }
-		else if(Config.script_name.equals(Config.script_name4)) { myBB1_6.adduser(player, email, password, ipAddress); }
-		else if(Config.script_name.equals(Config.script_name5)) { vB4_1.adduser(player, email, password, ipAddress); }
-		else { Stop("Can't register user, disabling plugin.");  }
+		Util.AddUser(player, email, password, ipAddress);
 		MySQL.close();
 	}
 
@@ -218,11 +211,7 @@ public class AuthDB extends JavaPlugin {
 				Util.Debug("Cannot connect to MySQL server:");
 				e.printStackTrace();
 			}
-			if(Config.script_name.equals(Config.script_name1)) { if(phpBB3.checkuser(player.toLowerCase())) { dupe = true; } }
-			else if(Config.script_name.equals(Config.script_name2)) { if(SMF1.checkuser(player.toLowerCase())) { dupe = true; } }
-			else if(Config.script_name.equals(Config.script_name3)) { if(SMF2.checkuser(player.toLowerCase())) { dupe = true; } }
-			else if(Config.script_name.equals(Config.script_name4)) { if(myBB1_6.checkuser(player.toLowerCase())) { dupe = true; } }
-			else if(Config.script_name.equals(Config.script_name5)) { if(vB4_1.checkuser(player.toLowerCase())) { dupe = true; } }
+			if(Util.CheckUser(Config.script_name, player.toLowerCase())) dupe = true;
 			else { Stop("Can't find a forum board, stopping the plugin."); }
 			Util.Debug("No user!");
 			MySQL.close();

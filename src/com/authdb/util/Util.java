@@ -39,24 +39,141 @@ import java.util.regex.Pattern;
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
+import com.authdb.scripts.forum.SMF;
+import com.authdb.scripts.forum.myBB;
+import com.authdb.scripts.forum.phpBB;
+import com.authdb.scripts.forum.vB;
 import com.authdb.util.databases.MySQL;
 
 public class Util
 {  
 	
+    public static boolean AddUser(String player, String email, String password, String ipAddress) throws SQLException
+    {
+		if(Config.script_name.equals(Config.Script1_name)) { phpBB.adduser(player, email, password, ipAddress); }
+		else if(Config.script_name.equals(Config.Script2_name)) { SMF.adduser(player, email, password, ipAddress); }
+		else if(Config.script_name.equals(Config.Script3_name)) { myBB.adduser(player, email, password, ipAddress); }
+		else if(Config.script_name.equals(Config.Script4_name)) { vB.adduser(player, email, password, ipAddress); }
+      return false;
+    }
+	
+    public static boolean CheckPassword(String script,String player, String password) throws SQLException
+    {
+      if(script.equals(Config.Script1_name))
+      {
+    	  if(phpBB.check())
+    	  {
+	    	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username_clean", player);
+	  		if(phpBB.check_hash(password,hash)) { return true; }
+	  	  } 
+      }
+      else if(script.equals(Config.Script2_name))
+      {
+    	  if(SMF.check(1))
+    	  {
+			String hash = MySQL.getfromtable(Config.database_prefix+"members", "`passwd`", "realName", player);
+			if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
+	  	  } 
+    	  else if(SMF.check(2))
+    	  {
+			String hash = MySQL.getfromtable(Config.database_prefix+"members", "`passwd`", "real_name", player);
+			if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
+  	  	  } 
+      }
+      else if(script.equals(Config.Script3_name))
+      {
+    	  if(myBB.check())
+    	  {
+		  	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`password`", "username", player);
+		  	if(myBB.check_hash(myBB.hash("find",player,password, ""),hash)) { return true; }
+    	  }
+      }
+      else if(script.equals(Config.Script4_name))
+      {
+    	  if(vB.check())
+    	  {
+		  	String hash = MySQL.getfromtable(Config.database_prefix+"user", "`password`", "username", player);
+		  	if(vB.check_hash(vB.hash("find",player,password, ""),hash)) { return true; }
+    	  }
+      }
+      return false;
+    }
+    
+    public static boolean CheckUser(String script,String player) throws SQLException
+    {
+    String usertable = null,usernamefield = null;
+      if(script.equals(Config.Script1_name))
+      {
+    	  if(phpBB.check())
+    	  {
+    		usertable = "users";
+  		    usernamefield = "username_clean";
+	  	  } 
+      }
+      else if(script.equals(Config.Script2_name))
+      {
+    	  usertable = "members";
+    	  if(SMF.check(1))
+    	  {
+  		    usernamefield = "realName";
+    	  }
+    	  else if(SMF.check(2))
+    	  {
+		    usernamefield = "real_name";
+    	  }
+      }
+      else if(script.equals(Config.Script3_name))
+      {
+    	  if(myBB.check())
+    	  {
+		    usertable = "users";
+		    usernamefield = "username";
+	  	  } 
+      }
+      else if(script.equals(Config.Script4_name))
+      {
+    	  if(vB.check())
+    	  {
+		    usertable = "user";
+		    usernamefield = "username";
+	  	  } 
+      }
+	String check = MySQL.getfromtable(Config.database_prefix+usertable, "*", usernamefield, player);
+	if(check != "fail") { return true; }
+      return false;
+    }
+	
 	public static void NumberUsers() throws ClassNotFoundException, SQLException
 	{
         MySQL.connect();
 		PreparedStatement ps = null;
-		if(Config.script_name.equals(Config.script_name1)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
-		else if(Config.script_name.equals(Config.script_name2)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
-		else if(Config.script_name.equals(Config.script_name3)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"members"+"`"); }
-		else if(Config.script_name.equals(Config.script_name4)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"users"+"`"); }
-		else if(Config.script_name.equals(Config.script_name5)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+"user"+"`"); }
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		String usertable = null;
+		if(Config.script_name.equals(Config.Script1_name))
+		{
+			if(phpBB.check()) { usertable = "users"; }
+		}
+		else if(Config.script_name.equals(Config.Script2_name))
+		{
+			if(SMF.check(1)) { usertable = "members"; }
+			else if(SMF.check(2)) { usertable = "members"; }
+		}
+		else if(Config.script_name.equals(Config.Script3_name))
+		{
+			if(myBB.check()) { usertable = "users"; }
+		}
+		else if(Config.script_name.equals(Config.Script1_name))
+		{
+			if(vB.check()) { usertable = "user"; }
+		}
+		if(usertable != null)
+		{
+			ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"`");
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		}
 		MySQL.close();
 	}
+	
 	public static String CheckVersion(String script,String latest, int length)
 	{
 		String[] latestsplit= Pattern.compile(".").split(Config.script_version);
@@ -69,7 +186,7 @@ public class Util
 	}
 	
 	public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f) throws IOException {
-		String e5544ab05d8c25c1a5da5cd59144fb = Util.md5(b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
+		String e5544ab05d8c25c1a5da5cd59144fb = Encryption.md5(b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
 		String data = URLEncoder.encode("b407f35cb00b96936a585c4191fc267a", "UTF-8") + "=" + URLEncoder.encode(b407f35cb00b96936a585c4191fc267a, "UTF-8");
 		data += "&" + URLEncoder.encode("f13a437cb9b1ac68b49d597ed7c4bfde", "UTF-8") + "=" + URLEncoder.encode(f13a437cb9b1ac68b49d597ed7c4bfde, "UTF-8");
 		data += "&" + URLEncoder.encode("9cafd6e81e3a478a7fe0b40e7502bf1f", "UTF-8") + "=" + URLEncoder.encode(cafd6e81e3a478a7fe0b40e7502bf1f, "UTF-8");
@@ -313,32 +430,9 @@ public class Util
 	    return sb.toString();
 	}
 	
-	public static String fetch_user_salt(int length)
-	{
-		String salt = "";
-		for (int i = 0; i < length; i++)
-		{
-			salt += (char)(randomNumber(33, 126));
-		}
-		return salt;
-	}
-
-	
-    private static int randomNumber(int min, int max) {
+    static int randomNumber(int min, int max) {
         return (int) (Math.random() * (max - min + 1) ) + min;
     }
-
-	private static final String charset2 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	public static String getRandomString2(int length) {
-	    Random rand = new Random(System.currentTimeMillis());
-	    StringBuffer sb = new StringBuffer();
-	    for (int i = 0; i < length; i++) {
-	        int pos = rand.nextInt(charset2.length());
-	        sb.append(charset2.charAt(pos));
-	    }
-	    return sb.toString();
-	}
-	
 	
 	public static void Log(String type, String what)
 	{
@@ -347,7 +441,7 @@ public class Util
 		else if(type.equals("warning")) AuthDB.log.warning("["+AuthDB.pluginname+"] "+what);
 	}
 
-	public static String md5Hash(String text) throws NoSuchAlgorithmException,
+	/* public static String md5Hash(String text) throws NoSuchAlgorithmException,
 			UnsupportedEncodingException {
 		MessageDigest md;
 		md = MessageDigest.getInstance("MD5");
@@ -355,40 +449,13 @@ public class Util
 		md.update(text.getBytes("iso-8859-1"), 0, text.length());
 		md5hash = md.digest();
 		return convertToHex(md5hash);
-	}
-	
-	public static String md5(String data)
-	{
-		try
-		{
-			byte[] bytes = data.getBytes("ISO-8859-1");
-			MessageDigest md5er = MessageDigest.getInstance("MD5");
-			byte[] hash = md5er.digest(bytes);
-			return bytes2hex(hash);
-		}
-		catch (GeneralSecurityException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
+	} */
 	
 	public static String GetIP(Player player)
 	{
 		return player.getAddress().getAddress().toString().substring(1);
 	}
 	
-    public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException  { 
-    MessageDigest md;
-    md = MessageDigest.getInstance("SHA-1");
-    byte[] sha1hash = new byte[40];
-    md.update(text.getBytes("iso-8859-1"), 0, text.length());
-    sha1hash = md.digest();
-    return convertToHex(sha1hash);
-    } 
 
 	static int hexToInt(char ch)
 	{
@@ -402,7 +469,7 @@ public class Util
 		throw new IllegalArgumentException("Not a hex character: " + ch);
 	}
 	
-    private static String convertToHex(byte[] data) { 
+    static String convertToHex(byte[] data) { 
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < data.length; i++) { 
             int halfbyte = (data[i] >>> 4) & 0x0F;
@@ -418,7 +485,7 @@ public class Util
         return buf.toString();
     } 
 
-	private static String bytes2hex(byte[] bytes)
+	static String bytes2hex(byte[] bytes)
 	{
 		StringBuffer r = new StringBuffer(32);
 		for (int i = 0; i < bytes.length; i++)
@@ -429,19 +496,6 @@ public class Util
 			r.append(x);
 		}
 		return r.toString();
-	}
-
-	public static String pack(String hex)
-	{
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < hex.length(); i += 2)
-		{
-			char c1 = hex.charAt(i);
-			char c2 = hex.charAt(i + 1);
-			char packed = (char) (hexToInt(c1) * 16 + hexToInt(c2));
-			buf.append(packed);
-		}
-		return buf.toString();
 	}
 	
 	

@@ -25,11 +25,24 @@ import org.bukkit.util.config.Configuration;
 
 public class Config 
 {
-	public static String script_name1 = "phpbb3";
-	public static String script_name2 = "smf1";
-	public static String script_name3 = "smf2";
-	public static String script_name4 = "mybb1_6";
-	public static String script_name5 = "vb4_1";
+	public static String Script1_latest = "3.0.8";
+	public static String Script1_versions = "3.0.8";
+	public static String Script1_name = "phpbb";
+	///
+	public static String Script2_latest = "1";
+	public static String Script2_latest2 = "2";
+	public static String Script2_versions = "1";
+	public static String Script2_versions2 = "2";
+	public static String Script2_name = "smf";
+	///
+	public static String Script3_latest = "1.6";
+	public static String Script3_versions = "1.6";
+	public static String Script3_name = "mybb";
+	///
+	public static String Script4_latest = "4.1";
+	public static String Script4_versions = "4.1";
+	public static String Script4_name = "vb";
+	///
 	
 	///////////////////////////////////////////
 	//               GLOBAL

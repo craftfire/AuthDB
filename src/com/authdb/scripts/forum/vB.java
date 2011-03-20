@@ -16,54 +16,71 @@
 package com.authdb.scripts.forum;
 
   import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
+  import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
+import java.util.Arrays;
 
 import com.authdb.util.Config;
+import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 
-  public class myBB1_6 {
-  	
+  public class vB {
+	  
+	  public static boolean check()
+		{
+			String name = Config.Script4_name;
+			String latest = Config.Script4_latest;
+			String[] versions = new String[] {Config.Script4_versions};
+			String Version = Util.CheckVersion(name,latest, 3);
+			if(Arrays.asList(versions).contains(Version))
+			{
+				if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list over supported versions of this script ("+name+")");
+				return true;
+			}
+			else 
+			{ 
+				Util.Log("warning","Version: "+Version+" is NOT in the list over supported versions of this script ("+name+")"); 
+				return false;
+			}
+		}
+	  
     public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
     {
   	long timestamp = System.currentTimeMillis()/1000;
-  	String salt = Util.getRandomString2(8);
-  	String hash = myBB1_6_hash("create",player,password, salt);
-  	///int userid;
-  	//
+  	String salt = Encryption.hash(30,"none",33,126);
+  	String passwordhashed = hash("create",player,password, salt);
+  	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
+  //	int userid;
+  	///
   	PreparedStatement ps;
   	//
-  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-    ps.setString(1, player); //username
-  	ps.setString(2, hash); // password
-    ps.setString(3, salt); //salt
+  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+    ps.setString(1, "2"); //usergroupid
+  	ps.setString(2, passwordhashed); // password
+    ps.setString(3, passworddate); //passworddate
     ps.setString(4, email); //email
-  	ps.setLong(5, timestamp); //regdate
-  	ps.setLong(6, timestamp); //lastactive
+  	ps.setString(5, "1"); //showvbcode
+  	ps.setLong(6, timestamp); //joindate
   	ps.setLong(7, timestamp); //lastvisit
-  	ps.setString(8, ipAddress); //regip
-  	//ps.setLong(9, Util.IP2Long(ipAddress)); //longregip
-	ps.setString(9, "2130706433");
-  	//need to add these, it's complaining about not default is set.
-	ps.setString(10, ""); //signature
-	ps.setString(11, ""); //buddylist
-	ps.setString(12, ""); //ignorelist
-	ps.setString(13, ""); //pmfolders
-	ps.setString(14, ""); //notepad
-	ps.setString(15, ""); //usernotes
-	ps.setString(16, "5");//usergroup
+  	ps.setLong(8, timestamp); //lastactivity
+  	ps.setString(9, "5"); //reputationlevelid
+	ps.setString(10, "45108311"); //options
+	ps.setLong(11, Util.IP2Long(ipAddress)); //ipaddress
+	ps.setString(12, salt); //salt
+	ps.setString(13, player); //username
     ps.executeUpdate();
- 
-    /*userid = MySQL.countitall(Config.database_prefix+"users");
-    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datacache", "`cache`", "title", "stats");
+     
+   /*  userid = MySQL.countitall(ForumAuth.forumPrefix+"user");
+    String oldcache =  MySQL.getfromtable(ForumAuth.forumPrefix+"datastore", "`data`", "title", "userstats");
+    Util.Log("info",oldcache);
     StringTokenizer st = new StringTokenizer(oldcache,":");
     int i = 0, usernamelength = player.length();
     String numusers, lastuid, lastusername, totalusers = "", newcache = "";
     while (st.hasMoreTokens()) {
-   if(i == 5) 
+    	if(i == 5) 
     	{ 
     		st.nextToken();
     		newcache += usernamelength+":";
@@ -80,6 +97,17 @@ import com.authdb.util.databases.MySQL;
 			numusers = "\""+numuserNumber+"\""+";s";
 			newcache += numusers+":";
     	}
+    	else if(i == 13) 
+    	{ 
+    		st.nextToken();
+    		newcache += usernamelength+":";
+    	}
+    	else if(i == 14) 
+    	{ 
+    		st.nextToken();
+    		lastusername = "\""+player+"\";s";
+    		newcache += lastusername+":";
+    	}
     	else if(i == 17) 
     	{ 
     		String dupe = "";
@@ -87,31 +115,20 @@ import com.authdb.util.databases.MySQL;
     		st.nextToken();
     		newcache += dupe.length()+":";
     	}
-    	else if(i == 21) 
+    	else if(i == 18) 
     	{ 
     		 st.nextToken();
     		lastuid = "\""+userid+"\";}";
     		newcache += lastuid;
     	}
-    	else if(i == 24) 
-    	{ 
-    		st.nextToken();
-    		newcache += usernamelength+":";
-    	}
-    	else if(i == 25) 
-    	{ 
-    		st.nextToken();
-    		lastusername = "\""+player+"\";s";
-    		newcache += lastusername+":";
-    	}
       else
       {  
     	  newcache += st.nextToken()+":"; 
       }
-     Util.Log("info",i+"-"+st.nextToken()+":"); 
+   //   Util.Log("info",i+"-"+st.nextToken()+":"); 
       i++;
     }
-  StringTokenizer st2 = new StringTokenizer(newcache,":");
+    StringTokenizer st2 = new StringTokenizer(newcache,":");
     String newcache2 = "";
     while (st2.hasMoreTokens()) {
     	if(i == 5) 
@@ -124,30 +141,17 @@ import com.authdb.util.databases.MySQL;
       	  newcache2 += st.nextToken()+":"; 
         }
     }
-      //ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datacache"+"` SET `cache` = '" + newcache2 + "' WHERE `title` = 'stats'");
-     // ps.executeUpdate();
+    
+      ps = MySQL.mysql.prepareStatement("UPDATE `"+ForumAuth.forumPrefix+"datastore"+"` SET `data` = '" + newcache2 + "' WHERE `title` = 'userstats'");
+      ps.executeUpdate();
       */
     }
-    public static boolean checkpassword(String player, String password) throws SQLException
-    {
-  	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`password`", "username", player);
-  	String salt = "";
-  	if(myBB1_6_check_hash(myBB1_6_hash("find",player,password, salt),hash)) { return true; }
-  	else { return false; }
-    }
     
-    public static boolean checkuser(String player) throws SQLException
-    {	
-  	String check = MySQL.getfromtable(Config.database_prefix+"users", "*", "username", player);
-  	if(check != "fail") { return true; }
-  	return false;
-    }
-  	
-    public static String myBB1_6_hash(String action,String player,String password, String thesalt) throws SQLException {
+    public static String hash(String action,String player,String password, String thesalt) throws SQLException {
     	if(action.equals("find"))
     	{
   	try {
-  		String salt = MySQL.getfromtable(Config.database_prefix+"users", "`salt`", "username", player);
+  		String salt = MySQL.getfromtable(Config.database_prefix+"user", "`salt`", "username", player);
   		return passwordHash(password, salt);
   	} catch (NoSuchAlgorithmException e) {
   		e.printStackTrace();
@@ -170,7 +174,7 @@ import com.authdb.util.databases.MySQL;
   	return "fail";
     }
 
-  	public static boolean myBB1_6_check_hash(String passwordhash, String hash)
+  	public static boolean check_hash(String passwordhash, String hash)
   	{
   		if(passwordhash.equals(hash)) return true;
   		else return false;
@@ -178,6 +182,6 @@ import com.authdb.util.databases.MySQL;
   	
   	public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
   	{
-  	return Util.md5Hash(Util.md5Hash(salt) + Util.md5Hash(password));
+  	return Encryption.md5(Encryption.md5(password)+salt);
   	}
 }

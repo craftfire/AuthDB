@@ -17,11 +17,9 @@ package com.authdb.scripts.forum;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.StringTokenizer;
-import java.util.regex.Pattern;
-
-import com.authdb.AuthDB;
+import java.util.Arrays;
 import com.authdb.util.Config;
+import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
@@ -35,86 +33,90 @@ import com.authdb.util.databases.MySQL;
  * @author lars
  * @author Contex
  */
-public class phpBB3 {
+public class phpBB {
+	
+	public static boolean check()
+	{
+		String name = Config.Script1_name;
+		String latest = Config.Script1_latest;
+		String[] versions = new String[] {Config.Script1_versions};
+		String Version = Util.CheckVersion(name,latest, 3);
+		if(Arrays.asList(versions).contains(Version))
+		{
+			if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list over supported versions of this script ("+name+")");
+			return true;
+		}
+		else 
+		{ 
+			Util.Log("warning","Version: "+Version+" is NOT in the list over supported versions of this script ("+name+")"); 
+			return false;
+		}
+	}
 	
   public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
   {
-	long timestamp = System.currentTimeMillis()/1000;
-	//String[] SupportVersions = ["3.0.8"];
-	//String Version = Util.CheckVersion("phpBB","3.0.8", 3);
-	//if(SupportVersions.
-		//.asList(...).contains(...)
-	String hash = phpbb_hash(password);
-	int userid;
-	//
-	PreparedStatement ps;
-	//
-	try {
-		MySQL.connect();
-	} catch (ClassNotFoundException e) {
-		Util.Debug("Cannot connect to MySQL server:");
-		e.printStackTrace();
+	if(check())
+	{
+		String hash = phpbb_hash(password);
+		long timestamp = System.currentTimeMillis()/1000;
+		int userid;
+		//
+		PreparedStatement ps;
+		//
+		try {
+			MySQL.connect();
+		} catch (ClassNotFoundException e) {
+			Util.Debug("Cannot connect to MySQL server:");
+			e.printStackTrace();
+		}
+		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+	    ps.setString(1, player);
+		ps.setString(2, player.toLowerCase());
+	    ps.setString(3, hash);
+	    ps.setString(4, email);
+		ps.setString(5, "2"); //group
+		ps.setString(6, "0.00"); //timezone
+		ps.setString(7, "0"); //dst
+		ps.setString(8, "en"); //lang
+		ps.setString(9, "0"); //user_type
+		ps.setLong(10, timestamp); //user_regdate
+		ps.setString(11, "1"); //usernew
+		ps.setLong(12, timestamp); //user_lastvisit
+		//need to add these, it's complaining about not default is set.
+		ps.setString(13, ""); //user_permissions
+		ps.setString(14, ""); //user_sig
+		ps.setString(15, ""); //user_occ
+		ps.setString(16, ""); //user_interests
+		///
+		ps.setString(17, ipAddress); //user_ip
+	    ps.executeUpdate();
+	    
+	    userid = MySQL.countitall(Config.database_prefix+"users");
+	    
+		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+	    ps.setInt(1, 2);
+		ps.setInt(2, userid);
+	    ps.setInt(3, 0);
+	    ps.setInt(4, 0);
+	    ps.executeUpdate();
+	    
+		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+	    ps.setInt(1, 7);
+		ps.setInt(2, userid);
+	    ps.setInt(3, 0);
+	    ps.setInt(4, 0);
+	    ps.executeUpdate();
+	    
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
+	    ps.executeUpdate();
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
+	    ps.executeUpdate();
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+	    ps.executeUpdate();
+	    MySQL.close();
 	}
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-    ps.setString(1, player);
-	ps.setString(2, player.toLowerCase());
-    ps.setString(3, hash);
-    ps.setString(4, email);
-	ps.setString(5, "2"); //group
-	ps.setString(6, "0.00"); //timezone
-	ps.setString(7, "0"); //dst
-	ps.setString(8, "en"); //lang
-	ps.setString(9, "0"); //user_type
-	ps.setLong(10, timestamp); //user_regdate
-	ps.setString(11, "1"); //usernew
-	ps.setLong(12, timestamp); //user_lastvisit
-	//need to add these, it's complaining about not default is set.
-	ps.setString(13, ""); //user_permissions
-	ps.setString(14, ""); //user_sig
-	ps.setString(15, ""); //user_occ
-	ps.setString(16, ""); //user_interests
-	///
-	ps.setString(17, ipAddress); //user_ip
-    ps.executeUpdate();
-    
-    userid = MySQL.countitall(Config.database_prefix+"users");
-    
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
-    ps.setInt(1, 2);
-	ps.setInt(2, userid);
-    ps.setInt(3, 0);
-    ps.setInt(4, 0);
-    ps.executeUpdate();
-    
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
-    ps.setInt(1, 7);
-	ps.setInt(2, userid);
-    ps.setInt(3, 0);
-    ps.setInt(4, 0);
-    ps.executeUpdate();
-    
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
-    ps.executeUpdate();
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
-    ps.executeUpdate();
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
-    ps.executeUpdate();
-    MySQL.close();
-  }
-  
-  public static boolean checkpassword(String player, String password) throws SQLException
-  {	
-	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username_clean", player);
-	if(phpbb_check_hash(password,hash)) { return true; }
-	else { return false; }
-  }
-  
-  public static boolean checkuser(String player) throws SQLException
-  {	
-	String check = MySQL.getfromtable(Config.database_prefix+"users", "*", "username_clean", player);
-	if(check != "fail") { return true; }
-	return false;
-  }
+ }
+
 	
   private static String itoa64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   
@@ -129,8 +131,8 @@ public class phpBB3 {
 
 		for (int i = 0; i < count; i += 16)
 		{
-			random_state = Util.md5(unique_id() + random_state);
-			random += Util.pack(Util.md5(random_state));
+			random_state = Encryption.md5(unique_id() + random_state);
+			random += Encryption.pack(Encryption.md5(random_state));
 		}
 		random = random.substring(0, count);
 	}
@@ -140,7 +142,7 @@ public class phpBB3 {
 	if (hash.length() == 34)
 		return hash;
 
-	return Util.md5(password);
+	return Encryption.md5(password);
   }
 
   private static String unique_id() {
@@ -225,11 +227,11 @@ public class phpBB3 {
 		if (salt.length() != 8)
 			return output;
 
-		String m1 = Util.md5(salt + password);
-		String hash = Util.pack(m1);
+		String m1 = Encryption.md5(salt + password);
+		String hash = Encryption.pack(m1);
 		do
 		{
-			hash = Util.pack(Util.md5(hash + password));
+			hash = Encryption.pack(Encryption.md5(hash + password));
 		}
 		while (--count > 0);
 
@@ -239,11 +241,11 @@ public class phpBB3 {
 		return output;
 	}
 
-	public static boolean phpbb_check_hash(String password, String hash)
+	public static boolean check_hash(String password, String hash)
 	{
 		if (hash.length() == 34)
 			return _hash_crypt_private(password, hash).equals(hash);
 		else
-			return Util.md5(password).equals(hash);
+			return Encryption.md5(password).equals(hash);
 	}
 }
