@@ -354,7 +354,8 @@ public class Util
 		{
 			string = string.replaceAll("\\{IP\\}", GetIP(player));
 			string = string.replaceAll("\\{PLAYER\\}", player.getName());
-			string = string.replaceAll("\\{NEWPLAYER\\}", "");
+			string = string.replaceAll("\\{NEWPLAYER\\}", "");      
+			string = string.replaceAll("&", "§"); 
 		}
 		string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
 		string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
@@ -365,7 +366,7 @@ public class Util
 		string = string.replaceAll("\\{STATE\\}", "");
 		string = string.replaceAll("\\{COUNTRY\\}", "");
 		string = string.replaceAll("\\{AGE\\}", "");
-		string = string.replaceAll("&", "§");
+
 		///COLORS
 		string = string.replaceAll("\\<BLACK\\>", "§0");
 		string = string.replaceAll("\\<NAVY\\>", "§1");
