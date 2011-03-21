@@ -37,6 +37,7 @@ import com.authdb.AuthDB;
 import com.authdb.util.Config;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
 
 public class AuthDBPlayerListener extends PlayerListener
 {
@@ -54,11 +55,11 @@ public void onPlayerLogin(PlayerLoginEvent event)
 		if(Config.debug_enable) Util.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
 		Player player = event.getPlayer();
 		String name = player.getName();
-		if (Util.checkUsernameCharacters(name) == false && Util.CheckWhitelist(name) == false)
+		if (Util.checkUsernameCharacters(name) == false && Util.CheckWhitelist("badcharacters",name) == false)
 	    {
 		  if(Config.debug_enable) Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
 	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_badcharacters_kicked", player, event);
-	      else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_badcharacters_renamed", player, event);
+	     // else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_badcharacters_renamed", player, event);
 	    }
 	}
 }
@@ -66,7 +67,8 @@ int Schedule;
 
 public boolean CheckIdle(Player player) throws IOException
 {
-	if(Config.debug_enable) Util.Debug("Launching function: CheckIdle(Player player))");
+	if(Config.debug_enable) 
+		Util.Debug("Launching function: CheckIdle(Player player))");
 	if (AuthDB.isAuthorized(player.getEntityId()) == false && this.plugin.IdleTask("check",player, ""+Schedule))
 	{
 		Messages.SendMessage("AuthDB_message_idle_kick", player, null);
@@ -79,9 +81,10 @@ public boolean CheckIdle(Player player) throws IOException
   {
 	final Player player = event.getPlayer();
     try {
-	    if(Config.idle_kick == true && Util.CheckWhitelist(player.getDisplayName()) == false)
+	    if(Config.idle_kick == true && Util.CheckWhitelist("idle",player.getDisplayName()) == false)
 	    {
-	    	if(Config.debug_enable) Util.Debug("Idle time is: "+Config.idle_ticks);
+	    	if(Config.debug_enable) 
+	    		Util.Debug("Idle time is: "+Config.idle_ticks);
 	    	Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    		@Override
 	    		public void run() 
@@ -94,20 +97,23 @@ public boolean CheckIdle(Player player) throws IOException
 					} 
 	    		} }, Config.idle_ticks);
 	    	if(this.plugin.IdleTask("add",player, ""+Schedule))
-	    		if(Config.debug_enable) Util.Debug(player.getName()+" added to the IdleTaskList");
+	    		if(Config.debug_enable) 
+	    			Util.Debug(player.getName()+" added to the IdleTaskList");
 	    	this.plugin.updateDb();
 	    }
 	if(Config.custom_enabled) if(Config.custom_encryption == null) { player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT."); }
    if (this.plugin.isRegistered(player.getName())) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
          player.getInventory().clear();
-       Messages.SendMessage("AuthDB_message_welcome_user", player,null);
+        	 Messages.SendMessage("AuthDB_message_welcome_user", player,null);
      } else if (Config.register_force) {
         this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
        player.getInventory().clear();
-		Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
+      Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
       }
-     else if (!Config.register_force) { Messages.SendMessage("AuthDB_message_welcome_guest", player,null); }
+     else if (!Config.register_force) { 
+    	 Messages.SendMessage("AuthDB_message_welcome_guest", player,null); 
+    	 }
      else {
         this.plugin.authorize(event.getPlayer().getEntityId());
       }
@@ -153,9 +159,10 @@ public boolean CheckIdle(Player player) throws IOException
   {
     String[] split = event.getMessage().split(" ");
 	Player player = event.getPlayer();
+
     if (split[0].equals("/login")) {
       if (!this.plugin.isRegistered(player.getName()))
-  		  Messages.SendMessage("AuthDB_message_login_ notregistered", player,null);
+  		  Messages.SendMessage("AuthDB_message_login_notregistered", player,null);
   	  else if (AuthDB.isAuthorized(player.getEntityId())) {			  
 				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
       }
@@ -189,7 +196,7 @@ public boolean CheckIdle(Player player) throws IOException
       else if (split.length < 3)
 				  Messages.SendMessage("AuthDB_message_email_required", player,null);
        else if ((split.length >= 3) && (!this.plugin.checkEmail(split[2])))
-				  Messages.SendMessage("AuthDB_message_email_badcharacters", player,null);
+				  Messages.SendMessage("AuthDB_message_email_invalid", player,null);
       else {
         try {
            if (split.length >= 3)

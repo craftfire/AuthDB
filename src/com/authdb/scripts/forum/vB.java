@@ -37,13 +37,15 @@ import com.authdb.util.databases.MySQL;
 			String Version = Util.CheckVersion(name,latest, 3);
 			if(Arrays.asList(versions).contains(Version))
 			{
-				if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list over supported versions of this script ("+name+")");
+				Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
+				Config.script_version = latest;
 				return true;
 			}
 			else 
 			{ 
-				Util.Log("warning","Version: "+Version+" is NOT in the list over supported versions of this script ("+name+")"); 
-				return false;
+				Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
+				Config.script_version = latest;
+				return true;
 			}
 		}
 	  

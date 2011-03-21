@@ -43,13 +43,14 @@ public class phpBB {
 		String Version = Util.CheckVersion(name,latest, 3);
 		if(Arrays.asList(versions).contains(Version))
 		{
-			if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list over supported versions of this script ("+name+")");
+			if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list of supported versions of this script ("+name+")");
 			return true;
 		}
 		else 
 		{ 
-			Util.Log("warning","Version: "+Version+" is NOT in the list over supported versions of this script ("+name+")"); 
-			return false;
+			Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
+			Config.script_version = latest;
+			return true;
 		}
 	}
 	
@@ -63,12 +64,7 @@ public class phpBB {
 		//
 		PreparedStatement ps;
 		//
-		try {
-			MySQL.connect();
-		} catch (ClassNotFoundException e) {
-			Util.Debug("Cannot connect to MySQL server:");
-			e.printStackTrace();
-		}
+
 		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
 	    ps.setString(1, player);
 		ps.setString(2, player.toLowerCase());

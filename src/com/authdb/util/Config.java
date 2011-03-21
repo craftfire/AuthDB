@@ -42,13 +42,24 @@ public class Config
 	public static String Script4_latest = "4.1";
 	public static String Script4_versions = "4.1";
 	public static String Script4_name = "vb";
+	
+	public static String Script5_latest = "6.20";
+	public static String Script5_versions = "6.20";
+	public static String Script5_name = "drupal";
+	
+	public static String Script6_latest = "1.5.22";
+	public static String Script6_versions = "1.5.22";
+	public static String Script6_latest2 = "1.6.1";
+	public static String Script6_versions2 = "1.6.1";
+	public static String Script6_name = "joomla";
 	///
-	public static boolean WorldEdit;
 	
 	///////////////////////////////////////////
 	//               GLOBAL
 	///////////////////////////////////////////
+	public static boolean database_ison;
 	public static boolean has_badcharacters;
+	public static boolean HasForumBoard;
 	
 	///////////////////////////////////////////
 	//               Database
@@ -67,7 +78,7 @@ public class Config
 		///////////////////////////////////////////
 		//               script
 		///////////////////////////////////////////
-		public static String script_name,script_version;
+		public static String script_name,script_version,script_salt;
 		public static boolean script_updatestatus;
 		
 		///////////////////////////////////////////
@@ -108,7 +119,7 @@ public class Config
 		//               badcharacters
 		///////////////////////////////////////////
 		public static boolean badcharacters_kick,badcharacters_remove;
-		public static String badcharacters_characters;
+		public static String badcharacters_characters,badcharacters_whitelist="";
 		
 		///////////////////////////////////////////
 		//               geoip
@@ -138,7 +149,6 @@ public class Config
 		  template.load();
 			if(config.equals("config")) 
 			{
-				WorldEdit = false;
 				///////////////////////////////////////////
 				//               Core
 				///////////////////////////////////////////
@@ -156,6 +166,7 @@ public class Config
 					script_name = GetConfigString("Core.script.name", "phpbb").toLowerCase();
 					script_version = GetConfigString("Core.script.version", "3.0.8");
 					script_updatestatus = GetConfigBoolean("Core.script.updatestatus", true);
+					script_salt = GetConfigString("Core.script.salt", "");
 					
 					///////////////////////////////////////////
 					//               custom
@@ -227,6 +238,7 @@ public class Config
 					badcharacters_kick = GetConfigBoolean("Core.badcharacters.kick", true);
 					badcharacters_remove = GetConfigBoolean("Core.badcharacters.remove", false);
 					badcharacters_characters = GetConfigString("Core.badcharacters.characters", "$^@(#)!+\\-/");
+					badcharacters_whitelist= GetConfigString("Core.badcharacters.whitelist", "");
 					
 					///////////////////////////////////////////
 					//               geoip
@@ -271,6 +283,10 @@ public class Config
 					///////////////////////////////////////////
 					//               welcome
 					///////////////////////////////////////////
+					Messages.AuthDB_message_database_failure = Config.GetConfigString("Core.AuthDB.database.failure", "&dDatabase connection failed! Contact admin.");
+					///////////////////////////////////////////
+					//               welcome
+					///////////////////////////////////////////
 					Messages.AuthDB_message_welcome_guest = (String)Config.GetConfigString("Core.AuthDB.welcome.guest", "&4Welcome guest! Please register with /register <password> <email>");
 					Messages.AuthDB_message_welcome_user = (String)Config.GetConfigString("Core.AuthDB.welcome.user", "&4Welcome back {PLAYER}! Please login with /login <password>");
 					
@@ -309,14 +325,14 @@ public class Config
 					//               email
 					///////////////////////////////////////////
 					Messages.AuthDB_message_email_required = Config.GetConfigString("Core.AuthDB.email.required", "&4Email required for registration!");
-					Messages.AuthDB_message_email_badcharacters = Config.GetConfigString("Core.AuthDB.email.badcharacters", "&4Email contains bad characters: {BADCHARACTERS}!");
+					Messages.AuthDB_message_email_invalid = Config.GetConfigString("Core.AuthDB.email.invalid", "&4Invalid email! Please try again!");
 					
 					///////////////////////////////////////////
 					//               username
 					///////////////////////////////////////////
 					Messages.AuthDB_message_badcharacters_renamed = Config.GetConfigString("Core.AuthDB.badcharacters.renamed", "&2{PLAYER} renamed to {PLAYERNEW} due to bad characters: {BADCHARACTERS}.");
-					Messages.AuthDB_message_badcharacters_kicked = Config.GetConfigString("Core.AuthDB.badcharacters.kicked", "Username contains bad characters: {BADCHARACTERS}!");
-					Messages.AuthDB_message_badcharacters_whitelist = Config.GetConfigString("Core.AuthDB.badcharacters.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
+					Messages.AuthDB_message_badcharacters_kicked = Config.GetConfigString("Core.AuthDB.badcharacters.kick", "Username contains bad characters: {BADCHARACTERS}!");
+					Messages.AuthDB_message_badcharacters_whitelist = Config.GetConfigString("Core.AuthDB.badcharacters.whitelist", "&2{PLAYER} on the bad characters &fwhitelist&2, bypassing restrictions!");
 					
 					///////////////////////////////////////////
 					//               password
@@ -330,6 +346,7 @@ public class Config
 					//               idle
 					///////////////////////////////////////////
 					Messages.AuthDB_message_idle_kick = Config.GetConfigString("Core.AuthDB.idle.kick", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
+					Messages.AuthDB_message_idle_whitelist = Config.GetConfigString("Core.AuthDB.idle.whitelist", "{PLAYER} on the idle whitelist, bypassing restrictions!");
 					
 				///////////////////////////////////////////
 				//               CraftIRC

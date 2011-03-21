@@ -22,7 +22,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 
+import com.authdb.AuthDB;
 import com.authdb.util.Config;
+import com.authdb.util.Messages;
 import com.authdb.util.Util;
 
 
@@ -30,11 +32,32 @@ public class MySQL
 {
 	public static Connection mysql = null;
 	
+	public static boolean check()
+	{
+		try {
+			mysql = DriverManager.getConnection(Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+		} catch (SQLException e) {
+			Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
+			AuthDB.Server.broadcastMessage("");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public static void close() { if (mysql != null) try { mysql.close(); } catch (SQLException localSQLException) { } }
 	
-	public static void connect() throws SQLException, ClassNotFoundException
+	public static void connect()
 	{
-		Class.forName(Util.ToDriver(Config.database_driver));
+		try {
+			Class.forName(Util.ToDriver(Config.database_driver));
+		} catch (ClassNotFoundException e) {
+			Config.database_ison = false;
+			Util.Log("warning", "CANNOT FIND DATABASE DRIVER!!!");
+			Messages.SendMessage("AuthDB_message_database_failure", null, null);
+			e.printStackTrace();
+		}
+		
 		if(Config.debug_enable)
 		{
 			Util.Debug("Lauching function: connect()");
@@ -49,7 +72,15 @@ public class MySQL
 		}
 		
 		if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
-		mysql = DriverManager.getConnection(Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+		try {
+			Config.database_ison = true;
+			mysql = DriverManager.getConnection(Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+		} catch (SQLException e) {
+			Config.database_ison = false;
+			Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
+			Messages.SendMessage("AuthDB_message_database_failure", null, null);
+			e.printStackTrace();
+		}
 	}
 	
 	public static int countitall(String table) throws SQLException
@@ -63,18 +94,11 @@ public class MySQL
 	}
 	public static String getfromtable(String table,String column1,String column2,String value) throws SQLException
 	{
-		try {
-			MySQL.connect();
-		} catch (ClassNotFoundException e) {
-			Util.Debug("Cannot connect to MySQL server:");
-			e.printStackTrace();
-		}
 		String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"'";
 		Statement stmt = mysql.createStatement();
 		ResultSet rs = stmt.executeQuery( query );
 		String dupe = "fail";
 		if (rs.next()) { dupe = rs.getString(1); }
-		close();
 		return dupe;
 	}
 }

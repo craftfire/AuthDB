@@ -28,6 +28,10 @@ public static void SendMessage(String type,Player player)
 	{
 		if(AuthDB.craftircHandle != null && Config.CraftIRC_enabled == true)
 		{
+			if(type.equals("AuthDB_message_database_failure")) 
+			{
+				AuthDB.craftircHandle.sendMessageToTag(Config.CraftIRC_prefix+" "+Util.replaceStrings(Messages.AuthDB_message_database_failure,player,""), Config.CraftIRC_tag);
+			}
 			if(type.equals("CraftIRC_message_status_join")) 
 			{
 				AuthDB.craftircHandle.sendMessageToTag(Config.CraftIRC_prefix+" "+Util.replaceStrings(Messages.CraftIRC_message_status_join,player,""), Config.CraftIRC_tag);

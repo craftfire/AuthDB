@@ -56,6 +56,7 @@ import com.ensifera.animosity.craftirc.CraftIRC;
 
 public class AuthDB extends JavaPlugin {
 	//
+    public static org.bukkit.Server Server;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
 	public static String pluginversion = "2.0.0";
@@ -82,6 +83,7 @@ public class AuthDB extends JavaPlugin {
 
 	public void onEnable() 
 	{
+		Server = getServer();
 		if(Config.usagestats_enabled)
 		{
 			try { Util.PostInfo(getServer().getName(),getServer().getVersion(),pluginversion); } 
@@ -103,7 +105,6 @@ public class AuthDB extends JavaPlugin {
 		    return;
 		}
 		Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
-		Plugin checkWorldEdit = getServer().getPluginManager().getPlugin("WorldEdit");
 		if (checkCraftIRC != null && Config.CraftIRC_enabled == true) {
 		    try {
 		        	Util.Log("info", "CraftIRC Support Enabled"); 
@@ -115,7 +116,6 @@ public class AuthDB extends JavaPlugin {
 		    	Stop("Error in looking for CraftIRC");
 		    }
 		}
-		if(checkWorldEdit != null) Config.WorldEdit = true;
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Normal, this);
@@ -132,17 +132,7 @@ public class AuthDB extends JavaPlugin {
 		pm.registerEvent(Event.Type.BLOCK_INTERACT, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGED, this.entityListener, Event.Priority.Normal, this);
 		
-		try { MySQL.connect(); } 
-		catch (ClassNotFoundException e) 
-		{
-			e.printStackTrace();
-			Stop("ERRORS in the ClassNotFoundException. Plugin will NOT work. Disabling it.");
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-			Stop("ERRORS in the SQLException. Plugin will NOT work. Disabling it.");
-		}
+		MySQL.connect();
 		try {
 			Util.NumberUsers();
 		} catch (ClassNotFoundException e) {
@@ -155,7 +145,7 @@ public class AuthDB extends JavaPlugin {
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
-		Util.Log("info", pluginname + " is developed by Contex <contex@authdb.com> and Wulfspider <wulfspider@authdb.com>");
+		Util.Log("info", pluginname + " is developed by Contex <contex@craftfire.com> and Wulfspider <wulfspider@craftfire.com>");
 	}
 
     public static boolean isAuthorized(int id) { return authorizedIds.contains(Integer.valueOf(id)); }
@@ -165,14 +155,8 @@ public class AuthDB extends JavaPlugin {
 	 {
 		try 
 		{
-			try {
 				MySQL.connect();
-			} catch (ClassNotFoundException e) {
-				Util.Debug("Cannot connect to MySQL server:");
-				e.printStackTrace();
-			}
 			if(Util.CheckPassword(Config.script_name, player.toLowerCase(), password)) return true;
-			else { Stop("Can't check password, stopping plugin."); }
 			MySQL.close();
 		} 
 		catch (SQLException e) 
@@ -193,12 +177,7 @@ public class AuthDB extends JavaPlugin {
 
 	public void register(String player, String password, String email, String ipAddress) throws IOException, SQLException 
 	{
-		try {
-			MySQL.connect();
-		} catch (ClassNotFoundException e) {
-			Util.Debug("Cannot connect to MySQL server:");
-			e.printStackTrace();
-		}
+		MySQL.connect();
 		Util.AddUser(player, email, password, ipAddress);
 		MySQL.close();
 	}
@@ -206,17 +185,17 @@ public class AuthDB extends JavaPlugin {
 	public boolean isRegistered(String player) {
 		try {
 			
-			Util.Debug("Running function: isRegistered(String player)");
+			if(Config.debug_enable) 
+				Util.Debug("Running function: isRegistered(String player)");
 			boolean dupe = false;
-			try {
-				MySQL.connect();
-			} catch (ClassNotFoundException e) {
-				Util.Debug("Cannot connect to MySQL server:");
-				e.printStackTrace();
+			MySQL.connect();
+			Config.HasForumBoard = false;
+			if(Util.CheckUser(Config.script_name, player.toLowerCase()))
+			{
+				dupe = true;
 			}
-			if(Util.CheckUser(Config.script_name, player.toLowerCase())) dupe = true;
-			else { Stop("Can't find a forum board, stopping the plugin."); }
-			Util.Debug("No user!");
+			if(!Config.HasForumBoard) 
+				Stop("Can't find a forum board, stopping the plugin.");
 			MySQL.close();
 			return dupe;
 		} catch (SQLException e) 
