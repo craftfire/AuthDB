@@ -152,7 +152,6 @@ public boolean CheckIdle(Player player) throws IOException
   public void onPlayerCommandPreprocess(PlayerChatEvent event)
   {
     String[] split = event.getMessage().split(" ");
-    Util.Log("info", "COMMAND: "+split[0]);
 	Player player = event.getPlayer();
     if (split[0].equals("/login")) {
       if (!this.plugin.isRegistered(player.getName()))
@@ -175,10 +174,11 @@ public boolean CheckIdle(Player player) throws IOException
           player.getInventory().setContents(inv);
 				  Messages.SendMessage("AuthDB_message_login_failure", player,null);
       }
+      if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
      event.setMessage("/login ******");
       event.setCancelled(true);
      }
-	  else if (split[0].equals("/register")) {
+	else if (split[0].equals("/register")) {
       if (!Config.register_enabled)
 		  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
       else if (this.plugin.isRegistered(player.getName()))
@@ -209,12 +209,12 @@ public boolean CheckIdle(Player player) throws IOException
           e.printStackTrace();
         }
       }
+      if(Config.debug_enable) Util.Debug(player.getName()+" register ********");
       event.setMessage("/register *****");
        event.setCancelled(true);
      } else if (!AuthDB.isAuthorized(player.getEntityId())) {
-    Util.Debug("HERE");
-     event.setMessage("");
-     event.setCancelled(true);
+      event.setMessage("/iamnotloggedin");
+      event.setCancelled(true);
     }
   }
 
@@ -229,10 +229,7 @@ public boolean CheckIdle(Player player) throws IOException
   public void onPlayerChat(PlayerChatEvent event)
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
-    {
-    	event.setMessage("");
-        event.setCancelled(true);
-    }
+       event.setCancelled(true);
   }
 
   public void onPlayerItem(PlayerItemEvent event)
