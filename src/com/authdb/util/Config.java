@@ -27,8 +27,10 @@ public class Config
 {
 	public static String Script1_latest = "3.0.8";
 	public static String Script1_versions = "3.0.8";
+	public static String Script1_versionrange = "3.0.0-3.0.8";
 	public static String Script1_latest2 = "2.0.23";
 	public static String Script1_versions2 = "2.0.23";
+	public static String Script1_versionrange2 = "2.0.0-2.0.23";
 	public static String Script1_name = "phpbb";
 	///
 	public static String Script2_latest = "1";

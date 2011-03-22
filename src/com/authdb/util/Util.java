@@ -61,6 +61,7 @@ public class Util
 			else if(Config.script_name.equals(Config.Script3_name)) { myBB.adduser(player, email, password, ipAddress); }
 			else if(Config.script_name.equals(Config.Script4_name)) { vB.adduser(player, email, password, ipAddress); }
 			else if(Config.script_name.equals(Config.Script5_name)) { Drupal.adduser(player, email, password, ipAddress); }
+			else if(Config.script_name.equals(Config.Script6_name)) { Joomla.adduser(player, email, password, ipAddress); }
     	} 
       return false;
     }
@@ -81,7 +82,7 @@ public class Util
 		    	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username_clean", player);
 		  		if(phpBB.check_hash(password,hash)) { return true; }
 		  	  } 
-	    	  else if(phpBB.check(1))
+	    	  else if(phpBB.check(2))
 	    	  {
 		    	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username", player);
 		  		if(hash.equals(Encryption.md5(password))) { return true; }
@@ -155,32 +156,31 @@ public class Util
 		    }
 		    else if(script.equals(Config.Script1_name))
 		      {
-		    	  if(phpBB.check(1))
-		    	  {
-		    		usertable = "users";
-		  		    usernamefield = "username_clean";
-			  	  } 
-		    	  else if(phpBB.check(1))
-		    	  {
-		    		usertable = "users";
-		  		    usernamefield = "username";
-			  	  } 
+		    	usertable = "users";
+		    	if(CheckVersionInRange(Config.Script1_versionrange))
+		    	{
+		    		usernamefield = "username_clean";
+		    	}
+		    	else if(CheckVersionInRange(Config.Script1_versionrange2))
+		    	{
+		    		usernamefield = "username";
+		    	}
 		      }
 		      else if(script.equals(Config.Script2_name))
 		      {
 		    	  usertable = "members";
-		    	  if(SMF.check(1))
+		    	  if(CheckVersionInRange(Config.Script2_versionrange))
 		    	  {
 		  		    usernamefield = "realName";
 		    	  }
-		    	  else if(SMF.check(2))
+		    	  else if(CheckVersionInRange(Config.Script2_versionrange2))
 		    	  {
 				    usernamefield = "real_name";
 		    	  }
 		      }
 		      else if(script.equals(Config.Script3_name))
 		      {
-		    	  if(myBB.check())
+		    	  if(CheckVersionInRange(Config.Script3_versionrange))
 		    	  {
 				    usertable = "users";
 				    usernamefield = "username";
@@ -188,7 +188,7 @@ public class Util
 		      }
 		      else if(script.equals(Config.Script4_name))
 		      {
-		    	  if(vB.check(1) || vB.check(2))
+		    	  if(CheckVersionInRange(Config.Script4_versionrange) || CheckVersionInRange(Config.Script4_versionrange2))
 		    	  {
 				    usertable = "user";
 				    usernamefield = "username";
@@ -197,7 +197,7 @@ public class Util
 		      else if(script.equals(Config.Script5_name))
 		      {
 		    	  usertable = "users";
-		    	  if(Drupal.check(1))
+		    	  if(CheckVersionInRange(Config.Script5_versionrange))
 		    	  {
 		  		    usernamefield = "name";
 		    	  }
@@ -205,7 +205,7 @@ public class Util
 		      else if(script.equals(Config.Script6_name))
 		      {
 		    	  usertable = "users";
-		    	  if(Joomla.check(1))
+		    	  if(CheckVersionInRange(Config.Script6_versionrange))
 		    	  {
 		  		    usernamefield = "username";
 		    	  }
@@ -266,6 +266,75 @@ public class Util
 			}
     	}
 		MySQL.close();
+	}
+	
+	public static boolean CheckVersionInRange(String versionrange)
+	{
+		String version = Config.script_version;
+		String[] versions= version.split("\\.");
+		String[] versionss= versionrange.split("\\-");
+		String[] versionrange1= versionss[0].split("\\.");
+		String[] versionrange2= versionss[1].split("\\.");
+		if(versionrange1.length == versions.length)
+		{	
+			int a = Integer.parseInt(versionrange1[0]);
+			int b = Integer.parseInt(versionrange2[0]);
+			int c = Integer.parseInt(versions[0]);
+			if(a <= c && b >= c)
+			{
+				Util.Debug("Test1");
+				int d = b - c;
+				if(d > 0) 
+				{
+					return true;
+				}
+				else if(d == 0)
+				{
+					int a2 = Integer.parseInt(versionrange1[1]);
+					int b2 = Integer.parseInt(versionrange2[1]);
+					int c2 = Integer.parseInt(versions[1]);
+					if(a2 <= c2 && b2 >= c2)
+					{
+						Util.Debug("Test2");
+						int d2 = b2 - c2;
+						if(d2 > 0) 
+						{
+							return true;
+						}
+						else if(d2 == 0)
+						{
+							int a3 = Integer.parseInt(versionrange1[2]);
+							int b3 = Integer.parseInt(versionrange2[2]);
+							int c3 = Integer.parseInt(versions[2]);
+							if(a3 <= c3 && b3 >= c3)
+							{
+								if(versionrange1.length != 4) { return true; }
+								else if(versionrange1.length == 4)
+								{
+									Util.Debug("Test3");
+									int d3 = b3 - c3;
+									if(d3 > 0) 
+									{
+										return true;
+									}
+									else if(d3 == 0)
+									{
+										int a4 = Integer.parseInt(versionrange1[3]);
+										int b4 = Integer.parseInt(versionrange2[3]);
+										int c4 = Integer.parseInt(versions[3]);
+										if(a4 <= c4 && b4 >= c4)
+										{
+											return true;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	public static String CheckVersion(String script,String latest, int length)

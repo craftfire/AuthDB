@@ -142,6 +142,7 @@ public class AuthDB extends JavaPlugin {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
@@ -166,6 +167,12 @@ public class AuthDB extends JavaPlugin {
 		}
 		return false;
 	}
+	
+	public boolean isWithinRange(int number, int around, int range){
+	    int difference = Math.abs(around - number);
+	    return difference <= range;
+	}
+	
 	
 	void Stop(String error)
 	{

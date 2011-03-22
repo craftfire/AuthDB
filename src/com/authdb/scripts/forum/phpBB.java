@@ -49,8 +49,8 @@ public class phpBB {
 		else if(checkid == 2)
 		{
 			name = Config.Script1_name;
-			latest = Config.Script1_latest;
-			versions = new String[] {Config.Script1_versions};
+			latest = Config.Script1_latest2;
+			versions = new String[] {Config.Script1_versions2};
 			Version = Util.CheckVersion(name,latest, 3);
 		}
 		if(Arrays.asList(versions).contains(Version))
@@ -61,8 +61,8 @@ public class phpBB {
 		else 
 		{ 
 			Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
-			Config.script_version = latest;
-			return true;
+			//Config.script_version = latest;
+			return false;
 		}
 	}
 	
