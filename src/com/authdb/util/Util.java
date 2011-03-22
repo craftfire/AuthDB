@@ -41,6 +41,7 @@ import org.bukkit.entity.Player;
 import com.authdb.AuthDB;
 import com.authdb.scripts.Custom;
 import com.authdb.scripts.cms.Drupal;
+import com.authdb.scripts.cms.Joomla;
 import com.authdb.scripts.forum.SMF;
 import com.authdb.scripts.forum.myBB;
 import com.authdb.scripts.forum.phpBB;
@@ -75,10 +76,15 @@ public class Util
 	    	}
 	    	else if(script.equals(Config.Script1_name))
 	      {
-	    	  if(phpBB.check())
+	    	  if(phpBB.check(1))
 	    	  {
 		    	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username_clean", player);
 		  		if(phpBB.check_hash(password,hash)) { return true; }
+		  	  } 
+	    	  else if(phpBB.check(1))
+	    	  {
+		    	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username", player);
+		  		if(hash.equals(Encryption.md5(password))) { return true; }
 		  	  } 
 	      }
 	      else if(script.equals(Config.Script2_name))
@@ -104,7 +110,7 @@ public class Util
 	      }
 	      else if(script.equals(Config.Script4_name))
 	      {
-	    	  if(vB.check())
+	    	  if(vB.check(1) || vB.check(2))
 	    	  {
 			  	String hash = MySQL.getfromtable(Config.database_prefix+"user", "`password`", "username", player);
 			  	if(vB.check_hash(vB.hash("find",player,password, ""),hash)) { return true; }
@@ -116,6 +122,14 @@ public class Util
 	    	  {
 			  	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`pass`", "name", player);
 			  	if(Encryption.md5(password).equals(hash)) { return true; }
+	    	  }
+	      }
+	      else if(script.equals(Config.Script6_name))
+	      {
+	    	  if(Joomla.check(1))
+	    	  {
+			  	String hash = MySQL.getfromtable(Config.database_prefix+"user", "`password`", "username", player);
+			  	if(Joomla.check_hash(password,hash)) { return true; }
 	    	  }
 	      }
     	}
@@ -141,10 +155,15 @@ public class Util
 		    }
 		    else if(script.equals(Config.Script1_name))
 		      {
-		    	  if(phpBB.check())
+		    	  if(phpBB.check(1))
 		    	  {
 		    		usertable = "users";
 		  		    usernamefield = "username_clean";
+			  	  } 
+		    	  else if(phpBB.check(1))
+		    	  {
+		    		usertable = "users";
+		  		    usernamefield = "username";
 			  	  } 
 		      }
 		      else if(script.equals(Config.Script2_name))
@@ -169,7 +188,7 @@ public class Util
 		      }
 		      else if(script.equals(Config.Script4_name))
 		      {
-		    	  if(vB.check())
+		    	  if(vB.check(1) || vB.check(2))
 		    	  {
 				    usertable = "user";
 				    usernamefield = "username";
@@ -181,6 +200,14 @@ public class Util
 		    	  if(Drupal.check(1))
 		    	  {
 		  		    usernamefield = "name";
+		    	  }
+		      }
+		      else if(script.equals(Config.Script6_name))
+		      {
+		    	  usertable = "users";
+		    	  if(Joomla.check(1))
+		    	  {
+		  		    usernamefield = "username";
 		    	  }
 		      }
 		      else { Config.HasForumBoard = false; };
@@ -208,7 +235,7 @@ public class Util
 			}
 			else if(Config.script_name.equals(Config.Script1_name))
 			{
-				if(phpBB.check()) { usertable = "users"; }
+				if(phpBB.check(1) || phpBB.check(2)) { usertable = "users"; }
 			}
 			else if(Config.script_name.equals(Config.Script2_name))
 			{
@@ -221,11 +248,15 @@ public class Util
 			}
 			else if(Config.script_name.equals(Config.Script4_name))
 			{
-				if(vB.check()) { usertable = "user"; }
+				if(vB.check(1) || vB.check(2)) { usertable = "user"; }
 			}
 			else if(Config.script_name.equals(Config.Script5_name))
 			{
 				if(Drupal.check(1)) { usertable = "users"; }
+			}
+			else if(Config.script_name.equals(Config.Script6_name))
+			{
+				if(Joomla.check(1)) { usertable = "users"; }
 			}
 			if(usertable != null)
 			{

@@ -29,12 +29,24 @@ import com.authdb.util.databases.MySQL;
 
   public class vB {
 	  
-	  public static boolean check()
+	  public static boolean check(int checkid)
 		{
-			String name = Config.Script4_name;
-			String latest = Config.Script4_latest;
-			String[] versions = new String[] {Config.Script4_versions};
-			String Version = Util.CheckVersion(name,latest, 3);
+		  String name = null, latest = null, Version = null;
+		  String[] versions = null;
+			if(checkid == 1)
+			{
+			    name = Config.Script4_name;
+				latest = Config.Script4_latest;
+				versions = new String[] {Config.Script4_versions};
+				Version = Util.CheckVersion(name,latest, 3);
+			}
+			else if(checkid == 2)
+			{
+			    name = Config.Script4_name;
+				latest = Config.Script4_latest2;
+				versions = new String[] {Config.Script4_versions2};
+				Version = Util.CheckVersion(name,latest, 3);
+			}
 			if(Arrays.asList(versions).contains(Version))
 			{
 				Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
@@ -52,7 +64,7 @@ import com.authdb.util.databases.MySQL;
     public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
     {
   	long timestamp = System.currentTimeMillis()/1000;
-  	if(check())
+  	if(check(1))
   	{
 	  	String salt = Encryption.hash(30,"none",33,126);
 	  	String passwordhashed = hash("create",player,password, salt);
@@ -142,7 +154,106 @@ import com.authdb.util.databases.MySQL;
 	    	}
 	        else
 	        {  
-	      	  newcache2 += st.nextToken()+":"; 
+	      	  newcache2 += st.nextToken()+": "; 
+	        }
+	    }
+	    
+	      ps = MySQL.mysql.prepareStatement("UPDATE `"+ForumAuth.forumPrefix+"datastore"+"` SET `data` = '" + newcache2 + "' WHERE `title` = 'userstats'");
+	      ps.executeUpdate();
+	      */
+  		}
+  	else if(check(2))
+  	{
+	  	String salt = Encryption.hash(30,"none",33,126);
+	  	String passwordhashed = hash("create",player,password, salt);
+	  	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
+	  //	int userid;
+	  	///
+	  	PreparedStatement ps;
+	  	//
+	  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`,`usertitle`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+	    ps.setString(1, "2"); //usergroupid
+	  	ps.setString(2, passwordhashed); // password
+	    ps.setString(3, passworddate); //passworddate
+	    ps.setString(4, email); //email
+	  	ps.setString(5, "1"); //showvbcode
+	  	ps.setLong(6, timestamp); //joindate
+	  	ps.setLong(7, timestamp); //lastvisit
+	  	ps.setLong(8, timestamp); //lastactivity
+	  	ps.setString(9, "5"); //reputationlevelid
+		ps.setString(10, "45091927"); //options
+		ps.setString(11, ipAddress); //ipaddress
+		ps.setString(12, salt); //salt
+		ps.setString(13, player); //username
+		ps.setString(13, "Junior Member"); //usertitle
+	    ps.executeUpdate();
+	     
+	   /*  userid = MySQL.countitall(ForumAuth.forumPrefix+"user");
+	    String oldcache =  MySQL.getfromtable(ForumAuth.forumPrefix+"datastore", "`data`", "title", "userstats");
+	    Util.Log("info",oldcache);
+	    StringTokenizer st = new StringTokenizer(oldcache,":");
+	    int i = 0, usernamelength = player.length();
+	    String numusers, lastuid, lastusername, totalusers = "", newcache = "";
+	    while (st.hasMoreTokens()) {
+	    	if(i == 5) 
+	    	{ 
+	    		st.nextToken();
+	    		newcache += usernamelength+":";
+	    	}
+	    	else if(i == 6) 
+	    	{ 
+	    		numusers = st.nextToken();
+	    		numusers = Util.removeChar(numusers,'"');
+				numusers = Util.removeChar(numusers,'s');
+				numusers = Util.removeChar(numusers,';');
+				numusers = numusers.trim();
+				int numuserNumber = Integer.parseInt(numusers) + 1;
+				totalusers += numuserNumber;
+				numusers = "\""+numuserNumber+"\""+";s";
+				newcache += numusers+":";
+	    	}
+	    	else if(i == 13) 
+	    	{ 
+	    		st.nextToken();
+	    		newcache += usernamelength+":";
+	    	}
+	    	else if(i == 14) 
+	    	{ 
+	    		st.nextToken();
+	    		lastusername = "\""+player+"\";s";
+	    		newcache += lastusername+":";
+	    	}
+	    	else if(i == 17) 
+	    	{ 
+	    		String dupe = "";
+	    		dupe += userid;
+	    		st.nextToken();
+	    		newcache += dupe.length()+":";
+	    	}
+	    	else if(i == 18) 
+	    	{ 
+	    		 st.nextToken();
+	    		lastuid = "\""+userid+"\";}";
+	    		newcache += lastuid;
+	    	}
+	      else
+	      {  
+	    	  newcache += st.nextToken()+":"; 
+	      }
+	   //   Util.Log("info",i+"-"+st.nextToken()+":"); 
+	      i++;
+	    }
+	    StringTokenizer st2 = new StringTokenizer(newcache,":");
+	    String newcache2 = "";
+	    while (st2.hasMoreTokens()) {
+	    	if(i == 5) 
+	    	{ 
+	    		st.nextToken();
+	    		newcache2 += totalusers.length()+":";
+	    	}
+	        else
+	        {  
+	      	  newcache2 += st.nextToken()+": "; 
 	        }
 	    }
 	    

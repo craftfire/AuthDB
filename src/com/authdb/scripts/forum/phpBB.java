@@ -35,12 +35,24 @@ import com.authdb.util.databases.MySQL;
  */
 public class phpBB {
 	
-	public static boolean check()
+	public static boolean check(int checkid)
 	{
-		String name = Config.Script1_name;
-		String latest = Config.Script1_latest;
-		String[] versions = new String[] {Config.Script1_versions};
-		String Version = Util.CheckVersion(name,latest, 3);
+		String name = null, latest = null, Version = null;
+		String[] versions = null;
+		if(checkid == 1)
+		{
+			name = Config.Script1_name;
+			latest = Config.Script1_latest;
+			versions = new String[] {Config.Script1_versions};
+			Version = Util.CheckVersion(name,latest, 3);
+		}
+		else if(checkid == 2)
+		{
+			name = Config.Script1_name;
+			latest = Config.Script1_latest;
+			versions = new String[] {Config.Script1_versions};
+			Version = Util.CheckVersion(name,latest, 3);
+		}
 		if(Arrays.asList(versions).contains(Version))
 		{
 			if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list of supported versions of this script ("+name+")");
@@ -56,7 +68,7 @@ public class phpBB {
 	
   public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
   {
-	if(check())
+	if(check(1))
 	{
 		String hash = phpbb_hash(password);
 		long timestamp = System.currentTimeMillis()/1000;
@@ -109,6 +121,41 @@ public class phpBB {
 	    ps.executeUpdate();
 	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
 	    ps.executeUpdate();
+	    MySQL.close();
+	}
+	else if(check(2))
+	{
+		String hash = Encryption.md5(password);
+		long timestamp = System.currentTimeMillis()/1000;
+		int userid;
+		//
+		PreparedStatement ps;
+		//
+
+		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`user_active`,`username`,`user_password`,`user_lastvisit`,`user_regdate`,`user_email`)  VALUES (?,?,?,?,?,?)", 1);
+	    ps.setInt(1, 1); //user_active
+		ps.setString(2, player.toLowerCase()); //username
+	    ps.setString(3, hash); //user_password
+	    ps.setLong(4, timestamp); //user_lastvisit
+		ps.setLong(5, timestamp); //user_regdate
+		ps.setString(6, email); //user_email
+		///
+	    ps.executeUpdate();
+	    
+	    userid = MySQL.countitall(Config.database_prefix+"users");
+	    
+		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_group"+"` (`group_id`,`user_id`,`user_pending`)  VALUES (?,?,?)", 1);
+	    ps.setInt(1, 3);
+		ps.setInt(2, userid);
+	    ps.setInt(3, 0);
+	    ps.executeUpdate();
+	    /*
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
+	    ps.executeUpdate();
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
+	    ps.executeUpdate();
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+	    ps.executeUpdate();*/
 	    MySQL.close();
 	}
  }

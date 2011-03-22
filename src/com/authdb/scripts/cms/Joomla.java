@@ -17,9 +17,11 @@ package com.authdb.scripts.cms;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
@@ -35,7 +37,7 @@ public class Joomla {
 		{
 			String name = Config.Script6_name;
 			String latest = Config.Script6_latest;
-			String[] versions = new String[] {Config.Script5_versions};
+			String[] versions = new String[] {Config.Script6_versions};
 			String Version = Util.CheckVersion(name,latest, 3);
 			if(Arrays.asList(versions).contains(Version))
 			{
@@ -75,46 +77,20 @@ public class Joomla {
 	if(check(1))
 	{
 		String hash = hash(player,password);
-		int userid;
 		//
 		PreparedStatement ps;
 		//
-		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"members"+"` (`memberName`,`dateRegistered`,`lastLogin`,`realName`,`passwd`,`emailAddress`,`memberIP`,`memberIP2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`messageLabels`,`personalText`,`websiteTitle`,`websiteUrl`,`location`,`ICQ`,`MSN`,`signature`,`avatar`,`usertitle`,`secretQuestion`,`additionalGroups`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-	    ps.setString(1, player); //memberName
-	    ps.setLong(2, timestamp); //dateRegistered
-	    ps.setLong(3, timestamp); //lastLogin
-	    ps.setString(4, player); //realName
-		ps.setString(5, hash); //passwd
-		ps.setString(6, email); //emailAddress
-		ps.setString(7, ipAddress); //memberIP
-		ps.setString(8, ipAddress); //memberIP2
-		///need to add these, it's complaining about not default is set.
-		ps.setString(9, ""); //lngfile
-		ps.setString(10, ""); //buddy_list
-		ps.setString(11, ""); //pm_ignore_list
-		ps.setString(12, ""); //messageLabels
-		ps.setString(13, ""); //personalText
-		ps.setString(14, ""); //websiteTitle
-		ps.setString(15, ""); //websiteUrl
-		ps.setString(16, ""); //location
-		ps.setString(17, ""); //ICQ
-		ps.setString(18, ""); //MSN
-		ps.setString(19, ""); //signature
-		ps.setString(20, ""); //avatar
-		ps.setString(21, ""); //usertitle
-		ps.setString(22, ""); //secretQuestion
-		ps.setString(23, ""); //additionalGroups
+		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`name`,`username`,`email`,`password`,`usertype`,`block`,`gid`,`registerDate`,`lastvisitDate`)  VALUES (?,?,?,?,?,?,?,?,?)", 1);
+	    ps.setString(1, player); //name
+	    ps.setString(2, player); //username
+	    ps.setString(3, email); //email
+	    ps.setString(4, hash); //password
+		ps.setString(5, "Registered"); //usertype
+		ps.setInt(6, 0); //block
+		ps.setInt(7, 18); //gid
+		ps.setString(8, "NOW()"); //registerDate
+		ps.setString(9, "NOW()"); //lastvisitDate
 		ps.executeUpdate();
-		
-		userid = MySQL.countitall(Config.database_prefix+"members");
-		ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
-		ps.executeUpdate();
-		ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
-		ps.executeUpdate();
-		ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
-		ps.executeUpdate();
-	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
-	    ps.executeUpdate();
 	}
 	else if(check(2))
 	{
@@ -164,20 +140,66 @@ public class Joomla {
 	}
   }
 	
-  public static String hash(String player, String password) {
-	try {
-		return Encryption.SHA1(player+password);
-	} catch (NoSuchAlgorithmException e) {
-		e.printStackTrace();
-	} catch (UnsupportedEncodingException e) {
-		e.printStackTrace();
-	}
-	return "fail";
-  }
 
-	public static boolean check_hash(String passwordhash, String hash)
-	{
-		if(passwordhash.equals(hash)) return true;
-		else return false;
-	}
+public static boolean check_hash(String passwd,String dbEntry) {
+if (passwd==null || dbEntry==null || dbEntry.length()==0)
+throw new IllegalArgumentException();
+String[] arr = dbEntry.split(":",2);
+if (arr.length==2) {
+// new format as {HASH}:{SALT}
+String cryptpass = arr[0];
+String salt = arr[1];
+
+return Encryption.md5(passwd+salt).equals(cryptpass);
+} else {
+// old format as {HASH} just like PHPbb and many other apps
+String cryptpass = dbEntry;
+
+return Encryption.md5(passwd).equals(cryptpass); 
+}
+}
+
+static Random _rnd;
+
+public static String hash(String username, String passwd) {
+StringBuffer saltBuf = new StringBuffer();
+if (_rnd==null) _rnd=new SecureRandom();
+int i;
+for (i=0;i<32;i++) {
+saltBuf.append(Integer.toString(_rnd.nextInt(36),36));
+}
+String salt = saltBuf.toString();
+
+return Encryption.md5(passwd+salt)+":"+salt;
+}
+
+/** Takes the MD5 hash of a sequence of ASCII or LATIN1 characters,
+* and returns it as a 32-character lowercase hex string.
+*
+* Equivalent to MySQL's MD5() function 
+* and to perl's Digest::MD5::md5_hex(),
+* and to PHP's md5().
+*
+* Does no error-checking of the input, but only uses the low 8 bits
+* from each input character.
+*/
+/*
+private static String md5(String data) {
+byte[] bdata = new byte[data.length()]; int i; byte[] hash;
+
+for (i=0;i<data.length();i++) bdata[i]=(byte)(data.charAt(i)&0xff );
+
+try {
+MessageDigest md5er = MessageDigest.getInstance("MD5");
+hash = md5er.digest(bdata);
+} catch (GeneralSecurityException e) { throw new RuntimeException(e); }
+
+StringBuffer r = new StringBuffer(32);
+for (i=0;i<hash.length;i++) {
+String x = Integer.toHexString(hash[i]&0xff);
+if (x.length()<2) r.append("0");
+r.append(x);
+}
+return r.toString(); 
+} */
 }

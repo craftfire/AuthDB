@@ -27,6 +27,8 @@ public class Config
 {
 	public static String Script1_latest = "3.0.8";
 	public static String Script1_versions = "3.0.8";
+	public static String Script1_latest2 = "2.0.23";
+	public static String Script1_versions2 = "2.0.23";
 	public static String Script1_name = "phpbb";
 	///
 	public static String Script2_latest = "1";
@@ -39,8 +41,10 @@ public class Config
 	public static String Script3_versions = "1.6";
 	public static String Script3_name = "mybb";
 	///
-	public static String Script4_latest = "4.1";
-	public static String Script4_versions = "4.1";
+	public static String Script4_latest = "4.1.2";
+	public static String Script4_versions = "4.1.2";
+	public static String Script4_latest2 = "3.8.7";
+	public static String Script4_versions2 = "3.8.7";
 	public static String Script4_name = "vb";
 	
 	public static String Script5_latest = "6.20";
