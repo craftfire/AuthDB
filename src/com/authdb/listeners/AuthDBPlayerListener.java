@@ -171,8 +171,7 @@ public boolean CheckIdle(Player player) throws IOException
       }
       else if (this.plugin.checkPassword(player.getName(), split[1])) {
          ItemStack[] inv = this.plugin.getInventory(player.getName());
-        if (inv != null)
-         player.getInventory().setContents(inv);
+        if (inv != null) { player.getInventory().setContents(inv); }
         this.plugin.authorize(player.getEntityId());
 	    Messages.SendMessage("AuthDB_message_login_success", player,null);
 	} else if (Config.password_kick) {

@@ -20,6 +20,7 @@ package com.authdb.scripts.forum;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
@@ -37,7 +38,6 @@ import com.authdb.util.databases.MySQL;
 	  	String salt = Encryption.hash(30,"none",33,126);
 	  	String passwordhashed = hash("create",player,password, salt);
 	  	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
-	  //	int userid;
 	  	///
 	  	PreparedStatement ps;
 	  	//
@@ -56,79 +56,24 @@ import com.authdb.util.databases.MySQL;
 		ps.setString(12, salt); //salt
 		ps.setString(13, player); //username
 	    ps.executeUpdate();
-	     
-	   /*  userid = MySQL.countitall(ForumAuth.forumPrefix+"user");
-	    String oldcache =  MySQL.getfromtable(ForumAuth.forumPrefix+"datastore", "`data`", "title", "userstats");
+		
+	    int userid;
+	    userid = MySQL.countitall(Config.database_prefix+"user");
+	    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
 	    Util.Log("info",oldcache);
 	    StringTokenizer st = new StringTokenizer(oldcache,":");
 	    int i = 0, usernamelength = player.length();
 	    String numusers, lastuid, lastusername, totalusers = "", newcache = "";
 	    while (st.hasMoreTokens()) {
-	    	if(i == 5) 
-	    	{ 
-	    		st.nextToken();
-	    		newcache += usernamelength+":";
-	    	}
-	    	else if(i == 6) 
-	    	{ 
-	    		numusers = st.nextToken();
-	    		numusers = Util.removeChar(numusers,'"');
-				numusers = Util.removeChar(numusers,'s');
-				numusers = Util.removeChar(numusers,';');
-				numusers = numusers.trim();
-				int numuserNumber = Integer.parseInt(numusers) + 1;
-				totalusers += numuserNumber;
-				numusers = "\""+numuserNumber+"\""+";s";
-				newcache += numusers+":";
-	    	}
-	    	else if(i == 13) 
-	    	{ 
-	    		st.nextToken();
-	    		newcache += usernamelength+":";
-	    	}
-	    	else if(i == 14) 
-	    	{ 
-	    		st.nextToken();
-	    		lastusername = "\""+player+"\";s";
-	    		newcache += lastusername+":";
-	    	}
-	    	else if(i == 17) 
-	    	{ 
-	    		String dupe = "";
-	    		dupe += userid;
-	    		st.nextToken();
-	    		newcache += dupe.length()+":";
-	    	}
-	    	else if(i == 18) 
-	    	{ 
-	    		 st.nextToken();
-	    		lastuid = "\""+userid+"\";}";
-	    		newcache += lastuid;
-	    	}
-	      else
-	      {  
-	    	  newcache += st.nextToken()+":"; 
-	      }
-	   //   Util.Log("info",i+"-"+st.nextToken()+":"); 
+	  
+	     Util.Log("info",i+"-"+st.nextToken()+":"); 
 	      i++;
 	    }
-	    StringTokenizer st2 = new StringTokenizer(newcache,":");
-	    String newcache2 = "";
-	    while (st2.hasMoreTokens()) {
-	    	if(i == 5) 
-	    	{ 
-	    		st.nextToken();
-	    		newcache2 += totalusers.length()+":";
-	    	}
-	        else
-	        {  
-	      	  newcache2 += st.nextToken()+": "; 
-	        }
-	    }
+	  
 	    
-	      ps = MySQL.mysql.prepareStatement("UPDATE `"+ForumAuth.forumPrefix+"datastore"+"` SET `data` = '" + newcache2 + "' WHERE `title` = 'userstats'");
-	      ps.executeUpdate();
-	      */
+	     // ps = MySQL.mysql.prepareStatement("UPDATE `"+ForumAuth.forumPrefix+"datastore"+"` SET `data` = '" + newcache2 + "' WHERE `title` = 'userstats'");
+	     // ps.executeUpdate();
+	      
   		}
   	else if(checkid == 2)
   	{
@@ -153,81 +98,26 @@ import com.authdb.util.databases.MySQL;
 		ps.setString(11, ipAddress); //ipaddress
 		ps.setString(12, salt); //salt
 		ps.setString(13, player); //username
-		ps.setString(13, "Junior Member"); //usertitle
+		ps.setString(14, "Junior Member"); //usertitle
 	    ps.executeUpdate();
 	     
-	   /*  userid = MySQL.countitall(ForumAuth.forumPrefix+"user");
-	    String oldcache =  MySQL.getfromtable(ForumAuth.forumPrefix+"datastore", "`data`", "title", "userstats");
+	    int userid;
+	    userid = MySQL.countitall(Config.database_prefix+"user");
+	    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
 	    Util.Log("info",oldcache);
 	    StringTokenizer st = new StringTokenizer(oldcache,":");
 	    int i = 0, usernamelength = player.length();
 	    String numusers, lastuid, lastusername, totalusers = "", newcache = "";
-	    while (st.hasMoreTokens()) {
-	    	if(i == 5) 
-	    	{ 
-	    		st.nextToken();
-	    		newcache += usernamelength+":";
+	    while (st.hasMoreTokens()) 
+	    {
+	    	String cachestring = st.nextToken();
+	    	if(cachestring.equals("\"numbermembers\";s"))
+	    	{
+	    		Util.Log("info",i+"-"+cachestring+":"); 
 	    	}
-	    	else if(i == 6) 
-	    	{ 
-	    		numusers = st.nextToken();
-	    		numusers = Util.removeChar(numusers,'"');
-				numusers = Util.removeChar(numusers,'s');
-				numusers = Util.removeChar(numusers,';');
-				numusers = numusers.trim();
-				int numuserNumber = Integer.parseInt(numusers) + 1;
-				totalusers += numuserNumber;
-				numusers = "\""+numuserNumber+"\""+";s";
-				newcache += numusers+":";
-	    	}
-	    	else if(i == 13) 
-	    	{ 
-	    		st.nextToken();
-	    		newcache += usernamelength+":";
-	    	}
-	    	else if(i == 14) 
-	    	{ 
-	    		st.nextToken();
-	    		lastusername = "\""+player+"\";s";
-	    		newcache += lastusername+":";
-	    	}
-	    	else if(i == 17) 
-	    	{ 
-	    		String dupe = "";
-	    		dupe += userid;
-	    		st.nextToken();
-	    		newcache += dupe.length()+":";
-	    	}
-	    	else if(i == 18) 
-	    	{ 
-	    		 st.nextToken();
-	    		lastuid = "\""+userid+"\";}";
-	    		newcache += lastuid;
-	    	}
-	      else
-	      {  
-	    	  newcache += st.nextToken()+":"; 
-	      }
-	   //   Util.Log("info",i+"-"+st.nextToken()+":"); 
+	    	Util.Log("info",i+"-"+cachestring+":"); 
 	      i++;
 	    }
-	    StringTokenizer st2 = new StringTokenizer(newcache,":");
-	    String newcache2 = "";
-	    while (st2.hasMoreTokens()) {
-	    	if(i == 5) 
-	    	{ 
-	    		st.nextToken();
-	    		newcache2 += totalusers.length()+":";
-	    	}
-	        else
-	        {  
-	      	  newcache2 += st.nextToken()+": "; 
-	        }
-	    }
-	    
-	      ps = MySQL.mysql.prepareStatement("UPDATE `"+ForumAuth.forumPrefix+"datastore"+"` SET `data` = '" + newcache2 + "' WHERE `title` = 'userstats'");
-	      ps.executeUpdate();
-	      */
   		}
     }
     
