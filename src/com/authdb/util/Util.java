@@ -17,6 +17,8 @@
 package com.authdb.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -50,223 +52,216 @@ import com.authdb.util.databases.MySQL;
 
 public class Util
 {  
-	
-    public static boolean AddUser(String player, String email, String password, String ipAddress) throws SQLException
+    
+    public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException
     {
     	if(Config.database_ison)
-    	{
-	    	if(Config.custom_enabled) { Custom.adduser(player, email, password, ipAddress); }
-	    	else if(Config.script_name.equals(Config.Script1_name)) { phpBB.adduser(player, email, password, ipAddress); }
-			else if(Config.script_name.equals(Config.Script2_name)) { SMF.adduser(player, email, password, ipAddress); }
-			else if(Config.script_name.equals(Config.Script3_name)) { myBB.adduser(player, email, password, ipAddress); }
-			else if(Config.script_name.equals(Config.Script4_name)) { vB.adduser(player, email, password, ipAddress); }
-			else if(Config.script_name.equals(Config.Script5_name)) { Drupal.adduser(player, email, password, ipAddress); }
-			else if(Config.script_name.equals(Config.Script6_name)) { Joomla.adduser(player, email, password, ipAddress); }
-    	} 
-      return false;
-    }
-	
-    public static boolean CheckPassword(String script,String player, String password) throws SQLException
-    {
-    	if(Config.database_ison)
-    	{
-	    	if(Config.custom_enabled)
-	    	{
-		    	String hash = MySQL.getfromtable(Config.custom_table, "`"+Config.custom_passfield+"`", ""+Config.custom_userfield+"", player);
-		  		if(phpBB.check_hash(password,hash)) { return true; }
-	    	}
-	    	else if(script.equals(Config.Script1_name))
-	      {
-	    	  if(phpBB.check(1))
-	    	  {
-		    	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username_clean", player);
-		  		if(phpBB.check_hash(password,hash)) { return true; }
-		  	  } 
-	    	  else if(phpBB.check(2))
-	    	  {
-		    	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`user_password`", "username", player);
-		  		if(hash.equals(Encryption.md5(password))) { return true; }
-		  	  } 
-	      }
-	      else if(script.equals(Config.Script2_name))
-	      {
-	    	  if(SMF.check(1))
-	    	  {
-				String hash = MySQL.getfromtable(Config.database_prefix+"members", "`passwd`", "realName", player);
-				if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
-		  	  } 
-	    	  else if(SMF.check(2))
-	    	  {
-				String hash = MySQL.getfromtable(Config.database_prefix+"members", "`passwd`", "real_name", player);
-				if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
-	  	  	  } 
-	      }
-	      else if(script.equals(Config.Script3_name))
-	      {
-	    	  if(myBB.check())
-	    	  {
-			  	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`password`", "username", player);
-			  	if(myBB.check_hash(myBB.hash("find",player,password, ""),hash)) { return true; }
-	    	  }
-	      }
-	      else if(script.equals(Config.Script4_name))
-	      {
-	    	  if(vB.check(1) || vB.check(2))
-	    	  {
-			  	String hash = MySQL.getfromtable(Config.database_prefix+"user", "`password`", "username", player);
-			  	if(vB.check_hash(vB.hash("find",player,password, ""),hash)) { return true; }
-	    	  }
-	      }
-	      else if(script.equals(Config.Script5_name))
-	      {
-	    	  if(Drupal.check(1))
-	    	  {
-			  	String hash = MySQL.getfromtable(Config.database_prefix+"users", "`pass`", "name", player);
-			  	if(Encryption.md5(password).equals(hash)) { return true; }
-	    	  }
-	      }
-	      else if(script.equals(Config.Script6_name))
-	      {
-	    	  if(Joomla.check(1))
-	    	  {
-			  	String hash = MySQL.getfromtable(Config.database_prefix+"user", "`password`", "username", player);
-			  	if(Joomla.check_hash(password,hash)) { return true; }
-	    	  }
-	      }
-    	}
-      return false;
-    }
-    
-    public static boolean SetScriptConfig()
-    {
-    	return false;
-    }
-    
-    public static boolean CheckUser(String script,String player) throws SQLException
-    {
-		if(Config.database_ison)
 		{
-			Config.HasForumBoard = true;
-		    String usertable = null,usernamefield = null;
+    		String usertable = null,usernamefield = null, passwordfield = null;
+			PreparedStatement ps = null;
+			int number = 0;
 		    if(Config.custom_enabled)
 		    {
-		    	String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
-		    	if(check != "fail") { return true; }
-		    	return false;
+		    	if(type.equals("checkuser"))
+		    	{
+			    	String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
+			    	if(check != "fail") { return true; }
+			    	return false;
+		    	}
+		    	else if(type.equals("checkpassword"))
+		    	{
+			    	String hash = MySQL.getfromtable(Config.custom_table, "`"+Config.custom_passfield+"`", ""+Config.custom_userfield+"", player);
+			  		if(Custom.check_hash(password,hash)) { return true; }
+			    	return false;
+		    	}
+		    	else if(type.equals("adduser"))
+		    	{
+		    		Custom.adduser(player, email, password, ipAddress);
+		    	}
+		    	else if(type.equals("numusers"))
+		    	{
+		    		ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
+					ResultSet rs = ps.executeQuery();
+					if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		    	}
 		    }
 		    else if(script.equals(Config.Script1_name))
-		      {
-		    	usertable = "users";
-		    	if(CheckVersionInRange(Config.Script1_versionrange))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script1_versionrange))
 		    	{
-		    		usernamefield = "username_clean";
+    				usernamefield = "username_clean";
+    				passwordfield = "user_password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+				  		if(phpBB.check_hash(password,hash)) { return true; }
+			    	}
 		    	}
-		    	else if(CheckVersionInRange(Config.Script1_versionrange2))
+    			else if(CheckVersionInRange(Config.Script1_versionrange2))
 		    	{
-		    		usernamefield = "username";
+    				usernamefield = "username";
+    				passwordfield = "user_password";
+    				Config.HasForumBoard = true;
+    				number = 2;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+				  		if(phpBB.check_hash(password,hash)) { return true; }
+			    	}
 		    	}
-		      }
-		      else if(script.equals(Config.Script2_name))
-		      {
-		    	  usertable = "members";
-		    	  if(CheckVersionInRange(Config.Script2_versionrange))
-		    	  {
-		  		    usernamefield = "realName";
-		    	  }
-		    	  else if(CheckVersionInRange(Config.Script2_versionrange2))
-		    	  {
-				    usernamefield = "real_name";
-		    	  }
-		      }
-		      else if(script.equals(Config.Script3_name))
-		      {
-		    	  if(CheckVersionInRange(Config.Script3_versionrange))
-		    	  {
-				    usertable = "users";
-				    usernamefield = "username";
-			  	  } 
-		      }
-		      else if(script.equals(Config.Script4_name))
-		      {
-		    	  if(CheckVersionInRange(Config.Script4_versionrange) || CheckVersionInRange(Config.Script4_versionrange2))
-		    	  {
-				    usertable = "user";
-				    usernamefield = "username";
-			  	  } 
-		      }
-		      else if(script.equals(Config.Script5_name))
-		      {
-		    	  usertable = "users";
-		    	  if(CheckVersionInRange(Config.Script5_versionrange))
-		    	  {
-		  		    usernamefield = "name";
-		    	  }
-		      }
-		      else if(script.equals(Config.Script6_name))
-		      {
-		    	  usertable = "users";
-		    	  if(CheckVersionInRange(Config.Script6_versionrange))
-		    	  {
-		  		    usernamefield = "username";
-		    	  }
-		      }
-		      else { Config.HasForumBoard = false; };
-		    if(Config.HasForumBoard)
+		    	if(type.equals("adduser"))
+		    	{
+		    		 phpBB.adduser(number,player, email, password, ipAddress);
+		    		 return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script2_name))
+    		{
+    			usertable = "members";
+    			if(CheckVersionInRange(Config.Script2_versionrange))
+		    	{
+    				usernamefield = "realName";
+    				passwordfield = "passwd";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+				  		if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
+			    	}
+		    	}
+    			else if(CheckVersionInRange(Config.Script2_versionrange2))
+		    	{
+    				usernamefield = "real_name";
+    				passwordfield = "passwd";
+    				Config.HasForumBoard = true;
+    				number = 2;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+				  		if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		 SMF.adduser(number,player, email, password, ipAddress);
+		    		 return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script3_name))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script3_versionrange))
+		    	{
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(myBB.check_hash(myBB.hash("find",player,password, ""),hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		 myBB.adduser(number,player, email, password, ipAddress);
+		    		 return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script4_name))
+    		{
+    			usertable = "user";
+    			if(CheckVersionInRange(Config.Script4_versionrange))
+		    	{
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(vB.check_hash(vB.hash("find",player,password, ""),hash)) { return true; }
+			    	}
+		    	}
+    			else if(CheckVersionInRange(Config.Script4_versionrange2))
+		    	{
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 2;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(vB.check_hash(vB.hash("find",player,password, ""),hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		 vB.adduser(number,player, email, password, ipAddress);
+		    		 return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script5_name))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script5_versionrange))
+		    	{
+    				usernamefield = "name";
+    				passwordfield = "pass";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(Encryption.md5(password).equals(hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		 Drupal.adduser(number,player, email, password, ipAddress);
+		    		 return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script6_name))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script6_versionrange))
+		    	{
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(Joomla.check_hash(password,hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		 Joomla.adduser(number,player, email, password, ipAddress);
+		    		 return true;
+		    	}
+    		}
+		    if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
 		    {
-				String check = MySQL.getfromtable(Config.database_prefix+usertable, "*", usernamefield, player);
+		    	String check = MySQL.getfromtable(Config.database_prefix+usertable, "*", usernamefield, player);
 				if(check != "fail") { return true; }
 		    }
+		    else if(Config.HasForumBoard && type.equals("numusers") && !Config.custom_enabled)
+		    {
+		    	ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"`");
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+		    }
+		    
 		}
-	    return false;
+    	return false;
     }
-	
-	public static void NumberUsers() throws ClassNotFoundException, SQLException
-	{
-        MySQL.connect();
-        if(Config.database_ison)
-    	{
-			PreparedStatement ps = null;
-			String usertable = null;
-			if(Config.custom_enabled)
-			{
-				ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
-				ResultSet rs = ps.executeQuery();
-				if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
-			}
-			else if(Config.script_name.equals(Config.Script1_name))
-			{
-				if(phpBB.check(1) || phpBB.check(2)) { usertable = "users"; }
-			}
-			else if(Config.script_name.equals(Config.Script2_name))
-			{
-				if(SMF.check(1)) { usertable = "members"; }
-				else if(SMF.check(2)) { usertable = "members"; }
-			}
-			else if(Config.script_name.equals(Config.Script3_name))
-			{
-				if(myBB.check()) { usertable = "users"; }
-			}
-			else if(Config.script_name.equals(Config.Script4_name))
-			{
-				if(vB.check(1) || vB.check(2)) { usertable = "user"; }
-			}
-			else if(Config.script_name.equals(Config.Script5_name))
-			{
-				if(Drupal.check(1)) { usertable = "users"; }
-			}
-			else if(Config.script_name.equals(Config.Script6_name))
-			{
-				if(Joomla.check(1)) { usertable = "users"; }
-			}
-			if(usertable != null)
-			{
-				ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"`");
-				ResultSet rs = ps.executeQuery();
-				if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
-			}
-    	}
-		MySQL.close();
-	}
 	
 	public static boolean CheckVersionInRange(String versionrange)
 	{
@@ -282,7 +277,6 @@ public class Util
 			int c = Integer.parseInt(versions[0]);
 			if(a <= c && b >= c)
 			{
-				Util.Debug("Test1");
 				int d = b - c;
 				if(d > 0) 
 				{
@@ -295,7 +289,6 @@ public class Util
 					int c2 = Integer.parseInt(versions[1]);
 					if(a2 <= c2 && b2 >= c2)
 					{
-						Util.Debug("Test2");
 						int d2 = b2 - c2;
 						if(d2 > 0) 
 						{
@@ -311,7 +304,6 @@ public class Util
 								if(versionrange1.length != 4) { return true; }
 								else if(versionrange1.length == 4)
 								{
-									Util.Debug("Test3");
 									int d3 = b3 - c3;
 									if(d3 > 0) 
 									{
@@ -337,22 +329,21 @@ public class Util
 		return false;
 	}
 	
-	public static String CheckVersion(String script,String latest, int length)
+	public static void ErrorFile(String info)
 	{
-		String version = Config.script_version;
-		String[] latestsplit= version.split("\\.");
-		if(latestsplit.length != length)
-		{
-			if(Config.debug_enable) 
-				Util.Debug("The length of the version number is not equal to the length of what is required: "+length+" | Length: "+latestsplit.length+" | Version: "+version+" |. Setting to latest version of script: "+script+" "+latest);
-			return latest;
-		}
-		else 
-		{ 
-			if(Config.debug_enable)  
-				Util.Debug("Version is OK!");  
-		}
-		return Config.script_version;
+	   try
+	   {
+	    // Create file 
+	    FileWriter fstream = new FileWriter("plugins/"+AuthDB.pluginname+"/error.txt");
+	    BufferedWriter out = new BufferedWriter(fstream);
+	    out.append(info);
+	    //Close the output stream
+	    out.close();
+	   }
+	   catch (Exception e)
+	   {//Catch exception if any
+	      System.err.println("Error: " + e.getMessage());
+	   }
 	}
 	
 	public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f) throws IOException {

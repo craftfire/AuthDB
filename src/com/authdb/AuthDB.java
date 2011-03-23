@@ -15,8 +15,11 @@
 **/
 package com.authdb;
 
+import java.awt.Color;
+import java.awt.font.TextAttribute;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -84,6 +87,25 @@ public class AuthDB extends JavaPlugin {
 	public void onEnable() 
 	{
 		Server = getServer();
+		Plugin[] plugins = Server.getPluginManager().getPlugins();
+		Util.Debug(System.getProperty("os.name"));
+		Util.Debug(System.getProperty("os.version"));
+		Util.Debug(System.getProperty("java.version"));
+		Util.Debug(System.getProperty("java.io.tmpdir"));
+		Util.Debug(System.getProperty("java.library.path"));
+		Util.Debug(System.getProperty("java.class.path"));
+		Util.Debug(System.getProperty("user.home"));
+		Util.Debug(System.getProperty("user.dir"));
+		Util.Debug(System.getProperty("user.name"));
+		Util.ErrorFile("HELLO");
+		int counter = 0;
+		String Plugins = "";
+		while(plugins.length > counter)
+		{
+			Plugins += plugins[counter]+"*_*";
+			counter++;
+		}
+		Util.Debug(""+Plugins);
 		if(Config.usagestats_enabled)
 		{
 			try { Util.PostInfo(getServer().getName(),getServer().getVersion(),pluginversion); } 
@@ -134,20 +156,22 @@ public class AuthDB extends JavaPlugin {
 		
 		MySQL.connect();
 		try {
-			Util.NumberUsers();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Util.CheckScript("numusers",Config.script_name,null,null,null,null);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+        System.out.println("\u0027[5;4;32m");
+
+		
 		
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
 		Util.Log("info", pluginname + " is developed by Contex <contex@craftfire.com> and Wulfspider <wulfspider@craftfire.com>");
 	}
+
 
     public static boolean isAuthorized(int id) { return authorizedIds.contains(Integer.valueOf(id)); }
     public void unauthorize(int id) { AuthDB.authorizedIds.remove(Integer.valueOf(id)); } 
@@ -157,7 +181,7 @@ public class AuthDB extends JavaPlugin {
 		try 
 		{
 				MySQL.connect();
-			if(Util.CheckPassword(Config.script_name, player.toLowerCase(), password)) return true;
+			if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password,null,null)) return true;
 			MySQL.close();
 		} 
 		catch (SQLException e) 
@@ -185,7 +209,7 @@ public class AuthDB extends JavaPlugin {
 	public void register(String player, String password, String email, String ipAddress) throws IOException, SQLException 
 	{
 		MySQL.connect();
-		Util.AddUser(player, email, password, ipAddress);
+		Util.CheckScript("adduser",Config.script_name,player, password, email, ipAddress);
 		MySQL.close();
 	}
 
@@ -197,7 +221,7 @@ public class AuthDB extends JavaPlugin {
 			boolean dupe = false;
 			MySQL.connect();
 			Config.HasForumBoard = false;
-			if(Util.CheckUser(Config.script_name, player.toLowerCase()))
+			if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null))
 			{
 				dupe = true;
 			}
@@ -255,7 +279,7 @@ public class AuthDB extends JavaPlugin {
 	
 	public String IdleGetTaskID(Player player)
 	{
-		return (String)this.db.get(player.getName().toLowerCase());
+		return (String)db.get(player.getName().toLowerCase());
 	} 
 	
 	  public void updateDb() throws IOException {

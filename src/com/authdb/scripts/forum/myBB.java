@@ -28,29 +28,10 @@ import com.authdb.util.databases.MySQL;
 
 
   public class myBB {
-	  
-		public static boolean check()
-		{
-			String name = Config.Script3_name;
-			String latest = Config.Script3_latest;
-			String[] versions = new String[] {Config.Script3_versions};
-			String Version = Util.CheckVersion(name,latest, 3);
-			if(Arrays.asList(versions).contains(Version))
-			{
-				if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list of supported versions of this script ("+name+")");
-				return true;
-			}
-			else 
-			{ 
-				Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
-				Config.script_version = latest;
-				return true;
-			}
-		}
   	
-    public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
+    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
-		if(check())
+		if(checkid == 1)
 	    {
 	long timestamp = System.currentTimeMillis()/1000;
 	String salt = Encryption.hash(8,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",0,0);

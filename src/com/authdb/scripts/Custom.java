@@ -32,4 +32,16 @@ import com.authdb.util.databases.MySQL;
 			ps.setString(2, password); // password
 		    ps.executeUpdate();
 	    }
+	  
+	  public static String hash(String player, String password) {
+			return password;
+		  }
+
+			public static boolean check_hash(String passwordhash, String hash)
+			{
+				if(passwordhash.equals(hash)) 
+					return true;
+				else 
+					return false;
+			}
   }

@@ -29,42 +29,10 @@ import com.authdb.util.databases.MySQL;
 
 public class Drupal {
 	
-	public static boolean check(int checkid)
-	{
-		String name = null,latest = null,Version = null;
-		String[] versions = null;
-		if(checkid == 1)
-		{
-			name = Config.Script5_name;
-			latest = Config.Script5_latest;
-			versions = new String[] {Config.Script5_versions};
-			Version = Util.CheckVersion(name,latest, 2);
-		}
-		/*
-		else if(checkid == 2)
-		{
-			name = Config.Script5_name;
-			latest = Config.Script5_latest2;
-			versions = new String[] {Config.Script5_versions2};
-			Version = Util.CheckVersion(name,latest, 2);
-		}
-		*/
-		if(Arrays.asList(versions).contains(Version))
-		{
-			if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list of supported versions of this script ("+name+")");
-			return true;
-		}
-		else 
-		{ 
-			Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
-			Config.script_version = latest;
-			return true;
-		}
-	}
-  public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
 	long timestamp = System.currentTimeMillis()/1000;
-	if(check(1))
+	if(checkid == 1)
 	{
 		String hash = Encryption.md5(password);
 		//

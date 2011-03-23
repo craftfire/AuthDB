@@ -25,38 +25,25 @@ import org.bukkit.util.config.Configuration;
 
 public class Config 
 {
-	public static String Script1_latest = "3.0.8";
-	public static String Script1_versions = "3.0.8";
 	public static String Script1_versionrange = "3.0.0-3.0.8";
-	public static String Script1_latest2 = "2.0.23";
-	public static String Script1_versions2 = "2.0.23";
 	public static String Script1_versionrange2 = "2.0.0-2.0.23";
 	public static String Script1_name = "phpbb";
 	///
-	public static String Script2_latest = "1";
-	public static String Script2_latest2 = "2";
-	public static String Script2_versions = "1";
-	public static String Script2_versions2 = "2";
+	public static String Script2_versionrange = "3.0.0-3.0.8";
+	public static String Script2_versionrange2 = "2.0.0-2.0.23";
 	public static String Script2_name = "smf";
 	///
-	public static String Script3_latest = "1.6";
-	public static String Script3_versions = "1.6";
+	public static String Script3_versionrange = "1.6-1.6";
 	public static String Script3_name = "mybb";
-	///
-	public static String Script4_latest = "4.1.2";
-	public static String Script4_versions = "4.1.2";
-	public static String Script4_latest2 = "3.8.7";
-	public static String Script4_versions2 = "3.8.7";
+
+	public static String Script4_versionrange = "3.0.0-3.8.7";
+	public static String Script4_versionrange2 = "4.0.0-4.1.2";
 	public static String Script4_name = "vb";
 	
-	public static String Script5_latest = "6.20";
-	public static String Script5_versions = "6.20";
+	public static String Script5_versionrange = "6.20-6.20";
 	public static String Script5_name = "drupal";
 	
-	public static String Script6_latest = "1.5.22";
-	public static String Script6_versions = "1.5.22";
-	public static String Script6_latest2 = "1.6.1";
-	public static String Script6_versions2 = "1.6.1";
+	public static String Script6_versionrange = "1.5.0-1.5.22";
 	public static String Script6_name = "joomla";
 	///
 	

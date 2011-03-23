@@ -31,50 +31,10 @@ import com.authdb.util.databases.MySQL;
 
 public class Joomla {
 	
-	public static boolean check(int checkid)
-	{
-		if(checkid == 1)
-		{
-			String name = Config.Script6_name;
-			String latest = Config.Script6_latest;
-			String[] versions = new String[] {Config.Script6_versions};
-			String Version = Util.CheckVersion(name,latest, 3);
-			if(Arrays.asList(versions).contains(Version))
-			{
-				if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list of supported versions of this script ("+name+")");
-				return true;
-			}
-			else 
-			{ 
-				Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
-				Config.script_version = latest;
-				return true;
-			}
-		}
-		else if(checkid == 2)
-		{
-			String name = Config.Script6_name;
-			String latest = Config.Script6_latest2;
-			String[] versions = new String[] {Config.Script6_versions2};
-			String Version = Util.CheckVersion(name,latest, 3);
-			if(Arrays.asList(versions).contains(Version))
-			{
-				if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list over supported versions of this script ("+name+")");
-				return true;
-			}
-			else 
-			{ 
-				Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
-				Config.script_version = latest;
-				return true;
-			}
-		}
-		return false;
-	}
-  public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
 	long timestamp = System.currentTimeMillis()/1000;
-	if(check(1))
+	if(checkid == 1)
 	{
 		String hash = hash(player,password);
 		//
@@ -92,7 +52,7 @@ public class Joomla {
 		ps.setString(9, "NOW()"); //lastvisitDate
 		ps.executeUpdate();
 	}
-	else if(check(2))
+	else if(checkid == 2)
 	{
 		String hash = hash(player,password);
 		int userid;

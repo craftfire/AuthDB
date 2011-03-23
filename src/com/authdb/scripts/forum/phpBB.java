@@ -35,40 +35,9 @@ import com.authdb.util.databases.MySQL;
  */
 public class phpBB {
 	
-	public static boolean check(int checkid)
-	{
-		String name = null, latest = null, Version = null;
-		String[] versions = null;
-		if(checkid == 1)
-		{
-			name = Config.Script1_name;
-			latest = Config.Script1_latest;
-			versions = new String[] {Config.Script1_versions};
-			Version = Util.CheckVersion(name,latest, 3);
-		}
-		else if(checkid == 2)
-		{
-			name = Config.Script1_name;
-			latest = Config.Script1_latest2;
-			versions = new String[] {Config.Script1_versions2};
-			Version = Util.CheckVersion(name,latest, 3);
-		}
-		if(Arrays.asList(versions).contains(Version))
-		{
-			if(Config.debug_enable) Util.Debug("Version: "+Version+" is in the list of supported versions of this script ("+name+")");
-			return true;
-		}
-		else 
-		{ 
-			Util.Log("warning","Version: "+Version+" is NOT in the list of supported versions of this script ("+name+") Setting to latest version of script: "+name+" "+latest); 
-			//Config.script_version = latest;
-			return false;
-		}
-	}
-	
-  public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
+  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {
-	if(check(1))
+	if(checkid==1)
 	{
 		String hash = phpbb_hash(password);
 		long timestamp = System.currentTimeMillis()/1000;
@@ -123,7 +92,7 @@ public class phpBB {
 	    ps.executeUpdate();
 	    MySQL.close();
 	}
-	else if(check(2))
+	else if(checkid == 2)
 	{
 		String hash = Encryption.md5(password);
 		long timestamp = System.currentTimeMillis()/1000;
