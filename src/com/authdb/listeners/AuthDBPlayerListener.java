@@ -167,6 +167,17 @@ public boolean CheckIdle(Player player) throws IOException
   	  else if (AuthDB.isAuthorized(player.getEntityId())) {			  
 				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
       }
+      else if (split.length == 3) {
+    	  if (this.plugin.checkPassword(split[1], split[2])) {
+    	         ItemStack[] inv = this.plugin.getInventory(player.getName());
+    	        if (inv != null) { player.getInventory().setContents(inv); }
+    	        this.plugin.authorize(player.getEntityId());
+    		    Messages.SendMessage("AuthDB_message_login_success", player,null);
+    		} else if (Config.password_kick) 
+    		{
+    			  Messages.SendMessage("AuthDB_message_login_failure", player,null);
+    	    }
+}
       else if (split.length < 2) {
 				  Messages.SendMessage("AuthDB_message_login_usage", player,null);
       }

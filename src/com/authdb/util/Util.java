@@ -181,7 +181,7 @@ public class Util
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(Config.Script4_name) || script.equals(Config.Script4_shortname))
+		    else if(script.equals(Config.Script4_name) || script.equals(Config.String4_shortname))
     		{
     			usertable = "user";
     			if(CheckVersionInRange(Config.Script4_versionrange))
@@ -634,12 +634,13 @@ public class Util
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(data);
 		wr.flush();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		/*BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String line;
         while ((line = rd.readLine()) != null) 
         {
        	 Util.Debug(line);
         }
+        */
 		//BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 	}
 	

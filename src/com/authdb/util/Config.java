@@ -42,7 +42,7 @@ public class Config
 	public static String Script4_versionrange = "3.0.0-3.8.7";
 	public static String Script4_versionrange2 = "4.0.0-4.1.2";
 	public static String Script4_name = "vbulletin";
-	public static String Script4_shortname = "vb";
+	public static String String4_shortname = "vb";
 	
 	public static String Script5_versionrange = "6.20-6.20";
 	//public static String Script5_versionrange2 = "7.0-7.0";
@@ -208,7 +208,7 @@ public class Config
 					database_password =  GetConfigString("Core.database.password", "");
 					database_port =  GetConfigString("Core.database.port", "3306");
 					database_host =  GetConfigString("Core.database.host", "localhost");
-					database_database = GetConfigString("Core.database.database", "minecraft_forum");
+					database_database = GetConfigString("Core.database.name", "minecraft_forum");
 					database_prefix = GetConfigString("Core.database.prefix", "");
 					dbDb = "jdbc:mysql://"+database_host+":"+database_port+"/"+database_database;
 					
@@ -353,7 +353,7 @@ public class Config
 					//               badcharacters
 					///////////////////////////////////////////
 					Messages.AuthDB_message_badcharacters_renamed = Config.GetConfigString("Core.AuthDB.badcharacters.renamed", "&2{PLAYER} renamed to {PLAYERNEW} due to bad characters: {BADCHARACTERS}.");
-					Messages.AuthDB_message_badcharacters_kicked = Config.GetConfigString("Core.AuthDB.badcharacters.kick", "Username contains bad characters: {BADCHARACTERS}!");
+					Messages.AuthDB_message_badcharacters_kicked = Config.GetConfigString("Core.AuthDB.badcharacters.kicked", "Username contains bad characters: {BADCHARACTERS}!");
 					Messages.AuthDB_message_badcharacters_whitelist = Config.GetConfigString("Core.AuthDB.badcharacters.whitelist", "&2{PLAYER} on the bad characters &fwhitelist&2, bypassing restrictions!");
 					
 					///////////////////////////////////////////
@@ -367,7 +367,7 @@ public class Config
 					///////////////////////////////////////////
 					//               idle
 					///////////////////////////////////////////
-					Messages.AuthDB_message_idle_kick = Config.GetConfigString("Core.AuthDB.idle.kick", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
+					Messages.AuthDB_message_idle_kick = Config.GetConfigString("Core.AuthDB.idle.kicked", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
 					Messages.AuthDB_message_idle_whitelist = Config.GetConfigString("Core.AuthDB.idle.whitelist", "{PLAYER} on the idle whitelist, bypassing restrictions!");
 					
 				///////////////////////////////////////////
