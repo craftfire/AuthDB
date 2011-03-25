@@ -634,13 +634,13 @@ public class Util
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(data);
 		wr.flush();
-		/*BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
+		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+       /* String line;
         while ((line = rd.readLine()) != null) 
         {
-       	 Util.Debug(line);
-        }
-        */
+       	// Util.Debug(line);
+        }*/
+        
 		//BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 	}
 	
