@@ -63,7 +63,7 @@ public class AuthDB extends JavaPlugin {
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
 	public static String pluginversion = "2.0.0";
-	public static CraftIRC craftircHandle = null;
+    public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
 	private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
@@ -76,7 +76,9 @@ public class AuthDB extends JavaPlugin {
 
 	public void onDisable() 
 	{
-		zCraftIRC.SendMessage("disconnect",null);
+		Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
+	    if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
+	    	zCraftIRC.SendMessage("disconnect",null);
 		disableInventory();
 		authorizedIds.clear();
 		db.clear();
@@ -88,28 +90,22 @@ public class AuthDB extends JavaPlugin {
 	{
 		Server = getServer();
 		Plugin[] plugins = Server.getPluginManager().getPlugins();
-		Util.Debug(System.getProperty("os.name"));
-		Util.Debug(System.getProperty("os.version"));
-		Util.Debug(System.getProperty("java.version"));
-		Util.Debug(System.getProperty("java.io.tmpdir"));
+		//Util.Debug(System.getProperty("java.version"));
+		/*Util.Debug(System.getProperty("java.io.tmpdir"));
 		Util.Debug(System.getProperty("java.library.path"));
 		Util.Debug(System.getProperty("java.class.path"));
 		Util.Debug(System.getProperty("user.home"));
 		Util.Debug(System.getProperty("user.dir"));
 		Util.Debug(System.getProperty("user.name"));
-		Util.ErrorFile("HELLO");
+		Util.ErrorFile("HELLO"); */
 		int counter = 0;
 		String Plugins = "";
 		while(plugins.length > counter)
 		{
-			Plugins += plugins[counter]+"*_*";
+			Plugins += plugins[counter].getDescription().getName()+"&_&"+plugins[counter].getDescription().getVersion();
+			if(plugins.length != (counter + 1))
+				Plugins += "*_*";
 			counter++;
-		}
-		Util.Debug(""+Plugins);
-		if(Config.usagestats_enabled)
-		{
-			try { Util.PostInfo(getServer().getName(),getServer().getVersion(),pluginversion); } 
-			catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send data to main server."); }
 		}
 		
 		Config TheMessages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
@@ -126,18 +122,32 @@ public class AuthDB extends JavaPlugin {
 		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
 		    return;
 		}
-		Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
-		if (checkCraftIRC != null && Config.CraftIRC_enabled == true) {
-		    try {
-		        	Util.Log("info", "CraftIRC Support Enabled"); 
-		        	craftircHandle = (CraftIRC) checkCraftIRC;
-		        	zCraftIRC.SendMessage("connect",null);
-		        } 
-		    catch (ClassCastException ex) {
-		    	ex.printStackTrace();
-		    	Stop("Error in looking for CraftIRC");
-		    }
+
+	      final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
+	      //Util.Debug(""+checkCraftIRC.isEnabled());
+	      if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
+	    	  craftircHandle = ((CraftIRC)checkCraftIRC);
+	    	  Util.Log("info","Found supported plugin: " + checkCraftIRC.getDescription().getName());
+	    	  this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+		    		@Override
+		    		public void run() { if(checkCraftIRC.isEnabled()) { zCraftIRC.SendMessage("connect", null); } } }, 100);
+	    	  
+	      }
+		String thescript = "",theversion = "";
+		if(Config.custom_enabled) { thescript = "custom"; }
+		else 
+		{ 
+			thescript = Config.script_name; 
+			theversion = Config.script_version;
 		}
+		String online = ""+getServer().getOnlinePlayers().length;
+		String max = ""+getServer().getMaxPlayers();
+		if(Config.usagestats_enabled)
+		{
+			try { Util.PostInfo(getServer().getName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); } 
+			catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send data to main server."); }
+		}
+		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Normal, this);
@@ -161,10 +171,6 @@ public class AuthDB extends JavaPlugin {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-        System.out.println("\u0027[5;4;32m");
-
-		
 		
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");

@@ -28,23 +28,52 @@ public class Config
 	public static String Script1_versionrange = "3.0.0-3.0.8";
 	public static String Script1_versionrange2 = "2.0.0-2.0.23";
 	public static String Script1_name = "phpbb";
+	public static String Script1_shortname = "phpbb";
 	///
-	public static String Script2_versionrange = "3.0.0-3.0.8";
-	public static String Script2_versionrange2 = "2.0.0-2.0.23";
-	public static String Script2_name = "smf";
+	public static String Script2_versionrange = "1.1.1-1.1.13";
+	public static String Script2_versionrange2 = "2.0.0.0-2.0.0.5";
+	public static String Script2_name = "simple machines";
+	public static String Script2_shortname = "smf";
 	///
 	public static String Script3_versionrange = "1.6-1.6";
 	public static String Script3_name = "mybb";
+	public static String Script3_shortname = "mybb";
 
 	public static String Script4_versionrange = "3.0.0-3.8.7";
 	public static String Script4_versionrange2 = "4.0.0-4.1.2";
-	public static String Script4_name = "vb";
+	public static String Script4_name = "vbulletin";
+	public static String Script4_shortname = "vb";
 	
 	public static String Script5_versionrange = "6.20-6.20";
+	//public static String Script5_versionrange2 = "7.0-7.0";
 	public static String Script5_name = "drupal";
+	public static String Script5_shortname = "dru";
 	
 	public static String Script6_versionrange = "1.5.0-1.5.22";
+	public static String Script6_versionrange2 = "1.6.0-1.6.1";
 	public static String Script6_name = "joomla";
+	public static String Script6_shortname = "joom";
+	
+	public static String Script7_name = "vanilla";
+	public static String Script7_shortname = "van";
+	public static String Script7_versionrange = "2.0.17.8-2.0.17.8";
+	public static String Script7_versionrange2 = "2.0.17.9-2.0.17.9";
+	
+	public static String Script8_name = "punbb";
+	public static String Script8_shortname = "pun";
+	public static String Script8_versionrange = "1.3.4-1.3.5";
+	
+	public static String Script9_name = "xenforo";
+	public static String Script9_shortname = "xf";
+	public static String Script9_versionrange = "1.0.0-1.0.0";
+	
+	public static String Script10_name = "bbpress";
+	public static String Script10_shortname = "bbp";
+	public static String Script10_versionrange = "1.0.3-1.0.3";
+	
+	public static String Script11_name = "xpress engine";
+	public static String Script11_shortname = "xe";
+	public static String Script11_versionrange = "1.0.3-1.0.3";
 	///
 	
 	///////////////////////////////////////////
@@ -52,7 +81,7 @@ public class Config
 	///////////////////////////////////////////
 	public static boolean database_ison;
 	public static boolean has_badcharacters;
-	public static boolean HasForumBoard;
+	public static boolean HasForumBoard,Capitalization;
 	
 	///////////////////////////////////////////
 	//               Database
@@ -321,7 +350,7 @@ public class Config
 					Messages.AuthDB_message_email_invalid = Config.GetConfigString("Core.AuthDB.email.invalid", "&4Invalid email! Please try again!");
 					
 					///////////////////////////////////////////
-					//               username
+					//               badcharacters
 					///////////////////////////////////////////
 					Messages.AuthDB_message_badcharacters_renamed = Config.GetConfigString("Core.AuthDB.badcharacters.renamed", "&2{PLAYER} renamed to {PLAYERNEW} due to bad characters: {BADCHARACTERS}.");
 					Messages.AuthDB_message_badcharacters_kicked = Config.GetConfigString("Core.AuthDB.badcharacters.kick", "Username contains bad characters: {BADCHARACTERS}!");
@@ -359,17 +388,25 @@ public class Config
 					Messages.CraftIRC_message_register_registered = Config.GetConfigString("Plugins.CraftIRC.register.registered", "{PLAYER} had a lapse in memory and tried to register again.");
 					
 					///////////////////////////////////////////
+					//               password
+					///////////////////////////////////////////
+					Messages.CraftIRC_message_password_success = Config.GetConfigString("Plugins.CraftIRC.password.success", "{PLAYER} logged in successfully!");
+					Messages.CraftIRC_message_password_failure = Config.GetConfigString("Plugins.CraftIRC.password.failure", "{PLAYER} tried to login with the wrong password!");
+					
+					///////////////////////////////////////////
+					//               idle
+					///////////////////////////////////////////
+					Messages.CraftIRC_message_idle_kicked = Config.GetConfigString("Plugins.CraftIRC.idle.kicked", "{PLAYER} was kicked due to bad characters in username!");
+					Messages.CraftIRC_message_idle_whitelist = Config.GetConfigString("Plugins.CraftIRC.idle.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
+					
+					
+					///////////////////////////////////////////
 					//               badcharacters
 					///////////////////////////////////////////
 					Messages.CraftIRC_message_badcharacters_renamed = Config.GetConfigString("Plugins.CraftIRC.badcharacters.renamed", "{PLAYER} renamed to {PLAYERNEW} due to bad characters.");
 					Messages.CraftIRC_message_badcharacters_kicked = Config.GetConfigString("Plugins.CraftIRC.badcharacters.kicked", "{PLAYER} was kicked due to bad characters in username!");
 					Messages.CraftIRC_message_badcharacters_whitelist = Config.GetConfigString("Plugins.CraftIRC.badcharacters.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
 					
-					///////////////////////////////////////////
-					//               password
-					///////////////////////////////////////////
-					Messages.CraftIRC_message_password_success = Config.GetConfigString("Plugins.CraftIRC.password.success", "{PLAYER} logged in successfully!");
-					Messages.CraftIRC_message_password_failure = Config.GetConfigString("Plugins.CraftIRC.password.failure", "{PLAYER} tried to login with the wrong password!");
 					
 			}
 

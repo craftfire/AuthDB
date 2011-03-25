@@ -55,7 +55,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
 		if(Config.debug_enable) Util.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
 		Player player = event.getPlayer();
 		String name = player.getName();
-		if (Util.checkUsernameCharacters(name) == false && Util.CheckWhitelist("badcharacters",name) == false)
+		if (Util.checkUsernameCharacters(name) == false && Util.CheckWhitelist("badcharacters",player) == false)
 	    {
 		  if(Config.debug_enable) Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
 	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_badcharacters_kicked", player, event);
@@ -81,7 +81,7 @@ public boolean CheckIdle(Player player) throws IOException
   {
 	final Player player = event.getPlayer();
     try {
-	    if(Config.idle_kick == true && Util.CheckWhitelist("idle",player.getDisplayName()) == false)
+	    if(Config.idle_kick == true && Util.CheckWhitelist("idle",player) == false)
 	    {
 	    	if(Config.debug_enable) 
 	    		Util.Debug("Idle time is: "+Config.idle_ticks);
@@ -129,6 +129,7 @@ public boolean CheckIdle(Player player) throws IOException
   {
 	// plugin.getServer().getScheduler().scheduleSyncDelayedTask;
      Player player = event.getPlayer();
+     Messages.SendMessage("AuthDB_message_left_server", player,null);
      try {
 		if(this.plugin.IdleTask("check",player, "0"))
 		 {
@@ -175,10 +176,12 @@ public boolean CheckIdle(Player player) throws IOException
         this.plugin.authorize(player.getEntityId());
 	    Messages.SendMessage("AuthDB_message_login_success", player,null);
 	} else if (Config.password_kick) {
-       ItemStack[] inv = this.plugin.getInventory(player.getName());
-      if (inv != null)
-          player.getInventory().setContents(inv);
-				  Messages.SendMessage("AuthDB_message_login_failure", player,null);
+      /* ItemStack[] inv = this.plugin.getInventory(player.getName());
+	      if (inv != null)
+	      {
+	    	  player.getInventory().setContents(inv);
+	      } */
+		  Messages.SendMessage("AuthDB_message_login_failure", player,null);
       }
       if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
      event.setMessage("/login ******");

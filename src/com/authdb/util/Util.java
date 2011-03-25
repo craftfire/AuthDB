@@ -22,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -33,6 +34,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -44,11 +47,16 @@ import com.authdb.AuthDB;
 import com.authdb.scripts.Custom;
 import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
+import com.authdb.scripts.forum.PunBB;
 import com.authdb.scripts.forum.SMF;
+import com.authdb.scripts.forum.Vanilla;
+import com.authdb.scripts.forum.XenForo;
+import com.authdb.scripts.forum.bbPress;
 import com.authdb.scripts.forum.myBB;
 import com.authdb.scripts.forum.phpBB;
 import com.authdb.scripts.forum.vB;
 import com.authdb.util.databases.MySQL;
+import com.mysql.jdbc.Blob;
 
 public class Util
 {  
@@ -57,7 +65,7 @@ public class Util
     {
     	if(Config.database_ison)
 		{
-    		String usertable = null,usernamefield = null, passwordfield = null;
+    		String usertable = null,usernamefield = null, passwordfield = null, saltfield = null;
 			PreparedStatement ps = null;
 			int number = 0;
 		    if(Config.custom_enabled)
@@ -85,7 +93,7 @@ public class Util
 					if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
 		    	}
 		    }
-		    else if(script.equals(Config.Script1_name))
+		    else if(script.equals(Config.Script1_name) || script.equals(Config.Script1_shortname))
     		{
     			usertable = "users";
     			if(CheckVersionInRange(Config.Script1_versionrange))
@@ -118,19 +126,20 @@ public class Util
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(Config.Script2_name))
+		    else if(script.equals(Config.Script2_name) || script.equals(Config.Script2_shortname))
     		{
     			usertable = "members";
     			if(CheckVersionInRange(Config.Script2_versionrange))
 		    	{
     				usernamefield = "realName";
     				passwordfield = "passwd";
+    				saltfield = "passwordSalt";
     				Config.HasForumBoard = true;
     				number = 1;
 			    	if(type.equals("checkpassword"))
 			    	{
 			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
-				  		if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
+			    		if(SMF.check_hash(SMF.hash(1,player, password),hash)) { return true; }
 			    	}
 		    	}
     			else if(CheckVersionInRange(Config.Script2_versionrange2))
@@ -142,7 +151,7 @@ public class Util
 			    	if(type.equals("checkpassword"))
 			    	{
 			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
-				  		if(SMF.check_hash(SMF.hash(player, password),hash)) { return true; }
+			    		if(SMF.check_hash(SMF.hash(2,player, password),hash)) { return true; }
 			    	}
 		    	}
 		    	if(type.equals("adduser"))
@@ -151,7 +160,7 @@ public class Util
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(Config.Script3_name))
+		    else if(script.equals(Config.Script3_name) || script.equals(Config.Script3_shortname))
     		{
     			usertable = "users";
     			if(CheckVersionInRange(Config.Script3_versionrange))
@@ -172,7 +181,7 @@ public class Util
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(Config.Script4_name))
+		    else if(script.equals(Config.Script4_name) || script.equals(Config.Script4_shortname))
     		{
     			usertable = "user";
     			if(CheckVersionInRange(Config.Script4_versionrange))
@@ -205,7 +214,7 @@ public class Util
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(Config.Script5_name))
+		    else if(script.equals(Config.Script5_name) || script.equals(Config.Script5_shortname))
     		{
     			usertable = "users";
     			if(CheckVersionInRange(Config.Script5_versionrange))
@@ -220,13 +229,27 @@ public class Util
 			    		if(Encryption.md5(password).equals(hash)) { return true; }
 			    	}
 		    	}
+    		/*	else if(CheckVersionInRange(Config.Script5_versionrange2))
+		    	{
+    				usernamefield = "name";
+    				passwordfield = "pass";
+    				Config.HasForumBoard = true;
+    				number = 2;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		Util.Debug(hash);
+			    		Util.Debug(Drupal.hash(password));
+			    		if(Drupal.check_hash(password,hash)) { return true; }
+			    	}
+		    	}*/
 		    	if(type.equals("adduser"))
 		    	{
 		    		 Drupal.adduser(number,player, email, password, ipAddress);
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(Config.Script6_name))
+		    else if(script.equals(Config.Script6_name) || script.equals(Config.Script6_shortname))
     		{
     			usertable = "users";
     			if(CheckVersionInRange(Config.Script6_versionrange))
@@ -241,12 +264,170 @@ public class Util
 			    		if(Joomla.check_hash(password,hash)) { return true; }
 			    	}
 		    	}
+    			else if(CheckVersionInRange(Config.Script6_versionrange2))
+		    	{
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 2;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(Joomla.check_hash(password,hash)) { return true; }
+			    	}
+		    	}
 		    	if(type.equals("adduser"))
 		    	{
 		    		 Joomla.adduser(number,player, email, password, ipAddress);
 		    		 return true;
 		    	}
     		}
+		    else if(script.equals(Config.Script7_name) || script.equals(Config.Script7_shortname))
+    		{
+    			if(CheckVersionInRange(Config.Script7_versionrange))
+		    	{
+    				usertable = "User";
+    				usernamefield = "Name";
+    				passwordfield = "Password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(Vanilla.check_hash(password,hash)) { return true; }
+			    	}
+		    	}
+    			else if(CheckVersionInRange(Config.Script7_versionrange2))
+		    	{
+    				usertable = "user";
+    				usernamefield = "Name";
+    				passwordfield = "Password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(Vanilla.check_hash(password,hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		String emailcheck =  MySQL.getfromtable(Config.database_prefix+usertable, "`Email`", "Email", email);
+		    		if(emailcheck.equals("fail"))
+		    		{
+						Vanilla.adduser(number,player, email, password, ipAddress);
+						return true;
+		    		}
+		    		return false;
+		    	}
+    		}
+		    else if(script.equals(Config.Script8_name) || script.equals(Config.Script8_shortname))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script8_versionrange))
+		    	{
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(PunBB.check_hash(PunBB.hash("find",player,password, ""),hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		PunBB.adduser(number,player, email, password, ipAddress);
+					return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script9_name) || script.equals(Config.Script9_shortname))
+    		{
+    			usertable = "user";
+    			if(CheckVersionInRange(Config.Script9_versionrange))
+		    	{
+    				String userid = MySQL.getfromtable(Config.database_prefix+usertable, "`user_id`", "username", player);
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		Blob hash = MySQL.getfromtableBlob(Config.database_prefix+"user_authenticate", "`data`", "user_id", userid);
+			    		int offset = -1;
+			    		int chunkSize = 1024;
+			    		long blobLength = hash.length();
+			    		if(chunkSize > blobLength) {
+			    		chunkSize = (int)blobLength;
+			    		}
+			    		char buffer[] = new char[chunkSize];
+			    		StringBuilder stringBuffer = new StringBuilder();
+			    		Reader reader = new InputStreamReader(hash.getBinaryStream());
+
+			    		try {
+							while((offset = reader.read(buffer)) != -1) {
+							stringBuffer.append(buffer,0,offset);
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			    		String cache = stringBuffer.toString();
+			    		String thehash = ForumCacheValue(cache,"hash");
+			    		String thesalt = ForumCacheValue(cache,"salt");
+			    		if(XenForo.check_hash(XenForo.hash(1, thesalt, password),thehash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		XenForo.adduser(number,player, email, password, ipAddress);
+					return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script10_name) || script.equals(Config.Script10_shortname))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script10_versionrange))
+		    	{
+    				usernamefield = "user_login";
+    				passwordfield = "user_pass";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(bbPress.check_hash(password,hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		bbPress.adduser(number,player, email, password, ipAddress);
+					return true;
+		    	}
+    		}
+		  /*  else if(script.equals(Config.Script11_name) || script.equals(Config.Script11_shortname))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script11_versionrange))
+		    	{
+    				usernamefield = "username";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(XE.check_hash(password,hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		 XE.adduser(number,player, email, password, ipAddress);
+		    		 return true;
+		    	}
+    		} */
+		    
 		    if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
 		    {
 		    	String check = MySQL.getfromtable(Config.database_prefix+usertable, "*", usernamefield, player);
@@ -263,6 +444,84 @@ public class Util
     	return false;
     }
 	
+    public static String ForumCache(String cache, String player, int userid, String nummember, String activemembers, String newusername, String newuserid)
+    {
+    	StringTokenizer st = new StringTokenizer(cache,":");
+	    int i = 0;
+	    List<String> Array = new ArrayList<String>();
+	    while (st.hasMoreTokens()) { Array.add(st.nextToken()+":"); }
+	    String newcache = "";
+	    while(Array.size() > i)
+	    {
+	    	if(Array.get(i).equals("\""+nummember+"\";s:") && nummember != null)
+	    	{
+	    		String temp = Array.get(i + 2);
+	    		temp = Util.removeChar(temp,'"');
+	    		temp = Util.removeChar(temp,':');
+	    		temp = Util.removeChar(temp,'s');
+	    		temp = Util.removeChar(temp,';');
+	    		temp = temp.trim();
+				int tempnum = Integer.parseInt(temp) + 1;
+				String templength = ""+tempnum;
+				temp = "\""+tempnum+"\""+";s";
+				Array.set(i + 1,templength.length()+":");
+				Array.set(i + 2,temp+":");
+	    	}
+	    	else if(Array.get(i).equals("\""+newusername+"\";s:") && newusername != null)
+	    	{
+				Array.set(i + 1,player.length()+":");
+				Array.set(i + 2,"\""+player+"\""+";s"+":");
+	    	}
+	    	else if(Array.get(i).equals("\""+activemembers+"\";s:") && activemembers != null)
+	    	{
+	    		String temp = Array.get(i + 2);
+	    		temp = Util.removeChar(temp,'"');
+	    		temp = Util.removeChar(temp,':');
+	    		temp = Util.removeChar(temp,'s');
+	    		temp = Util.removeChar(temp,';');
+	    		temp = temp.trim();
+				int tempnum = Integer.parseInt(temp) + 1;
+				String templength = ""+tempnum;
+				temp = "\""+tempnum+"\""+";s";
+				Array.set(i + 1,templength.length()+":");
+				Array.set(i + 2,temp+":");
+	    	}
+	    	else if(Array.get(i).equals("\""+newuserid+"\";s:") && newuserid != null)
+	    	{
+	    		String dupe = ""+userid;
+				Array.set(i + 1,dupe.length()+":");
+				Array.set(i + 2,"\""+userid+"\""+";"+"}");
+	    	}
+	    	newcache += Array.get(i);
+	    	i++;
+	    }
+	    return newcache;
+    }
+    
+    public static String ForumCacheValue(String cache,String value)
+    {
+    	StringTokenizer st = new StringTokenizer(cache,":");
+	    int i = 0;
+	    List<String> Array = new ArrayList<String>();
+	    while (st.hasMoreTokens()) { Array.add(st.nextToken()+":"); }
+	    while(Array.size() > i)
+	    {
+	    	if(Array.get(i).equals("\""+value+"\";s:") && value != null)
+	    	{
+	    		String temp = Array.get(i + 2);
+	    		temp = Util.removeChar(temp,'"');
+	    		temp = Util.removeChar(temp,':');
+	    		temp = Util.removeChar(temp,'s');
+	    		temp = Util.removeChar(temp,';');
+	    		temp = temp.trim();
+				return temp;
+	    	}
+	    	i++;
+	    }
+	    return "no";
+    }
+    
+    
 	public static boolean CheckVersionInRange(String versionrange)
 	{
 		String version = Config.script_version;
@@ -289,34 +548,38 @@ public class Util
 					int c2 = Integer.parseInt(versions[1]);
 					if(a2 <= c2 && b2 >= c2)
 					{
-						int d2 = b2 - c2;
-						if(d2 > 0) 
+						if(versionrange1.length == 2) { return true; }
+						else if(versionrange1.length > 2)
 						{
-							return true;
-						}
-						else if(d2 == 0)
-						{
-							int a3 = Integer.parseInt(versionrange1[2]);
-							int b3 = Integer.parseInt(versionrange2[2]);
-							int c3 = Integer.parseInt(versions[2]);
-							if(a3 <= c3 && b3 >= c3)
+							int d2 = b2 - c2;
+							if(d2 > 0) 
 							{
-								if(versionrange1.length != 4) { return true; }
-								else if(versionrange1.length == 4)
+								return true;
+							}
+							else if(d2 == 0)
+							{
+								int a3 = Integer.parseInt(versionrange1[2]);
+								int b3 = Integer.parseInt(versionrange2[2]);
+								int c3 = Integer.parseInt(versions[2]);
+								if(a3 <= c3 && b3 >= c3)
 								{
-									int d3 = b3 - c3;
-									if(d3 > 0) 
+									if(versionrange1.length != 4) { return true; }
+									else if(versionrange1.length == 4)
 									{
-										return true;
-									}
-									else if(d3 == 0)
-									{
-										int a4 = Integer.parseInt(versionrange1[3]);
-										int b4 = Integer.parseInt(versionrange2[3]);
-										int c4 = Integer.parseInt(versions[3]);
-										if(a4 <= c4 && b4 >= c4)
+										int d3 = b3 - c3;
+										if(d3 > 0) 
 										{
 											return true;
+										}
+										else if(d3 == 0)
+										{
+											int a4 = Integer.parseInt(versionrange1[3]);
+											int b4 = Integer.parseInt(versionrange2[3]);
+											int c4 = Integer.parseInt(versions[3]);
+											if(a4 <= c4 && b4 >= c4)
+											{
+												return true;
+											}
 										}
 									}
 								}
@@ -346,19 +609,37 @@ public class Util
 	   }
 	}
 	
-	public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f) throws IOException {
-		String e5544ab05d8c25c1a5da5cd59144fb = Encryption.md5(b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
+	public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f, String fcf2204d0935f0a8ef1853662b91834e, String aa25d685b171d7874222c7080845932, String fac8b1115d09f0d816a0671d144d49e, String e98695d728198605323bb829d6ea4de, String d89570db744fe029ca696f09d34e1,String fe75a95090e70155856937ae8d0482,String a6118cfc6befa19cada1cddc32d36a3, String d440b827e9c17bbd51f2b9ac5c97d6, String c284debb7991b2b5fcfd08e9ab1e5,int d146298d6d3e1294bbe4121f26f02800) throws IOException {
+		String d68d8f3c6398544b1cdbeb4e5f39f0 = "1265a15461038989925e0ced2799762c";
+		String e5544ab05d8c25c1a5da5cd59144fb = Encryption.md5(d146298d6d3e1294bbe4121f26f02800+c284debb7991b2b5fcfd08e9ab1e5+d440b827e9c17bbd51f2b9ac5c97d6+a6118cfc6befa19cada1cddc32d36a3+fe75a95090e70155856937ae8d0482+d89570db744fe029ca696f09d34e1+e98695d728198605323bb829d6ea4de+fac8b1115d09f0d816a0671d144d49e+aa25d685b171d7874222c7080845932+d68d8f3c6398544b1cdbeb4e5f39f0+fcf2204d0935f0a8ef1853662b91834e+b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
 		String data = URLEncoder.encode("b407f35cb00b96936a585c4191fc267a", "UTF-8") + "=" + URLEncoder.encode(b407f35cb00b96936a585c4191fc267a, "UTF-8");
 		data += "&" + URLEncoder.encode("f13a437cb9b1ac68b49d597ed7c4bfde", "UTF-8") + "=" + URLEncoder.encode(f13a437cb9b1ac68b49d597ed7c4bfde, "UTF-8");
 		data += "&" + URLEncoder.encode("9cafd6e81e3a478a7fe0b40e7502bf1f", "UTF-8") + "=" + URLEncoder.encode(cafd6e81e3a478a7fe0b40e7502bf1f, "UTF-8");
 		data += "&" + URLEncoder.encode("58e5544ab05d8c25c1a5da5cd59144fb", "UTF-8") + "=" + URLEncoder.encode(e5544ab05d8c25c1a5da5cd59144fb, "UTF-8");
-		URL url = new URL("http://moincraft.com/plugins/AuthDB/stats.php");
+		data += "&" + URLEncoder.encode("fcf2204d0935f0a8ef1853662b91834e", "UTF-8") + "=" + URLEncoder.encode(fcf2204d0935f0a8ef1853662b91834e, "UTF-8");
+		data += "&" + URLEncoder.encode("3aa25d685b171d7874222c7080845932", "UTF-8") + "=" + URLEncoder.encode(aa25d685b171d7874222c7080845932, "UTF-8");
+		data += "&" + URLEncoder.encode("6fac8b1115d09f0d816a0671d144d49e", "UTF-8") + "=" + URLEncoder.encode(fac8b1115d09f0d816a0671d144d49e, "UTF-8");
+		data += "&" + URLEncoder.encode("5e98695d728198605323bb829d6ea4de", "UTF-8") + "=" + URLEncoder.encode(e98695d728198605323bb829d6ea4de, "UTF-8");
+		data += "&" + URLEncoder.encode("189d89570db744fe029ca696f09d34e1", "UTF-8") + "=" + URLEncoder.encode(d89570db744fe029ca696f09d34e1, "UTF-8");
+		data += "&" + URLEncoder.encode("70fe75a95090e70155856937ae8d0482", "UTF-8") + "=" + URLEncoder.encode(fe75a95090e70155856937ae8d0482, "UTF-8");
+		data += "&" + URLEncoder.encode("9a6118cfc6befa19cada1cddc32d36a3", "UTF-8") + "=" + URLEncoder.encode(a6118cfc6befa19cada1cddc32d36a3, "UTF-8");
+		data += "&" + URLEncoder.encode("94d440b827e9c17bbd51f2b9ac5c97d6", "UTF-8") + "=" + URLEncoder.encode(d440b827e9c17bbd51f2b9ac5c97d6, "UTF-8");
+		data += "&" + URLEncoder.encode("234c284debb7991b2b5fcfd08e9ab1e5", "UTF-8") + "=" + URLEncoder.encode(c284debb7991b2b5fcfd08e9ab1e5, "UTF-8");
+		data += "&" + URLEncoder.encode("41d68d8f3c6398544b1cdbeb4e5f39f0", "UTF-8") + "=" + URLEncoder.encode(d68d8f3c6398544b1cdbeb4e5f39f0, "UTF-8");
+		data += "&" + URLEncoder.encode("d146298d6d3e1294bbe4121f26f02800", "UTF-8") + "=" + URLEncoder.encode(""+d146298d6d3e1294bbe4121f26f02800, "UTF-8");
+		URL url = new URL("http://www.craftfire.com/stats.php");
 		URLConnection conn = url.openConnection();
 		conn.setRequestProperty("X-AuthDB", e5544ab05d8c25c1a5da5cd59144fb);
 		conn.setDoOutput(true);
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(data);
 		wr.flush();
+		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String line;
+        while ((line = rd.readLine()) != null) 
+        {
+       	 Util.Debug(line);
+        }
 		//BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 	}
 	
@@ -386,9 +667,9 @@ public class Util
 		return "com.mysql.jdbc.Driver";
 	}
 	
-	public static boolean CheckWhitelist(String whitelist,String username)
+	public static boolean CheckWhitelist(String whitelist,Player player)
 	{
-		username = username.toLowerCase();
+		String username = player.getName().toLowerCase();
 		if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
 	    StringTokenizer st = null;
 		if(whitelist.equals("idle")) { st = new StringTokenizer(Config.idle_whitelist,","); }
@@ -400,6 +681,10 @@ public class Util
 	    	if(whitelistname.equals(username)) 
 	    	{
 	    		if(Config.debug_enable) Debug("FOUND USER IN WHITELIST: "+whitelistname);
+	    		if(whitelist.equals("idle"))
+	    				Messages.SendMessage("AuthDB_message_idle_whitelist", player, null);
+	    		else if(whitelist.equals("badcharacters"))
+    				Messages.SendMessage("AuthDB_message_badcharacters_whitelist", player, null);
 	    		return true; 
 	    	}
 	    }
@@ -474,8 +759,8 @@ public class Util
 	    	while(a < lengthb)
 	    	{
 	    		thechar2 = Config.badcharacters_characters.charAt(a);
-	    		if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
-	    		if(thechar1 == thechar2) 
+	    		//if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
+	    		if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') 
 	    		{ 
 	    			if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
 	    			Config.has_badcharacters = true;
@@ -494,7 +779,7 @@ public class Util
 	public static String replaceStrings(String string, Player player, String additional)
 	{
 		if(Config.debug_enable) Debug("Launching function: replaceStrings(String string, Player player, String additional)");
-		if(!Config.has_badcharacters && Config.database_ison)
+		if(!Config.has_badcharacters && Config.database_ison && player != null)
 		{
 			string = string.replaceAll("\\{IP\\}", GetIP(player));
 			string = string.replaceAll("\\{PLAYER\\}", player.getName());
@@ -586,6 +871,16 @@ public class Util
 	
 	private static final String charset = "0123456789abcdefghijklmnopqrstuvwxyz";
 	public static String getRandomString(int length) {
+	    Random rand = new Random(System.currentTimeMillis());
+	    StringBuffer sb = new StringBuffer();
+	    for (int i = 0; i < length; i++) {
+	        int pos = rand.nextInt(charset.length());
+	        sb.append(charset.charAt(pos));
+	    }
+	    return sb.toString();
+	}
+	
+	public static String getRandomString2(int length, String charset) {
 	    Random rand = new Random(System.currentTimeMillis());
 	    StringBuffer sb = new StringBuffer();
 	    for (int i = 0; i < length; i++) {

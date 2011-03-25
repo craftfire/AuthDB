@@ -26,6 +26,7 @@ import com.authdb.AuthDB;
 import com.authdb.util.Config;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
+import com.mysql.jdbc.Blob;
 
 
 public class MySQL
@@ -99,6 +100,16 @@ public class MySQL
 		ResultSet rs = stmt.executeQuery( query );
 		String dupe = "fail";
 		if (rs.next()) { dupe = rs.getString(1); }
+		return dupe;
+	}
+	
+	public static Blob getfromtableBlob(String table,String column1,String column2,String value) throws SQLException
+	{
+		String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"'";
+		Statement stmt = mysql.createStatement();
+		ResultSet rs = stmt.executeQuery( query );
+		Blob dupe = null;
+		if (rs.next()) { dupe = (Blob) rs.getBlob(1); }
 		return dupe;
 	}
 }

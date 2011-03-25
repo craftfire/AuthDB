@@ -69,6 +69,57 @@ public class Encryption
         sha1hash = md.digest();
         return Util.convertToHex(sha1hash);
     } 
+    
+    public static String SHA256(String text)
+    {
+        MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        md.update(text.getBytes());
+ 
+        byte byteData[] = md.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        StringBuffer hexString = new StringBuffer();
+    	for (int i=0;i<byteData.length;i++) {
+    		String hex=Integer.toHexString(0xff & byteData[i]);
+   	     	if(hex.length()==1) hexString.append('0');
+   	     	hexString.append(hex);
+    	}
+    	return hexString.toString();
+    }
+    
+    public static String SHA512(String text)
+    {
+        StringBuffer sb = new StringBuffer();
+
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
+            messageDigest.update(text.getBytes("UTF-8"));
+            byte[] digestBytes = messageDigest.digest();
+
+
+            String hex = null;
+
+            for (int i = 0; i < digestBytes.length; i++) {
+                hex = Integer.toHexString(0xFF & digestBytes[i]);
+                if (hex.length() < 2) 
+                    sb.append("0");
+                sb.append(hex);
+                }
+            }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            }
+
+        return new String(sb);
+    }
    
 	public static String pack(String hex)
 	{

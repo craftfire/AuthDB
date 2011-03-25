@@ -19,7 +19,9 @@ package com.authdb.scripts.forum;
   import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import com.authdb.util.Config;
@@ -33,92 +35,70 @@ import com.authdb.util.databases.MySQL;
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
   	long timestamp = System.currentTimeMillis()/1000;
-  	if(checkid == 1)
-  	{
-	  	String salt = Encryption.hash(30,"none",33,126);
-	  	String passwordhashed = hash("create",player,password, salt);
-	  	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
-	  	///
-	  	PreparedStatement ps;
-	  	//
-	  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-	    ps.setString(1, "2"); //usergroupid
-	  	ps.setString(2, passwordhashed); // password
-	    ps.setString(3, passworddate); //passworddate
-	    ps.setString(4, email); //email
-	  	ps.setString(5, "1"); //showvbcode
-	  	ps.setLong(6, timestamp); //joindate
-	  	ps.setLong(7, timestamp); //lastvisit
-	  	ps.setLong(8, timestamp); //lastactivity
-	  	ps.setString(9, "5"); //reputationlevelid
-		ps.setString(10, "45108311"); //options
-		ps.setLong(11, Util.IP2Long(ipAddress)); //ipaddress
-		ps.setString(12, salt); //salt
-		ps.setString(13, player); //username
-	    ps.executeUpdate();
-		
-	    int userid;
-	    userid = MySQL.countitall(Config.database_prefix+"user");
-	    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
-	    Util.Log("info",oldcache);
-	    StringTokenizer st = new StringTokenizer(oldcache,":");
-	    int i = 0, usernamelength = player.length();
-	    String numusers, lastuid, lastusername, totalusers = "", newcache = "";
-	    while (st.hasMoreTokens()) {
-	  
-	     Util.Log("info",i+"-"+st.nextToken()+":"); 
-	      i++;
-	    }
-	  
-	    
-	     // ps = MySQL.mysql.prepareStatement("UPDATE `"+ForumAuth.forumPrefix+"datastore"+"` SET `data` = '" + newcache2 + "' WHERE `title` = 'userstats'");
-	     // ps.executeUpdate();
-	      
-  		}
-  	else if(checkid == 2)
-  	{
-	  	String salt = Encryption.hash(30,"none",33,126);
-	  	String passwordhashed = hash("create",player,password, salt);
-	  	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
-	  //	int userid;
-	  	///
-	  	PreparedStatement ps;
-	  	//
-	  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`,`usertitle`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-	    ps.setString(1, "2"); //usergroupid
-	  	ps.setString(2, passwordhashed); // password
-	    ps.setString(3, passworddate); //passworddate
-	    ps.setString(4, email); //email
-	  	ps.setString(5, "1"); //showvbcode
-	  	ps.setLong(6, timestamp); //joindate
-	  	ps.setLong(7, timestamp); //lastvisit
-	  	ps.setLong(8, timestamp); //lastactivity
-	  	ps.setString(9, "5"); //reputationlevelid
-		ps.setString(10, "45091927"); //options
-		ps.setString(11, ipAddress); //ipaddress
-		ps.setString(12, salt); //salt
-		ps.setString(13, player); //username
-		ps.setString(14, "Junior Member"); //usertitle
-	    ps.executeUpdate();
-	     
-	    int userid;
-	    userid = MySQL.countitall(Config.database_prefix+"user");
-	    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
-	    Util.Log("info",oldcache);
-	    StringTokenizer st = new StringTokenizer(oldcache,":");
-	    int i = 0, usernamelength = player.length();
-	    String numusers, lastuid, lastusername, totalusers = "", newcache = "";
-	    while (st.hasMoreTokens()) 
-	    {
-	    	String cachestring = st.nextToken();
-	    	if(cachestring.equals("\"numbermembers\";s"))
-	    	{
-	    		Util.Log("info",i+"-"+cachestring+":"); 
-	    	}
-	    	Util.Log("info",i+"-"+cachestring+":"); 
-	      i++;
-	    }
-  		}
+	  	if(checkid == 1)
+	  	{
+		  	String salt = Encryption.hash(30,"none",33,126);
+		  	String passwordhashed = hash("create",player,password, salt);
+		  	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
+		  	///
+		  	PreparedStatement ps;
+		  	//
+		  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+		    ps.setString(1, "2"); //usergroupid
+		  	ps.setString(2, passwordhashed); // password
+		    ps.setString(3, passworddate); //passworddate
+		    ps.setString(4, email); //email
+		  	ps.setString(5, "1"); //showvbcode
+		  	ps.setLong(6, timestamp); //joindate
+		  	ps.setLong(7, timestamp); //lastvisit
+		  	ps.setLong(8, timestamp); //lastactivity
+		  	ps.setString(9, "5"); //reputationlevelid
+			ps.setString(10, "45108311"); //options
+			ps.setLong(11, Util.IP2Long(ipAddress)); //ipaddress
+			ps.setString(12, salt); //salt
+			ps.setString(13, player); //username
+		    ps.executeUpdate();
+			
+		    
+		    int userid = MySQL.countitall(Config.database_prefix+"user");
+		    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
+		    String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid");
+		    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+		    ps.executeUpdate();
+		      
+	  		}
+	  	else if(checkid == 2)
+	  	{
+		  	String salt = Encryption.hash(30,"none",33,126);
+		  	String passwordhashed = hash("create",player,password, salt);
+		  	String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
+		  //	int userid;
+		  	///
+		  	PreparedStatement ps;
+		  	//
+		  	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`,`usertitle`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+		    ps.setString(1, "2"); //usergroupid
+		  	ps.setString(2, passwordhashed); // password
+		    ps.setString(3, passworddate); //passworddate
+		    ps.setString(4, email); //email
+		  	ps.setString(5, "1"); //showvbcode
+		  	ps.setLong(6, timestamp); //joindate
+		  	ps.setLong(7, timestamp); //lastvisit
+		  	ps.setLong(8, timestamp); //lastactivity
+		  	ps.setString(9, "5"); //reputationlevelid
+			ps.setString(10, "45091927"); //options
+			ps.setString(11, ipAddress); //ipaddress
+			ps.setString(12, salt); //salt
+			ps.setString(13, player); //username
+			ps.setString(14, "Junior Member"); //usertitle
+		    ps.executeUpdate();
+		     
+		    int userid = MySQL.countitall(Config.database_prefix+"user");
+		    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
+		    String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid");
+		    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+		    ps.executeUpdate();
+	  	}
     }
     
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {

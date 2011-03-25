@@ -96,14 +96,20 @@ public class Messages
 		public static String CraftIRC_message_register_success,CraftIRC_message_register_failure,CraftIRC_message_register_registered;
 		
 		///////////////////////////////////////////
-		//               username
-		///////////////////////////////////////////
-		public static String CraftIRC_message_badcharacters_renamed,CraftIRC_message_badcharacters_kicked,CraftIRC_message_badcharacters_whitelist;
-		
-		///////////////////////////////////////////
 		//               password
 		///////////////////////////////////////////
 		public static String CraftIRC_message_password_success,CraftIRC_message_password_failure;
+		
+		///////////////////////////////////////////
+		//               idle
+		///////////////////////////////////////////
+		public static String CraftIRC_message_idle_kicked,CraftIRC_message_idle_whitelist;
+		
+		///////////////////////////////////////////
+		//               badcharacters
+		///////////////////////////////////////////
+		public static String CraftIRC_message_badcharacters_renamed,CraftIRC_message_badcharacters_kicked,CraftIRC_message_badcharacters_whitelist;
+	
 		
 	public static void SendMessage(String type,Player player,PlayerLoginEvent event)
 	{
@@ -225,7 +231,7 @@ public class Messages
 			}
 			else if(type.equals("AuthDB_message_idle_whitelist"))
 			{
-				player.sendMessage(Util.replaceStrings(AuthDB_message_idle_whitelist,player,null));
+				//player.sendMessage(Util.replaceStrings(AuthDB_message_idle_whitelist,player,null));
 			}
 		}
 		else { Messages.SendMessage("AuthDB_message_database_failure", null, null); }

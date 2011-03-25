@@ -15,58 +15,53 @@
 **/
 package com.authdb.scripts.forum;
 
-  import java.io.UnsupportedEncodingException;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-  import java.sql.PreparedStatement;
-  import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
-
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
+public class PunBB {
+	
+  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
+  {
+	if(checkid == 1)
+	{
+		long timestamp = System.currentTimeMillis()/1000;
+		//
+		PreparedStatement ps;
+		//
+		String salt = Encryption.hash(12,"none",33, 126);
+		String hash = hash("create",player,password,salt);
+		
+		ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`group_id`,`username`,`password`,`salt`,`email`,`registered`,`registration_ip`,`last_visit`)  VALUES (?,?,?,?,?,?,?,?)", 1);
+	    ps.setInt(1, 3); //group_id
+		ps.setString(2, player); //username
+	    ps.setString(3, hash); //password
+	    ps.setString(4, salt); //salt
+		ps.setString(5, email); //email
+		ps.setLong(6, timestamp); //registered
+		ps.setString(7, ipAddress); //registration_ip
+		ps.setLong(8, timestamp); //last_visit
+		///
+	    ps.executeUpdate();
+	    
+	    /*
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
+	    ps.executeUpdate();
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
+	    ps.executeUpdate();
+	    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+	    ps.executeUpdate();*/
+	}
+ }
 
-  public class myBB {
-  	
-    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-    {
-		if(checkid == 1)
-	    {
-	long timestamp = System.currentTimeMillis()/1000;
-	String salt = Encryption.hash(8,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",0,0);
-	String hash = hash("create",player,password, salt);
-	//
-	PreparedStatement ps;
-	//
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-	ps.setString(1, player); //username
-	ps.setString(2, hash); // password
-	ps.setString(3, salt); //salt
-	ps.setString(4, email); //email
-	ps.setLong(5, timestamp); //regdate
-	ps.setLong(6, timestamp); //lastactive
-	ps.setLong(7, timestamp); //lastvisit
-	ps.setString(8, ipAddress); //regip
-	ps.setLong(9, Util.IP2Long(ipAddress));
-	//need to add these, it's complaining about not default is set.
-	ps.setString(10, ""); //signature
-	ps.setString(11, ""); //buddylist
-	ps.setString(12, ""); //ignorelist
-	ps.setString(13, ""); //pmfolders
-	ps.setString(14, ""); //notepad
-	ps.setString(15, ""); //usernotes
-	ps.setString(16, "5");//usergroup
-	ps.executeUpdate();
-	 
-    int userid = MySQL.countitall(Config.database_prefix+"user");
-    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
-    String newcache = Util.ForumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid");
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datacache"+"` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
-    ps.executeUpdate();
-	    }
-    }
-  	
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
     	if(action.equals("find"))
     	{
@@ -102,6 +97,6 @@ import com.authdb.util.databases.MySQL;
   	
   	public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
   	{
-  	return Encryption.md5(Encryption.md5(salt) + Encryption.md5(password));
+  		return Encryption.SHA1(salt + Encryption.SHA1(password));
   	}
 }
