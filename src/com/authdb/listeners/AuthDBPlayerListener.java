@@ -129,18 +129,12 @@ public boolean CheckIdle(Player player) throws IOException
 			 else
 				 Messages.SendMessage("AuthDB_message_welcome_user", player,null);
 		 } else if (Config.register_force) {
-			 if (!CheckGuest(player,Config.guests_inventory))
-			  {
 				    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
 					   player.getInventory().clear();
 					  Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
-			  }
 		  }
 		 else if (!Config.register_force) { 
-			 if (!CheckGuest(player,Config.guests_inventory))
-			  {
 					  Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
-			  }
 			 }
 		 else {
 		    this.plugin.authorize(event.getPlayer().getEntityId());
@@ -207,7 +201,8 @@ public boolean CheckIdle(Player player) throws IOException
     			long timestamp = System.currentTimeMillis()/1000;
     			this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
 	 			this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-				if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
+				if(Config.debug_enable) 
+					Util.Debug("Session started for "+player.getName());
     		    Messages.SendMessage("AuthDB_message_login_success", player,null);
     		} else if (Config.password_kick) 
     		{
@@ -224,7 +219,8 @@ public boolean CheckIdle(Player player) throws IOException
 		long timestamp = System.currentTimeMillis()/1000;
 		this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
 		this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-		if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
+		if(Config.debug_enable) 
+			Util.Debug("Session started for "+player.getName());
 	    Messages.SendMessage("AuthDB_message_login_success", player,null);
 	} else if (Config.password_kick) {
       /* ItemStack[] inv = this.plugin.getInventory(player.getName());
@@ -262,7 +258,8 @@ public boolean CheckIdle(Player player) throws IOException
 					long timestamp = System.currentTimeMillis()/1000;
 					this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
 					this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-					if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
+					if(Config.debug_enable) 
+						Util.Debug("Session started for "+player.getName());
 					Messages.SendMessage("AuthDB_message_register_success", player,null);
           this.plugin.authorize(player.getEntityId());
         } catch (IOException e) {
@@ -321,7 +318,8 @@ public boolean CheckIdle(Player player) throws IOException
     		long timestamp = System.currentTimeMillis()/1000;
     		this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
     		this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-    		if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
+    		if(Config.debug_enable) 
+    			Util.Debug("Session started for "+player.getName());
     	    Messages.SendMessage("AuthDB_message_login_success", player,null);
     	} else if (Config.password_kick) {
           /* ItemStack[] inv = this.plugin.getInventory(player.getName());

@@ -359,21 +359,6 @@ public class AuthDB extends JavaPlugin {
 		}
 		else if(type.equals("check2"))
 		{
-			if(this.db3.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { return true; }
-		}
-		else if(type.equals("add3"))
-		{
-			this.db3.put(player.getName(), TaskID);
-			return true;
-		}
-		
-		else if(type.equals("remove3"))
-		{
-			this.db3.remove(player.getName());
-			return true;
-		}
-		else if(type.equals("check3"))
-		{
 			if(this.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { return true; }
 		}
 		return false;
