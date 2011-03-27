@@ -8,6 +8,7 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.authdb.listeners;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
@@ -27,7 +28,10 @@ public AuthDBEntityListener(AuthDB instance)
 
 public void onEntityTarget(EntityTargetEvent event)
 {
+	
   if (((event.getEntity() instanceof Player)) && AuthDB.isAuthorized(event.getEntity().getEntityId()) == false)
+	   event.setCancelled(true);
+  else if (((event.getEntity() instanceof Monster)) && (event.getTarget() instanceof Player) && AuthDB.isAuthorized(event.getTarget().getEntityId()) == false)
 	   event.setCancelled(true);
 }
 

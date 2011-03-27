@@ -89,6 +89,7 @@ public boolean CheckIdle(Player player) throws IOException
 				else { sessionallow = true; }
 				
 			}
+			else { sessionallow = false; }
 		}
 			
 		try {
@@ -246,6 +247,9 @@ public boolean CheckIdle(Player player) throws IOException
           ItemStack[] inv = this.plugin.getInventory(player.getName());
          if (inv != null)
             player.getInventory().setContents(inv);
+					long timestamp = System.currentTimeMillis()/1000;
+					this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+					if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
 					Messages.SendMessage("AuthDB_message_register_success", player,null);
           this.plugin.authorize(player.getEntityId());
         } catch (IOException e) {
