@@ -124,11 +124,10 @@ public class Config
 		public static String idle_time = "seconds",idle_length = "30",idle_whitelist="";
 		public static boolean idle_kick;
 		public static int idle_ticks;
-  
-		///////////////////////////////////////////
+		
 		//               guests
 		///////////////////////////////////////////
-		public static boolean guests_commands,guests_movement,guests_inventory,guests_drops,guests_health,guests_damage,guests_interact,guests_build,guests_chat;
+		public static boolean guests_commands,guests_movement,guests_inventory,guests_drops,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
   
 		///////////////////////////////////////////
 		//               badcharacters
@@ -186,11 +185,11 @@ public class Config
 					///////////////////////////////////////////
 					//               custom
 					///////////////////////////////////////////
-					custom_enabled = GetConfigBoolean("Core.custom.enabled", false);
-					custom_table = GetConfigString("Core.custom.table", "users");
-					custom_userfield = GetConfigString("Core.custom.userfield", "username");
-					custom_passfield = GetConfigString("Core.custom.passfield", "password");
-					custom_encryption = GetConfigString("Core.custom.encryption", "").toLowerCase();
+					custom_enabled = GetConfigBoolean("Core.customdb.enabled", false);
+					custom_table = GetConfigString("Core.customdb.table", "users");
+					custom_userfield = GetConfigString("Core.customdb.userfield", "username");
+					custom_passfield = GetConfigString("Core.customdb.passfield", "password");
+					custom_encryption = GetConfigString("Core.customdb.encryption", "").toLowerCase();
 					
 					
 					///////////////////////////////////////////
@@ -234,19 +233,22 @@ public class Config
 					idle_kick= GetConfigBoolean("Core.idle.kick", true);
 					idle_whitelist= GetConfigString("Core.idle.whitelist", "");
 					idle_ticks = Util.ToTicks(idle_time,idle_length);
-			  
+					
 					///////////////////////////////////////////
 					//               guests
 					///////////////////////////////////////////
-					guests_commands = GetConfigBoolean("Core.guests.commands", true);
-					guests_movement = GetConfigBoolean("Core.guests.movement", true);
-					guests_inventory = GetConfigBoolean("Core.guests.inventory", true);
-					guests_drops = GetConfigBoolean("Core.guests.drops", true);
-					guests_health = GetConfigBoolean("Core.guests.health", true);
-					guests_damage = GetConfigBoolean("Core.guests.damage", true);
-					guests_interact = GetConfigBoolean("Core.guests.interact", true);
-					guests_build = GetConfigBoolean("Core.guests.build", true);
-					guests_chat= GetConfigBoolean("Core.guests.chat", true);
+					guests_commands = GetConfigBoolean("Core.guest.commands", false);
+					guests_movement = GetConfigBoolean("Core.guest.movement", false);
+					guests_inventory = GetConfigBoolean("Core.guest.inventory", false);
+					guests_drops = GetConfigBoolean("Core.guest.drops", false);
+					guests_health = GetConfigBoolean("Core.guest.health", false);
+					guests_mobdamage = GetConfigBoolean("Core.guest.mobdamage", false);
+					guests_interact = GetConfigBoolean("Core.guest.interactions", false);
+					guests_build = GetConfigBoolean("Core.guest.building", false);
+					guests_destroy = GetConfigBoolean("Core.guest.destruction", false);
+					guests_chat= GetConfigBoolean("Core.guest.chat", false);
+					guests_mobtargeting= GetConfigBoolean("Core.guest.mobtargeting", false);
+					guests_pvp= GetConfigBoolean("Core.guest.pvp", false);
 			  
 					///////////////////////////////////////////
 					//               badcharacters

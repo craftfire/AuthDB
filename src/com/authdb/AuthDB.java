@@ -64,6 +64,7 @@ public class AuthDB extends JavaPlugin {
 	private static List<Integer> authorizedIds = new ArrayList();
 	public static HashMap<String, String> db = new HashMap();
 	public static HashMap<String, String> db2 = new HashMap();
+	public static HashMap<String, String> db3 = new HashMap();
 	public static String idleFileName = "idle.db";
 	public static Logger log = Logger.getLogger("Minecraft");
 	public HashMap<String, ItemStack[]> inventories = new HashMap();
@@ -77,6 +78,7 @@ public class AuthDB extends JavaPlugin {
 		authorizedIds.clear();
 		db.clear();
 		db2.clear();
+		db3.clear();
 		MySQL.close();
 	 }
 
@@ -152,6 +154,7 @@ public class AuthDB extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_ITEM, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, this.playerListener, Event.Priority.Normal, this);
+	    pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACED, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGED, this.blockListener, Event.Priority.Normal, this);
@@ -216,25 +219,49 @@ public class AuthDB extends JavaPlugin {
 	}
 
 	public boolean isRegistered(String player) {
-		try {
-			
-			if(Config.debug_enable) 
-				Util.Debug("Running function: isRegistered(String player)");
-			boolean dupe = false;
-			MySQL.connect();
-			Config.HasForumBoard = false;
-			if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null))
+		boolean dupe = false;
+		boolean checkneeded = true;
+		if(Config.debug_enable) 
+			//Util.Debug("Running function: isRegistered(String player)");
+		
+		if(this.db3.containsKey(Encryption.md5(player)))
+		{ 
+			//if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
+			String check =db3.get(Encryption.md5(player));
+			if(check.equals("yes"))
 			{
-				dupe = true;
+				//if(Config.debug_enable) Util.Debug("Cache "+player+" passed with value "+check);
+				checkneeded = false;
+				return true;
 			}
-			if(!Config.HasForumBoard) 
-				Stop("Can't find a forum board, stopping the plugin.");
-			MySQL.close();
-			return dupe;
-		} catch (SQLException e) 
+			else if(check.equals("no"))
+			{
+				//if(Config.debug_enable) Util.Debug("Cache "+player+" did NOT pass with value "+check);
+				return false;
+			}
+		}
+		else if(checkneeded)
 		{
-			e.printStackTrace();
-			Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
+			try {
+				MySQL.connect();
+				Config.HasForumBoard = false;
+				if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null))
+				{
+					long timestamp = System.currentTimeMillis()/1000;
+					db3.put(Encryption.md5(player), "yes");
+					dupe = true;
+				}
+				if(!Config.HasForumBoard) 
+					Stop("Can't find a forum board, stopping the plugin.");
+				MySQL.close();
+				if(!dupe)
+					db3.put(Encryption.md5(player), "no");
+				return dupe;
+			} catch (SQLException e) 
+			{
+				e.printStackTrace();
+				Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
+			}
 		}
 		return false;
 	}
@@ -331,6 +358,21 @@ public class AuthDB extends JavaPlugin {
 			return true;
 		}
 		else if(type.equals("check2"))
+		{
+			if(this.db3.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { return true; }
+		}
+		else if(type.equals("add3"))
+		{
+			this.db3.put(player.getName(), TaskID);
+			return true;
+		}
+		
+		else if(type.equals("remove3"))
+		{
+			this.db3.remove(player.getName());
+			return true;
+		}
+		else if(type.equals("check3"))
 		{
 			if(this.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { return true; }
 		}

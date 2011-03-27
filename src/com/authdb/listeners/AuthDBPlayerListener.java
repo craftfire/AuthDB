@@ -17,6 +17,7 @@ import java.util.TimerTask;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerItemEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -125,12 +126,18 @@ public boolean CheckIdle(Player player) throws IOException
 		     player.getInventory().clear();
 		    	 Messages.SendMessage("AuthDB_message_welcome_user", player,null);
 		 } else if (Config.register_force) {
-		    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
-		   player.getInventory().clear();
-		  Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
+			 if (!CheckGuest(player,Config.guests_inventory))
+			  {
+				    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
+					   player.getInventory().clear();
+					  Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
+			  }
 		  }
 		 else if (!Config.register_force) { 
-			 Messages.SendMessage("AuthDB_message_welcome_guest", player,null); 
+			 if (!CheckGuest(player,Config.guests_inventory))
+			  {
+					  Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
+			  }
 			 }
 		 else {
 		    this.plugin.authorize(event.getPlayer().getEntityId());
@@ -195,6 +202,7 @@ public boolean CheckIdle(Player player) throws IOException
     	        if (inv != null) { player.getInventory().setContents(inv); }
     	        this.plugin.authorize(player.getEntityId());
     			long timestamp = System.currentTimeMillis()/1000;
+    			this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
 	 			this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
 				if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
     		    Messages.SendMessage("AuthDB_message_login_success", player,null);
@@ -211,6 +219,7 @@ public boolean CheckIdle(Player player) throws IOException
         if (inv != null) { player.getInventory().setContents(inv); }
         this.plugin.authorize(player.getEntityId());
 		long timestamp = System.currentTimeMillis()/1000;
+		this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
 		this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
 		if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
 	    Messages.SendMessage("AuthDB_message_login_success", player,null);
@@ -248,6 +257,7 @@ public boolean CheckIdle(Player player) throws IOException
          if (inv != null)
             player.getInventory().setContents(inv);
 					long timestamp = System.currentTimeMillis()/1000;
+					this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
 					this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
 					if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
 					Messages.SendMessage("AuthDB_message_register_success", player,null);
@@ -264,38 +274,83 @@ public boolean CheckIdle(Player player) throws IOException
       event.setMessage("/register *****");
        event.setCancelled(true);
      } else if (!AuthDB.isAuthorized(player.getEntityId())) {
-      event.setMessage("/iamnotloggedin");
-      event.setCancelled(true);
+	  if (!CheckGuest(player,Config.guests_commands))
+	  {
+	      event.setMessage("/iamnotloggedin");
+	      event.setCancelled(true);
+	  }
     }
   }
 
   public void onPlayerMove(PlayerMoveEvent event)
   {
-    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId())) {
-      event.setCancelled(true);
-     event.getPlayer().teleportTo(event.getFrom());
+    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId())) 
+    {
+    	  if (!CheckGuest(event.getPlayer(),Config.guests_movement))
+      	  {
+      	      event.setCancelled(true);
+      	      event.getPlayer().teleportTo(event.getFrom());
+      	  }
     }
   }
 
   public void onPlayerChat(PlayerChatEvent event)
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
-       event.setCancelled(true);
+    {
+  	  if (!CheckGuest(event.getPlayer(),Config.guests_chat))
+  	  {
+  	      event.setCancelled(true);
+  	  }
+    }
   }
 
   public void onPlayerItem(PlayerItemEvent event)
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
-      event.setCancelled(true);
+    {
+		 if (!CheckGuest(event.getPlayer(),Config.guests_inventory))
+		  {
+			 event.setCancelled(true);
+		  }
+    }
   }
   public void onPlayerPickupItem(PlayerPickupItemEvent event) 
   {
 	    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
-	      event.setCancelled(true);
+	    {
+			 if (!CheckGuest(event.getPlayer(),Config.guests_drops))
+			  {
+				 event.setCancelled(true);
+			  }
+	    }
+  }
+  
+  public void onPlayerDropItem(PlayerDropItemEvent event) 
+  {
+	    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+	    {
+			 if (!CheckGuest(event.getPlayer(),Config.guests_drops))
+			  {
+				 event.setCancelled(true);
+			  }
+	    }
   }
 
   public void onPlayerRespawn(PlayerRespawnEvent event) 
   {
-	 // AuthDB.deleteInventory(event.getPlayer().getName());
+	  // AuthDB.deleteInventory(event.getPlayer().getName());
   }
+  
+	public boolean CheckGuest(Player player,boolean what)
+	{
+	 if(what)
+	 {
+	  if (!this.plugin.isRegistered(player.getName()))
+	  {
+		      return true;
+	  }
+	 }
+	 return false;
+	}
 }
