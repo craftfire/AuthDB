@@ -98,7 +98,7 @@ public class Config
 		///////////////////////////////////////////
 		//               custom
 		///////////////////////////////////////////
-		public static String custom_table,custom_userfield,custom_passfield,custom_encryption;
+		public static String custom_table,custom_userfield,custom_passfield,custom_encryption,custom_emailfield;
 		public static boolean custom_enabled;
 		
 		///////////////////////////////////////////
@@ -195,6 +195,7 @@ public class Config
 					custom_table = GetConfigString("Core.customdb.table", "users");
 					custom_userfield = GetConfigString("Core.customdb.userfield", "username");
 					custom_passfield = GetConfigString("Core.customdb.passfield", "password");
+					custom_emailfield = GetConfigString("Core.customdb.emailfield", "");
 					custom_encryption = GetConfigString("Core.customdb.encryption", "").toLowerCase();
 					
 					
