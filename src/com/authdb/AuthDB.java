@@ -44,6 +44,7 @@ import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
 import com.authdb.plugins.zCraftIRC;
 import com.authdb.util.Config;
+import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 import com.ensifera.animosity.craftirc.CraftIRC;
@@ -54,7 +55,7 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "2.0.2";
+	public static String pluginversion = "2.1.0";
     public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -62,6 +63,7 @@ public class AuthDB extends JavaPlugin {
 	private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
 	private static List<Integer> authorizedIds = new ArrayList();
 	public static HashMap<String, String> db = new HashMap();
+	public static HashMap<String, String> db2 = new HashMap();
 	public static String idleFileName = "idle.db";
 	public static Logger log = Logger.getLogger("Minecraft");
 	public HashMap<String, ItemStack[]> inventories = new HashMap();
@@ -74,6 +76,7 @@ public class AuthDB extends JavaPlugin {
 		disableInventory();
 		authorizedIds.clear();
 		db.clear();
+		db2.clear();
 		MySQL.close();
 	 }
 
@@ -280,6 +283,11 @@ public class AuthDB extends JavaPlugin {
 		return (String)db.get(player.getName().toLowerCase());
 	} 
 	
+	public String GetSessionTime(Player player)
+	{
+		return this.db.get(player.getName());
+	} 
+	
 	  public void updateDb() throws IOException {
 		    BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), idleFileName)));
 		    Set keys = this.db.keySet();
@@ -308,8 +316,22 @@ public class AuthDB extends JavaPlugin {
 		}
 		else if(type.equals("check"))
 		{
-			if(this.db.containsKey(player.getName().toLowerCase()))
-				return true;
+			if(this.db.containsKey(player.getName().toLowerCase())) { return true; }
+		}
+		else if(type.equals("add2"))
+		{
+			this.db2.put(player.getName(), TaskID);
+			return true;
+		}
+		
+		else if(type.equals("remove2"))
+		{
+			this.db2.remove(player.getName());
+			return true;
+		}
+		else if(type.equals("check2"))
+		{
+			if(this.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { return true; }
 		}
 		return false;
 	}

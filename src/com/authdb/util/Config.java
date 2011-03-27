@@ -116,6 +116,7 @@ public class Config
 		//               session
 		///////////////////////////////////////////
 		public static String session_time,session_length;
+		public static int session_seconds;
 		
 		///////////////////////////////////////////
 		//               idle
@@ -223,6 +224,7 @@ public class Config
 					///////////////////////////////////////////
 					session_time = GetConfigString("Core.session.time", "minutes");
 					session_length = GetConfigString("Core.session.length", "60");
+					session_seconds = Util.ToSeconds(session_time,session_length);
 					
 					///////////////////////////////////////////
 					//               idle
@@ -231,7 +233,7 @@ public class Config
 					idle_length= GetConfigString("Core.idle.length", "30");
 					idle_kick= GetConfigBoolean("Core.idle.kick", true);
 					idle_whitelist= GetConfigString("Core.idle.whitelist", "");
-					idle_ticks = Util.ToTicks(Config.idle_time,Config.idle_length);
+					idle_ticks = Util.ToTicks(idle_time,idle_length);
 			  
 					///////////////////////////////////////////
 					//               guests

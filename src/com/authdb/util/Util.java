@@ -651,6 +651,21 @@ public class Util
 		return 600;
 	}
 	
+	public static int ToSeconds(String time, String length) {
+		if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
+		time = time.toLowerCase();
+		int lengthint = Integer.parseInt( length );
+		if(time.equals("days")) 
+			return lengthint * 86400;
+		else if(time.equals("hours")) 
+			return lengthint * 3600;
+		else if(time.equals("minutes")) 
+			return lengthint * 60;
+		else if(time.equals("seconds")) 
+			return lengthint;
+		return 600;
+	}
+	
 	public static String ToDriver(String dataname)
 	{
 		dataname = dataname.toLowerCase();

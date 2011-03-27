@@ -11,6 +11,7 @@ package com.authdb.listeners;
 import java.awt.Color;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
+import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
@@ -34,6 +36,8 @@ import com.authdb.util.databases.MySQL;
 public class AuthDBPlayerListener extends PlayerListener
 {
   private final AuthDB plugin;
+  boolean sessionallow;
+  int Schedule;
 
   public AuthDBPlayerListener(AuthDB instance)
   {
@@ -55,7 +59,6 @@ public void onPlayerLogin(PlayerLoginEvent event)
 	    }
 	}
 }
-int Schedule;
 
 public boolean CheckIdle(Player player) throws IOException
 {
@@ -72,49 +75,75 @@ public boolean CheckIdle(Player player) throws IOException
   public void onPlayerJoin(PlayerEvent event)
   {
 	final Player player = event.getPlayer();
-    try {
-	    if(Config.idle_kick == true && Util.CheckWhitelist("idle",player) == false)
-	    {
-	    	if(Config.debug_enable) 
-	    		Util.Debug("Idle time is: "+Config.idle_ticks);
-	    	Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-	    		@Override
-	    		public void run() 
-	    		{ 
-	    			try {
-						CheckIdle(player);
-					} catch (IOException e) {
-						Util.Log("warning", "Error checking if player was in the idle list");
-						e.printStackTrace();
-					} 
-	    		} }, Config.idle_ticks);
-	    	if(this.plugin.IdleTask("add",player, ""+Schedule))
-	    		if(Config.debug_enable) 
-	    			Util.Debug(player.getName()+" added to the IdleTaskList");
-	    	this.plugin.updateDb();
-	    }
-	if(Config.custom_enabled) if(Config.custom_encryption == null) { player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT."); }
-   if (this.plugin.isRegistered(player.getName())) {
-        this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
-         player.getInventory().clear();
-        	 Messages.SendMessage("AuthDB_message_welcome_user", player,null);
-     } else if (Config.register_force) {
-        this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
-       player.getInventory().clear();
-      Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
-      }
-     else if (!Config.register_force) { 
-    	 Messages.SendMessage("AuthDB_message_welcome_guest", player,null); 
-    	 }
-     else {
-        this.plugin.authorize(event.getPlayer().getEntityId());
-      }
-    } catch (IOException e) {
-      Util.Log("severe","["+AuthDB.pluginname+"] Inventory file error:");
-      player.kickPlayer("inventory protection kicked");
-       e.printStackTrace();
-    player.sendMessage(Color.red + "Error happend, report to admins!");
-    }
+	try {
+		if(Config.session_length != "0" || Config.session_length != null)
+		{
+			long timestamp = System.currentTimeMillis()/1000;
+			if(this.plugin.IdleTask("check2",player, "") == true)
+			{ 
+				long storedtime = Long.parseLong(this.plugin.db2.get(Encryption.md5(player.getName()+Util.GetIP(player))));
+				if(Config.debug_enable) Util.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
+				long timedifference = timestamp - storedtime;
+				if(Config.debug_enable) Util.Debug("Difference: "+timedifference);
+				if(timedifference > Config.session_seconds) { sessionallow = false; }
+				else { sessionallow = true; }
+				
+			}
+		}
+			
+		try {
+		    if(Config.idle_kick == true && Util.CheckWhitelist("idle",player) == false && sessionallow == false)
+		    {
+		    	if(Config.debug_enable) 
+		    		Util.Debug("Idle time is: "+Config.idle_ticks);
+		    	Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		    		@Override
+		    		public void run() 
+		    		{ 
+		    			try {
+							CheckIdle(player);
+						} catch (IOException e) {
+							Util.Log("warning", "Error checking if player was in the idle list");
+							e.printStackTrace();
+						} 
+		    		} }, Config.idle_ticks);
+		    	if(this.plugin.IdleTask("add",player, ""+Schedule))
+		    		if(Config.debug_enable) 
+		    			Util.Debug(player.getName()+" added to the IdleTaskList");
+		    	this.plugin.updateDb();
+		    }
+		if(Config.custom_enabled) if(Config.custom_encryption == null) { player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT."); }
+  
+		if(sessionallow)
+		{
+			Messages.SendMessage("AuthDB_message_login_session", player,null);
+			this.plugin.authorize(event.getPlayer().getEntityId());
+		}
+		else if (this.plugin.isRegistered(player.getName())) {
+		    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
+		     player.getInventory().clear();
+		    	 Messages.SendMessage("AuthDB_message_welcome_user", player,null);
+		 } else if (Config.register_force) {
+		    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
+		   player.getInventory().clear();
+		  Messages.SendMessage("AuthDB_message_welcome_guest", player,null);
+		  }
+		 else if (!Config.register_force) { 
+			 Messages.SendMessage("AuthDB_message_welcome_guest", player,null); 
+			 }
+		 else {
+		    this.plugin.authorize(event.getPlayer().getEntityId());
+		  }
+		} catch (IOException e) {
+		  Util.Log("severe","["+AuthDB.pluginname+"] Inventory file error:");
+		  player.kickPlayer("inventory protection kicked");
+		   e.printStackTrace();
+		player.sendMessage(Color.red + "Error happend, report to admins!");
+		}
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
   }
 
   public void onPlayerQuit(PlayerEvent event)
@@ -164,6 +193,9 @@ public boolean CheckIdle(Player player) throws IOException
     	         ItemStack[] inv = this.plugin.getInventory(player.getName());
     	        if (inv != null) { player.getInventory().setContents(inv); }
     	        this.plugin.authorize(player.getEntityId());
+    			long timestamp = System.currentTimeMillis()/1000;
+	 			this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+				if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
     		    Messages.SendMessage("AuthDB_message_login_success", player,null);
     		} else if (Config.password_kick) 
     		{
@@ -177,6 +209,9 @@ public boolean CheckIdle(Player player) throws IOException
          ItemStack[] inv = this.plugin.getInventory(player.getName());
         if (inv != null) { player.getInventory().setContents(inv); }
         this.plugin.authorize(player.getEntityId());
+		long timestamp = System.currentTimeMillis()/1000;
+		this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+		if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
 	    Messages.SendMessage("AuthDB_message_login_success", player,null);
 	} else if (Config.password_kick) {
       /* ItemStack[] inv = this.plugin.getInventory(player.getName());
