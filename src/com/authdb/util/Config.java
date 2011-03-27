@@ -107,6 +107,11 @@ public class Config
 		public static boolean register_enabled,register_force;
 		
 		///////////////////////////////////////////
+		//               login
+		///////////////////////////////////////////
+		public static String login_method;
+		
+		///////////////////////////////////////////
 		//               password
 		///////////////////////////////////////////
 		public static String password_tries;
@@ -125,6 +130,7 @@ public class Config
 		public static boolean idle_kick;
 		public static int idle_ticks;
 		
+		///////////////////////////////////////////
 		//               guests
 		///////////////////////////////////////////
 		public static boolean guests_commands,guests_movement,guests_inventory,guests_drops,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
@@ -210,6 +216,11 @@ public class Config
 					///////////////////////////////////////////
 					register_enabled = GetConfigBoolean("Core.register.enabled", true);
 					register_force = GetConfigBoolean("Core.register.force", true);
+					
+					///////////////////////////////////////////
+					//               login
+					///////////////////////////////////////////
+					login_method = GetConfigString("Core.login.method", "default");
 					
 					///////////////////////////////////////////
 					//               password

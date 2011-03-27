@@ -124,7 +124,10 @@ public boolean CheckIdle(Player player) throws IOException
 		else if (this.plugin.isRegistered(player.getName())) {
 		    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
 		     player.getInventory().clear();
-		    	 Messages.SendMessage("AuthDB_message_welcome_user", player,null);
+			 if(Util.ToLoginMethod(Config.login_method).equals("prompt"))
+				 player.sendMessage("§fAuth§bDB§f > Please enter password for username: §b"+player.getName());
+			 else
+				 Messages.SendMessage("AuthDB_message_welcome_user", player,null);
 		 } else if (Config.register_force) {
 			 if (!CheckGuest(player,Config.guests_inventory))
 			  {
@@ -298,7 +301,41 @@ public boolean CheckIdle(Player player) throws IOException
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
     {
-  	  if (!CheckGuest(event.getPlayer(),Config.guests_chat))
+      if(Util.ToLoginMethod(Config.login_method).equals("prompt"))
+      {
+    	  String[] split = event.getMessage().split(" ");
+    	 // String password = event.getMessage();
+    	  Player player = event.getPlayer();
+          if (!this.plugin.isRegistered(player.getName()))
+      		  Messages.SendMessage("AuthDB_message_login_notregistered", player,null);
+      	  else if (AuthDB.isAuthorized(player.getEntityId())) {			  
+    				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
+          }
+          else if (split.length > 1) {
+    				  player.sendMessage("§bJust type in the password for "+player.getName());
+          }
+          else if (this.plugin.checkPassword(player.getName(), split[0])) {
+             ItemStack[] inv = this.plugin.getInventory(player.getName());
+            if (inv != null) { player.getInventory().setContents(inv); }
+            this.plugin.authorize(player.getEntityId());
+    		long timestamp = System.currentTimeMillis()/1000;
+    		this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
+    		this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+    		if(Config.debug_enable) Util.Debug("Session started for "+player.getName());
+    	    Messages.SendMessage("AuthDB_message_login_success", player,null);
+    	} else if (Config.password_kick) {
+          /* ItemStack[] inv = this.plugin.getInventory(player.getName());
+    	      if (inv != null)
+    	      {
+    	    	  player.getInventory().setContents(inv);
+    	      } */
+    		  Messages.SendMessage("AuthDB_message_login_failure", player,null);
+          }
+          if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
+         event.setMessage("/login ******");
+          event.setCancelled(true);  
+      }
+      else if (!CheckGuest(event.getPlayer(),Config.guests_chat))
   	  {
   	      event.setCancelled(true);
   	  }

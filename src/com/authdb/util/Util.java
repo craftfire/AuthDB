@@ -675,6 +675,15 @@ public class Util
 		return "com.mysql.jdbc.Driver";
 	}
 	
+	public static String ToLoginMethod(String method)
+	{
+		method = method.toLowerCase();
+		if(method.equals("prompt")) 
+			return method;
+		else 
+			return "default";
+	}
+	
 	public static boolean CheckWhitelist(String whitelist,Player player)
 	{
 		String username = player.getName().toLowerCase();
