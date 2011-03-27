@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
   import java.sql.SQLException;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
+import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 
@@ -46,9 +47,16 @@ import com.authdb.util.databases.MySQL;
 
 			public static boolean check_hash(String passwordhash, String hash)
 			{
-				if(passwordhash.equals(hash)) 
-					return true;
-				else 
-					return false;
+				try {
+					if(Encryption.Encrypt(Config.custom_encryption, passwordhash).equals(hash)) 
+						return true;
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return false;
 			}
   }

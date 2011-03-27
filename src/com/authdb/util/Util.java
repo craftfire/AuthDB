@@ -65,7 +65,11 @@ public class Util
 		    	if(type.equals("checkuser"))
 		    	{
 			    	String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
-			    	if(check != "fail") { return true; }
+			    	if(check != "fail") 
+			    	{ 
+			    		Config.HasForumBoard = true;
+			    		return true; 
+			    	}
 			    	return false;
 		    	}
 		    	else if(type.equals("checkpassword"))

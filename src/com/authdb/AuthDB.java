@@ -185,7 +185,7 @@ public class AuthDB extends JavaPlugin {
 	 {
 		try 
 		{
-				MySQL.connect();
+			MySQL.connect();
 			if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password,null,null)) return true;
 			MySQL.close();
 		} 

@@ -20,6 +20,7 @@ public class Encryption
 	{
 		if(encryption.equals("md5")) return md5(toencrypt);
 		else if(encryption.equals("sha1")) return SHA1(toencrypt);
+		else if(encryption.equals("sha512")) return SHA512(toencrypt);
 		if(Config.debug_enable) Util.Log("info","Could not find encryption method: "+Config.custom_encryption+", using default: md5");
 		Config.custom_encryption = "md5";
 		return md5(toencrypt);
