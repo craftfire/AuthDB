@@ -51,7 +51,7 @@ import com.authdb.util.databases.MySQL;
 	ps.setString(16, "5");//usergroup
 	ps.executeUpdate();
 	 
-    int userid = MySQL.countitall(Config.database_prefix+"user");
+    int userid = MySQL.countitall(Config.database_prefix+"users");
     String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
     String newcache = Util.ForumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid");
     ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datacache"+"` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");

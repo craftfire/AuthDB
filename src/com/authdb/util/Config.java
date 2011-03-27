@@ -66,6 +66,10 @@ public class Config
 	public static String Script11_name = "xpress engine";
 	public static String Script11_shortname = "xe";
 	public static String Script11_versionrange = "1.0.3-1.0.3";
+	
+	public static String Script12_name = "datalife engine";
+	public static String Script12_shortname = "dle";
+	public static String Script12_versionrange = "9.2-9.2";
 	///
 	
 	///////////////////////////////////////////

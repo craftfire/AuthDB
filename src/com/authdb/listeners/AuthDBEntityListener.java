@@ -61,13 +61,16 @@ public void onEntityDamage(EntityDamageEvent event)
 			   {
 				   Player p = (Player)event.getEntity();
 				   EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
-				   Player t = (Player)e.getDamager();
-			  	  if ((e.getEntity() instanceof Player) && CheckGuest(t,Config.guests_pvp) == false)
+			  	  if ((e.getEntity() instanceof Player))
 			  	  {
+			  		Player t = (Player)e.getDamager();
+			  		if(!CheckGuest(t,Config.guests_pvp))
+			  		{
 			  		 if (!CheckGuest(p,Config.guests_health))
 				  	  {
 				  	      event.setCancelled(true);
 				  	  }
+			  		}
 			  	  }
 			   }
 		   }

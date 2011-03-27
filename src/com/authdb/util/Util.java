@@ -37,6 +37,7 @@ import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
 import com.authdb.scripts.Custom;
+import com.authdb.scripts.cms.DLE;
 import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
 import com.authdb.scripts.forum.PunBB;
@@ -399,6 +400,27 @@ public class Util
 		    	if(type.equals("adduser"))
 		    	{
 		    		bbPress.adduser(number,player, email, password, ipAddress);
+					return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script12_name) || script.equals(Config.Script12_shortname))
+    		{
+    			usertable = "users";
+    			if(CheckVersionInRange(Config.Script12_versionrange))
+		    	{
+    				usernamefield = "name";
+    				passwordfield = "password";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		if(DLE.check_hash(DLE.hash(password),hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		DLE.adduser(number,player, email, password, ipAddress);
 					return true;
 		    	}
     		}

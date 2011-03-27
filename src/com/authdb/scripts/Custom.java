@@ -56,18 +56,25 @@ import com.authdb.util.databases.MySQL;
 			return password;
 		  }
 
-			public static boolean check_hash(String passwordhash, String hash)
-			{
-				try {
-					if(Encryption.Encrypt(Config.custom_encryption, passwordhash).equals(hash)) 
-						return true;
-				} catch (NoSuchAlgorithmException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
+	public static boolean check_hash(String passwordhash, String hash)
+	{
+		try {
+			if(Encryption.Encrypt(Config.custom_encryption, passwordhash).equals(hash)) 
+				return true;
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static String SaltIt(String password)
+	{
+		return password;
+		
+	}
+
   }
