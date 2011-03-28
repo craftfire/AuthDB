@@ -73,8 +73,7 @@ import com.authdb.util.databases.MySQL;
 	
 	public static String SaltIt(String password)
 	{
-		return password;
-		
+		return password;	
 	}
 
   }

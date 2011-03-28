@@ -102,8 +102,8 @@ public class Config
 		///////////////////////////////////////////
 		//               custom
 		///////////////////////////////////////////
-		public static String custom_table,custom_userfield,custom_passfield,custom_encryption,custom_emailfield;
-		public static boolean custom_enabled;
+		public static String custom_table,custom_userfield,custom_passfield,custom_encryption,custom_emailfield,custom_;
+		public static boolean custom_enabled,custom_salt;
 		
 		///////////////////////////////////////////
 		//               register

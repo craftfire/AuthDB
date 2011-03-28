@@ -30,10 +30,12 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -277,20 +279,19 @@ public class AuthDB extends JavaPlugin {
 	      else
 	        return false;
 	}
-	
-	public void storeInventory(String player, ItemStack[] inventory) throws IOException {
-		File inv = new File(getDataFolder(), player + "_inv");
-		if (inv.exists()) return;
-		inv.createNewFile();
-		BufferedWriter bw = new BufferedWriter(new FileWriter(inv));
-		for (short i = 0; i < inventory.length; i = (short)(i + 1)) 
-		{
-			bw.write(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability());
-			bw.newLine();
-		}
-		bw.close();
-		this.inventories.put(player.toLowerCase(), inventory);
-	}
+
+	  public void storeInventory(String player, ItemStack[] inventory) throws IOException {
+	    File inv = new File(getDataFolder(), player + "_inv");
+	    if (inv.exists())
+	      return;
+	    inv.createNewFile();
+	    BufferedWriter bw = new BufferedWriter(new FileWriter(inv));
+	    for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
+	      bw.write(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability());
+	      bw.newLine();
+	    }
+	    bw.close();
+	  }
 	
 	public void disableInventory()
 	{
@@ -364,52 +365,54 @@ public class AuthDB extends JavaPlugin {
 		return false;
 	}
 	
-	public ItemStack[] getInventory(String player) 
-	{
-		File f = new File(getDataFolder(), player + "_inv");
-		if (inventories.containsKey(player.toLowerCase())) 
-		{
-			if ((f.exists()) && (!f.delete()))
-				Util.Log("warning", "Unable to delete user inventory file: " + player + "_inv");
-			return (ItemStack[])inventories.remove(player.toLowerCase());
-		}
-		if (f.exists()) 
-		{
-			ItemStack[] inv = new ItemStack[36];
-			try 
-			{
-			Scanner s = new Scanner(f);
-			short i = 0;
-			while (s.hasNextLine()) 
-			{
-				String line = s.nextLine();
-				String[] split = line.split(":");
-				if (split.length == 4) 
-				{
-					inv[i] = 
-					new ItemStack(Integer.valueOf(split[0]).intValue(), Integer.valueOf(split[1]).intValue(), 
-					Short.valueOf(split[3]).shortValue(), split[2].length() == 0 ? null : Byte.valueOf(split[2]));
-					i = (short)(i + 1);
-				}
-			}
-			s.close();
-			if (!f.delete())
-			Util.Log("warning", "Unable to delete user inventory file: " + player + "_inv");
-			} 
-			catch (IOException e) 
-			{
-				e.printStackTrace();
-				Stop("ERRORS in Inventory file read error. Plugin will NOT work. Disabling it.");
-			}
-			return inv;
-		}
-		return null;
-	}
+	public ItemStack[] getInventory(String player)
+	  {
+	    File f = new File(getDataFolder(), player + "_inv");
+
+	    if (f.exists()) {
+	      ItemStack[] inv = new ItemStack[36];
+	      try {
+	        Scanner s = new Scanner(f);
+	        short i = 0;
+	        while (s.hasNextLine()) {
+	          String line = s.nextLine();
+	          String[] split = line.split(":");
+	          if (split.length == 4) {
+	            int type = Integer.valueOf(split[0]).intValue();
+	            inv[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
+
+	            short dur = Short.valueOf(split[3]).shortValue();
+	            if (dur > 0)
+	              inv[i].setDurability(dur);
+	            byte dd;
+	            if (split[2].length() == 0)
+	              dd = 0;
+	            else
+	              dd = Byte.valueOf(split[2]).byteValue();
+	            Material mat = Material.getMaterial(type);
+	            if (mat == null)
+	              inv[i].setData(new MaterialData(type, dd));
+	            else
+	              inv[i].setData(mat.getNewData(dd));
+	            i = (short)(i + 1);
+	          }
+	        }
+	        s.close();
+	        if (!f.delete())
+	        	Util.Log("warning","Unable to delete user inventory file: " + player + "_inv");
+	      } catch (IOException e) {
+	    	  Util.Log("severe", "Inventory file read error:");
+	        e.printStackTrace();
+	      }
+	      return inv;
+	    }
+
+	    return null;
+	  }
 	
-	/*  public void deleteInventory(String player) {
-		    File f = new File(getDataFolder(),player + "_inv");
+	  public void deleteInventory(String player) {
+		    File f = new File(getDataFolder(), player + "_inv");
 		    if (f.exists())
 		      f.delete();
 		  }
-		  */
 }
