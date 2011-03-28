@@ -162,7 +162,8 @@ public class Messages
 			}
 			else if(type.equals("AuthDB_message_login_failure")) 
 			{
-				player.sendMessage(Util.replaceStrings(AuthDB_message_login_failure,player,null));
+				if(Config.password_kick) { player.kickPlayer(Util.replaceStrings(AuthDB_message_login_failure,player,null)); }
+				else { player.sendMessage(Util.replaceStrings(AuthDB_message_login_failure,player,null)); }
 			}
 			else if(type.equals("AuthDB_message_login_authorized")) 
 			{

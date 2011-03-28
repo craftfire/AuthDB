@@ -231,7 +231,7 @@ public class Config
 					//               password
 					///////////////////////////////////////////
 					password_tries = GetConfigString("Core.password.tries", "3");
-					password_kick = GetConfigBoolean("Core.password.false", true);
+					password_kick = GetConfigBoolean("Core.password.kick", true);
 					password_ban = GetConfigBoolean("Core.password.ban", false);
 					
 					///////////////////////////////////////////

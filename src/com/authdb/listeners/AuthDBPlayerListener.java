@@ -120,7 +120,7 @@ public boolean CheckIdle(Player player) throws IOException
 		}
 		else if (this.plugin.isRegistered(player.getName())) {
 		    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
-		    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(player.getInventory() != null) {  player.getInventory().clear(); } } }, 20);
+		    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(player.getInventory() != null) {  player.getInventory().clear(); } } }, 40);
 		     player.getInventory().clear();
 			 if(Util.ToLoginMethod(Config.login_method).equals("prompt"))
 				 player.sendMessage("§fAuth§bDB§f > Welcome §b"+player.getName()+"§f! Please enter your password:");
@@ -204,7 +204,8 @@ public boolean CheckIdle(Player player) throws IOException
 				if(Config.debug_enable) 
 					Util.Debug("Session started for "+player.getName());
     		    Messages.SendMessage("AuthDB_message_login_success", player,null);
-    		} else if (Config.password_kick) 
+    		} 
+    	    else
     		{
     			  Messages.SendMessage("AuthDB_message_login_failure", player,null);
     	    }
@@ -222,7 +223,8 @@ public boolean CheckIdle(Player player) throws IOException
 		if(Config.debug_enable) 
 			Util.Debug("Session started for "+player.getName());
 	    Messages.SendMessage("AuthDB_message_login_success", player,null);
-	} else if (Config.password_kick) {
+	} else
+	{
       /* ItemStack[] inv = this.plugin.getInventory(player.getName());
 	      if (inv != null)
 	      {
@@ -322,7 +324,7 @@ public boolean CheckIdle(Player player) throws IOException
 		    		if(Config.debug_enable) 
 		    			Util.Debug("Session started for "+player.getName());
 		    	    Messages.SendMessage("AuthDB_message_login_success", player,null);
-		    	} else if (Config.password_kick) {
+		    	} else {
 		          /* ItemStack[] inv = this.plugin.getInventory(player.getName());
 		    	      if (inv != null)
 		    	      {
