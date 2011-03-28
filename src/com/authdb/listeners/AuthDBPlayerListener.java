@@ -80,9 +80,11 @@ public boolean CheckIdle(Player player) throws IOException
 			if(this.plugin.IdleTask("check2",player, "") == true)
 			{ 
 				long storedtime = Long.parseLong(this.plugin.db2.get(Encryption.md5(player.getName()+Util.GetIP(player))));
-				if(Config.debug_enable) Util.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
+				if(Config.debug_enable) 
+					Util.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
 				long timedifference = timestamp - storedtime;
-				if(Config.debug_enable) Util.Debug("Difference: "+timedifference);
+				if(Config.debug_enable) 
+					Util.Debug("Difference: "+timedifference);
 				if(timedifference > Config.session_seconds) { sessionallow = false; }
 				else { sessionallow = true; }
 				

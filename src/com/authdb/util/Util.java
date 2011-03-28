@@ -453,8 +453,9 @@ public class Util
 		    }
 		    else if(Config.HasForumBoard && type.equals("numusers") && !Config.custom_enabled)
 		    {
-		    	ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"`");
-				ResultSet rs = ps.executeQuery();
+		    	if(script.equals(Config.Script1_name) || script.equals(Config.Script1_shortname)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"` WHERE  `group_id` !=6"); }
+		    	else { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"`"); }
+		    	ResultSet rs = ps.executeQuery();
 				if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
 		    }
 		    

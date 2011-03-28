@@ -57,7 +57,7 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "2.1.0";
+	public static String pluginversion = "2.1.1";
     public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -222,7 +222,7 @@ public class AuthDB extends JavaPlugin {
 	public boolean isRegistered(String player) {
 		boolean dupe = false;
 		boolean checkneeded = true;
-		if(Config.debug_enable) 
+		//if(Config.debug_enable) 
 			//Util.Debug("Running function: isRegistered(String player)");
 		
 		if(this.db3.containsKey(Encryption.md5(player)))
