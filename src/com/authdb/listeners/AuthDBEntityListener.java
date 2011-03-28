@@ -79,7 +79,7 @@ public void onEntityDamage(EntityDamageEvent event)
 			   if (!(event instanceof EntityDamageByEntityEvent)) { return; }
 			EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
 			Player t = (Player)e.getDamager();
-		  	  if ((e.getEntity() instanceof Player) && CheckGuest(t,Config.guests_mobdamage) == false)
+		  	  if ((e.getDamager() instanceof Player) && CheckGuest(t,Config.guests_mobdamage) == false)
 		  	  {
 		  		event.setCancelled(true);
 		  	  }
