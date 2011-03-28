@@ -137,7 +137,7 @@ public class Config
 		///////////////////////////////////////////
 		//               guests
 		///////////////////////////////////////////
-		public static boolean guests_commands,guests_movement,guests_inventory,guests_drops,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
+		public static boolean guests_commands,guests_movement,guests_inventory,guests_drop,guests_pickup,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
   
 		///////////////////////////////////////////
 		//               badcharacters
@@ -256,7 +256,8 @@ public class Config
 					guests_commands = GetConfigBoolean("Core.guest.commands", false);
 					guests_movement = GetConfigBoolean("Core.guest.movement", false);
 					guests_inventory = GetConfigBoolean("Core.guest.inventory", false);
-					guests_drops = GetConfigBoolean("Core.guest.drops", false);
+					guests_drop = GetConfigBoolean("Core.guest.drop", false);
+					guests_pickup = GetConfigBoolean("Core.guest.pickup", false);
 					guests_health = GetConfigBoolean("Core.guest.health", false);
 					guests_mobdamage = GetConfigBoolean("Core.guest.mobdamage", false);
 					guests_interact = GetConfigBoolean("Core.guest.interactions", false);

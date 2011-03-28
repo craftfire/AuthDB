@@ -49,19 +49,23 @@ public void onEntityDamage(EntityDamageEvent event)
 	{
 		if (event.getEntity() instanceof Player)
 		{
-			   if(event.getCause().name().equals("FALL"))
+		   Player p = (Player)event.getEntity();
+		   if (event instanceof EntityDamageByEntityEvent)
+		   {
+			   EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
+			   if ((e.getDamager() instanceof Animals) || (e.getDamager() instanceof Monster))
 			   {
-				   Player p = (Player)event.getEntity();
-				   if (!CheckGuest(p,Config.guests_health))
-			  	   {
-					   event.setCancelled(true);
-			  	   }
+				   if (event.getEntity() instanceof Player)
+				   {
+					  if (!CheckGuest(p,Config.guests_health))
+				  	  {
+				  	      event.setCancelled(true);
+				  	  }
+				   }
 			   }
-			   else if(event.getCause().name().equals("ENTITY_ATTACK"))
+			   else if (e.getDamager() instanceof Player)
 			   {
-				   Player p = (Player)event.getEntity();
-				   EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
-			  	  if ((e.getEntity() instanceof Player))
+			  	  if (e.getEntity() instanceof Player)
 			  	  {
 			  		Player t = (Player)e.getDamager();
 			  		if(!CheckGuest(t,Config.guests_pvp))
@@ -73,27 +77,48 @@ public void onEntityDamage(EntityDamageEvent event)
 			  		}
 			  	  }
 			   }
+			   else
+			   {
+				   if (!CheckGuest(p,Config.guests_health))
+			  	   {
+					   event.setCancelled(true);
+			  	   }
+				   else if (this.plugin.isRegistered(p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
+				   {
+					   event.setCancelled(true);
+				   }
+			   }
 		   }
+		   else 
+		   { 
+			   if (this.plugin.isRegistered(p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
+			   {
+				   event.setCancelled(true);
+				   return;
+			   }
+		   }
+	   }
 		else if ((event.getEntity() instanceof Animals) || (event.getEntity() instanceof Monster))
 		{
-			   if (!(event instanceof EntityDamageByEntityEvent)) { return; }
+			if (!(event instanceof EntityDamageByEntityEvent)) { return; }
 			EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
-			Player t = (Player)e.getDamager();
-		  	  if ((e.getDamager() instanceof Player) && CheckGuest(t,Config.guests_mobdamage) == false)
-		  	  {
-		  		event.setCancelled(true);
-		  	  }
+		  	  if ((e.getDamager() instanceof Player))
+	  		  {
+				Player t = (Player)e.getDamager();
+		  		if(!CheckGuest(t,Config.guests_mobdamage)) { event.setCancelled(true); }
+	  		  }
 		}
 	}
 
 	public boolean CheckGuest(Player player,boolean what)
 	{
-	 if(what)
+	 if(what == true && this.plugin.isRegistered(player.getName()) == false)
 	 {
-	  if (!this.plugin.isRegistered(player.getName()))
-	  {
 		      return true;
-	  }
+	 }
+	 else if (this.plugin.isRegistered(player.getName()) == true && AuthDB.isAuthorized(player.getEntityId()) == true)
+	 {
+		return true; 
 	 }
 	 return false;
 	}

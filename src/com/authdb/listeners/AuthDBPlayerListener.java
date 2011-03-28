@@ -11,9 +11,6 @@ package com.authdb.listeners;
 import java.awt.Color;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -28,11 +25,11 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
+import com.authdb.plugins.zCraftIRC;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
-import com.authdb.util.databases.MySQL;
 
 public class AuthDBPlayerListener extends PlayerListener
 {
@@ -123,6 +120,7 @@ public boolean CheckIdle(Player player) throws IOException
 		}
 		else if (this.plugin.isRegistered(player.getName())) {
 		    this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
+		    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(player.getInventory() != null) {  player.getInventory().clear(); } } }, 20);
 		     player.getInventory().clear();
 			 if(Util.ToLoginMethod(Config.login_method).equals("prompt"))
 				 player.sendMessage("§fAuth§bDB§f > Welcome §b"+player.getName()+"§f! Please enter your password:");
@@ -176,7 +174,12 @@ public boolean CheckIdle(Player player) throws IOException
 		if(Config.debug_enable) Util.Debug("Error with the Idle list, can't cancel task?");
 		e.printStackTrace();
 	}
-    this.plugin.unauthorize(player.getEntityId());
+     this.plugin.unauthorize(player.getEntityId());
+	 if (CheckGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered(player.getName()) == false)
+	  {
+		 ItemStack[] theinv = new ItemStack[36];
+		 player.getInventory().setContents(theinv);
+	  }
   }
 
   public void onPlayerCommandPreprocess(PlayerChatEvent event)
@@ -301,38 +304,39 @@ public boolean CheckIdle(Player player) throws IOException
     	  Player player = event.getPlayer();
     	  if (this.plugin.isRegistered(player.getName())) 
     	  {
-	    	  if (this.plugin.isRegistered(player.getName())) {
-	      	  if (AuthDB.isAuthorized(player.getEntityId())) {			  
-	    				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
-	          }
-	          else if (split.length > 1) {
-	    				  player.sendMessage("§bJust type in the password for "+player.getName());
-	          }
-	          else if (this.plugin.checkPassword(player.getName(), split[0])) {
-	             ItemStack[] inv = this.plugin.getInventory(player.getName());
-	            if (inv != null) { player.getInventory().setContents(inv); }
-	            this.plugin.authorize(player.getEntityId());
-	    		long timestamp = System.currentTimeMillis()/1000;
-	    		this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
-	    		this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-	    		if(Config.debug_enable) 
-	    			Util.Debug("Session started for "+player.getName());
-	    	    Messages.SendMessage("AuthDB_message_login_success", player,null);
-	    	} else if (Config.password_kick) {
-	          /* ItemStack[] inv = this.plugin.getInventory(player.getName());
-	    	      if (inv != null)
-	    	      {
-	    	    	  player.getInventory().setContents(inv);
-	    	      } */
-	    		  Messages.SendMessage("AuthDB_message_login_failure", player,null);
-	          }
-	          if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
-	         event.setMessage("/login ******");
-	          event.setCancelled(true);  
-	      }
+	    	  if (this.plugin.isRegistered(player.getName())) 
+	    	  {
+		      	  if (AuthDB.isAuthorized(player.getEntityId())) {			  
+		    				  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
+		          }
+		          else if (split.length > 1) {
+		    				  player.sendMessage("§bJust type in the password for "+player.getName());
+		          }
+		          else if (this.plugin.checkPassword(player.getName(), split[0])) {
+		             ItemStack[] inv = this.plugin.getInventory(player.getName());
+		            if (inv != null) { player.getInventory().setContents(inv); }
+		            this.plugin.authorize(player.getEntityId());
+		    		long timestamp = System.currentTimeMillis()/1000;
+		    		this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
+		    		this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+		    		if(Config.debug_enable) 
+		    			Util.Debug("Session started for "+player.getName());
+		    	    Messages.SendMessage("AuthDB_message_login_success", player,null);
+		    	} else if (Config.password_kick) {
+		          /* ItemStack[] inv = this.plugin.getInventory(player.getName());
+		    	      if (inv != null)
+		    	      {
+		    	    	  player.getInventory().setContents(inv);
+		    	      } */
+		    		  Messages.SendMessage("AuthDB_message_login_failure", player,null);
+		          }
+		          if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
+		         event.setMessage("/login ******");
+		          event.setCancelled(true);  
+		      }
     	  }
       }
-      else if (!CheckGuest(event.getPlayer(),Config.guests_chat))
+      if (!CheckGuest(event.getPlayer(),Config.guests_chat))
   	  {
   	      event.setCancelled(true);
   	  }
@@ -343,17 +347,14 @@ public boolean CheckIdle(Player player) throws IOException
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
     {
-		 if (!CheckGuest(event.getPlayer(),Config.guests_inventory))
-		  {
-			 event.setCancelled(true);
-		  }
+		 event.setCancelled(true);
     }
   }
   public void onPlayerPickupItem(PlayerPickupItemEvent event) 
   {
 	    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
 	    {
-			 if (!CheckGuest(event.getPlayer(),Config.guests_drops))
+			 if (!CheckGuest(event.getPlayer(),Config.guests_pickup))
 			  {
 				 event.setCancelled(true);
 			  }
@@ -364,7 +365,7 @@ public boolean CheckIdle(Player player) throws IOException
   {
 	    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
 	    {
-			 if (!CheckGuest(event.getPlayer(),Config.guests_drops))
+			 if (!CheckGuest(event.getPlayer(),Config.guests_drop))
 			  {
 				 event.setCancelled(true);
 			  }

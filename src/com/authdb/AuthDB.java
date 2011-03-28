@@ -123,7 +123,6 @@ public class AuthDB extends JavaPlugin {
 		}
 
 	      final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
-	      //Util.Debug(""+checkCraftIRC.isEnabled());
 	      if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
 	    	  craftircHandle = ((CraftIRC)checkCraftIRC);
 	    	  Util.Log("info","Found supported plugin: " + checkCraftIRC.getDescription().getName());
