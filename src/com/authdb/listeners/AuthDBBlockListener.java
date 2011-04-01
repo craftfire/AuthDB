@@ -11,8 +11,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockInteractEvent;
 import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.authdb.AuthDB;
@@ -59,18 +59,6 @@ public class AuthDBBlockListener extends BlockListener
 	  	  }
 	   }
 	  }*/
-  
-  public void onBlockInteract(BlockInteractEvent event) {
-    LivingEntity e = event.getEntity();
-    if ((e != null) && ((e instanceof HumanEntity)) && (!AuthDB.isAuthorized(e.getEntityId())))
-    {
-	  Player p = (Player)event.getEntity();
-  	  if (!CheckGuest(p,Config.guests_interact))
-  	  {
-  	      event.setCancelled(true);
-  	  }
-    }
-  }
   
 	public boolean CheckGuest(Player player,boolean what)
 	{

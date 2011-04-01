@@ -57,7 +57,7 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "2.1.1";
+	public static String pluginversion = "2.1.3";
     public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -142,26 +142,24 @@ public class AuthDB extends JavaPlugin {
 		String max = ""+getServer().getMaxPlayers();
 		if(Config.usagestats_enabled)
 		{
-			try { Util.PostInfo(getServer().getName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); } 
+			try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); } 
 			catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send data to main server."); }
 		}
-		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Priority.Highest, this);
+		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_ITEM, this.playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Highest, this);
+		pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Lowest, this);
 	    pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.BLOCK_PLACED, this.blockListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.BLOCK_DAMAGED, this.blockListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.BLOCK_DAMAGE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.BLOCK_INTERACT, this.blockListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.ENTITY_DAMAGED, this.entityListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.ENTITY_TARGET, this.entityListener, Event.Priority.Normal, this);
 		
 		MySQL.connect();
@@ -175,7 +173,7 @@ public class AuthDB extends JavaPlugin {
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
-		Util.Log("info", pluginname + " is developed by Contex <contex@craftfire.com> and Wulfspider <wulfspider@craftfire.com>");
+		Util.Log("info", pluginname + " is developed by CraftFire <dev@craftfire.com>");
 	}
 
 
@@ -252,8 +250,8 @@ public class AuthDB extends JavaPlugin {
 					db3.put(Encryption.md5(player), "yes");
 					dupe = true;
 				}
-				if(!Config.HasForumBoard) 
-					Stop("Can't find a forum board, stopping the plugin.");
+				//if(!Config.HasForumBoard) 
+					//Stop("Can't find a forum board, stopping the plugin.");
 				MySQL.close();
 				if(!dupe)
 					db3.put(Encryption.md5(player), "no");
