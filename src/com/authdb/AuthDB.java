@@ -57,7 +57,7 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "2.1.3";
+	public static String pluginversion = "2.1.4";
     public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -67,6 +67,7 @@ public class AuthDB extends JavaPlugin {
 	public static HashMap<String, String> db = new HashMap();
 	public static HashMap<String, String> db2 = new HashMap();
 	public static HashMap<String, String> db3 = new HashMap();
+	public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
 	public static String idleFileName = "idle.db";
 	public static Logger log = Logger.getLogger("Minecraft");
 	public HashMap<String, ItemStack[]> inventories = new HashMap();
@@ -131,6 +132,9 @@ public class AuthDB extends JavaPlugin {
 		    		public void run() { if(checkCraftIRC.isEnabled()) { zCraftIRC.SendMessage("connect", null); } } }, 100);
 	    	  
 	      }
+	      final Plugin Backpack = getServer().getPluginManager().getPlugin("Backpack");
+	      if (Backpack != null) { Config.HasBackpack = true; }
+	      
 		String thescript = "",theversion = "";
 		if(Config.custom_enabled) { thescript = "custom"; }
 		else 
@@ -146,9 +150,9 @@ public class AuthDB extends JavaPlugin {
 			catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send data to main server."); }
 		}
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Lowest, this);
+		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Lowest, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener, Event.Priority.Normal, this);
@@ -294,13 +298,13 @@ public class AuthDB extends JavaPlugin {
 	{
 		Set pl = inventories.keySet();
 		Iterator i = pl.iterator();
-		   while (i.hasNext())
-		   {
-				String player = (String)i.next();
-				Player pla = getServer().getPlayer(player);
-				if (pl != null)
-				pla.getInventory().setContents((ItemStack[])this.inventories.get(player));
-		   }
+	   while (i.hasNext())
+	   {
+			String player = (String)i.next();
+			Player pla = getServer().getPlayer(player);
+			if (pl != null)
+			pla.getInventory().setContents((ItemStack[])this.inventories.get(player));
+	   }
 		inventories.clear();
 	}
 	
@@ -367,7 +371,9 @@ public class AuthDB extends JavaPlugin {
 	    File f = new File(getDataFolder(), player + "_inv");
 
 	    if (f.exists()) {
-	      ItemStack[] inv = new ItemStack[36];
+	    	ItemStack[] inv;
+	    	if(Config.HasBackpack) { inv = new ItemStack[252]; }
+	    	else { inv = new ItemStack[36]; }
 	      try {
 	        Scanner s = new Scanner(f);
 	        short i = 0;

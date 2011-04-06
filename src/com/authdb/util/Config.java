@@ -78,6 +78,7 @@ public class Config
 	public static boolean database_ison;
 	public static boolean has_badcharacters;
 	public static boolean HasForumBoard,Capitalization;
+	public static boolean HasBackpack = false;
 	
 	///////////////////////////////////////////
 	//               Database

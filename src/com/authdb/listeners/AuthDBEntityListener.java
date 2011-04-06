@@ -50,6 +50,16 @@ public void onEntityDamage(EntityDamageEvent event)
 		if (event.getEntity() instanceof Player)
 		{
 		   Player p = (Player)event.getEntity();
+		   if(this.plugin.AuthTimeDB.containsKey(p.getName()))
+		   {
+			   long timestamp = System.currentTimeMillis()/1000;
+			   long difference = timestamp - Integer.parseInt(this.plugin.AuthTimeDB.get(p.getName()));
+			   if(difference < 5)
+			   {
+				   Util.Debug("Time difference: "+difference+", caneling damage.");
+				   event.setCancelled(true);
+			   }
+		   }
 		   if (event instanceof EntityDamageByEntityEvent)
 		   {
 			   EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
