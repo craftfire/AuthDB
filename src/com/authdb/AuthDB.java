@@ -47,6 +47,7 @@ import com.authdb.listeners.AuthDBPlayerListener;
 import com.authdb.plugins.zCraftIRC;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
+import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 import com.ensifera.animosity.craftirc.CraftIRC;
@@ -57,7 +58,7 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "2.1.4";
+	public static String pluginversion = "2.1.5";
     public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -68,7 +69,10 @@ public class AuthDB extends JavaPlugin {
 	public static HashMap<String, String> db2 = new HashMap();
 	public static HashMap<String, String> db3 = new HashMap();
 	public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
+	public static HashMap<String, String> AuthPasswordTriesDB = new HashMap<String, String>();
+	public static HashMap<String, String> AuthOtherNamesDB = new HashMap<String, String>();
 	public static String idleFileName = "idle.db";
+	public static String otherNamesFileName = "othernames.db";
 	public static Logger log = Logger.getLogger("Minecraft");
 	public HashMap<String, ItemStack[]> inventories = new HashMap();
 
@@ -79,6 +83,8 @@ public class AuthDB extends JavaPlugin {
 	    	zCraftIRC.SendMessage("disconnect",null);
 		disableInventory();
 		authorizedIds.clear();
+		AuthTimeDB.clear();
+		AuthPasswordTriesDB.clear();
 		db.clear();
 		db2.clear();
 		db3.clear();
@@ -174,6 +180,8 @@ public class AuthDB extends JavaPlugin {
 			e.printStackTrace();
 		}
 		
+        Util.AddOtherNamesToDB();
+		
 		Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
@@ -212,13 +220,21 @@ public class AuthDB extends JavaPlugin {
 		getServer().getPluginManager().disablePlugin(((org.bukkit.plugin.Plugin) (this)));
 	}
 	
-	public void register(String player, String password, String ipAddress) throws IOException, SQLException { register(player, password, "", ipAddress); }
-
-	public void register(String player, String password, String email, String ipAddress) throws IOException, SQLException 
+	public boolean register(Player theplayer, String password, String email, String ipAddress) throws IOException, SQLException 
 	{
 		MySQL.connect();
+		String player = theplayer.getName();
+		//if(Config.debug_enable) Util.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
+		//if (Util.checkUsernameCharacters(password) == false)
+		//{
+		//	Messages.SendMessage("AuthDB_message_password_badcharacters", theplayer, null);
+		//}
+		//else
+		//{
 		Util.CheckScript("adduser",Config.script_name,player, password, email, ipAddress);
+		//}
 		MySQL.close();
+		return true;
 	}
 
 	public boolean isRegistered(String player) {
@@ -281,15 +297,19 @@ public class AuthDB extends JavaPlugin {
 	        return false;
 	}
 
-	  public void storeInventory(String player, ItemStack[] inventory) throws IOException {
+	  public void storeInventory(String player, ItemStack[] theinventory) throws IOException {
 	    File inv = new File(getDataFolder(), player + "_inv");
-	    if (inv.exists())
-	      return;
+	    if (inv.exists()) { return; }
 	    inv.createNewFile();
 	    BufferedWriter bw = new BufferedWriter(new FileWriter(inv));
-	    for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
-	      bw.write(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability());
-	      bw.newLine();
+	    for (short i = 0; i < theinventory.length; i = (short)(i + 1)) 
+	    {
+	    	if(theinventory[i] != null)
+	    	{
+	    		bw.write(theinventory[i].getTypeId() + ":" + theinventory[i].getAmount() + ":" + (theinventory[i].getData() == null ? "" : Byte.valueOf(theinventory[i].getData().getData())) + ":" + theinventory[i].getDurability());
+	    	}
+	    	else { bw.write("0:0::0"); }
+	    	bw.newLine();
 	    }
 	    bw.close();
 	  }

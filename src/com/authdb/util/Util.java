@@ -10,19 +10,20 @@ package com.authdb.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.entity.Player;
 
@@ -40,6 +40,7 @@ import com.authdb.scripts.Custom;
 import com.authdb.scripts.cms.DLE;
 import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
+import com.authdb.scripts.forum.IPB;
 import com.authdb.scripts.forum.PunBB;
 import com.authdb.scripts.forum.SMF;
 import com.authdb.scripts.forum.Vanilla;
@@ -226,7 +227,7 @@ public class Util
 			    		if(Encryption.md5(password).equals(hash)) { return true; }
 			    	}
 		    	}
-    		/*	else if(CheckVersionInRange(Config.Script5_versionrange2))
+    			/*else if(CheckVersionInRange(Config.Script5_versionrange2))
 		    	{
     				usernamefield = "name";
     				passwordfield = "pass";
@@ -236,8 +237,8 @@ public class Util
 			    	{
 			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
 			    		Util.Debug(hash);
-			    		Util.Debug(Drupal.hash(password));
-			    		if(Drupal.check_hash(password,hash)) { return true; }
+			    		Util.Debug(Drupal.user_hash_password(password,1));
+			    		if(hash.equals(Drupal.user_hash_password(password,1))) { return true; }
 			    	}
 		    	}*/
 		    	if(type.equals("adduser"))
@@ -422,6 +423,28 @@ public class Util
 		    	{
 		    		DLE.adduser(number,player, email, password, ipAddress);
 					return true;
+		    	}
+    		}
+		    else if(script.equals(Config.Script13_name) || script.equals(Config.Script13_shortname))
+    		{
+    			usertable = "members";
+    			if(CheckVersionInRange(Config.Script13_versionrange))
+		    	{
+    				usernamefield = "members_l_username";
+    				passwordfield = "members_pass_hash";
+    				Config.HasForumBoard = true;
+    				number = 1;
+			    	if(type.equals("checkpassword"))
+			    	{
+			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+			    		Util.Debug("hash 1 : "+hash);
+			    		if(IPB.check_hash(IPB.hash("find", player, password, null),hash)) { return true; }
+			    	}
+		    	}
+		    	if(type.equals("adduser"))
+		    	{
+		    		IPB.adduser(number,player, email, password, ipAddress);
+		    		 return true;
 		    	}
     		}
 		  /*  else if(script.equals(Config.Script11_name) || script.equals(Config.Script11_shortname))
@@ -818,7 +841,33 @@ public class Util
 		return true;
 	}
 	
-	public static void Debug(String message) { Log("info",message); }
+	public static String fixCharacters(String string)
+	{
+		int lengtha = string.length();
+		int lengthb = "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/".length();
+	    int i = 0;
+	    char thechar1, thechar2;
+	    String tempstring = "";
+	    while(i < lengtha)
+	    {
+	    	thechar1 = string.charAt(i);
+	    	int a = 0;
+	    	while(a < lengthb)
+	    	{
+	    		thechar2 = "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/".charAt(a);
+	    		if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') 
+	    		{ 
+	    			thechar1 = thechar2;
+	    		}
+	    		a++;
+	    	}
+	    	tempstring += thechar1;
+		    i++;
+	    }
+		return tempstring;
+	}
+	
+	public static void Debug(String message) { if(Config.debug_enable) { Log("info",message); } }
 	
 	public static String replaceStrings(String string, Player player, String additional)
 	{
@@ -945,15 +994,198 @@ public class Util
 		else if(type.equals("warning")) AuthDB.log.warning("["+AuthDB.pluginname+"] "+what);
 	}
 
-	/* public static String md5Hash(String text) throws NoSuchAlgorithmException,
-			UnsupportedEncodingException {
-		MessageDigest md;
-		md = MessageDigest.getInstance("MD5");
-		byte[] md5hash = new byte[32];
-		md.update(text.getBytes("iso-8859-1"), 0, text.length());
-		md5hash = md.digest();
-		return convertToHex(md5hash);
-	} */
+	public static String CheckOtherName(String player)
+	{
+		 if(AuthDB.AuthOtherNamesDB.containsKey(player))
+		 {
+			 return AuthDB.AuthOtherNamesDB.get(player);
+		 }
+		 return "fail";
+	}
+
+	public static void AddOtherNamesToDB()
+	{
+		File file = new File("plugins/"+AuthDB.pluginname+"/"+AuthDB.otherNamesFileName);
+		if (file.exists())
+		{
+		    BufferedReader reader = null;
+			try {
+				reader = new BufferedReader(new FileReader(file));
+			} catch (FileNotFoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+	
+			String currentLine;
+		    try 
+		    {
+			while((currentLine = reader.readLine()) != null) 
+			{
+			  String[] split = currentLine.split(":");
+			  AuthDB.AuthOtherNamesDB.put(split[0], split[1]);
+			}
+			reader.close();
+			
+		    }
+		    catch (Exception e) { System.err.println("Error: " + e.getMessage()); }
+		}
+	}
+	
+	public static String GetFile(String what, String data)
+	  {
+		  Util.Debug("READING FROM FILE get");
+		  File file = new File("plugins/"+AuthDB.pluginname+"/"+AuthDB.otherNamesFileName);
+		  if (file.exists())
+		  {
+			  BufferedReader reader = null;
+				try {
+					reader = new BufferedReader(new FileReader(file));
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+	
+				String currentLine;
+			    try {
+				while((currentLine = reader.readLine()) != null) {
+				  String[] split = currentLine.split(":");
+				  if(split[0].equals(what)) { return split[1]; }
+				}
+				reader.close();
+				
+			    }catch (Exception e){
+				      System.err.println("Error: " + e.getMessage());
+				      return "fail";
+				    }
+		  }
+		    return "fail";
+	  }
+	  
+	  public static boolean ToFile(String action, String what, String data)
+		{
+		    Util.Debug("READING FROM FILE "+action);
+			File file = new File("plugins/"+AuthDB.pluginname+"/"+AuthDB.otherNamesFileName);
+			if(action.equals("write"))
+			{
+			      try
+			      {
+		    	    BufferedWriter out;
+		            out = new BufferedWriter(new FileWriter(file,true));
+		            out.write(what+":"+data);
+		            out.newLine();
+		            out.close();
+		    	    }catch (Exception e){
+		    	      e.printStackTrace();
+		    	      return false;
+		    	    }
+			      return true;
+			}
+			else if(action.equals("check"))
+			{
+				try 
+				{
+			    FileInputStream fstream = new FileInputStream(file);
+			    DataInputStream in = new DataInputStream(fstream);
+			    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			    String strLine;
+			    while ((strLine = br.readLine()) != null)   
+			    {
+			      String[] split = strLine.split(":");
+			      if(split[0].equals(what)) { return true; }
+			    }
+			 //   fstream.close();
+			   // br.close();
+			    in.close();
+			    }catch (Exception e){
+			      //e.printStackTrace();
+			      return false;
+			    }
+				 
+			}
+			else if(action.equals("remove"))
+			{
+
+				BufferedReader reader = null;
+				try {
+					reader = new BufferedReader(new FileReader(file));
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				String currentLine;
+				String thedupe = "";
+			    try {
+				while((currentLine = reader.readLine()) != null) {
+				  String[] split = currentLine.split(":");
+				  if(split[0].equals(what)) { continue; }
+				  thedupe += currentLine+"¤XX¤";
+				}
+				reader.close();
+				
+				
+			    BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.pluginname+"/"+AuthDB.otherNamesFileName)));
+			    String[] thesplit = thedupe.split("¤XX¤");
+			    int counter = 0;
+			    while (counter < thesplit.length)
+			    {
+			      bw.append(thesplit[counter]);
+			      bw.newLine();
+			      counter++;
+			    }
+			    bw.close();
+			    
+			    
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}
+			else if(action.equals("change"))
+			{
+
+				BufferedReader reader = null;
+				try {
+					reader = new BufferedReader(new FileReader(file));
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				String currentLine;
+				String thedupe = "";
+			    try {
+				while((currentLine = reader.readLine()) != null) {
+				  String[] split = currentLine.split(":");
+				  if(split[0].equals(what)) { thedupe += what+":"+data+"¤XX¤"; }
+				  else { thedupe += currentLine+"¤XX¤"; }
+				}
+				reader.close();
+				
+				
+			    BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.pluginname+"/"+AuthDB.otherNamesFileName)));
+			    String[] thesplit = thedupe.split("¤XX¤");
+			    int counter = 0;
+			    while (counter < thesplit.length)
+			    {
+			      bw.append(thesplit[counter]);
+			      bw.newLine();
+			      counter++;
+			    }
+			    bw.close();
+			    
+			    
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}			
+			return false;
+		}
 	
 	public static String GetIP(Player player)
 	{

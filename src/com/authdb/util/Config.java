@@ -70,6 +70,10 @@ public class Config
 	public static String Script12_name = "datalife engine";
 	public static String Script12_shortname = "dle";
 	public static String Script12_versionrange = "9.2-9.2";
+	
+	public static String Script13_name = "ipb";
+	public static String Script13_shortname = "ipb";
+	public static String Script13_versionrange = "3.1.4-3.1.4";
 	///
 	
 	///////////////////////////////////////////
@@ -115,6 +119,7 @@ public class Config
 		//               login
 		///////////////////////////////////////////
 		public static String login_method;
+		public static boolean login_linking,login_unlinking;
 		
 		///////////////////////////////////////////
 		//               password
@@ -209,7 +214,9 @@ public class Config
 					///////////////////////////////////////////
 					database_driver =  GetConfigString("Core.database.driver", "mysql");
 					database_username =  GetConfigString("Core.database.username", "root");
+					//database_username = Util.fixCharacters(database_username);
 					database_password =  GetConfigString("Core.database.password", "");
+					//database_password = Util.fixCharacters(database_password);
 					database_port =  GetConfigString("Core.database.port", "3306");
 					database_host =  GetConfigString("Core.database.host", "localhost");
 					database_database = GetConfigString("Core.database.name", "minecraft_forum");
@@ -227,6 +234,8 @@ public class Config
 					//               login
 					///////////////////////////////////////////
 					login_method = GetConfigString("Core.login.method", "default");
+					login_linking = GetConfigBoolean("Core.login.linking", true);
+					login_unlinking = GetConfigBoolean("Core.login.unlinking", false);
 					
 					///////////////////////////////////////////
 					//               password
@@ -264,9 +273,9 @@ public class Config
 					guests_interact = GetConfigBoolean("Core.guest.interactions", false);
 					guests_build = GetConfigBoolean("Core.guest.building", false);
 					guests_destroy = GetConfigBoolean("Core.guest.destruction", false);
-					guests_chat= GetConfigBoolean("Core.guest.chat", false);
-					guests_mobtargeting= GetConfigBoolean("Core.guest.mobtargeting", false);
-					guests_pvp= GetConfigBoolean("Core.guest.pvp", false);
+					guests_chat = GetConfigBoolean("Core.guest.chat", false);
+					guests_mobtargeting = GetConfigBoolean("Core.guest.mobtargeting", false);
+					guests_pvp = GetConfigBoolean("Core.guest.pvp", false);
 			  
 					///////////////////////////////////////////
 					//               badcharacters
@@ -336,7 +345,7 @@ public class Config
 					///////////////////////////////////////////
 					Messages.AuthDB_message_register_success = Config.GetConfigString("Core.AuthDB.register.success", "&4You have been registered!");
 					Messages.AuthDB_message_register_failure = Config.GetConfigString("Core.AuthDB.register.failure", "&4Error while registering!");
-					Messages.AuthDB_message_register_registered = Config.GetConfigString("Core.AuthDB.register.registered", "&4You are already registered!");
+					Messages.AuthDB_message_register_registered = Config.GetConfigString("Core.AuthDB.register.exists", "&4You are already registered!");
 					Messages.AuthDB_message_register_disabled = Config.GetConfigString("Core.AuthDB.register.disabled", "&4Registration not allowed!");
 					Messages.AuthDB_message_register_usage = Config.GetConfigString("Core.AuthDB.register.usage", "&4Correct usage is: /register <password> <email>");
 					
@@ -358,6 +367,22 @@ public class Config
 					Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.AuthDB.login.usage", "&4Correct usage is: /login <password>");
 					
 					///////////////////////////////////////////
+					//               link
+					///////////////////////////////////////////
+					Messages.AuthDB_message_link_success = Config.GetConfigString("Core.AuthDB.link.success", "<lightgreen>You have successfully linked!. You are now logged in");
+					Messages.AuthDB_message_link_failure = Config.GetConfigString("Core.AuthDB.link.failure", "<rose>Error while linking!");
+					Messages.AuthDB_message_link_exists = Config.GetConfigString("Core.AuthDB.link.exists", "<rose>You are already linked to a username!");
+					Messages.AuthDB_message_link_usage = Config.GetConfigString("Core.AuthDB.link.usage", "<rose>Correct usage is: /link <otherusername> <password>");
+						
+					///////////////////////////////////////////
+					//               unlink
+					///////////////////////////////////////////
+					Messages.AuthDB_message_unlink_success = Config.GetConfigString("Core.AuthDB.unlink.success", "<lightgreen>You have successfully unlinked!");
+					Messages.AuthDB_message_unlink_failure = Config.GetConfigString("Core.AuthDB.unlink.failure", "<rose>Error while unlinking!");
+					Messages.AuthDB_message_unlink_nonexist = Config.GetConfigString("Core.AuthDB.unlink.nonexist", "<rose>You do not have a linked username!");
+					Messages.AuthDB_message_unlink_usage = Config.GetConfigString("Core.AuthDB.unlink.usage", "<rose>Correct usage is: /unlink <otherusername> <password>");
+					
+					///////////////////////////////////////////
 					//               email
 					///////////////////////////////////////////
 					Messages.AuthDB_message_email_required = Config.GetConfigString("Core.AuthDB.email.required", "&4Email required for registration!");
@@ -377,6 +402,8 @@ public class Config
 					Messages.AuthDB_message_password_failure = Config.GetConfigString("Core.AuthDB.password.failure", "&4Error! Password change failed!");
 					Messages.AuthDB_message_password_notregistered = Config.GetConfigString("Core.AuthDB.password.notregistered", "&4Register first!");
 					Messages.AuthDB_message_password_usage = Config.GetConfigString("Core.AuthDB.password.usage", "&4Correct usage is: /password <oldpassword> <password>");
+					Messages.AuthDB_message_password_badcharacters = Config.GetConfigString("Core.AuthDB.password.badcharacters", "&4Password contains bad characters: {BADCHARACTERS}!");
+					
 					
 					///////////////////////////////////////////
 					//               idle
@@ -391,8 +418,8 @@ public class Config
 					///////////////////////////////////////////
 					//               status
 					///////////////////////////////////////////
-					Messages.CraftIRC_message_status_join = Config.GetConfigString("Plugins.CraftIRC.status.guest", "{PLAYER} has joined the server from {PROVINCE}{STATE}, {COUNTRY} ({IP}).");
-					Messages.CraftIRC_message_status_quit = Config.GetConfigString("Plugins.CraftIRC.status.user", "{PLAYER} has quit the server.");
+					Messages.CraftIRC_message_status_join = Config.GetConfigString("Plugins.CraftIRC.status.join", "{PLAYER} has joined the server from {PROVINCE}{STATE}, {COUNTRY} ({IP}).");
+					Messages.CraftIRC_message_status_quit = Config.GetConfigString("Plugins.CraftIRC.status.quit", "{PLAYER} has quit the server.");
 					
 					///////////////////////////////////////////
 					//               register
@@ -406,7 +433,6 @@ public class Config
 					///////////////////////////////////////////
 					Messages.CraftIRC_message_password_success = Config.GetConfigString("Plugins.CraftIRC.password.success", "{PLAYER} logged in successfully!");
 					Messages.CraftIRC_message_password_failure = Config.GetConfigString("Plugins.CraftIRC.password.failure", "{PLAYER} tried to login with the wrong password!");
-					
 					///////////////////////////////////////////
 					//               idle
 					///////////////////////////////////////////

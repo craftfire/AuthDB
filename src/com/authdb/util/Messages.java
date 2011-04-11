@@ -54,6 +54,16 @@ public class Messages
 		public static String AuthDB_message_login_success,AuthDB_message_login_failure,AuthDB_message_login_authorized,AuthDB_message_login_notregistered,AuthDB_message_login_session,AuthDB_message_login_usage;
 		
 		///////////////////////////////////////////
+		//               link
+		///////////////////////////////////////////
+		public static String AuthDB_message_link_success,AuthDB_message_link_failure,AuthDB_message_link_exists,AuthDB_message_link_usage;
+		
+		///////////////////////////////////////////
+		//               unlink
+		///////////////////////////////////////////
+		public static String AuthDB_message_unlink_success,AuthDB_message_unlink_failure,AuthDB_message_unlink_nonexist,AuthDB_message_unlink_usage;
+		
+		///////////////////////////////////////////
 		//               email
 		///////////////////////////////////////////
 		public static String AuthDB_message_email_required,AuthDB_message_email_invalid;
@@ -66,7 +76,7 @@ public class Messages
 		///////////////////////////////////////////
 		//               password
 		///////////////////////////////////////////
-		public static String AuthDB_message_password_success,AuthDB_message_password_failure,AuthDB_message_password_notregistered,AuthDB_message_password_usage;
+		public static String AuthDB_message_password_success,AuthDB_message_password_failure,AuthDB_message_password_notregistered,AuthDB_message_password_usage,AuthDB_message_password_badcharacters;
 		
 		///////////////////////////////////////////
 		//               idle
@@ -158,12 +168,23 @@ public class Messages
 			}
 			else if(type.equals("AuthDB_message_login_success")) 
 			{
+				AuthDB.AuthPasswordTriesDB.put(player.getName(), "0");
 				player.sendMessage(Util.replaceStrings(AuthDB_message_login_success,player,null));
 			}
 			else if(type.equals("AuthDB_message_login_failure")) 
 			{
-				if(Config.password_kick) { player.kickPlayer(Util.replaceStrings(AuthDB_message_login_failure,player,null)); }
-				else { player.sendMessage(Util.replaceStrings(AuthDB_message_login_failure,player,null)); }
+				String temp = AuthDB.AuthPasswordTriesDB.get(player.getName());
+				int tries = Integer.parseInt(temp) + 1;
+  			    if(tries > Integer.parseInt(Config.password_tries) && Config.password_kick == true)
+  			    { 
+  			    	player.kickPlayer(Util.replaceStrings(AuthDB_message_login_failure,player,null));
+  			    	AuthDB.AuthPasswordTriesDB.put(player.getName(),"0");
+  			    }
+  			    else 
+  			    { 
+  			    	AuthDB.AuthPasswordTriesDB.put(player.getName(),""+tries);
+  			    	player.sendMessage(Util.replaceStrings(AuthDB_message_login_failure,player,null)); 
+  			    }
 			}
 			else if(type.equals("AuthDB_message_login_authorized")) 
 			{
@@ -180,6 +201,38 @@ public class Messages
 			else if(type.equals("AuthDB_message_login_usage")) 
 			{
 				player.sendMessage(Util.replaceStrings(AuthDB_message_login_usage,player,null));
+			}
+			else if(type.equals("AuthDB_message_link_success")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_link_success,player,null));
+			}
+			else if(type.equals("AuthDB_message_link_failure")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_link_failure,player,null));
+			}
+			else if(type.equals("AuthDB_message_link_exists")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_link_exists,player,null));
+			}
+			else if(type.equals("AuthDB_message_link_usage")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_link_usage,player,null));
+			}
+			else if(type.equals("AuthDB_message_unlink_success")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_success,player,null));
+			}
+			else if(type.equals("AuthDB_message_unlink_failure")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_failure,player,null));
+			}
+			else if(type.equals("AuthDB_message_unlink_nonexist")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_nonexist,player,null));
+			}
+			else if(type.equals("AuthDB_message_unlink_usage")) 
+			{
+				player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_usage,player,null));
 			}
 			else if(type.equals("AuthDB_message_email_required")) 
 			{
@@ -217,6 +270,17 @@ public class Messages
 			else if(type.equals("AuthDB_message_password_usage")) 
 			{
 				player.sendMessage(Util.replaceStrings(AuthDB_message_password_usage,player,null));
+			}
+			else if(type.equals("AuthDB_message_password_badcharacters")) 
+			{
+				if(Config.badcharacters_kick)
+				{
+					player.kickPlayer(Util.replaceStrings(AuthDB_message_password_badcharacters,player,null));
+				}
+				else
+				{
+					player.sendMessage(Util.replaceStrings(AuthDB_message_password_badcharacters,player,null));
+				}
 			}
 			else if(type.equals("AuthDB_message_idle_kick"))
 			{

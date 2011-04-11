@@ -28,7 +28,7 @@ public class MySQL
 	public static boolean check()
 	{
 		try {
-			mysql = DriverManager.getConnection(Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+			mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
 		} catch (SQLException e) {
 			Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
 			AuthDB.Server.broadcastMessage("");
@@ -67,7 +67,8 @@ public class MySQL
 		if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
 		try {
 			Config.database_ison = true;
-			mysql = DriverManager.getConnection(Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+			
+			mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
 		} catch (SQLException e) {
 			Config.database_ison = false;
 			Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
