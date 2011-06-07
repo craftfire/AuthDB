@@ -29,6 +29,10 @@ import com.mysql.jdbc.Blob;
 
 public class XenForo {
 	
+	public static String Name = "xenforo";
+	public static String ShortName = "xf";
+	public static String VersionRange = "1.0.0-1.0.0";
+	
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {
 	if(checkid == 1)

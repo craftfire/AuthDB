@@ -11,10 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
-import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 
@@ -28,6 +26,11 @@ import com.authdb.util.databases.MySQL;
  * @author Contex
  */
 public class phpBB {
+	
+	public static String VersionRange = "3.0.0-3.0.8";
+	public static String VersionRange2 = "2.0.0-2.0.23";
+	public static String Name = "phpbb";
+	public static String ShortName = "phpbb";
 	
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {

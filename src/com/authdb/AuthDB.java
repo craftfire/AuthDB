@@ -7,28 +7,28 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 **/
 package com.authdb;
 
-import java.awt.Color;
-import java.awt.font.TextAttribute;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.Console;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.minecraft.server.PropertyManager;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -58,23 +58,23 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "2.1.5";
+	public static String pluginversion = "2.3.0";
     public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
 	private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
 	private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
-	private static List<Integer> authorizedIds = new ArrayList();
-	public static HashMap<String, String> db = new HashMap();
-	public static HashMap<String, String> db2 = new HashMap();
-	public static HashMap<String, String> db3 = new HashMap();
+	private static List<Integer> authorizedIds = new ArrayList<Integer>();
+	public static HashMap<String, String> db = new HashMap<String, String>();
+	public static HashMap<String, String> db2 = new HashMap<String, String>();
+	public static HashMap<String, String> db3 = new HashMap<String, String>();
 	public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
 	public static HashMap<String, String> AuthPasswordTriesDB = new HashMap<String, String>();
 	public static HashMap<String, String> AuthOtherNamesDB = new HashMap<String, String>();
 	public static String idleFileName = "idle.db";
 	public static String otherNamesFileName = "othernames.db";
 	public static Logger log = Logger.getLogger("Minecraft");
-	public HashMap<String, ItemStack[]> inventories = new HashMap();
+	public HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
 
 	public void onDisable() 
 	{
@@ -84,6 +84,7 @@ public class AuthDB extends JavaPlugin {
 		disableInventory();
 		authorizedIds.clear();
 		AuthTimeDB.clear();
+		AuthOtherNamesDB.clear();
 		AuthPasswordTriesDB.clear();
 		db.clear();
 		db2.clear();
@@ -93,7 +94,41 @@ public class AuthDB extends JavaPlugin {
 
 
 	public void onEnable() 
-	{
+	{	 
+		/* File file = new File("plugins/"+pluginname+"/AuthDB_Ban.jar");
+			
+			URLClassLoader clazzLoader = null;
+			try {
+				clazzLoader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
+			} catch (MalformedURLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+//			System.class.getClassLoader()
+			
+			JarFile jarFile = null;
+			try {
+				jarFile = new JarFile(file);
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			Enumeration<JarEntry> entries = jarFile.entries();
+			
+			while (entries.hasMoreElements()) {
+				JarEntry element = entries.nextElement();
+				if (element.getName().endsWith(".class")) {
+					try {
+						Class c = clazzLoader.loadClass(element.getName().replaceAll(".class", "").replaceAll("/", "."));
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		*/
+		
 		Server = getServer();
 		Plugin[] plugins = Server.getPluginManager().getPlugins();
 		//Util.Debug(System.getProperty("java.version"));
@@ -114,20 +149,26 @@ public class AuthDB extends JavaPlugin {
 			counter++;
 		}
 		
-		Config TheMessages = new Config("messages","plugins/"+pluginname+"/", "messages.yml");
-		if (null == TheMessages.GetConfigString("messages", "")) 
+		File f = new File("plugins/"+pluginname+"/messages.yml");
+		if ( !f.exists() )
 		{
-		    Util.Log("info", "messages.yml could not be found in plugins/AuthDB/ -- disabling!");
-		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
-		    return;
+		    Util.Log("info", "messages.yml could not be found in plugins/AuthDB/! Creating messages.yml!");
+		    DefaultFile("messages.yml");
+
+		    //getServer().getPluginManager().disablePlugin(((Plugin) (this)));
+		    //return;
 		}
-		Config TheConfig = new Config("config","plugins/"+pluginname+"/", "config.yml");
-		if (null == getConfiguration().getKeys("Core")) 
+		new Config("messages","plugins/"+pluginname+"/", "messages.yml");
+		
+		f = new File("plugins/"+pluginname+"/config.yml");
+		if ( !f.exists() )
 		{
-		    Util.Log("info", "config.yml could not be found in plugins/AuthDB/ -- disabling!");
-		    getServer().getPluginManager().disablePlugin(((Plugin) (this)));
-		    return;
+			Util.Log("info", "config.yml could not be found in plugins/AuthDB/! Creating config.yml!");
+			DefaultFile("config.yml");
+		   // getServer().getPluginManager().disablePlugin(((Plugin) (this)));
+		   // return;
 		}
+		new Config("config","plugins/"+pluginname+"/", "config.yml");
 
 	      final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
 	      if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
@@ -140,29 +181,14 @@ public class AuthDB extends JavaPlugin {
 	      }
 	      final Plugin Backpack = getServer().getPluginManager().getPlugin("Backpack");
 	      if (Backpack != null) { Config.HasBackpack = true; }
-	      
-		String thescript = "",theversion = "";
-		if(Config.custom_enabled) { thescript = "custom"; }
-		else 
-		{ 
-			thescript = Config.script_name; 
-			theversion = Config.script_version;
-		}
-		String online = ""+getServer().getOnlinePlayers().length;
-		String max = ""+getServer().getMaxPlayers();
-		if(Config.usagestats_enabled)
-		{
-			try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); } 
-			catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send data to main server."); }
-		}
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Priority.Lowest, this);
+		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
+		pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Low, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Low, this);
+		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Priority.Low, this);
 		pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Lowest, this);
+		pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Low, this);
 	    pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.Normal, this);
@@ -171,7 +197,10 @@ public class AuthDB extends JavaPlugin {
 		pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.ENTITY_TARGET, this.entityListener, Event.Priority.Normal, this);
-		
+
+	    PropertyManager TheSettings = new PropertyManager(new File("server.properties"));
+		if (TheSettings.getBoolean("online-mode", true)) { Config.OnlineMode = true; }
+	    
 		MySQL.connect();
 		try {
 			Util.CheckScript("numusers",Config.script_name,null,null,null,null);
@@ -186,6 +215,21 @@ public class AuthDB extends JavaPlugin {
 		if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
 		if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
 		Util.Log("info", pluginname + " is developed by CraftFire <dev@craftfire.com>");
+		
+		String thescript = "",theversion = "";
+		if(Config.custom_enabled) { thescript = "custom"; }
+		else 
+		{ 
+			thescript = Config.script_name; 
+			theversion = Config.script_version;
+		}
+		String online = ""+getServer().getOnlinePlayers().length;
+		String max = ""+getServer().getMaxPlayers();
+		if(Config.usagestats_enabled)
+		{
+			try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); } 
+			catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send usage stats to main server."); }
+		}
 	}
 
 
@@ -197,6 +241,7 @@ public class AuthDB extends JavaPlugin {
 		try 
 		{
 			MySQL.connect();
+			password = Matcher.quoteReplacement(password);
 			if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password,null,null)) return true;
 			MySQL.close();
 		} 
@@ -213,73 +258,104 @@ public class AuthDB extends JavaPlugin {
 	    return difference <= range;
 	}
 	
-	
 	void Stop(String error)
 	{
 		Util.Log("warning",error);
 		getServer().getPluginManager().disablePlugin(((org.bukkit.plugin.Plugin) (this)));
 	}
-	
+	 
 	public boolean register(Player theplayer, String password, String email, String ipAddress) throws IOException, SQLException 
-	{
+	{	
+		password = Matcher.quoteReplacement(password);
+		if(password.length() < Integer.parseInt(Config.password_minimum))
+		{
+			Messages.SendMessage("AuthDB_message_password_minimum", theplayer, null);
+			return false;
+		}
+		else if(password.length() > Integer.parseInt(Config.password_maximum))
+		{
+			Messages.SendMessage("AuthDB_message_password_maximum", theplayer, null);
+			return false;
+		}
 		MySQL.connect();
 		String player = theplayer.getName();
-		//if(Config.debug_enable) Util.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
-		//if (Util.checkUsernameCharacters(password) == false)
-		//{
-		//	Messages.SendMessage("AuthDB_message_password_badcharacters", theplayer, null);
-		//}
-		//else
-		//{
-		Util.CheckScript("adduser",Config.script_name,player, password, email, ipAddress);
-		//}
+		if (!Util.CheckBadCharacters("password",password))
+		{
+			Messages.SendMessage("AuthDB_message_badcharacters_password", theplayer, null);
+		}
+		else
+		{
+			Util.CheckScript("adduser",Config.script_name,player, password, email, ipAddress);
+		}
 		MySQL.close();
 		return true;
 	}
 
-	public boolean isRegistered(String player) {
+	public boolean isRegistered(String when, String player) {
 		boolean dupe = false;
 		boolean checkneeded = true;
 		//if(Config.debug_enable) 
 			//Util.Debug("Running function: isRegistered(String player)");
-		
-		if(this.db3.containsKey(Encryption.md5(player)))
-		{ 
-			//if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
-			String check =db3.get(Encryption.md5(player));
-			if(check.equals("yes"))
-			{
-				//if(Config.debug_enable) Util.Debug("Cache "+player+" passed with value "+check);
-				checkneeded = false;
-				return true;
-			}
-			else if(check.equals("no"))
-			{
-				//if(Config.debug_enable) Util.Debug("Cache "+player+" did NOT pass with value "+check);
-				return false;
-			}
-		}
-		else if(checkneeded)
+		if(when.equals("join"))
 		{
+			MySQL.connect();
+			Config.HasForumBoard = false;
 			try {
-				MySQL.connect();
-				Config.HasForumBoard = false;
 				if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null))
 				{
-					long timestamp = System.currentTimeMillis()/1000;
 					db3.put(Encryption.md5(player), "yes");
 					dupe = true;
 				}
-				//if(!Config.HasForumBoard) 
-					//Stop("Can't find a forum board, stopping the plugin.");
-				MySQL.close();
-				if(!dupe)
-					db3.put(Encryption.md5(player), "no");
-				return dupe;
-			} catch (SQLException e) 
-			{
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-				Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
+			}
+			//if(!Config.HasForumBoard) 
+				//Stop("Can't find a forum board, stopping the plugin.");
+			MySQL.close();
+			if(!dupe)
+				db3.put(Encryption.md5(player), "no");
+			return dupe;
+		}
+		else
+		{
+			if(this.db3.containsKey(Encryption.md5(player)))
+			{ 
+				//if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
+				String check =db3.get(Encryption.md5(player));
+				if(check.equals("yes"))
+				{
+					//if(Config.debug_enable) Util.Debug("Cache "+player+" passed with value "+check);
+					checkneeded = false;
+					return true;
+				}
+				else if(check.equals("no"))
+				{
+					//if(Config.debug_enable) Util.Debug("Cache "+player+" did NOT pass with value "+check);
+					return false;
+				}
+			}
+			else if(checkneeded)
+			{
+				try {
+					MySQL.connect();
+					Config.HasForumBoard = false;
+					if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null))
+					{
+						db3.put(Encryption.md5(player), "yes");
+						dupe = true;
+					}
+					//if(!Config.HasForumBoard) 
+						//Stop("Can't find a forum board, stopping the plugin.");
+					MySQL.close();
+					if(!dupe)
+						db3.put(Encryption.md5(player), "no");
+					return dupe;
+				} catch (SQLException e) 
+				{
+					e.printStackTrace();
+					Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
+				}
 			}
 		}
 		return false;
@@ -340,8 +416,8 @@ public class AuthDB extends JavaPlugin {
 	
 	  public void updateDb() throws IOException {
 		    BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), idleFileName)));
-		    Set keys = this.db.keySet();
-		    Iterator i = keys.iterator();
+		    Set<String> keys = this.db.keySet();
+		    Iterator<String> i = keys.iterator();
 		    while (i.hasNext()) {
 		      String key = (String)i.next();
 		      bw.append(key + ":" + (String)this.db.get(key));
@@ -438,4 +514,44 @@ public class AuthDB extends JavaPlugin {
 		    if (f.exists())
 		      f.delete();
 		  }
+	  
+	 private void DefaultFile(String name) {
+		    File actual = new File(getDataFolder(), name);
+		    File direc = new File(getDataFolder(),"");
+		    if (!direc.exists()) { direc.mkdir(); }
+		    if (!actual.exists()) {
+		      java.io.InputStream input = getClass().getResourceAsStream("/files/" + name);
+		      if (input != null) {
+		    	  java.io.FileOutputStream output = null;
+		        try
+		        {
+		          output = new java.io.FileOutputStream(actual);
+		          byte[] buf = new byte[8192];
+		          int length = 0;
+
+		          while ((length = input.read(buf)) > 0) {
+		            output.write(buf, 0, length);
+		          }
+
+		          System.out.println("["+pluginname+"] Written default setup for " + name);
+		        } catch (Exception e) {
+		          e.printStackTrace();
+		        } finally {
+		          try {
+		            if (input != null)
+		              input.close();
+		          } catch (Exception e) {
+		          }
+		          try {
+		            if (output != null)
+		              output.close();
+		          }
+		          catch (Exception e)
+		          {
+		          }
+		        }
+		      }
+		    }
+		  }
+	  
 }

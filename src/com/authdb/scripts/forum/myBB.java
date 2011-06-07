@@ -11,7 +11,6 @@ package com.authdb.scripts.forum;
 import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
-import java.util.Arrays;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
@@ -20,6 +19,10 @@ import com.authdb.util.databases.MySQL;
 
 
   public class myBB {
+	
+	public static String VersionRange = "1.6-1.6";
+	public static String Name = "mybb";
+	public static String ShortName = "mybb";
   	
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
@@ -53,7 +56,7 @@ import com.authdb.util.databases.MySQL;
 	 
     int userid = MySQL.countitall(Config.database_prefix+"users");
     String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
-    String newcache = Util.ForumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid");
+    String newcache = Util.ForumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null);
     ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datacache"+"` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
     ps.executeUpdate();
 	    }

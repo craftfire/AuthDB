@@ -7,17 +7,13 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 **/
 package com.authdb.listeners;
 
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
-import com.authdb.util.Util;
 
 
 public class AuthDBBlockListener extends BlockListener
@@ -64,7 +60,7 @@ public class AuthDBBlockListener extends BlockListener
 	{
 	 if(what)
 	 {
-	  if (!this.plugin.isRegistered(player.getName()))
+	  if (!this.plugin.isRegistered("checkguest",player.getName()))
 	  {
 		      return true;
 	  }

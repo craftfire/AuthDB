@@ -22,6 +22,11 @@ import com.authdb.util.databases.MySQL;
 
 public class SMF {
 	
+	public static String VersionRange = "1.1.1-1.1.13";
+	public static String VersionRange2 = "2.0.0.0-2.0.0.5";
+	public static String Name = "simple machines";
+	public static String ShortName = "smf";
+	
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
 	long timestamp = System.currentTimeMillis()/1000;

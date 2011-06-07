@@ -23,6 +23,12 @@ import com.authdb.util.databases.MySQL;
 
 
   public class vB {
+		
+		public static String VersionRange = "3.0.0-3.8.7";
+		public static String VersionRange2 = "4.0.0-4.1.2";
+		public static String Name = "vbulletin";
+		public static String ShortName = "vb";
+	  
 	  
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
@@ -54,7 +60,7 @@ import com.authdb.util.databases.MySQL;
 		    
 		    int userid = MySQL.countitall(Config.database_prefix+"user");
 		    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
-		    String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid");
+		    String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
 		    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
 		    ps.executeUpdate();
 		      
@@ -87,7 +93,7 @@ import com.authdb.util.databases.MySQL;
 		     
 		    int userid = MySQL.countitall(Config.database_prefix+"user");
 		    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
-		    String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid");
+		    String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
 		    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
 		    ps.executeUpdate();
 	  	}

@@ -23,6 +23,11 @@ import com.authdb.util.databases.MySQL;
 
 public class Joomla {
 	
+	public static String VersionRange = "1.5.0-1.5.22";
+	public static String VersionRange2 = "1.6.0-1.6.1";
+	public static String Name = "joomla";
+	public static String ShortName = "joom";
+	
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
 	long timestamp = System.currentTimeMillis()/1000;

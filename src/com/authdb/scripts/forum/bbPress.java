@@ -7,19 +7,17 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 **/
 package com.authdb.scripts.forum;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
-import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class bbPress {
+	
+	public static String Name = "bbpress";
+	public static String ShortName = "bbp";
+	public static String VersionRange = "1.0.3-1.0.3";
 	
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {

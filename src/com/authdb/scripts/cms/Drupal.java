@@ -7,11 +7,8 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 **/
 package com.authdb.scripts.cms;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Random;
 
 import com.authdb.util.Config;
@@ -21,6 +18,11 @@ import com.authdb.util.databases.MySQL;
 
 
 public class Drupal {
+	
+	public static String VersionRange = "6.20-6.20";
+	public static String VersionRange2 = "7.0-7.0";
+	public static String Name = "drupal";
+	public static String ShortName = "dru";
 	
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
@@ -40,11 +42,10 @@ public class Drupal {
 		ps.setLong(6, timestamp); //login
 		ps.setInt(7, 1); //status
 		ps.setString(8, email); //init
-		///need to add these, it's complaining about not default is set.
 		ps.executeUpdate();
 	}
 	
-	else if(checkid == 1)
+	else if(checkid == 2)
 	{
 		String hash = user_hash_password(password,0);
 		int userid;
@@ -59,12 +60,11 @@ public class Drupal {
 		ps.setLong(5, timestamp); //login
 		ps.setInt(6, 1); //status
 		ps.setString(7, email); //init
-		///need to add these, it's complaining about not default is set.
 		ps.executeUpdate();
 	}
   }
 	
-	 private static String itoa64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	  private static String itoa64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	  private static final int DRUPAL_MIN_HASH_COUNT =  7;
 	  private static final int DRUPAL_MAX_HASH_COUNT = 30;
 	  private static final int DRUPAL_HASH_COUNT     = 14;
@@ -170,9 +170,8 @@ public class Drupal {
 		// Hashes may be imported from elsewhere, so we allow != DRUPAL_HASH_COUNT
 		if (count_log2 < DRUPAL_MIN_HASH_COUNT || count_log2 > DRUPAL_MAX_HASH_COUNT) return null; //throw new RuntimeException("Bad Hash count : " + count_log2);
 
-		String salt = setting.substring(4, 8); 
+		String salt = setting.substring(4, 12); 
 		// Hashes must have an 8 character salt.
-		//Util.Debug("HERE: "+output);
 		if (salt.length() != 8) return null; //throw new RuntimeException("Bad salt length : " + salt.length());
 
 		// Convert the base 2 logarithm into an integer.
@@ -193,20 +192,28 @@ public class Drupal {
 		 }
 	    catch(Exception e) { e.printStackTrace(); return null; }
 
-
 		int len  = hash.length();
 		String output =  setting + password_base64_encode(hash, len);
 		// _password_base64_encode() of a 16 byte MD5 will always be 22 characters.
 		// _password_base64_encode() of a 64 byte sha512 will always be 86 characters.
 		int expected = (int) (12 + Math.ceil((8 * len) / 6));
 
+		//Util.Debug("HASH DERP:"+output);
+		Util.Debug("TEST 2"+password_base64_encode(hash, len));
+		Util.Debug("TEST 2"+password_base64_encode(hash, len).length());
+		Util.Debug("HASH DERP:"+output.substring(0, 55));
+		Util.Debug("DERP 1 : "+output.length());
+		Util.Debug("DERP 2 : "+expected);
+		Util.Debug("FASCE:"+(output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
 		return (output.length() == expected) ? output.substring(0, DRUPAL_HASH_LENGTH) : null;
 	   }  
 	  
+	  
 	  public static String user_hash_password(String password, int count_log2)
 	   {
-		count_log2 = DRUPAL_HASH_COUNT; // Use the standard iteration count.
-		Util.Debug("LENGTH: "+count_log2);
+		if(count_log2<0 || count_log2 >DRUPAL_MAX_HASH_COUNT)
+		 count_log2 = DRUPAL_HASH_COUNT; // Use the standard iteration count.
+
 		return password_crypt("sha512", password, password_generate_salt(count_log2));
 	   } 
 	  

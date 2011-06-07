@@ -21,6 +21,10 @@ import com.authdb.util.databases.MySQL;
 
 public class XE {
 	
+	public static String Name = "xpress engine";
+	public static String ShortName = "xe";
+	public static String VersionRange = "1.0.3-1.0.3";
+	
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
 	long timestamp = System.currentTimeMillis()/1000;

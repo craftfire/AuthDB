@@ -11,15 +11,18 @@ package com.authdb.scripts.cms;
 import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
-import java.util.Arrays;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
-import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 
   public class DLE {
+		
+	public static String Name = "datalife engine";
+	public static String ShortName = "dle";
+	public static String VersionRange = "9.2-9.2";
+	
   	
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {

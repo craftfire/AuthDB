@@ -56,7 +56,7 @@ public void onEntityDamage(EntityDamageEvent event)
 			   long difference = timestamp - Integer.parseInt(this.plugin.AuthTimeDB.get(p.getName()));
 			   if(difference < 5)
 			   {
-				   Util.Debug("Time difference: "+difference+", caneling damage.");
+				   Util.Debug("Time difference: "+difference+", canceling damage.");
 				   event.setCancelled(true);
 			   }
 		   }
@@ -93,7 +93,7 @@ public void onEntityDamage(EntityDamageEvent event)
 			  	   {
 					   event.setCancelled(true);
 			  	   }
-				   else if (this.plugin.isRegistered(p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
+				   else if (this.plugin.isRegistered("health",p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
 				   {
 					   event.setCancelled(true);
 				   }
@@ -101,7 +101,7 @@ public void onEntityDamage(EntityDamageEvent event)
 		   }
 		   else 
 		   { 
-			   if (this.plugin.isRegistered(p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
+			   if (this.plugin.isRegistered("health",p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
 			   {
 				   event.setCancelled(true);
 				   return;
@@ -122,11 +122,11 @@ public void onEntityDamage(EntityDamageEvent event)
 
 	public boolean CheckGuest(Player player,boolean what)
 	{
-	 if(what == true && this.plugin.isRegistered(player.getName()) == false)
+	 if(what == true && this.plugin.isRegistered("checkguest",player.getName()) == false)
 	 {
 		      return true;
 	 }
-	 else if (this.plugin.isRegistered(player.getName()) == true && AuthDB.isAuthorized(player.getEntityId()) == true)
+	 else if (this.plugin.isRegistered("checkguest",player.getName()) == true && AuthDB.isAuthorized(player.getEntityId()) == true)
 	 {
 		return true; 
 	 }

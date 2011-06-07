@@ -20,56 +20,64 @@ import com.authdb.util.databases.MySQL;
 
 
   public class IPB {
+	  
+	public static String Name = "ipb";
+	public static String ShortName = "ipb";
+	public static String VersionRange = "3.1.4-3.1.4";
   	
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
 		if(checkid == 1)
 	    {
-	long timestamp = System.currentTimeMillis()/1000;
-	String salt = Encryption.hash(8,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",0,0);
-	String hash = hash("create",player,password, salt);
-	//
-	PreparedStatement ps;
-	//
-	ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-	ps.setString(1, player); //username
-	ps.setString(2, hash); // password
-	ps.setString(3, salt); //salt
-	ps.setString(4, email); //email
-	ps.setLong(5, timestamp); //regdate
-	ps.setLong(6, timestamp); //lastactive
-	ps.setLong(7, timestamp); //lastvisit
-	ps.setString(8, ipAddress); //regip
-	ps.setLong(9, Util.IP2Long(ipAddress));
-	//need to add these, it's complaining about not default is set.
-	ps.setString(10, ""); //signature
-	ps.setString(11, ""); //buddylist
-	ps.setString(12, ""); //ignorelist
-	ps.setString(13, ""); //pmfolders
-	ps.setString(14, ""); //notepad
-	ps.setString(15, ""); //usernotes
-	ps.setString(16, "5");//usergroup
-	ps.executeUpdate();
-	 
-    int userid = MySQL.countitall(Config.database_prefix+"users");
-    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
-    String newcache = Util.ForumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid");
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datacache"+"` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
-    ps.executeUpdate();
+			long timestamp = System.currentTimeMillis()/1000;
+			String salt = Encryption.hash(5,"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",0,0);
+			String hash = hash("create",player,password, salt);
+			//
+			PreparedStatement ps;
+			//
+			ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"members"+"` (`name`,`member_group_id`,`email`,`joined`,`ip_address`,`allow_admin_mails`,`last_visit`,`last_activity`,`ignored_users`,`members_display_name`,`members_seo_name`,`members_l_display_name`,`members_l_username`,`members_pass_hash`,`members_pass_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+			ps.setString(1, player); //name
+			ps.setInt(2, 3); // member_group_id
+			ps.setString(3, email); //email
+			ps.setLong(4, timestamp); //joined
+			ps.setString(5, ipAddress); //ip_address
+			ps.setInt(6, 1); //allow_admin_mails
+			ps.setLong(7, timestamp); //last_visit
+			ps.setLong(8, timestamp); //last_activity
+			ps.setString(9, "a:0:{}"); //ignored_users
+			ps.setString(10, player); //members_display_name
+			ps.setString(11, player.toLowerCase()); //members_seo_name
+			ps.setString(12, player); //members_l_display_name
+			ps.setString(13, player.toLowerCase()); //members_l_username
+			ps.setString(14, hash); //members_pass_hash
+			ps.setString(15, salt); //members_pass_salt
+			ps.executeUpdate();
+			 
+		    int userid = MySQL.countitall(Config.database_prefix+"members");
+		    ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"pfields_content"+"` (`member_id`)  VALUES (?)", 1);
+			ps.setInt(1, userid); //member_id
+		    ps.executeUpdate();
+		    ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"profile_portal"+"` (`pp_member_id`)  VALUES (?)", 1);
+			ps.setInt(1, userid); //pp_member_id
+		    ps.executeUpdate();
+		    String oldcache =  MySQL.getfromtable(Config.database_prefix+"cache_store", "`cs_value`", "cs_key", "stats");
+		    String newcache = Util.ForumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
+		    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"cache_store"+"` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
+		    ps.executeUpdate();
 	    }
     }
   	
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
     	if(action.equals("find"))
     	{
-  	try {
-  		String salt = MySQL.getfromtable(Config.database_prefix+"users", "`salt`", "username", player);
-  		return passwordHash(password, salt);
-  	} catch (NoSuchAlgorithmException e) {
-  		e.printStackTrace();
-  	} catch (UnsupportedEncodingException e) {
-  		e.printStackTrace();
-  	}
+		  	try {
+		  		String salt = MySQL.getfromtable(Config.database_prefix+"members", "`members_pass_salt`", "members_l_username", player.toLowerCase());
+		  		return passwordHash(password, salt);
+		  	} catch (NoSuchAlgorithmException e) {
+		  		e.printStackTrace();
+		  	} catch (UnsupportedEncodingException e) {
+		  		e.printStackTrace();
+		  	}
     	}
     	else if(action.equals("create"))
     	{

@@ -7,15 +7,8 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 **/
 package com.authdb.scripts.forum;
 
-  import java.io.UnsupportedEncodingException;
-  import java.security.NoSuchAlgorithmException;
   import java.sql.PreparedStatement;
   import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
@@ -23,7 +16,12 @@ import com.authdb.util.databases.MySQL;
 
 
   public class Vanilla {
-	  
+	
+	public static String Name = "vanilla";
+	public static String ShortName = "van";
+	public static String VersionRange = "2.0.17.8-2.0.17.8";
+	public static String VersionRange2 = "2.0.17.9-2.0.17.9";
+		
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
   	long timestamp = System.currentTimeMillis()/1000;
