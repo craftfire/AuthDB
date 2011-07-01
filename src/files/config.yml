@@ -7,9 +7,9 @@ Core:
     host: localhost
     port: 3306
     username: root
-    password: 
-    name: 
-    prefix: 
+    password: root
+    name: forum
+    prefix: phpbb_
   script:
     name: phpBB
     version: 3.0.8
@@ -29,20 +29,18 @@ Core:
     kick: true
   link:
     enabled: true
-    rename: true
   unlink:
     enabled: true
-    rename: true
   username:
     minimum: 3
-    maximum: 20
+    maximum: 16
   password:
     minimum: 6
-    maximum: 20
+    maximum: 16
   session:
     start: login
     time: minutes
-    length: 30
+    length: 60
   idle:
     time: seconds
     length: 30
@@ -62,7 +60,7 @@ Core:
     pvp: false
     mobtargeting: false
     mobdamage: false
-  badcharacters:
+  filter:
     kick: true
     username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "
     password: "&"

@@ -1,31 +1,24 @@
-/**          (C) Copyright 2011 Contex <contexmoh@gmail.com>
-	
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-
 **/
+
 package com.authdb.scripts.forum;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
 import java.util.Random;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
-import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
-import com.mysql.jdbc.Blob;
 
 public class XenForo {
 	

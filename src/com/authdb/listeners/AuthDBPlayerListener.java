@@ -1,5 +1,7 @@
-/**          (C) Copyright 2011 Contex <contexmoh@gmail.com>
-	
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
@@ -27,13 +29,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.afforess.backpack.BackpackManager;
-import com.afforess.backpack.BackpackPlayer;
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
+
+import com.afforess.backpack.BackpackManager;
+import com.afforess.backpack.BackpackPlayer;
 
 public class AuthDBPlayerListener extends PlayerListener
 {
@@ -49,15 +52,15 @@ public class AuthDBPlayerListener extends PlayerListener
 public void onPlayerLogin(PlayerLoginEvent event)
 {
 	Player player = event.getPlayer();
-	if(Config.badcharacters_kick || Config.badcharacters_remove)
+	if(Config.filter_kick || Config.filter_rename)
 	{
-		if(Config.debug_enable) Util.Debug("Kick on badcharacters: "+Config.badcharacters_kick+" | Remove bad characters: "+Config.badcharacters_remove);
+		if(Config.debug_enable) Util.Debug("Kick on bad characters: "+Config.filter_kick+" | Remove bad characters: "+Config.filter_rename);
 		String name = player.getName();
-		if (Util.CheckBadCharacters("username",name) == false && Util.CheckWhitelist("badcharacters",player) == false)
+		if (Util.CheckFilter("username",name) == false && Util.CheckWhitelist("username",player) == false)
 	    {
 		  if(Config.debug_enable) Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
-	      if(Config.badcharacters_kick) Messages.SendMessage("AuthDB_message_badcharacters_name", player, event);
-	     // else if(Config.badcharacters_remove) Messages.SendMessage("AuthDB_message_badcharacters_renamed", player, event);
+	      if(Config.filter_kick) Messages.SendMessage("AuthDB_message_filter_username", player, event);
+	     // else if(Config.filter_rename) Messages.SendMessage("AuthDB_message_filter_renamed", player, event);
 	    }
 	}
 	if(player.getName().length() < Integer.parseInt(Config.username_minimum))
@@ -182,7 +185,7 @@ public boolean CheckIdle(Player player) throws IOException
 		 else {
 				long thetimestamp = System.currentTimeMillis()/1000;
 				this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-		    this.plugin.authorize(event.getPlayer().getEntityId());
+				this.plugin.authorize(event.getPlayer().getEntityId());
 		  }
 		} catch (IOException e) {
 		  Util.Log("severe","["+AuthDB.pluginname+"] Inventory file error:");
@@ -344,6 +347,8 @@ public boolean CheckIdle(Player player) throws IOException
 	    }
      }
 	else if (split[0].equals("/register")) {
+		Boolean email = true;
+		if(Config.CraftIRC_enabled) { if(Config.custom_emailfield != null || Config.custom_emailfield != "") { email = false; } }
       if (!Config.register_enabled)
 		  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
       else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.CheckOtherName(player.getName())))
@@ -351,16 +356,21 @@ public boolean CheckIdle(Player player) throws IOException
       else if (split.length < 2) {
 				  Messages.SendMessage("AuthDB_message_register_usage", player,null);
       }
-      else if (split.length < 3)
+      else if (split.length < 3 && email)
+      {
 				  Messages.SendMessage("AuthDB_message_email_required", player,null);
-       else if ((split.length >= 3) && (!this.plugin.checkEmail(split[2])))
+      }
+       else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2])))
 				  Messages.SendMessage("AuthDB_message_email_invalid", player,null);
       else {
         try {
-           if (split.length >= 3) 
+           if (split.length >= 3 || ( !email && split.length >= 2 )) 
            { 
+        	   String themail = split[2];
+        	   if(email) 
+        		   themail = null;
         	   
-        	if(this.plugin.register(player, split[1], split[2],Util.GetIP(player)))
+        	if(this.plugin.register(player, split[1], themail,Util.GetIP(player)))
         	{
 
 	          ItemStack[] inv = this.plugin.getInventory(player.getName());

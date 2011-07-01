@@ -42,11 +42,11 @@ Core:
     maximum: "<rose>Your password does not meet the maximum requirement of {PASSMAX} characters!" 
   idle:
     kicked: "<rose>Kicked because you failed to login within {IDLELENGTH} {IDLETIME}."
-    whitelist: "<lightgreen>{PLAYER} on the idle <white>whitelist<lightgreen>, bypassing restrictions!"
-  badcharacters:
-    name: "<rose>Kicked because username contains bad characters.  {USERBADCHARACTERS}!"
+    whitelist: "<lightgreen>{PLAYER} is on the idle <white>whitelist<lightgreen>, bypassing restrictions!"
+  filter:
+    username: "<rose>Kicked because username contains bad characters.  {USERBADCHARACTERS}!"
     password: "<rose>Password contains bad characters!  {PASSBADCHARACTERS}!"
-    whitelist: "<lightgreen>{PLAYER} on the bad characters <white>whitelist<lightgreen>, bypassing restrictions!"
+    whitelist: "<lightgreen>{PLAYER} is on the filter <white>whitelist<lightgreen>, bypassing restrictions!"
 
 Plugins:
   CraftIRC:
@@ -62,7 +62,7 @@ Plugins:
       failure: "{PLAYER} tried to login with the wrong password!"
     idle:
       kicked: "{PLAYER} kicked from failure to login within {IDLELENGTH} {IDLETIME}."
-      whitelist: "{PLAYER} on the idle whitelist, bypassing restrictions!"
-    badcharacters:
+      whitelist: "{PLAYER} is on the idle whitelist, bypassing restrictions!"
+    filter:
       kicked: "{PLAYER} was kicked due to bad characters in username!"
-      whitelist: "{PLAYER} on the bad characters whitelist, bypassing restrictions!"
+      whitelist: "{PLAYER} is on the filter whitelist, bypassing restrictions!"

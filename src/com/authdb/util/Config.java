@@ -1,9 +1,10 @@
-/**          (C) Copyright 2011 Contex <contexmoh@gmail.com>
-	
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-
 **/
 
 package com.authdb.util;
@@ -13,7 +14,6 @@ import java.io.File;
 import org.bukkit.util.config.Configuration;
 
 //import com.ensifera.animosity.craftirc.CraftIRC;
-
 
 public class Config 
 {
@@ -106,10 +106,10 @@ public class Config
 		public static boolean guests_commands,guests_movement,guests_inventory,guests_drop,guests_pickup,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
   
 		///////////////////////////////////////////
-		//               badcharacters
+		//               filter
 		///////////////////////////////////////////
-		public static boolean badcharacters_kick,badcharacters_remove;
-		public static String badcharacters_username,badcharacters_password,badcharacters_whitelist="";
+		public static boolean filter_kick,filter_rename;
+		public static String filter_username,filter_password,filter_whitelist="";
 		
 		///////////////////////////////////////////
 		//               geoip
@@ -146,10 +146,24 @@ public class Config
 					///////////////////////////////////////////
 					//               plugin
 					///////////////////////////////////////////
-				    autoupdate_enable = GetConfigBoolean("Core.plugin.autoupdate", false);
+				    autoupdate_enable = GetConfigBoolean("Core.plugin.autoupdate", true);
 					debug_enable = GetConfigBoolean("Core.plugin.debugmode", false);
 					usagestats_enabled = GetConfigBoolean("Core.plugin.usagestats", true);
 				
+					///////////////////////////////////////////
+					//               database
+					///////////////////////////////////////////
+					database_driver =  GetConfigString("Core.database.driver", "mysql");
+					database_username =  GetConfigString("Core.database.username", "root");
+					//database_username = Util.fixCharacters(database_username);
+					database_password =  GetConfigString("Core.database.password", "root");
+					//database_password = Util.fixCharacters(database_password);
+					database_port =  GetConfigString("Core.database.port", "3306");
+					database_host =  GetConfigString("Core.database.host", "localhost");
+					database_database = GetConfigString("Core.database.name", "forum");
+					database_prefix = GetConfigString("Core.database.prefix", "");
+					dbDb = "jdbc:mysql://"+database_host+":"+database_port+"/"+database_database;
+					
 					///////////////////////////////////////////
 					//               script
 					///////////////////////////////////////////
@@ -162,27 +176,11 @@ public class Config
 					//               custom
 					///////////////////////////////////////////
 					custom_enabled = GetConfigBoolean("Core.customdb.enabled", false);
-					custom_table = GetConfigString("Core.customdb.table", "users");
+					custom_table = GetConfigString("Core.customdb.table", "authdb_users");
 					custom_userfield = GetConfigString("Core.customdb.userfield", "username");
 					custom_passfield = GetConfigString("Core.customdb.passfield", "password");
 					custom_emailfield = GetConfigString("Core.customdb.emailfield", "");
 					custom_encryption = GetConfigString("Core.customdb.encryption", "").toLowerCase();
-					
-					
-					///////////////////////////////////////////
-					//               database
-					///////////////////////////////////////////
-					database_driver =  GetConfigString("Core.database.driver", "mysql");
-					database_username =  GetConfigString("Core.database.username", "root");
-					//database_username = Util.fixCharacters(database_username);
-					database_password =  GetConfigString("Core.database.password", "");
-					//database_password = Util.fixCharacters(database_password);
-					database_port =  GetConfigString("Core.database.port", "3306");
-					database_host =  GetConfigString("Core.database.host", "localhost");
-					database_database = GetConfigString("Core.database.name", "minecraft_forum");
-					database_prefix = GetConfigString("Core.database.prefix", "");
-					dbDb = "jdbc:mysql://"+database_host+":"+database_port+"/"+database_database;
-					
 					
 					///////////////////////////////////////////
 					//               register
@@ -193,7 +191,7 @@ public class Config
 					///////////////////////////////////////////
 					//               login
 					///////////////////////////////////////////
-					login_method = GetConfigString("Core.login.method", "default");
+					login_method = GetConfigString("Core.login.method", "prompt");
 					login_tries = GetConfigString("Core.login.tries", "3");
 					login_kick = GetConfigBoolean("Core.login.kick", true);
 					login_ban = GetConfigBoolean("Core.login.ban", false);
@@ -214,14 +212,14 @@ public class Config
 					//               username
 					///////////////////////////////////////////
 					username_minimum = GetConfigString("Core.username.minimum", "3");
-					username_maximum = GetConfigString("Core.username.maximum", "20");
+					username_maximum = GetConfigString("Core.username.maximum", "16");
 					
 					
 					///////////////////////////////////////////
 					//               password
 					///////////////////////////////////////////
 					password_minimum = GetConfigString("Core.password.minimum", "6");
-					password_maximum = GetConfigString("Core.password.maximum", "20");
+					password_maximum = GetConfigString("Core.password.maximum", "16");
 					
 					///////////////////////////////////////////
 					//               session
@@ -259,13 +257,13 @@ public class Config
 					guests_pvp = GetConfigBoolean("Core.guest.pvp", false);
 			  
 					///////////////////////////////////////////
-					//               badcharacters
+					//               filter
 					///////////////////////////////////////////
-					badcharacters_kick = GetConfigBoolean("Core.filter.kick", true);
-					badcharacters_remove = GetConfigBoolean("Core.filter.remove", false);
-					badcharacters_username = GetConfigString("Core.filter.username", "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/");
-					badcharacters_password = GetConfigString("Core.filter.password", "&");
-					badcharacters_whitelist= GetConfigString("Core.filter.whitelist", "");
+					filter_kick = GetConfigBoolean("Core.filter.kick", true);
+					filter_rename = GetConfigBoolean("Core.filter.rename", false);
+					filter_username = GetConfigString("Core.filter.username", "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/");
+					filter_password = GetConfigString("Core.filter.password", "&");
+					filter_whitelist= GetConfigString("Core.filter.whitelist", "");
 					
 					///////////////////////////////////////////
 					//               geoip
@@ -310,45 +308,45 @@ public class Config
 					///////////////////////////////////////////
 					//               welcome
 					///////////////////////////////////////////
-					Messages.AuthDB_message_database_failure = Config.GetConfigString("Core.database.failure", "&dDatabase connection failed! Contact admin.");
+					Messages.AuthDB_message_database_failure = Config.GetConfigString("Core.database.failure", "<rose>Database connection failed! Access is denied! Contact admin.");
 					///////////////////////////////////////////
 					//               welcome
 					///////////////////////////////////////////
-					Messages.AuthDB_message_welcome_guest = (String)Config.GetConfigString("Core.welcome.guest", "&4Welcome guest! Please register with /register <password> <email>");
-					//Messages.AuthDB_message_welcome_user = (String)Config.GetConfigString("Core.welcome.user", "&4Welcome back {PLAYER}! Please login with /login <password>");
+					Messages.AuthDB_message_welcome_guest = (String)Config.GetConfigString("Core.welcome.guest", "<yellow>Welcome <white>guest<yellow>! Please register with /register <password> <email>");
+					//Messages.AuthDB_message_welcome_user = (String)Config.GetConfigString("Core.welcome.user", "<yellow>Welcome back <white>{PLAYER}<yellow>! Please login with /login <password>");
 					
 					///////////////////////////////////////////
 					//               guest
 					///////////////////////////////////////////
-					Messages.AuthDB_message_guest_notauthorized = Config.GetConfigString("Core.guest.notauthorized", "&4You are not authorized to do that!");
+					Messages.AuthDB_message_guest_notauthorized = Config.GetConfigString("Core.guest.notauthorized", "<rose>You are not authorized to do that!");
 					
 					///////////////////////////////////////////
 					//               register
 					///////////////////////////////////////////
-					Messages.AuthDB_message_register_success = Config.GetConfigString("Core.register.success", "&4You have been registered!");
+					Messages.AuthDB_message_register_success = Config.GetConfigString("Core.register.success", "<rose>You have been registered!");
 					Messages.AuthDB_message_register_failure = Config.GetConfigString("Core.register.failure", "<rose>Registration failed!");
-					Messages.AuthDB_message_register_registered = Config.GetConfigString("Core.register.exists", "&4You are already registered!");
-					Messages.AuthDB_message_register_disabled = Config.GetConfigString("Core.register.disabled", "&4Registration not allowed!");
-					Messages.AuthDB_message_register_usage = Config.GetConfigString("Core.register.usage", "&4Correct usage is: /register <password> <email>");
+					Messages.AuthDB_message_register_registered = Config.GetConfigString("Core.register.exists", "<rose>You are already registered!");
+					Messages.AuthDB_message_register_disabled = Config.GetConfigString("Core.register.disabled", "<rose>Registration not allowed!");
+					Messages.AuthDB_message_register_usage = Config.GetConfigString("Core.register.usage", "<rose>Correct usage is: /register <password> <email>");
 					
 					///////////////////////////////////////////
 					//               unregister
 					///////////////////////////////////////////
-					Messages.AuthDB_message_unregister_success = Config.GetConfigString("Core.unregister.success", "&2Unregistered successfully!");
-					Messages.AuthDB_message_unregister_failure = Config.GetConfigString("Core.unregister.failure", "&4An error occurred while unregistering!");
-					Messages.AuthDB_message_unregister_usage = Config.GetConfigString("Core.unregister.usage", "&4Correct usage is: /unregister <password>");
+					Messages.AuthDB_message_unregister_success = Config.GetConfigString("Core.unregister.success", "<lightgreen>Unregistered successfully!");
+					Messages.AuthDB_message_unregister_failure = Config.GetConfigString("Core.unregister.failure", "<rose>An error occurred while unregistering!");
+					Messages.AuthDB_message_unregister_usage = Config.GetConfigString("Core.unregister.usage", "<rose>Correct usage is: /unregister <password>");
 					
 					///////////////////////////////////////////
 					//               login
 					///////////////////////////////////////////
 					Messages.AuthDB_message_login_default = Config.GetConfigString("Core.login.default", "<yellow>Welcome back <white>{PLAYER}<yellow>! Please use /login <password>");
 					Messages.AuthDB_message_login_prompt = Config.GetConfigString("Core.login.prompt", "Auth<lightblue>DB <grey>> <white>Welcome <lightblue>{PLAYER}<white>! Please enter your password:");
-					Messages.AuthDB_message_login_success = Config.GetConfigString("Core.login.success", "&2Password accepted. Welcome!");
-					Messages.AuthDB_message_login_failure = Config.GetConfigString("Core.login.failure", "&4Password incorrect, please try again.");
-					Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.login.authorized", "&2You are already logged in!");;
-					Messages.AuthDB_message_login_notregistered = Config.GetConfigString("Core.login.notregistered", "&4You are not registred yet!");
-					Messages.AuthDB_message_login_session= Config.GetConfigString("Core.login.session", "&2Hey, I remember you! You are logged in!");
-					Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.login.usage", "&4Correct usage is: /login <password>");
+					Messages.AuthDB_message_login_success = Config.GetConfigString("Core.login.success", "<lightgreen>Password accepted. Welcome!");
+					Messages.AuthDB_message_login_failure = Config.GetConfigString("Core.login.failure", "<rose>Password incorrect, please try again.");
+					Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.login.authorized", "<lightgreen>You are already logged in!");;
+					Messages.AuthDB_message_login_notregistered = Config.GetConfigString("Core.login.notregistered", "<rose>You are not registred yet!");
+					Messages.AuthDB_message_login_session= Config.GetConfigString("Core.login.session", "<lightgreen>, I remember you! You are logged in!");
+					Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.login.usage", "<rose>Correct usage is: /login <password>");
 					
 					///////////////////////////////////////////
 					//               link
@@ -369,18 +367,17 @@ public class Config
 					///////////////////////////////////////////
 					//               email
 					///////////////////////////////////////////
-					Messages.AuthDB_message_email_required = Config.GetConfigString("Core.email.required", "&4Email required for registration!");
-					Messages.AuthDB_message_email_invalid = Config.GetConfigString("Core.email.invalid", "&4Invalid email! Please try again!");
+					Messages.AuthDB_message_email_required = Config.GetConfigString("Core.email.required", "<rose>Email required for registration!");
+					Messages.AuthDB_message_email_invalid = Config.GetConfigString("Core.email.invalid", "<rose>Invalid email! Please try again!");
 					
 					///////////////////////////////////////////
-					//               badcharacters
+					//               filter
 					///////////////////////////////////////////
-					Messages.AuthDB_message_badcharacters_renamed = Config.GetConfigString("Core.badcharacters.renamed", "&2{PLAYER} renamed to {PLAYERNEW} due to bad characters: {BADCHARACTERS}.");
-					Messages.AuthDB_message_badcharacters_whitelist = Config.GetConfigString("Core.badcharacters.whitelist", "&2{PLAYER} on the bad characters &fwhitelist&2, bypassing restrictions!");
-					Messages.AuthDB_message_badcharacters_name = Config.GetConfigString("Core.badcharacters.name", "Username contains bad characters: {BADCHARACTERS}!");
-					Messages.AuthDB_message_badcharacters_password = Config.GetConfigString("Core.badcharacters.password", "&4Password contains bad characters: {BADCHARACTERS}!");
-					
-					
+					Messages.AuthDB_message_filter_renamed = Config.GetConfigString("Core.filter.renamed", "<rose>{PLAYER} renamed to {PLAYERNEW} due to bad characters: {USERBADCHARACTERS}.");
+					Messages.AuthDB_message_filter_username = Config.GetConfigString("Core.filter.username", "<rose>Username contains bad characters: {USERBADCHARACTERS}!");
+					Messages.AuthDB_message_filter_password = Config.GetConfigString("Core.filter.password", "<rose>Password contains bad characters: {PASSBADCHARACTERS}!");
+					Messages.AuthDB_message_filter_whitelist = Config.GetConfigString("Core.filter.whitelist", "<lightgreen>{PLAYER} is on the filter <white>whitelist<lightgreen>, bypassing restrictions!");
+
 					///////////////////////////////////////////
 					//               username
 					///////////////////////////////////////////
@@ -392,16 +389,16 @@ public class Config
 					///////////////////////////////////////////
 					Messages.AuthDB_message_password_minimum = Config.GetConfigString("Core.password.minimum", "<rose>Your password does not meet the minimum requirement of {PASSMIN} characters!");
 					Messages.AuthDB_message_password_maximum = Config.GetConfigString("Core.password.maximum", "<rose>Your password does not meet the maximum requirement of {PASSMAX} characters!");
-					Messages.AuthDB_message_password_success = Config.GetConfigString("Core.password.success", "&2Password changed successfully!");
-					Messages.AuthDB_message_password_failure = Config.GetConfigString("Core.password.failure", "&4Error! Password change failed!");
-					Messages.AuthDB_message_password_notregistered = Config.GetConfigString("Core.password.notregistered", "&4Register first!");
-					Messages.AuthDB_message_password_usage = Config.GetConfigString("Core.password.usage", "&4Correct usage is: /password <oldpassword> <password>");
+					Messages.AuthDB_message_password_success = Config.GetConfigString("Core.password.success", "<lightgreen>Password changed successfully!");
+					Messages.AuthDB_message_password_failure = Config.GetConfigString("Core.password.failure", "<rose>Error! Password change failed!");
+					Messages.AuthDB_message_password_notregistered = Config.GetConfigString("Core.password.notregistered", "<rose>Register first!");
+					Messages.AuthDB_message_password_usage = Config.GetConfigString("Core.password.usage", "<rose>Correct usage is: /password <oldpassword> <password>");
 					
 					///////////////////////////////////////////
 					//               idle
 					///////////////////////////////////////////
 					Messages.AuthDB_message_idle_kick = Config.GetConfigString("Core.idle.kicked", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
-					Messages.AuthDB_message_idle_whitelist = Config.GetConfigString("Core.idle.whitelist", "{PLAYER} on the idle whitelist, bypassing restrictions!");
+					Messages.AuthDB_message_idle_whitelist = Config.GetConfigString("Core.idle.whitelist", "<lightgreen>{PLAYER} is on the idle <white>whitelist<lightgreen>, bypassing restrictions!");
 					
 				///////////////////////////////////////////
 				//               CraftIRC
@@ -429,17 +426,16 @@ public class Config
 					//               idle
 					///////////////////////////////////////////
 					Messages.CraftIRC_message_idle_kicked = Config.GetConfigString("Plugins.CraftIRC.idle.kicked", "{PLAYER} was kicked due to bad characters in username!");
-					Messages.CraftIRC_message_idle_whitelist = Config.GetConfigString("Plugins.CraftIRC.idle.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
+					Messages.CraftIRC_message_idle_whitelist = Config.GetConfigString("Plugins.CraftIRC.idle.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
 					
 					
 					///////////////////////////////////////////
-					//               badcharacters
+					//               filter
 					///////////////////////////////////////////
-					Messages.CraftIRC_message_badcharacters_renamed = Config.GetConfigString("Plugins.CraftIRC.badcharacters.renamed", "{PLAYER} renamed to {PLAYERNEW} due to bad characters.");
-					Messages.CraftIRC_message_badcharacters_kicked = Config.GetConfigString("Plugins.CraftIRC.badcharacters.kicked", "{PLAYER} was kicked due to bad characters in username!");
-					Messages.CraftIRC_message_badcharacters_whitelist = Config.GetConfigString("Plugins.CraftIRC.badcharacters.whitelist", "{PLAYER} on the on bad characters whitelist, bypassing restictions!");
-					
-					
+					Messages.CraftIRC_message_filter_renamed = Config.GetConfigString("Plugins.CraftIRC.filter.renamed", "{PLAYER} renamed to {PLAYERNEW} due to bad characters.");
+					Messages.CraftIRC_message_filter_kicked = Config.GetConfigString("Plugins.CraftIRC.filter.kicked", "{PLAYER} was kicked due to bad characters in username!");
+					Messages.CraftIRC_message_filter_whitelist = Config.GetConfigString("Plugins.CraftIRC.filter.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
+			
 			}
 
 	  }

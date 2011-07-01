@@ -1,21 +1,23 @@
-/**          (C) Copyright 2011 Contex <contexmoh@gmail.com>
-	
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-
 **/
+
 package com.authdb.util;
-import org.bukkit.craftbukkit.CraftServer;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.server.ServerEvent;
 
 import com.authdb.AuthDB;
 import com.authdb.plugins.zCraftIRC;
 
 public class Messages
 {
+static AuthDB plugin = new AuthDB();
 ///////////////////////////////////////////
 //  messages
 ///////////////////////////////////////////	
@@ -69,9 +71,9 @@ public class Messages
 		public static String AuthDB_message_email_required,AuthDB_message_email_invalid;
 		
 		///////////////////////////////////////////
-		//               badcharacters
+		//               filter
 		///////////////////////////////////////////
-		public static String AuthDB_message_badcharacters_renamed,AuthDB_message_badcharacters_name,AuthDB_message_badcharacters_password,AuthDB_message_badcharacters_whitelist;
+		public static String AuthDB_message_filter_renamed,AuthDB_message_filter_username,AuthDB_message_filter_password,AuthDB_message_filter_whitelist;
 		
 		///////////////////////////////////////////
 		//               username
@@ -113,9 +115,9 @@ public class Messages
 		public static String CraftIRC_message_idle_kicked,CraftIRC_message_idle_whitelist;
 		
 		///////////////////////////////////////////
-		//               badcharacters
+		//               filter
 		///////////////////////////////////////////
-		public static String CraftIRC_message_badcharacters_renamed,CraftIRC_message_badcharacters_kicked,CraftIRC_message_badcharacters_whitelist;
+		public static String CraftIRC_message_filter_renamed,CraftIRC_message_filter_kicked,CraftIRC_message_filter_whitelist;
 	
 		
 	public static void SendMessage(String type,Player player,PlayerLoginEvent event)
@@ -177,6 +179,49 @@ public class Messages
 			}
 			else if(type.equals("AuthDB_message_login_success")) 
 			{
+				/*//BukkitContrib
+				Player[] online = Bukkit.getServer().getOnlinePlayers();
+				final Player playerz = player;
+				final ContribPlayer cplayer = (ContribPlayer)player;
+				final AppearanceManager Manager = BukkitContrib.getAppearanceManager();
+    			final String URLBefore = Manager.getSkinUrl(cplayer, player);
+    			Util.Log("info", "URL Before: "+URLBefore);
+				 AuthDB.Server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {  
+    		    	 @Override public void run() 
+    		     { 
+    		    	 Util.Log("info", "RUNNING!");
+    		    	 final String URLAfter = Manager.getSkinUrl(cplayer, playerz);
+    		    	 Util.Log("info", "URL After: "+URLAfter);
+    		    	// Util.Log("info", "URL NAO: "+URLAfter);
+    		    	 Manager.resetGlobalSkin(playerz);
+    		    	 Manager.setGlobalSkin(playerz, URLAfter);
+    		    	// Manager.resetAllSkins(); 
+    		     } }, 100);
+				/*for (final Player players: online)
+	    		{
+					final Player playerz = player;
+					final ContribPlayer cplayer = (ContribPlayer)players;
+	    			final String URL2 = Manager.getSkinUrl(cplayer, players);
+	    			Util.Log("info", "URL2 "+URL2);
+	    			//Manager.resetAllCloaks() ;
+	    			//plugin.UpdateSkin();
+	    			final String URL = Manager.getSkinUrl(cplayer, players);
+	    			Util.Log("info", "URL1: "+URL);
+	    		     AuthDB.Server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {  
+	    		    	 @Override public void run() 
+	    		     { 
+	    		    	 Util.Log("info", "RUNNING!");
+	    		    	 Manager.setGlobalSkin(players, URL);
+	    		    	 final String URL2 = Manager.getSkinUrl(cplayer, players);
+	    		    	 Util.Log("info", "URLLLL: "+URL);
+	    		    	// Manager.resetAllSkins(); 
+	    		     } }, 100);
+	    		     */
+	    			///Manager.setGlobalSkin(players, URL);
+	    			//Manager.setGlobalSkin(player, URL);
+	    	//	}
+	    		//end
+				
 				AuthDB.AuthPasswordTriesDB.put(player.getName(), "0");
 				player.sendMessage(Util.replaceStrings(AuthDB_message_login_success,player,null));
 			}
@@ -251,29 +296,29 @@ public class Messages
 			{
 				player.sendMessage(Util.replaceStrings(AuthDB_message_email_invalid,player,null));
 			}
-			else if(type.equals("AuthDB_message_badcharacters_renamed")) 
+			else if(type.equals("AuthDB_message_filter_renamed")) 
 			{
-				//player.setDisplayName(Util.CheckBadCharacters("username",player.getName()));
-				player.sendMessage(Util.replaceStrings(AuthDB_message_badcharacters_renamed,player,null));
+				//player.setDisplayName(Util.CheckFilter("username",player.getName()));
+				player.sendMessage(Util.replaceStrings(AuthDB_message_filter_renamed,player,null));
 			}
-			else if(type.equals("AuthDB_message_badcharacters_name")) 
+			else if(type.equals("AuthDB_message_filter_username")) 
 			{
-				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_badcharacters_name,player,null));
+				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_filter_username,player,null));
 			}
-			else if(type.equals("AuthDB_message_badcharacters_password")) 
+			else if(type.equals("AuthDB_message_filter_password")) 
 			{
-				if(Config.badcharacters_kick)
+				if(Config.filter_kick)
 				{
-					player.kickPlayer(Util.replaceStrings(AuthDB_message_badcharacters_password,player,null));
+					player.kickPlayer(Util.replaceStrings(AuthDB_message_filter_password,player,null));
 				}
 				else
 				{
-					player.sendMessage(Util.replaceStrings(AuthDB_message_badcharacters_password,player,null));
+					player.sendMessage(Util.replaceStrings(AuthDB_message_filter_password,player,null));
 				}
 			}
-			else if(type.equals("AuthDB_message_badcharacters_whitelist")) 
+			else if(type.equals("AuthDB_message_filter_whitelist")) 
 			{
-				player.sendMessage(Util.replaceStrings(AuthDB_message_badcharacters_whitelist,player,null));
+				player.sendMessage(Util.replaceStrings(AuthDB_message_filter_whitelist,player,null));
 			}
 			else if(type.equals("AuthDB_message_username_minimum")) 
 			{

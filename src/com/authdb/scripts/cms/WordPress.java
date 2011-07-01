@@ -7,19 +7,20 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
-package com.authdb.scripts.forum;
+package com.authdb.scripts.cms;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
 
-public class bbPress {
+public class WordPress {
 	
-	public static String Name = "bbpress";
-	public static String ShortName = "bbp";
-	public static String VersionRange = "1.0.3-1.0.3";
+	public static String Name = "wordpress";
+	public static String ShortName = "wp";
+	public static String VersionRange = "3.1.3-3.1.4";
 	
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {

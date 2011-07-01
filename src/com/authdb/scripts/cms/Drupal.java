@@ -1,10 +1,12 @@
-/**          (C) Copyright 2011 Contex <contexmoh@gmail.com>
-	
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-
 **/
+
 package com.authdb.scripts.cms;
 
 import java.sql.PreparedStatement;
@@ -15,7 +17,6 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
-
 
 public class Drupal {
 	
@@ -48,7 +49,6 @@ public class Drupal {
 	else if(checkid == 2)
 	{
 		String hash = user_hash_password(password,0);
-		int userid;
 		//
 		PreparedStatement ps;
 		//

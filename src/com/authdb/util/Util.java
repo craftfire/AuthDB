@@ -1,9 +1,10 @@
-/**          (C) Copyright 2011 Contex <contexmoh@gmail.com>
-	
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-
 **/
 
 package com.authdb.util;
@@ -40,16 +41,18 @@ import com.authdb.scripts.Custom;
 import com.authdb.scripts.cms.DLE;
 import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
+import com.authdb.scripts.cms.WordPress;
+import com.authdb.scripts.forum.bbPress;
 import com.authdb.scripts.forum.IPB;
+import com.authdb.scripts.forum.MyBB;
+import com.authdb.scripts.forum.phpBB;
 import com.authdb.scripts.forum.PunBB;
 import com.authdb.scripts.forum.SMF;
-import com.authdb.scripts.forum.Vanilla;
 import com.authdb.scripts.forum.XenForo;
-import com.authdb.scripts.forum.bbPress;
-import com.authdb.scripts.forum.myBB;
-import com.authdb.scripts.forum.phpBB;
-import com.authdb.scripts.forum.vB;
+import com.authdb.scripts.forum.Vanilla;
+import com.authdb.scripts.forum.vBulletin;
 import com.authdb.util.databases.MySQL;
+
 import com.mysql.jdbc.Blob;
 
 public class Util
@@ -59,7 +62,7 @@ public class Util
     {
     	if(Config.database_ison)
 		{
-    		String usertable = null,usernamefield = null, passwordfield = null, saltfield = null;
+    		String usertable = null,usernamefield = null, passwordfield = null, saltfield = "";
     		boolean bans = false;
 			PreparedStatement ps = null;
 			int number = 0;
@@ -151,7 +154,7 @@ public class Util
     			usertable = "members";
     			if(CheckVersionInRange(SMF.VersionRange))
 		    	{
-    				usernamefield = "realName";
+    				usernamefield = "memberName";
     				passwordfield = "passwd";
     				saltfield = "passwordSalt";
     				Config.HasForumBoard = true;
@@ -165,7 +168,7 @@ public class Util
 		    	}
     			else if(CheckVersionInRange(SMF.VersionRange2))
 		    	{
-    				usernamefield = "real_name";
+    				usernamefield = "member_name";
     				passwordfield = "passwd";
     				Config.HasForumBoard = true;
     				bans = true;
@@ -182,10 +185,10 @@ public class Util
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(myBB.Name) || script.equals(myBB.ShortName))
+		    else if(script.equals(MyBB.Name) || script.equals(MyBB.ShortName))
     		{
     			usertable = "users";
-    			if(CheckVersionInRange(myBB.VersionRange))
+    			if(CheckVersionInRange(MyBB.VersionRange))
 		    	{
     				usernamefield = "username";
     				passwordfield = "password";
@@ -195,19 +198,19 @@ public class Util
 			    	if(type.equals("checkpassword"))
 			    	{
 			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
-			    		if(myBB.check_hash(myBB.hash("find",player,password, ""),hash)) { return true; }
+			    		if(MyBB.check_hash(MyBB.hash("find",player,password, ""),hash)) { return true; }
 			    	}
 		    	}
 		    	if(type.equals("adduser"))
 		    	{
-		    		 myBB.adduser(number,player, email, password, ipAddress);
+		    		 MyBB.adduser(number,player, email, password, ipAddress);
 		    		 return true;
 		    	}
     		}
-		    else if(script.equals(vB.Name) || script.equals(vB.ShortName))
+		    else if(script.equals(vBulletin.Name) || script.equals(vBulletin.ShortName))
     		{
     			usertable = "user";
-    			if(CheckVersionInRange(vB.VersionRange))
+    			if(CheckVersionInRange(vBulletin.VersionRange))
 		    	{
     				usernamefield = "username";
     				passwordfield = "password";
@@ -217,10 +220,10 @@ public class Util
 			    	if(type.equals("checkpassword"))
 			    	{
 			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
-			    		if(vB.check_hash(vB.hash("find",player,password, ""),hash)) { return true; }
+			    		if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
 			    	}
 		    	}
-    			else if(CheckVersionInRange(vB.VersionRange2))
+    			else if(CheckVersionInRange(vBulletin.VersionRange2))
 		    	{
     				usernamefield = "username";
     				passwordfield = "password";
@@ -230,12 +233,12 @@ public class Util
 			    	if(type.equals("checkpassword"))
 			    	{
 			    		String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
-			    		if(vB.check_hash(vB.hash("find",player,password, ""),hash)) { return true; }
+			    		if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
 			    	}
 		    	}
 		    	if(type.equals("adduser"))
 		    	{
-		    		 vB.adduser(number,player, email, password, ipAddress);
+		    		 vBulletin.adduser(number,player, email, password, ipAddress);
 		    		 return true;
 		    	}
     		}
@@ -519,7 +522,7 @@ public class Util
 		}
     	return false;
     }
-	
+    
     boolean CheckingBan(String usertable,String useridfield,String usernamefield,String username,String bantable,String banipfield,String bannamefield, String ipAddress) throws SQLException
     {
 		String check = "fail";
@@ -794,7 +797,7 @@ public class Util
 		if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
 	    StringTokenizer st = null;
 		if(whitelist.equals("idle")) { st = new StringTokenizer(Config.idle_whitelist,","); }
-	    else if(whitelist.equals("badcharacters")) { st = new StringTokenizer(Config.badcharacters_whitelist,","); }
+	    else if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,","); }
 	    while (st.hasMoreTokens()) 
 	    { 
 	    	String whitelistname = st.nextToken().toLowerCase();
@@ -804,8 +807,8 @@ public class Util
 	    		if(Config.debug_enable) Debug("FOUND USER IN WHITELIST: "+whitelistname);
 	    		if(whitelist.equals("idle"))
 	    				Messages.SendMessage("AuthDB_message_idle_whitelist", player, null);
-	    		else if(whitelist.equals("badcharacters"))
-    				Messages.SendMessage("AuthDB_message_badcharacters_whitelist", player, null);
+	    		else if(whitelist.equals("username"))
+    				Messages.SendMessage("AuthDB_message_filter_whitelist", player, null);
 	    		return true; 
 	    	}
 	    }
@@ -839,13 +842,13 @@ public class Util
 		
 	}
 	
-	public static boolean CheckBadCharacters(String what, String string)
+	public static boolean CheckFilter(String what, String string)
 	{
 		if(what.equals("username"))
 		{
-			if(Config.debug_enable) Debug("Launching function: CheckBadCharacters(String what, String string) - "+Config.badcharacters_username);
+			if(Config.debug_enable) Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_username);
 			int lengtha = string.length();
-			int lengthb = Config.badcharacters_username.length();
+			int lengthb = Config.filter_username.length();
 		    int i = 0;
 		    char thechar1, thechar2;
 		    while(i < lengtha)
@@ -854,7 +857,7 @@ public class Util
 		    	int a = 0;
 		    	while(a < lengthb)
 		    	{
-		    		thechar2 = Config.badcharacters_username.charAt(a);
+		    		thechar2 = Config.filter_username.charAt(a);
 		    		//if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
 		    		if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') 
 		    		{ 
@@ -871,9 +874,9 @@ public class Util
 		}
 		else if(what.equals("password"))
 		{
-			if(Config.debug_enable) Debug("Launching function: CheckBadCharacters(String what, String string) - "+Config.badcharacters_password);
+			if(Config.debug_enable) Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_password);
 			int lengtha = string.length();
-			int lengthb = Config.badcharacters_password.length();
+			int lengthb = Config.filter_password.length();
 		    int i = 0;
 		    char thechar1, thechar2;
 		    while(i < lengtha)
@@ -882,7 +885,7 @@ public class Util
 		    	int a = 0;
 		    	while(a < lengthb)
 		    	{
-		    		thechar2 = Config.badcharacters_password.charAt(a);
+		    		thechar2 = Config.filter_password.charAt(a);
 		    		//if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
 		    		if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') 
 		    		{ 
@@ -945,9 +948,8 @@ public class Util
 		string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
 		string = string.replaceAll("\\{IDLELENGTH\\}", Config.idle_length);
 		string = string.replaceAll("\\{IDLETIME\\}", Config.idle_time);
-		string = string.replaceAll("\\{USERBADCHARACTERS\\}",Matcher.quoteReplacement(Config.badcharacters_username));
-		string = string.replaceAll("\\{BADCHARACTERS\\}",Matcher.quoteReplacement(Config.badcharacters_username));
-		string = string.replaceAll("\\{PASSBADCHARACTERS\\}",Matcher.quoteReplacement(Config.badcharacters_password));
+		string = string.replaceAll("\\{USERBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_username));
+		string = string.replaceAll("\\{PASSBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_password));
 		string = string.replaceAll("\\{PROVINCE\\}", "");
 		string = string.replaceAll("\\{STATE\\}", "");
 		string = string.replaceAll("\\{COUNTRY\\}", "");
@@ -1063,7 +1065,6 @@ public class Util
 		 if(AuthDB.AuthOtherNamesDB.containsKey(player))
 		 {
 			 return AuthDB.AuthOtherNamesDB.get(player);
-			 
 		 }
 		 return player;
 	}

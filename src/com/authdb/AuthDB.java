@@ -1,29 +1,27 @@
-/**          (C) Copyright 2011 Contex <contexmoh@gmail.com>
-	
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-
 **/
+
+
 package com.authdb;
 
 import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +39,10 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
+
+
+
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
@@ -50,15 +52,17 @@ import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
+
 import com.ensifera.animosity.craftirc.CraftIRC;
 
 
 public class AuthDB extends JavaPlugin {
 	//
     public static org.bukkit.Server Server;
+    public static AuthDB plugin;
 	PluginDescriptionFile pluginFile = getDescription();
 	public static String pluginname = "AuthDB";
-	public static String pluginversion = "2.3.0";
+	public static String pluginversion = "2.3.0 indev";
     public static CraftIRC craftircHandle;
 	//
 	private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -78,6 +82,7 @@ public class AuthDB extends JavaPlugin {
 
 	public void onDisable() 
 	{
+		Util.Log("info", pluginname + " plugin " + pluginversion + " has been disabled");
 		Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
 	    if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
 	    	zCraftIRC.SendMessage("disconnect",null);
@@ -242,6 +247,10 @@ public class AuthDB extends JavaPlugin {
 		{
 			MySQL.connect();
 			password = Matcher.quoteReplacement(password);
+			if (Util.CheckOtherName(player) != player)
+			{
+				player = Util.CheckOtherName(player);
+			}
 			if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password,null,null)) return true;
 			MySQL.close();
 		} 
@@ -279,7 +288,7 @@ public class AuthDB extends JavaPlugin {
 		}
 		MySQL.connect();
 		String player = theplayer.getName();
-		if (!Util.CheckBadCharacters("password",password))
+		if (!Util.CheckFilter("password",password))
 		{
 			Messages.SendMessage("AuthDB_message_badcharacters_password", theplayer, null);
 		}
@@ -317,11 +326,37 @@ public class AuthDB extends JavaPlugin {
 				db3.put(Encryption.md5(player), "no");
 			return dupe;
 		}
+		else if(when.equals("command"))
+		{
+			MySQL.connect();
+			Config.HasForumBoard = false;
+			try {
+				if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null))
+				{
+					db3.put(Encryption.md5(player), "yes");
+					dupe = true;
+				}
+				else if (Util.CheckOtherName(player) != player)
+				{
+					db3.put(Encryption.md5(player), "yes");
+					dupe = true;
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//if(!Config.HasForumBoard) 
+				//Stop("Can't find a forum board, stopping the plugin.");
+			MySQL.close();
+			if(!dupe)
+				db3.put(Encryption.md5(player), "no");
+			return dupe;
+		}
 		else
 		{
 			if(this.db3.containsKey(Encryption.md5(player)))
 			{ 
-				//if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
+				if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
 				String check =db3.get(Encryption.md5(player));
 				if(check.equals("yes"))
 				{
@@ -514,7 +549,7 @@ public class AuthDB extends JavaPlugin {
 		    if (f.exists())
 		      f.delete();
 		  }
-	  
+		
 	 private void DefaultFile(String name) {
 		    File actual = new File(getDataFolder(), name);
 		    File direc = new File(getDataFolder(),"");
