@@ -65,17 +65,13 @@
   </distributionManagement> -->
 
   <repositories>
-    <repository>
-      <id>central</id>
-      <url>file://D:/.m2/repository</url>
-    </repository>
-    <repository>
-      <id>craftfire-mvn</id>
-      <url>http://mvn.craftfire.com/repo</url>
-    </repository>
+    <!-- <repository>
+      <id>craftfire-repo</id>
+      <url>http://repo.craftfire.com</url>
+    </repository> -->
     <repository>
       <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/artifactory/libs-snapshot-local/</url>
+      <url>http://repo.bukkit.org/artifactory/libs-snapshot-local</url>
     </repository>
   </repositories>
 

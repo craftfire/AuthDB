@@ -30,9 +30,18 @@ public class MySQL
 		try {
 			mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
 		} catch (SQLException e) {
-			Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
-			AuthDB.Server.broadcastMessage("");
-			e.printStackTrace();
+            if(Config.debug_enable)
+            {
+                Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
+                Messages.SendMessage("AuthDB_message_database_failure", null, null);
+                e.printStackTrace();
+            }
+            else
+            {
+                Util.Log("warning", "MySQL cannot connect to the specified host: "+Config.database_host);
+                Util.Log("warning", "Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                Messages.SendMessage("AuthDB_message_database_failure", null, null);
+            }
 			return false;
 		}
 		return true;
@@ -48,7 +57,7 @@ public class MySQL
 			Config.database_ison = false;
 			Util.Log("warning", "CANNOT FIND DATABASE DRIVER!!!");
 			Messages.SendMessage("AuthDB_message_database_failure", null, null);
-			e.printStackTrace();
+			if(Config.debug_enable) e.printStackTrace();
 		}
 		
 		if(Config.debug_enable)
@@ -71,9 +80,18 @@ public class MySQL
 			mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
 		} catch (SQLException e) {
 			Config.database_ison = false;
-			Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
-			Messages.SendMessage("AuthDB_message_database_failure", null, null);
-			e.printStackTrace();
+			if(Config.debug_enable)
+			{
+    			Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
+    			Messages.SendMessage("AuthDB_message_database_failure", null, null);
+    			e.printStackTrace();
+			}
+			else
+			{
+			    Util.Log("warning", "MySQL cannot connect to the specified host: "+Config.database_host);
+			    Util.Log("warning", "Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                Messages.SendMessage("AuthDB_message_database_failure", null, null);
+			}
 		}
 	}
 	

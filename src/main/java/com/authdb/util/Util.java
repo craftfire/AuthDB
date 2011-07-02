@@ -777,13 +777,6 @@ public class Util
 		wr.write(data);
 		wr.flush();
 		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-       /* String line;
-        while ((line = rd.readLine()) != null) 
-        {
-       	// Util.Debug(line);
-        }*/
-        
-		//BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 	}
 	
 	public static int ToTicks(String time, String length) {
