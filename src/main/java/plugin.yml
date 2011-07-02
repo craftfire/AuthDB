@@ -1,6 +1,6 @@
 name: AuthDB
 main: com.authdb.AuthDB
-version: 2.3.0 indev
+version: 2.3.0 indevv
 website: http://www.authdb.com
 description: Provides script and custom database user authentication through MySQL.
 authors:
