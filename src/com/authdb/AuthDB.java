@@ -7,7 +7,6 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
-
 package com.authdb;
 
 import java.io.BufferedWriter;
@@ -39,10 +38,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
-
-
-
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
@@ -54,7 +49,6 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
-
 
 public class AuthDB extends JavaPlugin {
 	//
@@ -96,7 +90,6 @@ public class AuthDB extends JavaPlugin {
 		db3.clear();
 		MySQL.close();
 	 }
-
 
 	public void onEnable() 
 	{	 
