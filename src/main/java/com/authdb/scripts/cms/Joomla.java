@@ -22,6 +22,7 @@ public class Joomla {
 	
 	public static String VersionRange = "1.5.0-1.5.22";
 	public static String VersionRange2 = "1.6.0-1.6.1";
+	public static String LatestVersionRange = VersionRange2;
 	public static String Name = "joomla";
 	public static String ShortName = "joom";
 	
