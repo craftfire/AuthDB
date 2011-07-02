@@ -500,7 +500,10 @@ public class Util
 		    		 return true;
 		    	}
     		} */
-		    if(!Config.HasForumBoard) { Log("warning","WARNING!! COULD NOT FIND A COMPATIBLE SCRIPT VERSION, PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK."); }
+		    if(!Config.HasForumBoard) 
+		    { 
+		        if(!Config.custom_enabled) Log("warning","WARNING!! COULD NOT FIND A COMPATIBLE SCRIPT VERSION, PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK."); 
+		    }
 		    if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
 		    {
 		    	String check = MySQL.getfromtable(Config.database_prefix+usertable, "*", usernamefield, player);
