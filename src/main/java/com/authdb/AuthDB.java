@@ -200,6 +200,7 @@ public class AuthDB extends JavaPlugin {
 
 	    PropertyManager TheSettings = new PropertyManager(new File("server.properties"));
 		if (TheSettings.getBoolean("online-mode", true)) { Config.OnlineMode = true; }
+		UpdateLinkedNames();
 	    
 		MySQL.connect();
 		try 
@@ -212,7 +213,7 @@ public class AuthDB extends JavaPlugin {
 			{
 				String enter = "\n";
 				Util.Log("info", "Creating default table schema for "+Config.custom_table);
-				Util.Debug("CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` ("+enter+"`id` int(4) NOT NULL auto_increment,"+enter+"`username` varchar(40) NOT NULL,"+enter+"`password` varchar(40) NOT NULL,"+enter+"`email` varchar(100) NOT NULL,"+enter+"PRIMARY KEY (`id`),"+enter+"UNIQUE KEY `username` (`username`)"+enter+") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+				Util.Debug(enter+"CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` ("+enter+"`id` int(4) NOT NULL auto_increment,"+enter+"`username` varchar(40) NOT NULL,"+enter+"`password` varchar(40) NOT NULL,"+enter+"`email` varchar(100) NOT NULL,"+enter+"PRIMARY KEY (`id`),"+enter+"UNIQUE KEY `username` (`username`)"+enter+") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 				String query = "CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` (`id` int(4) NOT NULL auto_increment,`username` varchar(40) NOT NULL,`password` varchar(40) NOT NULL,`email` varchar(100) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY `username` (`username`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
 				try
 				{
@@ -483,6 +484,17 @@ public class AuthDB extends JavaPlugin {
 		  }
 
 	
+    public void UpdateLinkedNames()
+    {
+        for (Player player : this.getServer().getOnlinePlayers()) 
+        {
+            if(Util.CheckOtherName(player.getName()) != player.getName())
+            {
+                player.setDisplayName(Util.CheckOtherName(player.getName()));
+            }
+        }
+    }
+	  
 	public boolean IdleTask(String type,Player player, String TaskID) throws IOException 
 	{
 		if(type.equals("add"))

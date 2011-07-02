@@ -512,7 +512,7 @@ public class Util
 	                		"|-----------------------------------------------------------------------------|\n" +
 	                		"| COULD NOT FIND A COMPATIBLE SCRIPT VERSION,                                 |\n" +
 	                		"| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN.PLUGIN MAY OR MAY NOT WORK.  |\n" +
-	                		"| YOUR SCRIPT VERSION FOR "+Config.script_name+" HAVE BEEN SET FROM "+TempVers+" TO "+Config.script_version+"            |\n" +
+	                		"| YOUR SCRIPT VERSION FOR "+Config.script_name+" HAVE BEEN SET FROM "+TempVers+" TO "+Config.script_version+"             |\n" +
             				"| FOR A LIST OF SCRIPT VERSIONS,                                              |\n" +
             				"| CHECK: http://wiki.bukkit.org/AuthDB_(Plugin)#Scripts_Supported             |\n"+
             				"|-----------------------------------------------------------------------------|"); 
@@ -770,6 +770,7 @@ public class Util
 		data += "&" + URLEncoder.encode("d146298d6d3e1294bbe4121f26f02800", "UTF-8") + "=" + URLEncoder.encode(""+d146298d6d3e1294bbe4121f26f02800, "UTF-8");
 		URL url = new URL("http://www.craftfire.com/stats.php");
 		URLConnection conn = url.openConnection();
+		conn.setConnectTimeout(2000);
 		conn.setRequestProperty("X-AuthDB", e5544ab05d8c25c1a5da5cd59144fb);
 		conn.setDoOutput(true);
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -1109,6 +1110,11 @@ public class Util
 			 return AuthDB.AuthOtherNamesDB.get(player);
 		 }
 		 return player;
+	}
+	
+	public static void RenamePlayer(Player player, String name)
+	{
+	    player.setDisplayName(name);
 	}
 
 	public static void AddOtherNamesToDB()
