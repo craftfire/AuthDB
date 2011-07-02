@@ -500,7 +500,25 @@ public class Util
 		    		 return true;
 		    	}
     		} */
-		    if(!Config.HasForumBoard) { Log("warning","WARNING!! COULD NOT FIND A COMPATIBLE SCRIPT VERSION, PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK."); }
+		    if(!Config.HasForumBoard) 
+		    { 
+		        if(!Config.custom_enabled)
+	            {
+		            String TempVers = Config.script_version;
+	                Config.script_version = ScriptVersion();
+	                Log("warning","\n" +
+	                		"|-----------------------------------------------------------------------------|\n" +
+	                		"|--------------------------------AUTHDB WARNING-------------------------------|\n" +
+	                		"|-----------------------------------------------------------------------------|\n" +
+	                		"| COULD NOT FIND A COMPATIBLE SCRIPT VERSION,                                 |\n" +
+	                		"| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN.PLUGIN MAY OR MAY NOT WORK.  |\n" +
+	                		"| YOUR SCRIPT VERSION FOR "+Config.script_name+" HAVE BEEN SET FROM "+TempVers+" TO "+Config.script_version+"            |\n" +
+            				"| FOR A LIST OF SCRIPT VERSIONS,                                              |\n" +
+            				"| CHECK: http://wiki.bukkit.org/AuthDB_(Plugin)#Scripts_Supported             |\n"+
+            				"|-----------------------------------------------------------------------------|"); 
+	                
+	            }
+		    }
 		    if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
 		    {
 		    	String check = MySQL.getfromtable(Config.database_prefix+usertable, "*", usernamefield, player);
@@ -521,6 +539,30 @@ public class Util
 		    
 		}
     	return false;
+    }
+    
+    static String ScriptVersion()
+    {
+        String script = Config.script_name;
+        if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { return split(phpBB.LatestVersionRange,"-")[1]; }
+        else if(script.equals(SMF.Name) || script.equals(SMF.ShortName)) { return split(SMF.LatestVersionRange,"-")[1]; }
+        else if(script.equals(MyBB.Name) || script.equals(MyBB.ShortName)) { return split(MyBB.LatestVersionRange,"-")[1]; }
+        else if(script.equals(vBulletin.Name) || script.equals(vBulletin.ShortName)) { return split(vBulletin.LatestVersionRange,"-")[1]; }
+        else if(script.equals(Drupal.Name) || script.equals(Drupal.ShortName)) { return split(Drupal.LatestVersionRange,"-")[1]; }
+        else if(script.equals(Joomla.Name) || script.equals(Joomla.ShortName)) { return split(Joomla.LatestVersionRange,"-")[1]; }
+        else if(script.equals(Vanilla.Name) || script.equals(Vanilla.ShortName)) { return split(Vanilla.LatestVersionRange,"-")[1]; }
+        else if(script.equals(PunBB.Name) || script.equals(PunBB.ShortName)) { return split(PunBB.LatestVersionRange,"-")[1]; }
+        else if(script.equals(XenForo.Name) || script.equals(XenForo.ShortName)) { return split(XenForo.LatestVersionRange,"-")[1]; }
+        else if(script.equals(bbPress.Name) || script.equals(bbPress.ShortName)) { return split(bbPress.LatestVersionRange,"-")[1]; }
+        else if(script.equals(DLE.Name) || script.equals(DLE.ShortName)) { return split(DLE.LatestVersionRange,"-")[1]; }
+        else if(script.equals(IPB.Name) || script.equals(IPB.ShortName)) { return split(IPB.LatestVersionRange,"-")[1]; }
+        return null;
+    }
+    
+    static String[] split(String string, String delimiter)
+    {
+        String[] split = string.split(delimiter);
+        return split;
     }
     
     boolean CheckingBan(String usertable,String useridfield,String usernamefield,String username,String bantable,String banipfield,String bannamefield, String ipAddress) throws SQLException

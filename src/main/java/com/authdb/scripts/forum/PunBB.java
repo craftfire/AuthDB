@@ -22,6 +22,7 @@ public class PunBB {
 	public static String Name = "punbb";
 	public static String ShortName = "pun";
 	public static String VersionRange = "1.3.4-1.3.5";
+	public static String LatestVersionRange = VersionRange;
 	
 	
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException

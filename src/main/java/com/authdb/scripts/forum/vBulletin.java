@@ -23,6 +23,7 @@ public class vBulletin {
 		
 		public static String VersionRange = "3.0.0-3.8.7";
 		public static String VersionRange2 = "4.0.0-4.1.2";
+		public static String LatestVersionRange = VersionRange2;
 		public static String Name = "vbulletin";
 		public static String ShortName = "vb";
 	  

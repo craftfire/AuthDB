@@ -24,6 +24,7 @@ import com.authdb.util.databases.MySQL;
 public class MyBB {
 	
 	public static String VersionRange = "1.6-1.6";
+	public static String LatestVersionRange = VersionRange;
 	public static String Name = "mybb";
 	public static String ShortName = "mybb";
   	
