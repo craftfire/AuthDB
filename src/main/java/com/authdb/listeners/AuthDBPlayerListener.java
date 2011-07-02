@@ -348,7 +348,7 @@ public boolean CheckIdle(Player player) throws IOException
      }
 	else if (split[0].equals("/register")) {
 		Boolean email = true;
-		if(Config.CraftIRC_enabled) { if(Config.custom_emailfield != null || Config.custom_emailfield != "") { email = false; } }
+		if(Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
       if (!Config.register_enabled)
 		  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
       else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.CheckOtherName(player.getName())))
@@ -366,16 +366,13 @@ public boolean CheckIdle(Player player) throws IOException
         try {
            if (split.length >= 3 || ( !email && split.length >= 2 )) 
            { 
-        	   String themail = split[2];
-        	   if(email) 
-        		   themail = null;
-        	   
+        	   String themail = null;
+        	   if(!email) { themail = null; }
+        	   else { themail = split[2]; }
         	if(this.plugin.register(player, split[1], themail,Util.GetIP(player)))
         	{
-
-	          ItemStack[] inv = this.plugin.getInventory(player.getName());
-	         if (inv != null)
-	            player.getInventory().setContents(inv);
+	            ItemStack[] inv = this.plugin.getInventory(player.getName());
+	            if (inv != null) { player.getInventory().setContents(inv); }
 				long timestamp = System.currentTimeMillis()/1000;
 				this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
 				this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
