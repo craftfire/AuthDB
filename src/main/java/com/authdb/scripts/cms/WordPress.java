@@ -21,6 +21,7 @@ public class WordPress {
 	public static String Name = "wordpress";
 	public static String ShortName = "wp";
 	public static String VersionRange = "3.1.3-3.1.4";
+	public static String LatestVersionRange = VersionRange;
 	
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {

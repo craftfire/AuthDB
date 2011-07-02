@@ -25,6 +25,7 @@ public class IPB {
 	public static String Name = "ipboard";
 	public static String ShortName = "ipb";
 	public static String VersionRange = "3.1.4-3.1.4";
+	public static String LatestVersionRange = VersionRange;
   	
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {

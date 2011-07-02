@@ -22,6 +22,7 @@ public class DLE {
 	public static String Name = "datalife engine";
 	public static String ShortName = "dle";
 	public static String VersionRange = "9.2-9.2";
+	public static String LatestVersionRange = VersionRange;
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {

@@ -22,6 +22,7 @@ public class Vanilla {
 	public static String ShortName = "van";
 	public static String VersionRange = "2.0.17.8-2.0.17.8";
 	public static String VersionRange2 = "2.0.17.9-2.0.17.9";
+	public static String LatestVersionRange = VersionRange2;
 		
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {

@@ -22,6 +22,7 @@ public class Drupal {
 	
 	public static String VersionRange = "6.20-6.20";
 	public static String VersionRange2 = "7.0-7.0";
+	public static String LatestVersionRange = VersionRange2;
 	public static String Name = "drupal";
 	public static String ShortName = "dru";
 	

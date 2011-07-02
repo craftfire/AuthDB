@@ -31,6 +31,7 @@ public class phpBB {
 	
 	public static String VersionRange = "3.0.0-3.0.8";
 	public static String VersionRange2 = "2.0.0-2.0.23";
+	public static String LatestVersionRange = VersionRange;
 	public static String Name = "phpbb";
 	public static String ShortName = "phpbb";
 	

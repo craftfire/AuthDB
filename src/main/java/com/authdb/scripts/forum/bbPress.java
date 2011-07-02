@@ -20,6 +20,7 @@ public class bbPress {
 	public static String Name = "bbpress";
 	public static String ShortName = "bbp";
 	public static String VersionRange = "1.0.3-1.0.3";
+	public static String LatestVersionRange = VersionRange;
 	
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {

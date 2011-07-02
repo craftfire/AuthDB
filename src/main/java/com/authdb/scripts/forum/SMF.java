@@ -23,6 +23,7 @@ public class SMF {
 	
 	public static String VersionRange = "1.1.1-1.1.13";
 	public static String VersionRange2 = "2.0.0.0-2.0.0.5";
+	public static String LatestVersionRange = VersionRange2;
 	public static String Name = "simple machines";
 	public static String ShortName = "smf";
 	
