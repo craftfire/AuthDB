@@ -29,8 +29,10 @@ Core:
     kick: true
   link:
     enabled: true
+    rename: true
   unlink:
     enabled: true
+    rename: true
   username:
     minimum: 3
     maximum: 16
