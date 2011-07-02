@@ -2,21 +2,25 @@ AuthDB
 ======
 Script and custom MySQL database user authentication plugin for CraftBukkit.
 
-Compiling
----------
-You need to have Maven installed (http://maven.apache.org). Once installed,
-simply run:
+Website: [http://www.craftfire.coom](http://www.craftfire.com)  
+Bugs/Suggestions: [http://www.craftfire.com/issues](http://www.craftfire.com/issues)
 
-    mvn clean package install
-    
-Maven will automatically download dependencies for you. Note: For that to work,
-be sure to add Maven to your "PATH".
+Compilation
+-----------
+We use maven to handle our dependencies.
 
-Contributing
-------------
-We happily accept contributions. The best way to do this is to fork AuthDB
-on GitHub, add your changes, and then submit a pull request. We'll look at it,
-make comments, and merge it into AuthDB if everything works out.
+* Install [Maven 3](http://maven.apache.org/download.html)
+* Check out this repo and: `mvn clean package`
 
-By submitting code, you agree to place to license your code under the 
-irrevocable GNU General Public License v3.
+Coding and Pull Request Conventions
+-----------
+* We generally follow the Sun/Oracle coding standards.
+* No tabs; use 4 spaces instead.
+* No trailing whitespaces.
+* No CRLF lineendigs, LF only, put your gits 'core.autocrlf' on 'true'
+* No 80 column limit or 'weird' midstatement newlines.
+* The number of commits in a pull request should be kept to a minimum (squish them into one most of the time - use common sense!).
+* No merges should be included in pull requests unless the pull request's purpose is a merge.
+* Pull requests should be tested (does it compile? AND does it work?) before submission.
+
+Follow the above conventions if you want your pull requests accepted.
