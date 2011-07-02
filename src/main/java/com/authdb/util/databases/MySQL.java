@@ -87,6 +87,12 @@ public class MySQL
 		return dupe;
 	}
 	
+	public static void query(String query) throws SQLException
+	{
+		Statement stmt = mysql.createStatement();
+		stmt.executeUpdate(query);
+	}
+	
 	public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException
 	{
 		String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'%";
