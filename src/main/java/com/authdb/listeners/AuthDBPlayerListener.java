@@ -71,6 +71,10 @@ public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		Messages.SendMessage("AuthDB_message_username_maximum", player, event);
 	}
+    if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
+    {
+        Util.RenamePlayer(player,Util.CheckOtherName(player.getName()));
+    }
 }
 
 public boolean CheckIdle(Player player) throws IOException
@@ -303,7 +307,7 @@ public boolean CheckIdle(Player player) throws IOException
 		  	 			this.plugin.AuthOtherNamesDB.put(player.getName(),split[1]);
 	  	 				Util.ToFile("write",  player.getName(), split[1]);
 		  				if(Config.debug_enable) { Util.Debug("Session started for "+player.getName()); }
-		  				if(Config.unlink_rename) { player.setDisplayName(split[1]); }
+		  				if(Config.link_rename) { player.setDisplayName(split[1]); }
 		      		    Messages.SendMessage("AuthDB_message_link_success", player,null);
 			  		} 
 			  	    else { Messages.SendMessage("AuthDB_message_link_failure", player,null); }
@@ -322,7 +326,7 @@ public boolean CheckIdle(Player player) throws IOException
 	    	{
 	        if (split.length == 3) 
 	        {
-	        	if(Util.CheckOtherName(player.getName()).equals(player.getName()))
+	        	if(Util.CheckOtherName(player.getName()).equals(player.getDisplayName()))
 	        	{
 			  	    if (this.plugin.checkPassword(split[1], split[2])) 
 			      	{

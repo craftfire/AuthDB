@@ -222,7 +222,6 @@ static AuthDB plugin = new AuthDB();
 	    	//	}
 	    		//end
 				
-				AuthDB.AuthPasswordTriesDB.put(player.getName(), "0");
 				player.sendMessage(Util.replaceStrings(AuthDB_message_login_success,player,null));
 			}
 			else if(type.equals("AuthDB_message_login_failure")) 

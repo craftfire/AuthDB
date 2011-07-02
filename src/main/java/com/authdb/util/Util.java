@@ -512,7 +512,7 @@ public class Util
 	                		"|-----------------------------------------------------------------------------|\n" +
 	                		"| COULD NOT FIND A COMPATIBLE SCRIPT VERSION,                                 |\n" +
 	                		"| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN.PLUGIN MAY OR MAY NOT WORK.  |\n" +
-	                		"| YOUR SCRIPT VERSION FOR "+Config.script_name+" HAVE BEEN SET FROM "+TempVers+" TO "+Config.script_version+"            |\n" +
+	                		"| YOUR SCRIPT VERSION FOR "+Config.script_name+" HAVE BEEN SET FROM "+TempVers+" TO "+Config.script_version+"             |\n" +
             				"| FOR A LIST OF SCRIPT VERSIONS,                                              |\n" +
             				"| CHECK: http://wiki.bukkit.org/AuthDB_(Plugin)#Scripts_Supported             |\n"+
             				"|-----------------------------------------------------------------------------|"); 
@@ -1109,6 +1109,11 @@ public class Util
 			 return AuthDB.AuthOtherNamesDB.get(player);
 		 }
 		 return player;
+	}
+	
+	public static void RenamePlayer(Player player, String name)
+	{
+	    player.setDisplayName(name);
 	}
 
 	public static void AddOtherNamesToDB()
