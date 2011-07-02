@@ -203,9 +203,9 @@ public class Config
 					link_rename = GetConfigBoolean("Core.link.rename", true);
 					
 					///////////////////////////////////////////
-					//               login
+					//               unlink
 					///////////////////////////////////////////
-					unlink_enabled = GetConfigBoolean("Core.unlink.rename", true);
+					unlink_enabled = GetConfigBoolean("Core.unlink.enabled", true);
 					unlink_rename = GetConfigBoolean("Core.unlink.rename", true);
 					
 					///////////////////////////////////////////
