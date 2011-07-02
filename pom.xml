@@ -69,6 +69,10 @@
       <id>craftfire-repo</id>
       <url>http://repo.craftfire.com</url>
     </repository> -->
+    <rpository>
+      <id>maven2-repo</id>
+      <url>http://repo1.maven.org/maven2</url>
+    </repository>
     <repository>
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/artifactory/libs-snapshot-local</url>
