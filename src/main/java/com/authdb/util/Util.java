@@ -502,7 +502,7 @@ public class Util
     		} */
 		    if(!Config.HasForumBoard) 
 		    { 
-		        if(!Config.custom_enabled) Log("warning","WARNING!! COULD NOT FIND A COMPATIBLE SCRIPT VERSION, PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK."); 
+		        if(!Config.custom_enabled) Log("warning","WARNING!! COULD NOT FIND A COMPATIBLE SCRIPT VERSION, PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK. FOR A LIST OF SCRIPT VERSIONS, CHECK: http://wiki.bukkit.org/AuthDB_(Plugin)#Scripts_Supported"); 
 		    }
 		    if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
 		    {
