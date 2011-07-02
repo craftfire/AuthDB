@@ -14,6 +14,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -200,11 +202,37 @@ public class AuthDB extends JavaPlugin {
 		if (TheSettings.getBoolean("online-mode", true)) { Config.OnlineMode = true; }
 	    
 		MySQL.connect();
-		try {
+		try 
+		{
 			Util.CheckScript("numusers",Config.script_name,null,null,null,null);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (SQLException e) 
+		{
+			if(Config.custom_enabled)
+			{
+				String enter = "\n";
+				Util.Log("info", "Creating default table schema for "+Config.custom_table);
+				Util.Debug("CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` ("+enter+"`id` int(4) NOT NULL auto_increment,"+enter+"`username` varchar(40) NOT NULL,"+enter+"`password` varchar(40) NOT NULL,"+enter+"`email` varchar(100) NOT NULL,"+enter+"PRIMARY KEY (`id`),"+enter+"UNIQUE KEY `username` (`username`)"+enter+") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+				String query = "CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` (`id` int(4) NOT NULL auto_increment,`username` varchar(40) NOT NULL,`password` varchar(40) NOT NULL,`email` varchar(100) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY `username` (`username`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+				try
+				{
+					MySQL.query(query);
+		    		Util.Log("info", "Sucessfully created table "+Config.custom_table);
+		    		PreparedStatement ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
+					ResultSet rs = ps.executeQuery();
+					if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+				} 
+				catch (SQLException e1) {
+					Util.Log("info", "Failed creating user table "+Config.custom_table);
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			else
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
         Util.AddOtherNamesToDB();
