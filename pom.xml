@@ -1,0 +1,214 @@
+<!--
+  Maven build file for AuthDB
+  Copyright (c) 2011 CraftFire <http://www.craftfire.com>
+  The CraftFire team members are Contex and Wulfspider
+  AuthDB is licensed under Creative Commons CC BY-NC-ND 3.0
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.authdb</groupId>
+  <artifactId>authdb</artifactId>
+  <version>2.3.0-SNAPSHOT</version>
+  <name>AuthDB</name>
+  <url>http://www.craftfire.com</url>
+  <description>Script and custom MySQL database user authentication plugin for CraftBukkit</description>
+  <!--<licenses>
+    <license>
+      <name>MIT</name>
+      <url>LICENSE.txt</url>
+      <distribution>repo</distribution>
+      <comments>The MIT License is a free software license originating at the Massachusetts Institute of Technology (MIT), used by the MIT X Consortium.</comments>
+    </license>
+  </licenses> -->
+
+  <organization>
+    <name>CraftFire</name>
+    <url>http://www.craftfire.com</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>Contex</id>
+      <email>contex@craftfire.com</email>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+      <properties>
+      </properties>
+    </developer>
+	<developer>
+      <id>Wulfspider</id>
+      <email>wulfspider@craftfire.com</email>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-5</timezone>
+      <properties>
+      </properties>
+    </developer>
+  </developers>
+
+  <!-- <scm>
+    <connection>scm:git:git://github.com/CraftFire/AuthDB.git</connection>
+    <url>https://github.com/CraftFire/AuthDB</url>
+    <developerConnection>scm:git:git@github.com:CraftFire/AuthDB.git</developerConnection>
+  </scm> -->
+
+  <!-- <distributionManagement>
+    <repository>
+      <id>craftfire-ssh</id>
+      <url>scpexe://mvn.craftfire.com/repo</url>
+    </repository>
+  </distributionManagement> -->
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <url>file://D:/.m2/repository</url>
+    </repository>
+    <!-- <repository>
+      <id>craftfire-mvn</id>
+      <url>http://mvn.craftfire.com/repo</url>
+    </repository>
+    <repository>
+      <id>dev-bukkit</id>
+      <url>http://ci.bukkit.org/job/dev-Bukkit/lastSuccessfulBuild/artifact/target</url>
+    </repository>
+    <repository>
+      <id>dev-craftbukkit</id>
+      <url>http://ci.bukkit.org/job/dev-CraftBukkit/lastSuccessfulBuild/artifact/target</url>
+    </repository> -->
+  </repositories>
+
+  <dependencies>
+    <!-- Required component -->
+    <!-- <dependency>
+      <groupId>com.craftfire</groupId>
+      <artifactId>util</artifactId>
+      <version>1.0.0</version>
+    </dependency> -->
+
+    <!-- Bukkit -->
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <!-- CraftBukkit -->
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>craftbukkit</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <!-- Third-party plugins -->
+    <dependency>
+      <groupId>com.ensifera.animosity</groupId>
+      <artifactId>craftirc</artifactId>
+      <version>2.0-PREVIEW-11</version>
+    </dependency>
+    <dependency>
+      <groupId>com.afforess</groupId>
+      <artifactId>minecartmaniacore</artifactId>
+      <version>1.2.8</version>
+    </dependency>
+    <dependency>
+      <groupId>com.afforess</groupId>
+      <artifactId>backpack</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+
+    <!-- Resources -->
+    <resources>
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources/</directory>
+        <includes>
+          <include>LICENSE.txt</include>
+          <include>plugin.yml</include>
+        </includes>
+      </resource>
+      <resource>
+        <targetPath>files/</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources/</directory>
+        <includes>
+          <include>config.yml</include>
+          <include>messages.yml</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <!-- Plugins -->
+    <plugins>
+      <!-- Compile plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+      </plugin>
+
+      <!-- JAR creation plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+            <pomPropertiesFile>false</pomPropertiesFile>
+            <manifest>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <Class-Path>../lib/mysql.jar ../lib/mysql-connector-java-bin.jar ../mysql.jar ../mysql-connector-java-bin.jar ../lib/mysql-connector-java-5.1.14-bin.jar ../mysql-connector-java-5.1.14-bin.jar ../lib/mysql-connector-java-5.1.15-bin.jar ../mysql-connector-java-5.1.15-bin.jar ../lib/mysql-connector-java-5.1.16-bin.jar ../mysql-connector-java-5.1.16-bin.jar</Class-Path>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!-- Assembly -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <descriptor>${basedir}/src/main/assembly/default.xml</descriptor>
+        </configuration>
+      </plugin>
+
+	  <!-- Deploy -->
+      <plugin>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ssh-external</artifactId>
+         <version>1.0-beta-7</version>
+      </plugin>
+
+      <!-- Release -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <preparationGoals>assembly:assembly</preparationGoals>
+          <goals>assembly:assembly</goals>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </build>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+</project>
