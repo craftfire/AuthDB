@@ -69,6 +69,7 @@ public class AuthDB extends JavaPlugin {
 	public static HashMap<String, String> db2 = new HashMap<String, String>();
 	public static HashMap<String, String> db3 = new HashMap<String, String>();
 	public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
+	public static HashMap<String, String> AuthRegistred = new HashMap<String, String>();
 	public static HashMap<String, String> AuthPasswordTriesDB = new HashMap<String, String>();
 	public static HashMap<String, String> AuthOtherNamesDB = new HashMap<String, String>();
 	public static String idleFileName = "idle.db";
@@ -85,6 +86,7 @@ public class AuthDB extends JavaPlugin {
 		disableInventory();
 		authorizedIds.clear();
 		AuthTimeDB.clear();
+		AuthRegistred.clear();
 		AuthOtherNamesDB.clear();
 		AuthPasswordTriesDB.clear();
 		db.clear();
@@ -192,7 +194,7 @@ public class AuthDB extends JavaPlugin {
 	    pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.Normal, this);
-	    pm.registerEvent(Event.Type.PLAYER_KICK, this.playerListener, Event.Priority.Low, this);
+	    pm.registerEvent(Event.Type.PLAYER_KICK, this.playerListener, Event.Priority.Lowest, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Normal, this);

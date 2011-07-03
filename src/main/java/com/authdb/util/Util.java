@@ -34,6 +34,9 @@ import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 
+import net.minecraft.server.Material;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
@@ -1100,6 +1103,15 @@ public class Util
 		else if(type.equals("warning")) AuthDB.log.warning("["+AuthDB.pluginname+"] "+what);
 	}
 
+	public static Location LandLocation(Location location)
+	{
+	    while(location.getBlock().getType().getId() == 0)
+	    {
+	        location.setY(location.getY() - 1);
+	    }
+        return location;
+	}
+	
 	public static String CheckOtherName(String player)
 	{
 		 if(AuthDB.AuthOtherNamesDB.containsKey(player))

@@ -11,7 +11,7 @@
   <version>dev-SNAPSHOT</version>
   <name>AuthDB</name>
   <url>http://www.craftfire.com</url>
-  <description>Script and custom MySQL database user authentication plugin for CraftBukkit</description>
+  <description>Script and custom MySQL database user authentication plugin for CraftBukkit.</description>
   <!--<licenses>
     <license>
       <name>MIT</name>
@@ -69,13 +69,17 @@
       <id>craftfire-repo</id>
       <url>http://repo.craftfire.com</url>
     </repository> -->
-    <rpository>
-      <id>maven2-repo</id>
-      <url>http://repo1.maven.org/maven2</url>
+    <repository>
+      <id>craftfire-dropbox</id>
+      <url>http://dl.dropbox.com/u/7446930/repo</url>
     </repository>
     <repository>
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/artifactory/libs-snapshot-local</url>
+    </repository>
+    <repository>
+      <id>mcserver-repo</id>
+      <url>http://repo.bukkit.org/artifactory/libs-release-local</url>
     </repository>
   </repositories>
 

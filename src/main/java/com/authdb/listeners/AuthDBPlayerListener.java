@@ -92,8 +92,9 @@ public boolean CheckIdle(Player player) throws IOException
 }
 
   public void onPlayerJoin(PlayerJoinEvent event)
-  {
+  { 
 	final Player player = event.getPlayer();
+    player.teleport(Util.LandLocation(player.getLocation()));
 	if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
     {
     	String message = event.getJoinMessage();
@@ -145,7 +146,7 @@ public boolean CheckIdle(Player player) throws IOException
 	     if(event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1)
 	     {
 	    	 player.setHealth(20);
-	    	 player.teleportTo(player.getWorld().getSpawnLocation());
+	    	 player.teleport(player.getWorld().getSpawnLocation());
 	     }
 		
 		if(sessionallow)
@@ -438,7 +439,7 @@ public boolean CheckIdle(Player player) throws IOException
     	  if (!CheckGuest(event.getPlayer(),Config.guests_movement))
       	  {
       	    event.setCancelled(true);
-      	    event.getPlayer().teleportTo(event.getFrom());
+      	    event.getPlayer().teleport(event.getFrom());
       	  }
     }
   }
@@ -492,18 +493,6 @@ public boolean CheckIdle(Player player) throws IOException
     }
   }
   
-  public void onPlayerKick(PlayerKickEvent event) 
-  {
-      Player player = event.getPlayer();
-      if(!AuthDB.isAuthorized(event.getPlayer().getEntityId()) && event.getReason().equals("Flying is not enabled on this server"))
-      {
-          if(this.plugin.isRegistered("command",player.getName()) == true || this.plugin.isRegistered("command",Util.CheckOtherName(player.getName())) == true)
-          event.setLeaveMessage("");
-          event.setReason("");
-          event.setCancelled(true);
-      }
-  }
-
   public void onPlayerPickupItem(PlayerPickupItemEvent event) 
   {
 	    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
@@ -547,7 +536,7 @@ public boolean CheckIdle(Player player) throws IOException
 	     if(event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1)
 	     {
 	    	 event.getPlayer().setHealth(20);
-	    	 event.getPlayer().teleportTo(event.getPlayer().getWorld().getSpawnLocation());
+	    	 event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
 	     }
   }
   
