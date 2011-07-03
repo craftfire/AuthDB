@@ -171,11 +171,29 @@ static AuthDB plugin = new AuthDB();
 			}
 			else if(type.equals("AuthDB_message_login_default")) 
 			{
-				player.sendMessage(Util.replaceStrings(AuthDB_message_login_default,player,null));
+                if(Util.CheckOtherName(player.getName()) != player.getName())
+                {
+                    String message = Util.replaceStrings(AuthDB_message_login_default,player,null);
+                    message = message.replaceAll(player.getName(), player.getDisplayName());
+                    player.sendMessage(message);
+                }
+                else
+                {
+                    player.sendMessage(Util.replaceStrings(AuthDB_message_login_default,player,null));
+                }
 			}
 			else if(type.equals("AuthDB_message_login_prompt")) 
 			{
-				player.sendMessage(Util.replaceStrings(AuthDB_message_login_prompt,player,null));
+			    if(Util.CheckOtherName(player.getName()) != player.getName())
+			    {
+			        String message = Util.replaceStrings(AuthDB_message_login_prompt,player,null);
+			        message = message.replaceAll(player.getName(), player.getDisplayName());
+			        player.sendMessage(message);
+			    }
+			    else
+			    {
+			        player.sendMessage(Util.replaceStrings(AuthDB_message_login_prompt,player,null));
+			    }
 			}
 			else if(type.equals("AuthDB_message_login_success")) 
 			{

@@ -976,6 +976,10 @@ public class Util
 			string = string.replaceAll("&", "§"); 
 		}
 		else { string = string.replaceAll("&",Matcher.quoteReplacement("§"));  }
+		if(Util.CheckOtherName(player.getName()) != player.getName())
+	    {
+		    string = string.replaceAll("\\{DISPLAYNAME\\}", Util.CheckOtherName(player.getName()));
+	    }
 		string = string.replaceAll("\\{USERMIN\\}", Config.username_minimum);
 		string = string.replaceAll("\\{USERMAX\\}", Config.username_maximum);
 		string = string.replaceAll("\\{PASSMIN\\}", Config.password_minimum);

@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -92,7 +93,12 @@ public boolean CheckIdle(Player player) throws IOException
   public void onPlayerJoin(PlayerJoinEvent event)
   {
 	final Player player = event.getPlayer();
-	Util.Debug("NAMEZ: "+player.getName());
+	if(Util.CheckOtherName(player.getName()) != player.getName())
+    {
+    	String message = event.getJoinMessage();
+    	message = message.replaceAll(player.getName(), player.getDisplayName());
+    	event.setJoinMessage(message);
+    }
 	this.plugin.AuthPasswordTriesDB.put(player.getName(),"0");
 	try {
 		if(Config.session_length != "0" || Config.session_length != null)
@@ -473,6 +479,13 @@ public boolean CheckIdle(Player player) throws IOException
 		      event.setCancelled(true);
 		  }
     }
+  }
+  
+  public void onPlayerKick(PlayerKickEvent event) 
+  {
+      Util.Debug("KICK1: "+event.getReason());
+      Util.Debug("KICK2: "+event.getLeaveMessage());
+      Util.Debug("KICK3: "+event.getType());
   }
 
   public void onPlayerPickupItem(PlayerPickupItemEvent event) 

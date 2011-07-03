@@ -192,12 +192,12 @@ public class AuthDB extends JavaPlugin {
 	    pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, this.playerListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.Normal, this);
+	    pm.registerEvent(Event.Type.PLAYER_KICK, this.playerListener, Event.Priority.Low, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
 	    pm.registerEvent(Event.Type.ENTITY_TARGET, this.entityListener, Event.Priority.Normal, this);
-
 	    PropertyManager TheSettings = new PropertyManager(new File("server.properties"));
 		if (TheSettings.getBoolean("online-mode", true)) { Config.OnlineMode = true; }
 		UpdateLinkedNames();
