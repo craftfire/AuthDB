@@ -93,7 +93,7 @@ public boolean CheckIdle(Player player) throws IOException
   public void onPlayerJoin(PlayerJoinEvent event)
   {
 	final Player player = event.getPlayer();
-	if(Util.CheckOtherName(player.getName()) != player.getName())
+	if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
     {
     	String message = event.getJoinMessage();
     	message = message.replaceAll(player.getName(), player.getDisplayName());

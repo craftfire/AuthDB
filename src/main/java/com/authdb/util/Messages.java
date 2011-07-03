@@ -171,7 +171,7 @@ static AuthDB plugin = new AuthDB();
 			}
 			else if(type.equals("AuthDB_message_login_default")) 
 			{
-                if(Util.CheckOtherName(player.getName()) != player.getName())
+                if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
                 {
                     String message = Util.replaceStrings(AuthDB_message_login_default,player,null);
                     message = message.replaceAll(player.getName(), player.getDisplayName());
@@ -184,7 +184,7 @@ static AuthDB plugin = new AuthDB();
 			}
 			else if(type.equals("AuthDB_message_login_prompt")) 
 			{
-			    if(Util.CheckOtherName(player.getName()) != player.getName())
+			    if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
 			    {
 			        String message = Util.replaceStrings(AuthDB_message_login_prompt,player,null);
 			        message = message.replaceAll(player.getName(), player.getDisplayName());
