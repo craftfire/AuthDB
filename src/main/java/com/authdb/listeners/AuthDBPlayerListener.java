@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
+import com.authdb.plugins.zBukkitContrib;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
@@ -253,171 +254,181 @@ public boolean CheckIdle(Player player) throws IOException
   
   public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
   {
-    String[] split = event.getMessage().split(" ");
-	Player player = event.getPlayer();
-
-    if (split[0].equals("/login"))
-    {
-        if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.CheckOtherName(player.getName())) == false)
-        {
-        	Messages.SendMessage("AuthDB_message_login_notregistered", player,null);
-        }
-  	    else if (AuthDB.isAuthorized(player.getEntityId())) 
-  	    {			  
-  	    	Messages.SendMessage("AuthDB_message_login_authorized", player,null);
-        }
-  	    else if (split.length < 2) 
-  	    {
-  	    	Messages.SendMessage("AuthDB_message_login_usage", player,null);
-  	    }
-        else if (this.plugin.checkPassword(player.getName(), split[1])) 
-        {
-	        ItemStack[] inv = this.plugin.getInventory(player.getName());
-	        if (inv != null) { player.getInventory().setContents(inv); }
-			long thetimestamp = System.currentTimeMillis()/1000;
-			this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-	        this.plugin.authorize(player.getEntityId());
-			long timestamp = System.currentTimeMillis()/1000;
-			this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
-			this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-			if(Config.debug_enable) 
-				Util.Debug("Session started for "+player.getName());
-		    Messages.SendMessage("AuthDB_message_login_success", player,null);
-		} 
-	    else
-		{
-		  Messages.SendMessage("AuthDB_message_login_failure", player,null);
-		}
-	    if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
-	    event.setMessage("/login ******");
-	    event.setCancelled(true);
-     }
-    else if (split[0].equals("/link"))
-    {
-    	if(Config.link_enabled)
-    	{
-	        if (split.length == 3) 
-	        {
-	        	if(Util.CheckOtherName(player.getName()).equals(player.getName()))
-	        	{
-			  	    if (this.plugin.checkPassword(split[1], split[2])) 
-			      	{
-		      	        ItemStack[] inv = this.plugin.getInventory(player.getName());
-		      	        if (inv != null) { player.getInventory().setContents(inv); }
-		    			long thetimestamp = System.currentTimeMillis()/1000;
-		    			this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-		      	        this.plugin.authorize(player.getEntityId());
-		      			long timestamp = System.currentTimeMillis()/1000;
-		      			this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
-		  	 			this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-		  	 			this.plugin.AuthOtherNamesDB.put(player.getName(),split[1]);
-	  	 				Util.ToFile("write",  player.getName(), split[1]);
-		  				if(Config.debug_enable) { Util.Debug("Session started for "+player.getName()); }
-		  				if(Config.link_rename) { player.setDisplayName(split[1]); }
-		      		    Messages.SendMessage("AuthDB_message_link_success", player,null);
-			  		} 
-			  	    else { Messages.SendMessage("AuthDB_message_link_failure", player,null); }
-	        	}
-	        	else { Messages.SendMessage("AuthDB_message_link_exists", player,null); }
-	        }
-	        else { Messages.SendMessage("AuthDB_message_link_usage", player,null); }
-		    if(Config.debug_enable) Util.Debug(player.getName()+" link ******** ********");
-		    event.setMessage("/link ****** ********");
-		    event.setCancelled(true);
-    	}
-     }
-    else if (split[0].equals("/unlink"))
-    {
-    	if(Config.unlink_enabled)
-	    	{
-	        if (split.length == 3) 
-	        {
-	        	if(Util.CheckOtherName(player.getName()).equals(player.getDisplayName()))
-	        	{
-			  	    if (this.plugin.checkPassword(split[1], split[2])) 
-			      	{
-		      	        ItemStack[] inv = this.plugin.getInventory(player.getName());
-		      	        if (inv != null) { player.getInventory().setContents(inv); }
-		      	        this.plugin.unauthorize(player.getEntityId());
-		      	        this.plugin.db2.remove(Encryption.md5(player.getName()+Util.GetIP(player)));
-		      	        this.plugin.db3.remove(Encryption.md5(player.getName()));
-		  	 			this.plugin.AuthOtherNamesDB.remove(player.getName());
-	  	 				Util.ToFile("remove", player.getName(), null);
-	  	 				if(Config.unlink_rename) { player.setDisplayName(player.getName()); }
-		      		    Messages.SendMessage("AuthDB_message_unlink_success", player,null);
-			  		} 
-			  	    else { Messages.SendMessage("AuthDB_message_unlink_failure", player,null); }
-	        	}
-	        	else { Messages.SendMessage("AuthDB_message_unlink_nonexist", player,null); }
-	        }
-	        else { Messages.SendMessage("AuthDB_message_unlink_usage", player,null); }
-		    if(Config.debug_enable) Util.Debug(player.getName()+" unlink ******** ********");
-		    event.setMessage("/unlink ****** ********");
-		    event.setCancelled(true);
-	    }
-     }
-	else if (split[0].equals("/register")) {
-		Boolean email = true;
-		if(Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
-      if (!Config.register_enabled)
-		  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
-      else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.CheckOtherName(player.getName())))
-		  Messages.SendMessage("AuthDB_message_register_registered", player,null);
-      else if (split.length < 2) {
-				  Messages.SendMessage("AuthDB_message_register_usage", player,null);
-      }
-      else if (split.length < 3 && email)
+      String Contrib = event.getMessage();
+      Contrib = Contrib.replaceAll("/", "");
+      if(!zBukkitContrib.CheckCommand(Contrib))
       {
-				  Messages.SendMessage("AuthDB_message_email_required", player,null);
-      }
-       else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2])))
-				  Messages.SendMessage("AuthDB_message_email_invalid", player,null);
-      else {
-        try {
-           if (split.length >= 3 || ( !email && split.length >= 2 )) 
-           { 
-        	   String themail = null;
-        	   if(!email) { themail = null; }
-        	   else { themail = split[2]; }
-        	if(this.plugin.register(player, split[1], themail,Util.GetIP(player)))
+        Util.Debug("COMMAND: "+event.getMessage());
+        String[] split = event.getMessage().split(" ");
+    	Player player = event.getPlayer();
+    
+        if (split[0].equals("/login"))
+        {
+            if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.CheckOtherName(player.getName())) == false)
+            {
+            	Messages.SendMessage("AuthDB_message_login_notregistered", player,null);
+            }
+      	    else if (AuthDB.isAuthorized(player.getEntityId())) 
+      	    {			  
+      	    	Messages.SendMessage("AuthDB_message_login_authorized", player,null);
+            }
+      	    else if (split.length < 2) 
+      	    {
+      	    	Messages.SendMessage("AuthDB_message_login_usage", player,null);
+      	    }
+            else if (this.plugin.checkPassword(player.getName(), split[1])) 
+            {
+    	        ItemStack[] inv = this.plugin.getInventory(player.getName());
+    	        if (inv != null) { player.getInventory().setContents(inv); }
+    			long thetimestamp = System.currentTimeMillis()/1000;
+    			this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+    	        this.plugin.authorize(player.getEntityId());
+    			long timestamp = System.currentTimeMillis()/1000;
+    			this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
+    			this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+    			if(Config.debug_enable) 
+    				Util.Debug("Session started for "+player.getName());
+    		    Messages.SendMessage("AuthDB_message_login_success", player,null);
+    		} 
+    	    else
+    		{
+    		  Messages.SendMessage("AuthDB_message_login_failure", player,null);
+    		}
+    	    if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
+    	    event.setMessage("/login ******");
+    	    event.setCancelled(true);
+         }
+        else if (split[0].equals("/link"))
+        {
+        	if(Config.link_enabled)
         	{
-	            ItemStack[] inv = this.plugin.getInventory(player.getName());
-	            if (inv != null) { player.getInventory().setContents(inv); }
-				long timestamp = System.currentTimeMillis()/1000;
-				this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
-				this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-				if(Config.debug_enable)  { Util.Debug("Session started for "+player.getName()); }
-				this.plugin.authorize(player.getEntityId());
-				long thetimestamp = System.currentTimeMillis()/1000;
-				this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-	  			Location temploc = event.getPlayer().getLocation();
-	  			while(temploc.getBlock().getTypeId() == 0) { temploc.setY(temploc.getY() - 1); }
-	  			temploc.setY(temploc.getY() + 1);
-	  			event.getPlayer().teleport(temploc);
-	  			
-				Messages.SendMessage("AuthDB_message_register_success", player,null);
+    	        if (split.length == 3) 
+    	        {
+    	        	if(Util.CheckOtherName(player.getName()).equals(player.getName()))
+    	        	{
+    			  	    if (this.plugin.checkPassword(split[1], split[2])) 
+    			      	{
+    		      	        ItemStack[] inv = this.plugin.getInventory(player.getName());
+    		      	        if (inv != null) { player.getInventory().setContents(inv); }
+    		    			long thetimestamp = System.currentTimeMillis()/1000;
+    		    			this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+    		      	        this.plugin.authorize(player.getEntityId());
+    		      			long timestamp = System.currentTimeMillis()/1000;
+    		      			this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
+    		  	 			this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+    		  	 			this.plugin.AuthOtherNamesDB.put(player.getName(),split[1]);
+    	  	 				Util.ToFile("write",  player.getName(), split[1]);
+    		  				if(Config.debug_enable) { Util.Debug("Session started for "+player.getName()); }
+    		  				if(Config.link_rename) { player.setDisplayName(split[1]); }
+    		      		    Messages.SendMessage("AuthDB_message_link_success", player,null);
+    			  		} 
+    			  	    else { Messages.SendMessage("AuthDB_message_link_failure", player,null); }
+    	        	}
+    	        	else { Messages.SendMessage("AuthDB_message_link_exists", player,null); }
+    	        }
+    	        else { Messages.SendMessage("AuthDB_message_link_usage", player,null); }
+    		    if(Config.debug_enable) Util.Debug(player.getName()+" link ******** ********");
+    		    event.setMessage("/link ****** ********");
+    		    event.setCancelled(true);
         	}
+         }
+        else if (split[0].equals("/unlink"))
+        {
+        	if(Config.unlink_enabled)
+    	    	{
+    	        if (split.length == 3) 
+    	        {
+    	        	if(Util.CheckOtherName(player.getName()).equals(player.getDisplayName()))
+    	        	{
+    			  	    if (this.plugin.checkPassword(split[1], split[2])) 
+    			      	{
+    		      	        ItemStack[] inv = this.plugin.getInventory(player.getName());
+    		      	        if (inv != null) { player.getInventory().setContents(inv); }
+    		      	        this.plugin.unauthorize(player.getEntityId());
+    		      	        this.plugin.db2.remove(Encryption.md5(player.getName()+Util.GetIP(player)));
+    		      	        this.plugin.db3.remove(Encryption.md5(player.getName()));
+    		  	 			this.plugin.AuthOtherNamesDB.remove(player.getName());
+    	  	 				Util.ToFile("remove", player.getName(), null);
+    	  	 				if(Config.unlink_rename) { player.setDisplayName(player.getName()); }
+    		      		    Messages.SendMessage("AuthDB_message_unlink_success", player,null);
+    			  		} 
+    			  	    else { Messages.SendMessage("AuthDB_message_unlink_failure", player,null); }
+    	        	}
+    	        	else { Messages.SendMessage("AuthDB_message_unlink_nonexist", player,null); }
+    	        }
+    	        else { Messages.SendMessage("AuthDB_message_unlink_usage", player,null); }
+    		    if(Config.debug_enable) Util.Debug(player.getName()+" unlink ******** ********");
+    		    event.setMessage("/unlink ****** ********");
+    		    event.setCancelled(true);
+    	    }
+         }
+    	else if (split[0].equals("/register")) {
+    		Boolean email = true;
+    		if(Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
+          if (!Config.register_enabled)
+    		  Messages.SendMessage("AuthDB_message_register_disabled", player,null);
+          else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.CheckOtherName(player.getName())))
+    		  Messages.SendMessage("AuthDB_message_register_registered", player,null);
+          else if (split.length < 2) {
+    				  Messages.SendMessage("AuthDB_message_register_usage", player,null);
+          }
+          else if (split.length < 3 && email)
+          {
+    				  Messages.SendMessage("AuthDB_message_email_required", player,null);
+          }
+           else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2])))
+    				  Messages.SendMessage("AuthDB_message_email_invalid", player,null);
+          else {
+            try {
+               if (split.length >= 3 || ( !email && split.length >= 2 )) 
+               { 
+            	   String themail = null;
+            	   if(!email) { themail = null; }
+            	   else { themail = split[2]; }
+            	if(this.plugin.register(player, split[1], themail,Util.GetIP(player)))
+            	{
+    	            ItemStack[] inv = this.plugin.getInventory(player.getName());
+    	            if (inv != null) { player.getInventory().setContents(inv); }
+    				long timestamp = System.currentTimeMillis()/1000;
+    				this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
+    				this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+    				if(Config.debug_enable)  { Util.Debug("Session started for "+player.getName()); }
+    				this.plugin.authorize(player.getEntityId());
+    				long thetimestamp = System.currentTimeMillis()/1000;
+    				this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+    	  			Location temploc = event.getPlayer().getLocation();
+    	  			while(temploc.getBlock().getTypeId() == 0) { temploc.setY(temploc.getY() - 1); }
+    	  			temploc.setY(temploc.getY() + 1);
+    	  			event.getPlayer().teleport(temploc);
+    	  			
+    				Messages.SendMessage("AuthDB_message_register_success", player,null);
+            	}
+            }
+            }catch (IOException e) {
+    					Messages.SendMessage("AuthDB_message_register_failure", player,null);
+              e.printStackTrace();
+            } catch (SQLException e) {
+    					Messages.SendMessage("AuthDB_message_register_failure", player,null);
+              e.printStackTrace();
+            }
+          }
+          if(Config.debug_enable) Util.Debug(player.getName()+" register ********");
+          event.setMessage("/register *****");
+           event.setCancelled(true);
+         } 
+    	 else if (!AuthDB.isAuthorized(player.getEntityId())) 
+         {
+    	  if (!CheckGuest(player,Config.guests_commands))
+    	  {
+    	      event.setMessage("/iamnotloggedin");
+    	      event.setCancelled(true);
+    	  }
         }
-        }catch (IOException e) {
-					Messages.SendMessage("AuthDB_message_register_failure", player,null);
-          e.printStackTrace();
-        } catch (SQLException e) {
-					Messages.SendMessage("AuthDB_message_register_failure", player,null);
-          e.printStackTrace();
-        }
+     }
+      else
+      {
+          Util.Debug("BukkitContrib is trying to check for SP client with command: "+event.getMessage());
       }
-      if(Config.debug_enable) Util.Debug(player.getName()+" register ********");
-      event.setMessage("/register *****");
-       event.setCancelled(true);
-     } 
-	 else if (!AuthDB.isAuthorized(player.getEntityId())) 
-     {
-	  if (!CheckGuest(player,Config.guests_commands))
-	  {
-	      event.setMessage("/iamnotloggedin");
-	      event.setCancelled(true);
-	  }
-    }
   }
 
   public void onPlayerMove(PlayerMoveEvent event)
@@ -483,9 +494,14 @@ public boolean CheckIdle(Player player) throws IOException
   
   public void onPlayerKick(PlayerKickEvent event) 
   {
-      Util.Debug("KICK1: "+event.getReason());
-      Util.Debug("KICK2: "+event.getLeaveMessage());
-      Util.Debug("KICK3: "+event.getType());
+      Player player = event.getPlayer();
+      if(!AuthDB.isAuthorized(event.getPlayer().getEntityId()) && event.getReason().equals("Flying is not enabled on this server"))
+      {
+          if(this.plugin.isRegistered("command",player.getName()) == true || this.plugin.isRegistered("command",Util.CheckOtherName(player.getName())) == true)
+          event.setLeaveMessage("");
+          event.setReason("");
+          event.setCancelled(true);
+      }
   }
 
   public void onPlayerPickupItem(PlayerPickupItemEvent event) 

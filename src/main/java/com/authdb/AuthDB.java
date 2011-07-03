@@ -378,7 +378,7 @@ public class AuthDB extends JavaPlugin {
 		{
 			if(this.db3.containsKey(Encryption.md5(player)))
 			{ 
-				if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
+				//if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
 				String check =db3.get(Encryption.md5(player));
 				if(check.equals("yes"))
 				{
