@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -54,6 +55,10 @@ public class AuthDBPlayerListener extends PlayerListener
 public void onPlayerLogin(PlayerLoginEvent event)
 {
 	Player player = event.getPlayer();
+	if (Util.CheckIfLoggedIn(player))
+    {
+	    event.disallow(Result.KICK_OTHER, "Sorry there is already a player with your name playing in this server.");
+    }
 	if(Config.filter_kick || Config.filter_rename)
 	{
 		if(Config.debug_enable) Util.Debug("Kick on bad characters: "+Config.filter_kick+" | Remove bad characters: "+Config.filter_rename);
@@ -530,7 +535,6 @@ public boolean CheckIdle(Player player) throws IOException
 	    }
   }
   
-
   public void onPlayerRespawn(PlayerRespawnEvent event) 
   {
 	     if(event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1)

@@ -1121,6 +1121,19 @@ public class Util
 		 return player;
 	}
 	
+ public static boolean CheckIfLoggedIn(Player player)
+ {
+     for(Player p : player.getServer().getOnlinePlayers()) 
+     {
+         Util.Debug("HEY");
+         if(p.getName().equals(player.getName()) && AuthDB.isAuthorized(p.getEntityId()))
+         {
+             return true;
+         }
+     }
+     return false;
+ }
+	
 	public static void RenamePlayer(Player player, String name)
 	{
 	    player.setDisplayName(name);
