@@ -1,0 +1,75 @@
+Core:
+  plugin:
+    debugmode: false
+    usagestats: true
+  database:
+    driver: mysql
+    host: localhost
+    port: 3306
+    username: root
+    password: root
+    name: forum
+    prefix: phpbb_
+  script:
+    name: phpBB
+    version: 3.0.8
+  customdb:
+    enabled: false
+    table: authdb_users
+    userfield: username
+    passfield: password
+    emailfield: email
+    encryption: md5
+  register:
+    enabled: true
+    force: true
+  login:
+    method: prompt
+    tries: 3
+    kick: true
+  link:
+    enabled: true
+    rename: true
+  unlink:
+    enabled: true
+    rename: true
+  username:
+    minimum: 3
+    maximum: 16
+  password:
+    minimum: 6
+    maximum: 16
+  session:
+    start: login
+    time: minutes
+    length: 60
+  idle:
+    time: seconds
+    length: 30
+    kick: true
+    whitelist: Contex,Wulfspider
+  guest:
+    commands: false
+    chat: false
+    building: false
+    destruction: false
+    movement: false
+    interactions: false
+    inventory: false
+    drop: false
+    pickup: false
+    health: false
+    pvp: false
+    mobtargeting: false
+    mobdamage: false
+  filter:
+    kick: true
+    username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "
+    password: "&"
+    whitelist: Contex,Wulfspider
+
+Plugins:
+  CraftIRC:
+    enabled: false
+    tag: admin
+    prefix: "%b%%green%[{PLUGIN}]%k%%b%"

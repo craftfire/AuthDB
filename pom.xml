@@ -60,7 +60,7 @@
   <!-- <distributionManagement>
     <repository>
       <id>craftfire-ssh</id>
-      <url>scpexe://mvn.craftfire.com/repo</url>
+      <url>scpexe://repo.craftfire.com</url>
     </repository>
   </distributionManagement> -->
 

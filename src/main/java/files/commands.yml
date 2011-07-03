@@ -1,0 +1,5 @@
+Core:
+  register: /register {PASSWORD} {EMAIL}
+  login: /login {PASSWORD}
+  logout: /logout
+  setspawn: /auth setspawn {GROUP}
