@@ -69,7 +69,7 @@
       <id>craftfire-repo</id>
       <url>http://repo.craftfire.com</url>
     </repository> -->
-    <rpository>
+    <repository>
       <id>maven2-repo</id>
       <url>http://repo1.maven.org/maven2</url>
     </repository>
