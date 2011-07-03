@@ -77,6 +77,10 @@
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/artifactory/libs-snapshot-local</url>
     </repository>
+    <repository>
+      <id>mcserver-repo</id>
+      <url>http://repo.bukkit.org/artifactory/libs-release-local</url>
+    </repository>
   </repositories>
 
   <dependencies>
