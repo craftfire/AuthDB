@@ -1,6 +1,6 @@
 name: AuthDB
 main: com.authdb.AuthDB
-version: 2.3.0
+version: dev-SNAPSHOT
 website: http://www.authdb.com
 description: Provides script and custom database user authentication through MySQL.
 authors:
@@ -8,9 +8,15 @@ authors:
   - Contex
   - Wulfspider
 commands:
-  login:
-    description: Login to your account.
-    usage: /<command> <password>
   register:
     description: Register for an account.
     usage: /<command> <password> <email>
+  login:
+    description: Login to your account.
+    usage: /<command> <password>
+  logout:
+    description: 
+    usage: /<command>
+  setspawn:
+    description: 
+    usage: /<command> <group>

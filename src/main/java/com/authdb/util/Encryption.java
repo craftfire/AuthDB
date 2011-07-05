@@ -17,59 +17,59 @@ import java.util.Random;
 
 public class Encryption
 {  
-	
-	public static String Encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException
-	{
-		if(encryption.equals("md5")) return md5(toencrypt);
-		else if(encryption.equals("sha1")) return SHA1(toencrypt);
-		else if(encryption.equals("sha512")) return SHA512(toencrypt);
-		if(Config.debug_enable) Util.Log("info","Could not find encryption method: "+Config.custom_encryption+", using default: md5");
-		Config.custom_encryption = "md5";
-		return md5(toencrypt);
-	}
-	
-	public static String hash(int length, String charset,int RangeFrom, int RangeTo)
-	{
-		if(charset.equals("none"))
-		{
-			String salt = "";
-			for (int i = 0; i < length; i++)
-			{
-				salt += (char)(Util.randomNumber(RangeFrom, RangeTo));
-			}
-			return salt;
-		}
-		else
-		{
-		    Random rand = new Random(System.currentTimeMillis());
-		    StringBuffer sb = new StringBuffer();
-		    for (int i = 0; i < length; i++) {
-		        int pos = rand.nextInt(charset.length());
-		        sb.append(charset.charAt(pos));
-		    }
-		    return sb.toString();
-		}
-	}
-	
-	public static String md5(String data)
-	{
-		try
-		{
-			byte[] bytes = data.getBytes("ISO-8859-1");
-			MessageDigest md5er = MessageDigest.getInstance("MD5");
-			byte[] hash = md5er.digest(bytes);
-			return Util.bytes2hex(hash);
-		}
-		catch (GeneralSecurityException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-	
+    
+    public static String Encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException
+    {
+        if(encryption.equals("md5")) return md5(toencrypt);
+        else if(encryption.equals("sha1")) return SHA1(toencrypt);
+        else if(encryption.equals("sha512")) return SHA512(toencrypt);
+        if(Config.debug_enable) Util.Log("info","Could not find encryption method: "+Config.custom_encryption+", using default: md5");
+        Config.custom_encryption = "md5";
+        return md5(toencrypt);
+    }
+    
+    public static String hash(int length, String charset,int RangeFrom, int RangeTo)
+    {
+        if(charset.equals("none"))
+        {
+            String salt = "";
+            for (int i = 0; i < length; i++)
+            {
+                salt += (char)(Util.randomNumber(RangeFrom, RangeTo));
+            }
+            return salt;
+        }
+        else
+        {
+            Random rand = new Random(System.currentTimeMillis());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < length; i++) {
+                int pos = rand.nextInt(charset.length());
+                sb.append(charset.charAt(pos));
+            }
+            return sb.toString();
+        }
+    }
+    
+    public static String md5(String data)
+    {
+        try
+        {
+            byte[] bytes = data.getBytes("ISO-8859-1");
+            MessageDigest md5er = MessageDigest.getInstance("MD5");
+            byte[] hash = md5er.digest(bytes);
+            return Util.bytes2hex(hash);
+        }
+        catch (GeneralSecurityException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+    
     public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException  
     { 
         MessageDigest md;
@@ -83,12 +83,12 @@ public class Encryption
     public static String SHA256(String text)
     {
         MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         md.update(text.getBytes());
  
         byte byteData[] = md.digest();
@@ -97,12 +97,12 @@ public class Encryption
          sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
         }
         StringBuffer hexString = new StringBuffer();
-    	for (int i=0;i<byteData.length;i++) {
-    		String hex=Integer.toHexString(0xff & byteData[i]);
-   	     	if(hex.length()==1) hexString.append('0');
-   	     	hexString.append(hex);
-    	}
-    	return hexString.toString();
+        for (int i=0;i<byteData.length;i++) {
+            String hex=Integer.toHexString(0xff & byteData[i]);
+                if(hex.length()==1) hexString.append('0');
+                hexString.append(hex);
+        }
+        return hexString.toString();
     }
     
     public static String SHA512(String text)
@@ -113,7 +113,6 @@ public class Encryption
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
             messageDigest.update(text.getBytes("UTF-8"));
             byte[] digestBytes = messageDigest.digest();
-
 
             String hex = null;
 
@@ -131,16 +130,16 @@ public class Encryption
         return new String(sb);
     }
    
-	public static String pack(String hex)
-	{
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < hex.length(); i += 2)
-		{
-			char c1 = hex.charAt(i);
-			char c2 = hex.charAt(i + 1);
-			char packed = (char) (Util.hexToInt(c1) * 16 + Util.hexToInt(c2));
-			buf.append(packed);
-		}
-		return buf.toString();
-	}
+    public static String pack(String hex)
+    {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < hex.length(); i += 2)
+        {
+            char c1 = hex.charAt(i);
+            char c2 = hex.charAt(i + 1);
+            char packed = (char) (Util.hexToInt(c1) * 16 + Util.hexToInt(c2));
+            buf.append(packed);
+        }
+        return buf.toString();
+    }
 }

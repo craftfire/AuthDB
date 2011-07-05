@@ -10,21 +10,30 @@ Core:
     password: root
     name: forum
     prefix: phpbb_
+    keepalive: false
   script:
     name: phpBB
     version: 3.0.8
   customdb:
     enabled: false
+    autocreate: true
     table: authdb_users
     userfield: username
     passfield: password
     emailfield: email
     encryption: md5
+/  welcome:
+/    enabled: true
+/    time: seconds
+/    delay: 2
+/    length: 10
   register:
     enabled: true
     force: true
   login:
     method: prompt
+/    time: minutes
+/    length: 3
     tries: 3
     kick: true
   link:
@@ -43,6 +52,7 @@ Core:
     start: login
     time: minutes
     length: 60
+/    protect: true
   idle:
     time: seconds
     length: 30

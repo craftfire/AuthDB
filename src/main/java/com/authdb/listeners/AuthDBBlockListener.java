@@ -23,49 +23,49 @@ public class AuthDBBlockListener extends BlockListener
 
   public AuthDBBlockListener(AuthDB instance)
   {
-	  plugin = instance;
+      plugin = instance;
   }
 
   public void onBlockPlace(BlockPlaceEvent event) {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
     {
-	  if (!CheckGuest(event.getPlayer(),Config.guests_build))
-  	  {
-  	      event.setCancelled(true);
-  	  }
+      if (!CheckGuest(event.getPlayer(),Config.guests_build))
+        {
+            event.setCancelled(true);
+        }
     }
   }
 
   public void onBlockDamage(BlockDamageEvent event) {
    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
    {
-  	  if (!CheckGuest(event.getPlayer(),Config.guests_destroy))
-  	  {
-  	      event.setCancelled(true);
-  	  }
+        if (!CheckGuest(event.getPlayer(),Config.guests_destroy))
+        {
+            event.setCancelled(true);
+        }
    }
   }
   
   /*
   public void onBlockDamage(BlockBreakEvent event) {
-	   if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
-	   {
-	  	  if (!CheckGuest(event.getPlayer(),Config.guests_destroy))
-	  	  {
-	  	      event.setCancelled(true);
-	  	  }
-	   }
-	  }*/
+       if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+       {
+            if (!CheckGuest(event.getPlayer(),Config.guests_destroy))
+            {
+                event.setCancelled(true);
+            }
+       }
+      }*/
   
-	public boolean CheckGuest(Player player,boolean what)
-	{
-	 if(what)
-	 {
-	  if (!this.plugin.isRegistered("checkguest",player.getName()))
-	  {
-		      return true;
-	  }
-	 }
-	 return false;
-	}
+    public boolean CheckGuest(Player player,boolean what)
+    {
+     if(what)
+     {
+      if (!this.plugin.isRegistered("checkguest",player.getName()))
+      {
+              return true;
+      }
+     }
+     return false;
+    }
 }
