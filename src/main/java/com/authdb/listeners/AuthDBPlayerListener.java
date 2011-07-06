@@ -57,14 +57,13 @@ public void onPlayerLogin(PlayerLoginEvent event)
     {
         Messages.SendMessage("AuthDB_message_session_protected", player, event);
     }
-    if(Config.filter_kick || Config.filter_rename)
+    if(Config.filter_action.equals("kick") || Config.filter_action.equals("rename"))
     {
-        if(Config.debug_enable) Util.Debug("Kick on bad characters: "+Config.filter_kick+" | Remove bad characters: "+Config.filter_rename);
         String name = player.getName();
         if (Util.CheckFilter("username",name) == false && Util.CheckWhitelist("username",player) == false)
         {
           if(Config.debug_enable) Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
-          if(Config.filter_kick) Messages.SendMessage("AuthDB_message_filter_username", player, event);
+          if(Config.filter_action.equals("kick")) Messages.SendMessage("AuthDB_message_filter_username", player, event);
         }
     }
     if(player.getName().length() < Integer.parseInt(Config.username_minimum))

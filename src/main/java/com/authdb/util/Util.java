@@ -169,7 +169,7 @@ public class Util
                         if(SMF.check_hash(SMF.hash(1,player, password),hash)) { return true; }
                     }
                 }
-                else if(CheckVersionInRange(SMF.VersionRange2))
+                else if(CheckVersionInRange(SMF.VersionRange2) || CheckVersionInRange("2.0") || CheckVersionInRange("2.0.0") || CheckVersionInRange("2.0.0.0"))
                 {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
@@ -1323,6 +1323,13 @@ public class Util
             return false;
         }
     
+    public static String GetFilterAction(String action)
+    {
+        if(action.toLowerCase().equals("kick")) { return "kick"; }
+        else if(action.toLowerCase().equals("rename")) { return "rename"; }
+        return "kick";
+    }
+      
     public static String GetIP(Player player)
     {
         return player.getAddress().getAddress().toString().substring(1);

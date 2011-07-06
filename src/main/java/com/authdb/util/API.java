@@ -199,7 +199,7 @@ public class API {
                     }
                 }
             }
-            else if(Util.CheckVersionInRange(SMF.VersionRange2))
+            else if(Util.CheckVersionInRange(SMF.VersionRange2) || Util.CheckVersionInRange("2.0") || Util.CheckVersionInRange("2.0.0") || Util.CheckVersionInRange("2.0.0.0"))
             {
                 //smf2
                 if(what.equals("getgroup"))

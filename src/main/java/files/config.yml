@@ -52,7 +52,7 @@ Core:
     start: login
     time: minutes
     length: 60
-/    protect: true
+    protect: true
   idle:
     time: seconds
     length: 30
@@ -73,7 +73,7 @@ Core:
     mobtargeting: false
     mobdamage: false
   filter:
-    kick: true
+    action: kick
     username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "
     password: "&"
     whitelist: Contex,Wulfspider

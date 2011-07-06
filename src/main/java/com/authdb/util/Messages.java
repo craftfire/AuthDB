@@ -327,7 +327,7 @@ static AuthDB plugin = new AuthDB();
             }
             else if(type.equals("AuthDB_message_filter_password")) 
             {
-                if(Config.filter_kick)
+                if(Config.filter_action.equals("kick"))
                 {
                     player.kickPlayer(Util.replaceStrings(AuthDB_message_filter_password,player,null));
                 }

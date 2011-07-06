@@ -117,8 +117,7 @@ public class Config
         ///////////////////////////////////////////
         //               filter
         ///////////////////////////////////////////
-        public static boolean filter_kick,filter_rename;
-        public static String filter_username,filter_password,filter_whitelist="";
+        public static String filter_action,filter_username,filter_password,filter_whitelist="";
         
         ///////////////////////////////////////////
         //               geoip
@@ -279,8 +278,7 @@ public class Config
                     ///////////////////////////////////////////
                     //               filter
                     ///////////////////////////////////////////
-                    filter_kick = GetConfigBoolean("Core.filter.kick", true);
-                    filter_rename = GetConfigBoolean("Core.filter.rename", false);
+                    filter_action = Util.GetFilterAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
                     filter_username = GetConfigString("Core.filter.username", "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/");
                     filter_password = GetConfigString("Core.filter.password", "&");
                     filter_whitelist= GetConfigString("Core.filter.whitelist", "");
