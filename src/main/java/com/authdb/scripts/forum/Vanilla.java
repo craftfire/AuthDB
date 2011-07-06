@@ -209,4 +209,4 @@ public class Vanilla {
         else
             return Encryption.md5(password).equals(hash);
     }
-  }
+}

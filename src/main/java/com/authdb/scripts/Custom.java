@@ -76,5 +76,4 @@ import com.authdb.util.databases.MySQL;
     {
         return password;    
     }
-
-  }
+}

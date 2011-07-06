@@ -5,14 +5,13 @@
   xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
   <includeBaseDirectory>false</includeBaseDirectory>
   <formats>
-    <format>jar</format>
     <format>zip</format>
   </formats>
   <files>
     <file>
-      <source>${project.build.directory}/${project.version}/${artifactId}.jar</source>
-      <destName>AuthDB.jar</destName>
-      <outputDirectory>/</outputDirectory>
+      <source>${project.build.directory}/${artifactId}-${project.version}.jar</source>
+      <destName>${artifactId}-${project.version}.zip</destName>
+      <outputDirectory>${project.build.directory}</outputDirectory>
       <filtered>false</filtered>
     </file>
   </files>

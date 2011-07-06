@@ -55,7 +55,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
     Player player = event.getPlayer();
     if (Config.session_protect && Util.CheckIfLoggedIn(player))
     {
-        event.disallow(Result.KICK_OTHER, "Sorry there is already a player with your name playing in this server.");
+        Messages.SendMessage("AuthDB_message_session_protected", player, event);
     }
     if(Config.filter_kick || Config.filter_rename)
     {
@@ -65,7 +65,6 @@ public void onPlayerLogin(PlayerLoginEvent event)
         {
           if(Config.debug_enable) Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
           if(Config.filter_kick) Messages.SendMessage("AuthDB_message_filter_username", player, event);
-         // else if(Config.filter_rename) Messages.SendMessage("AuthDB_message_filter_renamed", player, event);
         }
     }
     if(player.getName().length() < Integer.parseInt(Config.username_minimum))

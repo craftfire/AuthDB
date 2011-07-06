@@ -11,6 +11,7 @@ package com.authdb.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import com.authdb.AuthDB;
 import com.authdb.plugins.zCraftIRC;
@@ -53,7 +54,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               login
         ///////////////////////////////////////////
-        public static String AuthDB_message_login_default,AuthDB_message_login_prompt,AuthDB_message_login_success,AuthDB_message_login_failure,AuthDB_message_login_authorized,AuthDB_message_login_notregistered,AuthDB_message_login_session,AuthDB_message_login_usage;
+        public static String AuthDB_message_login_default,AuthDB_message_login_prompt,AuthDB_message_login_success,AuthDB_message_login_failure,AuthDB_message_login_authorized,AuthDB_message_login_notregistered,AuthDB_message_login_usage;
         
         ///////////////////////////////////////////
         //               link
@@ -84,6 +85,11 @@ static AuthDB plugin = new AuthDB();
         //               password
         ///////////////////////////////////////////
         public static String AuthDB_message_password_minimum,AuthDB_message_password_maximum,AuthDB_message_password_success,AuthDB_message_password_failure,AuthDB_message_password_notregistered,AuthDB_message_password_usage;
+        
+        ///////////////////////////////////////////
+        //               session
+        ///////////////////////////////////////////
+        public static String AuthDB_message_session_valid,AuthDB_message_session_protected;
         
         ///////////////////////////////////////////
         //               idle
@@ -266,10 +272,6 @@ static AuthDB plugin = new AuthDB();
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_notregistered,player,null));
             }
-            else if(type.equals("AuthDB_message_login_session")) 
-            {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_login_session,player,null));
-            }
             else if(type.equals("AuthDB_message_login_usage")) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_usage,player,null));
@@ -369,6 +371,14 @@ static AuthDB plugin = new AuthDB();
             else if(type.equals("AuthDB_message_password_usage")) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_usage,player,null));
+            }
+            else if(type.equals("AuthDB_message_session_valid")) 
+            {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid,player,null));
+            }
+            else if(type.equals("AuthDB_message_session_protected")) 
+            {
+                event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_valid,player,null));
             }
             else if(type.equals("AuthDB_message_idle_kick"))
             {

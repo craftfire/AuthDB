@@ -365,7 +365,6 @@ public class Config
                     Messages.AuthDB_message_login_failure = Config.GetConfigString("Core.login.failure", "<rose>Password incorrect, please try again.");
                     Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.login.authorized", "<lightgreen>You are already logged in!");;
                     Messages.AuthDB_message_login_notregistered = Config.GetConfigString("Core.login.notregistered", "<rose>You are not registred yet!");
-                    Messages.AuthDB_message_login_session= Config.GetConfigString("Core.login.session", "<lightgreen>, I remember you! You are logged in!");
                     Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.login.usage", "<rose>Correct usage is: /login <password>");
                     
                     ///////////////////////////////////////////
@@ -414,6 +413,9 @@ public class Config
                     Messages.AuthDB_message_password_notregistered = Config.GetConfigString("Core.password.notregistered", "<rose>Register first!");
                     Messages.AuthDB_message_password_usage = Config.GetConfigString("Core.password.usage", "<rose>Correct usage is: /password <oldpassword> <password>");
                     
+                    Messages.AuthDB_message_session_valid = Config.GetConfigString("Core.session.valid", "<lightgreen>, I remember you! You are logged in!");
+                    Messages.AuthDB_message_session_protected = Config.GetConfigString("Core.session.protected", "<rose>Sorry, a player with that name is already logged in on this server.");
+
                     ///////////////////////////////////////////
                     //               idle
                     ///////////////////////////////////////////

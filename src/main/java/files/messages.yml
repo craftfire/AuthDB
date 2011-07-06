@@ -18,7 +18,6 @@ Core:
     failure: "<rose>Password incorrect, please try again."
     authorized: "<rose>You are already logged in!"
     notregistered: "<rose>You are not registered yet!"
-    session: "<lightgreen>Hey, I remember you! You are logged in."
     usage: "<rose>Correct usage is: /login <password>"
   link:
     success: "<lightgreen>Username linked successfully!. You are now logged in."
@@ -40,6 +39,9 @@ Core:
   password:
     minimum: "<rose>Your password does not meet the minimum requirement of {PASSMIN} characters!"
     maximum: "<rose>Your password does not meet the maximum requirement of {PASSMAX} characters!" 
+  session:
+    valid: "<lightgreen>Hey, I remember you! You are logged in!"
+    protected: "<rose>Sorry, a player with that name is already logged in on this server."
   idle:
     kicked: "<rose>Kicked because you failed to login within {IDLELENGTH} {IDLETIME}."
     whitelist: "<lightgreen>{PLAYER} is on the idle <white>whitelist<lightgreen>, bypassing restrictions!"

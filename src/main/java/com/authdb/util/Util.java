@@ -1387,7 +1387,5 @@ public class Util
             r.append(x);
         }
         return r.toString();
-    }
-    
-    
+    }    
 }
