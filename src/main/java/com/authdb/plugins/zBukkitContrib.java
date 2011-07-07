@@ -9,6 +9,8 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.plugins;
 
+import com.authdb.util.Util;
+
 public class zBukkitContrib {
     public static boolean CheckCommand(String command)
     {
@@ -28,8 +30,12 @@ public class zBukkitContrib {
             }
             counter++;
         }
-        if(counter2 <= 4 || counter2 >= 2) 
-            return true;
+        Util.Debug("COUNTER: "+counter2);
+        if(counter2 <= 4 && counter2 >= 2) { 
+            Util.Debug("HELLO 1");
+            return true; 
+            }
+        Util.Debug("HELLO 2");
         return false;
     }
 }

@@ -568,6 +568,12 @@ public class Util
         return split;
     }
     
+    static void FillChatField(Player player, String text)
+    {
+        for (int i = 0; i < 20; i++) { player.sendMessage(""); }
+        player.sendMessage(text);
+    }
+    
     boolean CheckingBan(String usertable,String useridfield,String usernamefield,String username,String bantable,String banipfield,String bannamefield, String ipAddress) throws SQLException
     {
         String check = "fail";
@@ -786,30 +792,64 @@ public class Util
         if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt( length );
-        if(time.equals("days")) 
+        if(time.equals("days") || time.equals("day") || time.equals("d")) 
             return lengthint * 1728000;
-        else if(time.equals("hours")) 
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
             return lengthint * 72000;
-        else if(time.equals("minutes")) 
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
             return lengthint * 1200;
-        else if(time.equals("seconds")) 
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
             return lengthint * 20;
-        return 600;
+        return 0;
     }
     
     public static int ToSeconds(String time, String length) {
         if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt( length );
-        if(time.equals("days")) 
+        if(time.equals("days") || time.equals("day") || time.equals("d")) 
             return lengthint * 86400;
-        else if(time.equals("hours")) 
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
             return lengthint * 3600;
-        else if(time.equals("minutes")) 
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
             return lengthint * 60;
-        else if(time.equals("seconds")) 
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
             return lengthint;
-        return 600;
+        return 0;
+    }
+    
+    public static int StringToTicks(String string) {
+        String[] split = string.split(" ");
+        String length = split[0];
+        String time = split[1].toLowerCase();
+        int lengthint = Integer.parseInt( length );
+        if(Config.debug_enable) Debug("Launching function: FullStringToSeconds(String time, String length) - "+time+":"+length);
+        if(time.equals("days") || time.equals("day") || time.equals("d")) 
+            return lengthint * 1728000;
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
+            return lengthint * 72000;
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
+            return lengthint * 1200;
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
+            return lengthint * 20;
+        return 0;
+    }
+    
+    public static int StringToSeconds(String string) {
+        String[] split = string.split(" ");
+        String length = split[0];
+        String time = split[1].toLowerCase();
+        int lengthint = Integer.parseInt( length );
+        if(Config.debug_enable) Debug("Launching function: StringToSeconds(String time, String length) - "+time+":"+length);
+        if(time.equals("days") || time.equals("day") || time.equals("d")) 
+            return lengthint * 86400;
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
+            return lengthint * 3600;
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
+            return lengthint * 60;
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
+            return lengthint;
+        return 0;
     }
     
     public static String ToDriver(String dataname)
@@ -835,8 +875,7 @@ public class Util
         String username = player.getName().toLowerCase();
         if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
         StringTokenizer st = null;
-        if(whitelist.equals("idle")) { st = new StringTokenizer(Config.idle_whitelist,","); }
-        else if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,","); }
+        if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,","); }
         while (st.hasMoreTokens()) 
         { 
             String whitelistname = st.nextToken().toLowerCase();
@@ -977,20 +1016,19 @@ public class Util
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");      
             string = string.replaceAll("&", "§"); 
+            if(Util.CheckOtherName(player.getName()) != player.getName())
+            {
+                string = string.replaceAll("\\{DISPLAYNAME\\}", Util.CheckOtherName(player.getName()));
+            }
         }
         else { string = string.replaceAll("&",Matcher.quoteReplacement("§"));  }
-        if(Util.CheckOtherName(player.getName()) != player.getName())
-        {
-            string = string.replaceAll("\\{DISPLAYNAME\\}", Util.CheckOtherName(player.getName()));
-        }
         string = string.replaceAll("\\{USERMIN\\}", Config.username_minimum);
         string = string.replaceAll("\\{USERMAX\\}", Config.username_maximum);
         string = string.replaceAll("\\{PASSMIN\\}", Config.password_minimum);
         string = string.replaceAll("\\{PASSMAX\\}", Config.password_maximum);
         string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
         string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
-        string = string.replaceAll("\\{IDLELENGTH\\}", Config.idle_length);
-        string = string.replaceAll("\\{IDLETIME\\}", Config.idle_time);
+        string = string.replaceAll("\\{TIMEOUT\\}", ""+Config.login_timeout);
         string = string.replaceAll("\\{USERBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_username));
         string = string.replaceAll("\\{PASSBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_password));
         string = string.replaceAll("\\{PROVINCE\\}", "");
@@ -1322,10 +1360,12 @@ public class Util
             }            
             return false;
         }
+      
     
-    public static String GetFilterAction(String action)
+    public static String GetAction(String action)
     {
         if(action.toLowerCase().equals("kick")) { return "kick"; }
+        else if(action.toLowerCase().equals("ban")) { return "ban"; }
         else if(action.toLowerCase().equals("rename")) { return "rename"; }
         return "kick";
     }

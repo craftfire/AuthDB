@@ -68,10 +68,10 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, String> db2 = new HashMap<String, String>();
     public static HashMap<String, String> db3 = new HashMap<String, String>();
     public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
-    public static HashMap<String, String> AuthRegistred = new HashMap<String, String>();
+    public static HashMap<String, Integer> AuthDBWelcomeMessage = new HashMap<String, Integer>();
     public static HashMap<String, String> AuthPasswordTriesDB = new HashMap<String, String>();
     public static HashMap<String, String> AuthOtherNamesDB = new HashMap<String, String>();
-    public static String idleFileName = "idle.db";
+    public static String timeoutFileName = "timeout.db";
     public static String otherNamesFileName = "othernames.db";
     public static Logger log = Logger.getLogger("Minecraft");
     public HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
@@ -85,7 +85,7 @@ public class AuthDB extends JavaPlugin {
         disableInventory();
         authorizedIds.clear();
         AuthTimeDB.clear();
-        AuthRegistred.clear();
+        AuthDBWelcomeMessage.clear();
         AuthOtherNamesDB.clear();
         AuthPasswordTriesDB.clear();
         db.clear();
@@ -96,6 +96,7 @@ public class AuthDB extends JavaPlugin {
 
     public void onEnable() 
     {     
+        plugin = new AuthDB();
         /* File file = new File("plugins/"+pluginname+"/AuthDB_Ban.jar");
             
             URLClassLoader clazzLoader = null;
@@ -462,7 +463,7 @@ public class AuthDB extends JavaPlugin {
         inventories.clear();
     }
     
-    public String IdleGetTaskID(Player player)
+    public String TimeoutGetTaskID(Player player)
     {
         return (String)db.get(player.getName().toLowerCase());
     } 
@@ -473,7 +474,7 @@ public class AuthDB extends JavaPlugin {
     } 
     
       public void updateDb() throws IOException {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), idleFileName)));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), timeoutFileName)));
             Set<String> keys = this.db.keySet();
             Iterator<String> i = keys.iterator();
             while (i.hasNext()) {
@@ -496,7 +497,7 @@ public class AuthDB extends JavaPlugin {
         }
     }
       
-    public boolean IdleTask(String type,Player player, String TaskID) throws IOException 
+    public boolean TimeoutTask(String type,Player player, String TaskID) throws IOException 
     {
         if(type.equals("add"))
         {

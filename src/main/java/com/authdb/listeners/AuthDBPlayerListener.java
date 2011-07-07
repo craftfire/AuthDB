@@ -22,7 +22,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -80,11 +79,11 @@ public void onPlayerLogin(PlayerLoginEvent event)
     }
 }
 
-public boolean CheckIdle(Player player) throws IOException
+public boolean CheckTimeout(Player player) throws IOException
 {
     if(Config.debug_enable) 
-        Util.Debug("Launching function: CheckIdle(Player player))");
-    if (AuthDB.isAuthorized(player.getEntityId()) == false && this.plugin.IdleTask("check",player, ""+Schedule))
+        Util.Debug("Launching function: CheckTimeout(Player player))");
+    if (AuthDB.isAuthorized(player.getEntityId()) == false && this.plugin.TimeoutTask("check",player, ""+Schedule))
     {
         Messages.SendMessage("AuthDB_message_idle_kick", player, null);
         return true;
@@ -107,7 +106,7 @@ public boolean CheckIdle(Player player) throws IOException
         if(Config.session_length != "0" || Config.session_length != null)
         {
             long timestamp = System.currentTimeMillis()/1000;
-            if(this.plugin.IdleTask("check2",player, "") == true)
+            if(this.plugin.TimeoutTask("check2",player, "") == true)
             { 
                 long storedtime = Long.parseLong(this.plugin.db2.get(Encryption.md5(player.getName()+Util.GetIP(player))));
                 if(Config.debug_enable) 
@@ -123,24 +122,24 @@ public boolean CheckIdle(Player player) throws IOException
         }
             
         try {
-            if(Config.idle_kick == true && Util.CheckWhitelist("idle",player) == false && sessionallow == false)
+            if(Config.login_timeout > 0 && sessionallow == false)
             {
                 if(Config.debug_enable) 
-                    Util.Debug("Idle time is: "+Config.idle_ticks);
+                    Util.Debug("Timeout time is: "+Config.login_timeout);
                 Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
                     public void run() 
                     { 
                         try {
-                            CheckIdle(player);
+                            CheckTimeout(player);
                         } catch (IOException e) {
-                            Util.Log("warning", "Error checking if player was in the idle list");
+                            Util.Log("warning", "Error checking if player was in the timeout list");
                             e.printStackTrace();
                         } 
-                    } }, Config.idle_ticks);
-                if(this.plugin.IdleTask("add",player, ""+Schedule))
+                    } }, Config.login_timeout);
+                if(this.plugin.TimeoutTask("add",player, ""+Schedule))
                     if(Config.debug_enable) 
-                        Util.Debug(player.getName()+" added to the IdleTaskList");
+                        Util.Debug(player.getName()+" added to the CheckTimeoutTaskList");
                 this.plugin.updateDb();
             }
         if(Config.custom_enabled) if(Config.custom_encryption == null) { player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT."); }
@@ -217,28 +216,33 @@ public boolean CheckIdle(Player player) throws IOException
     // plugin.getServer().getScheduler().scheduleSyncDelayedTask;
      Player player = event.getPlayer();
      Messages.SendMessage("AuthDB_message_left_server", player,null);
+     if(AuthDB.AuthDBWelcomeMessage.containsKey(player.getName())) 
+     { 
+         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBWelcomeMessage.get(player.getName())); 
+         AuthDB.AuthDBWelcomeMessage.remove(player.getName());
+     }
      if(event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1)
      {
          player.setHealth(20);
-         player.teleportTo(player.getWorld().getSpawnLocation());
+         player.teleport(player.getWorld().getSpawnLocation());
      }
     // Util.Debug("PLAYER HEALTH:"+event.getPlayer().getHealth());
      try {
-        if(this.plugin.IdleTask("check",player, "0"))
+        if(this.plugin.TimeoutTask("check",player, "0"))
          {
-            int TaskID = Integer.parseInt(this.plugin.IdleGetTaskID(player));
-            if(Config.debug_enable) Util.Debug(player.getName()+" is in the IdleTaskList with ID: "+TaskID);
-            if(this.plugin.IdleTask("remove",player, "0"))
+            int TaskID = Integer.parseInt(this.plugin.TimeoutGetTaskID(player));
+            if(Config.debug_enable) Util.Debug(player.getName()+" is in the TimeoutTaskList with ID: "+TaskID);
+            if(this.plugin.TimeoutTask("remove",player, "0"))
             {
-                if(Config.debug_enable) Util.Debug(player.getName()+" was removed from the IdleTaskList");
+                if(Config.debug_enable) Util.Debug(player.getName()+" was removed from the TimeoutTaskList");
                 plugin.getServer().getScheduler().cancelTask(TaskID);
             }
-            else { if(Config.debug_enable) Util.Debug("Could not remove "+player.getName()+" from the idle list."); }
+            else { if(Config.debug_enable) Util.Debug("Could not remove "+player.getName()+" from the timeout list."); }
          }
-        else { if(Config.debug_enable) Util.Debug("Could not find "+player.getName()+" in the idle list, no need to remove."); }
+        else { if(Config.debug_enable) Util.Debug("Could not find "+player.getName()+" in the timeout list, no need to remove."); }
         this.plugin.updateDb();
     } catch (IOException e) {
-        if(Config.debug_enable) Util.Debug("Error with the Idle list, can't cancel task?");
+        if(Config.debug_enable) Util.Debug("Error with the timeout list, can't cancel task?");
         e.printStackTrace();
     }
         long thetimestamp = System.currentTimeMillis()/1000;
@@ -258,9 +262,9 @@ public boolean CheckIdle(Player player) throws IOException
   {
       String Contrib = event.getMessage();
       Contrib = Contrib.replaceAll("/", "");
+      Util.Debug(""+zBukkitContrib.CheckCommand("2.0.0"));
       if(!zBukkitContrib.CheckCommand(Contrib))
       {
-        Util.Debug("COMMAND: "+event.getMessage());
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
     
@@ -427,10 +431,10 @@ public boolean CheckIdle(Player player) throws IOException
           }
         }
      }
-      else
-      {
-          Util.Debug("BukkitContrib is trying to check for SP client with command: "+event.getMessage());
-      }
+     else
+     {
+         Util.Debug("BukkitContrib is trying to check for SP client with command: "+event.getMessage());
+     }
   }
 
   public void onPlayerMove(PlayerMoveEvent event)

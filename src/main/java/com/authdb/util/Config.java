@@ -61,7 +61,7 @@ public class Config
         ///////////////////////////////////////////
         public static boolean welcome_enabled;
         public static String welcome_time,welcome_delay,welcome_length;
-        public static int welcome_delay_seconds,welcome_length_seconds;
+        public static int welcome_delay_ticks,welcome_length_ticks;
         
         ///////////////////////////////////////////
         //               register
@@ -71,8 +71,8 @@ public class Config
         ///////////////////////////////////////////
         //               login
         ///////////////////////////////////////////
-        public static String login_method,login_tries;
-        public static boolean login_kick,login_ban;
+        public static String login_method,login_tries,login_action,login_delay_length,login_delay_time,login_timeout_length,login_timeout_time,login_show_length,login_show_time;
+        public static int login_delay,login_timeout,login_show;
         
         ///////////////////////////////////////////
         //               link
@@ -101,14 +101,7 @@ public class Config
         public static boolean session_protect;
         public static String session_time,session_length,session_start;
         public static int session_seconds;
-        
-        ///////////////////////////////////////////
-        //               idle
-        ///////////////////////////////////////////
-        public static String idle_time = "seconds",idle_length = "30",idle_whitelist="";
-        public static boolean idle_kick;
-        public static int idle_ticks;
-        
+
         ///////////////////////////////////////////
         //               guests
         ///////////////////////////////////////////
@@ -197,8 +190,8 @@ public class Config
                     welcome_time = GetConfigString("Core.welcome.time", "seconds");
                     welcome_delay = GetConfigString("Core.welcome.delay", "2");
                     welcome_length = GetConfigString("Core.welcome.length", "10");
-                    welcome_delay_seconds = Util.ToSeconds(welcome_time,welcome_delay);
-                    welcome_length_seconds = Util.ToSeconds(welcome_time,welcome_length);
+                    welcome_delay_ticks = Util.ToTicks(welcome_time,welcome_delay);
+                    welcome_length_ticks = Util.ToTicks(welcome_time,welcome_length);
 
                     ///////////////////////////////////////////
                     //               register
@@ -211,8 +204,16 @@ public class Config
                     ///////////////////////////////////////////
                     login_method = GetConfigString("Core.login.method", "prompt");
                     login_tries = GetConfigString("Core.login.tries", "3");
-                    login_kick = GetConfigBoolean("Core.login.kick", true);
-                    login_ban = GetConfigBoolean("Core.login.ban", false);
+                    login_action = Util.GetAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
+                    login_delay_length = Util.split(GetConfigString("Core.login.delay", "2 seconds"), " ")[0];
+                    login_delay_time = Util.split(GetConfigString("Core.login.delay", "2 seconds"), " ")[1];
+                    login_delay = Util.ToTicks(login_delay_time,login_delay_length);
+                    login_show_length = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[0];
+                    login_show_time = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[1];
+                    login_show = Util.ToTicks(login_show_time,login_show_length);
+                    login_timeout_length = Util.split(GetConfigString("Core.login.timeout", "3 minutes"), " ")[0];
+                    login_timeout_time = Util.split(GetConfigString("Core.login.timeout", "3 minutes"), " ")[1];
+                    login_timeout = Util.ToTicks(login_timeout_time,login_timeout_length);
                     
                     ///////////////////////////////////////////
                     //               link
@@ -250,15 +251,6 @@ public class Config
                     session_start = Util.CheckSessionStart(session_start);
                     
                     ///////////////////////////////////////////
-                    //               idle
-                    ///////////////////////////////////////////
-                    idle_time = GetConfigString("Core.idle.time", "seconds");
-                    idle_length= GetConfigString("Core.idle.length", "30");
-                    idle_kick= GetConfigBoolean("Core.idle.kick", true);
-                    idle_whitelist= GetConfigString("Core.idle.whitelist", "");
-                    idle_ticks = Util.ToTicks(idle_time,idle_length);
-                    
-                    ///////////////////////////////////////////
                     //               guests
                     ///////////////////////////////////////////
                     guests_commands = GetConfigBoolean("Core.guest.commands", false);
@@ -278,7 +270,7 @@ public class Config
                     ///////////////////////////////////////////
                     //               filter
                     ///////////////////////////////////////////
-                    filter_action = Util.GetFilterAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
+                    filter_action = Util.GetAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
                     filter_username = GetConfigString("Core.filter.username", "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/");
                     filter_password = GetConfigString("Core.filter.password", "&");
                     filter_whitelist= GetConfigString("Core.filter.whitelist", "");

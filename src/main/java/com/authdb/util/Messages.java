@@ -9,6 +9,8 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.util;
 
+import java.io.IOException;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -19,6 +21,7 @@ import com.authdb.plugins.zCraftIRC;
 public class Messages
 {
 static AuthDB plugin = new AuthDB();
+static int Schedule = 0;
 ///////////////////////////////////////////
 //  messages
 ///////////////////////////////////////////    
@@ -126,7 +129,7 @@ static AuthDB plugin = new AuthDB();
         public static String CraftIRC_message_filter_renamed,CraftIRC_message_filter_kicked,CraftIRC_message_filter_whitelist;
     
         
-    public static void SendMessage(String type,Player player,PlayerLoginEvent event)
+    public static void SendMessage(final String type,final Player player,PlayerLoginEvent event)
     {
         zCraftIRC.SendMessage(type,player);
         if(type.equals("AuthDB_message_database_failure")) 
@@ -177,28 +180,50 @@ static AuthDB plugin = new AuthDB();
             }
             else if(type.equals("AuthDB_message_login_default")) 
             {
-                if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
+                if(Config.welcome_enabled)
                 {
                     String message = Util.replaceStrings(AuthDB_message_login_default,player,null);
-                    message = message.replaceAll(player.getName(), player.getDisplayName());
-                    player.sendMessage(message);
-                }
-                else
-                {
-                    player.sendMessage(Util.replaceStrings(AuthDB_message_login_default,player,null));
+                    if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
+                    {
+                        message = message.replaceAll(player.getName(), player.getDisplayName());
+                        player.sendMessage(message);
+                    }
+                    else
+                    {
+                        player.sendMessage(message);
+                    }
                 }
             }
             else if(type.equals("AuthDB_message_login_prompt")) 
-            {
-                if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
+            { 
+                if(Config.login_delay > 0 && !AuthDB.AuthDBWelcomeMessage.containsKey(player.getName()))
                 {
-                    String message = Util.replaceStrings(AuthDB_message_login_prompt,player,null);
-                    message = message.replaceAll(player.getName(), player.getDisplayName());
-                    player.sendMessage(message);
-                }
-                else
-                {
-                    player.sendMessage(Util.replaceStrings(AuthDB_message_login_prompt,player,null));
+                    Schedule = AuthDB.Server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
+                    @Override
+                    public void run() 
+                    { 
+                        if(AuthDB.isAuthorized(player.getEntityId()))     
+                        { 
+                            AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBWelcomeMessage.get(player.getName())); 
+                            AuthDB.AuthDBWelcomeMessage.remove(player.getName());
+                        }
+                        else
+                        {
+                            if(!AuthDB.AuthDBWelcomeMessage.containsKey(player.getName())) { AuthDB.AuthDBWelcomeMessage.put(player.getName(), Schedule); }
+                            String message = Util.replaceStrings(AuthDB_message_login_prompt,player,null);
+                            if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
+                            {
+                                message = message.replaceAll(player.getName(), player.getDisplayName());
+                                player.sendMessage(message);
+                            }
+                            else
+                            {
+                                player.sendMessage(message);
+                            }
+                            Util.FillChatField(player, message);
+                           // SendMessage(type,player,null); 
+                        }
+                    } }, Config.login_delay, Util.ToTicks("seconds", "1"));
                 }
             }
             else if(type.equals("AuthDB_message_login_success")) 
@@ -253,7 +278,7 @@ static AuthDB plugin = new AuthDB();
             {
                 String temp = AuthDB.AuthPasswordTriesDB.get(player.getName());
                 int tries = Integer.parseInt(temp) + 1;
-                  if(tries > Integer.parseInt(Config.login_tries) && Config.login_kick == true)
+                  if(tries > Integer.parseInt(Config.login_tries) && Config.login_action.equals("kick"))
                   { 
                       player.kickPlayer(Util.replaceStrings(AuthDB_message_login_failure,player,null));
                       AuthDB.AuthPasswordTriesDB.put(player.getName(),"0");
