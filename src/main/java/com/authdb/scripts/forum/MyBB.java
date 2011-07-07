@@ -36,7 +36,7 @@ public class MyBB {
     //
     PreparedStatement ps;
     //
-    ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+    ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, player); //username
     ps.setString(2, hash); // password
     ps.setString(3, salt); //salt
@@ -56,10 +56,10 @@ public class MyBB {
     ps.setString(16, "5");//usergroup
     ps.executeUpdate();
      
-    int userid = MySQL.countitall(Config.database_prefix+"users");
-    String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
+    int userid = MySQL.countitall(Config.script_tableprefix+"users");
+    String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"datastore", "`data`", "title", "userstats");
     String newcache = Util.ForumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null);
-    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datacache"+"` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
+    ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"datacache"+"` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
     ps.executeUpdate();
         }
     }
@@ -68,7 +68,7 @@ public class MyBB {
         if(action.equals("find"))
         {
       try {
-          String salt = MySQL.getfromtable(Config.database_prefix+"users", "`salt`", "username", player);
+          String salt = MySQL.getfromtable(Config.script_tableprefix+"users", "`salt`", "username", player);
           return passwordHash(password, salt);
       } catch (NoSuchAlgorithmException e) {
           e.printStackTrace();

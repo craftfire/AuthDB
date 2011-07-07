@@ -36,7 +36,7 @@ public class Joomla {
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`name`,`username`,`email`,`password`,`usertype`,`block`,`gid`,`registerDate`,`lastvisitDate`,`params`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`name`,`username`,`email`,`password`,`usertype`,`block`,`gid`,`registerDate`,`lastvisitDate`,`params`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
         ps.setString(1, player); //name
         ps.setString(2, player); //username
         ps.setString(3, email); //email
@@ -50,16 +50,16 @@ public class Joomla {
         ps.setString(10, ""); //params
         ps.executeUpdate();
         
-        int userid = MySQL.countitall(Config.database_prefix+"users");
+        int userid = MySQL.countitall(Config.script_tableprefix+"users");
         
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"core_acl_aro"+"` (`section_value`,`value`,`name`)  VALUES (?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"core_acl_aro"+"` (`section_value`,`value`,`name`)  VALUES (?,?,?)", 1);
         ps.setString(1, "users"); //section_value
         ps.setInt(2, userid); //value
         ps.setString(3, player); //name
         ps.executeUpdate();
         
-        int aroid = MySQL.countitall(Config.database_prefix+"core_acl_aro");
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"core_acl_groups_aro_map"+"` (`group_id`,`aro_id`)  VALUES (?,?)", 1);
+        int aroid = MySQL.countitall(Config.script_tableprefix+"core_acl_aro");
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"core_acl_groups_aro_map"+"` (`group_id`,`aro_id`)  VALUES (?,?)", 1);
         ps.setInt(1, 18); //group_id
         ps.setInt(2, aroid); //aro_id
         ps.executeUpdate();
@@ -71,7 +71,7 @@ public class Joomla {
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`name`,`username`,`email`,`password`,`usertype`,`block`,`registerDate`,`lastvisitDate`,`params`)  VALUES (?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`name`,`username`,`email`,`password`,`usertype`,`block`,`registerDate`,`lastvisitDate`,`params`)  VALUES (?,?,?,?,?,?,?,?,?)", 1);
         ps.setString(1, player); //name
         ps.setString(2, player); //username
         ps.setString(3, email); //email
@@ -84,9 +84,9 @@ public class Joomla {
         ps.setString(9, ""); //params
         ps.executeUpdate();
         
-        int userid = MySQL.countitall(Config.database_prefix+"users");
+        int userid = MySQL.countitall(Config.script_tableprefix+"users");
         
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user_usergroup_map"+"` (`user_id`,`group_id`)  VALUES (?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user_usergroup_map"+"` (`user_id`,`group_id`)  VALUES (?,?)", 1);
         ps.setInt(1, userid); //user_id
         ps.setInt(2, 2); //group_id
         ps.executeUpdate();

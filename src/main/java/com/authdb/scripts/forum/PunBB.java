@@ -37,7 +37,7 @@ public class PunBB {
         String salt = Encryption.hash(12,"none",33, 126);
         String hash = hash("create",player,password,salt);
         
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`group_id`,`username`,`password`,`salt`,`email`,`registered`,`registration_ip`,`last_visit`)  VALUES (?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`group_id`,`username`,`password`,`salt`,`email`,`registered`,`registration_ip`,`last_visit`)  VALUES (?,?,?,?,?,?,?,?)", 1);
         ps.setInt(1, 3); //group_id
         ps.setString(2, player); //username
         ps.setString(3, hash); //password
@@ -50,11 +50,11 @@ public class PunBB {
         ps.executeUpdate();
         
         /*
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();*/
     }
  }
@@ -63,7 +63,7 @@ public class PunBB {
         if(action.equals("find"))
         {
       try {
-          String salt = MySQL.getfromtable(Config.database_prefix+"users", "`salt`", "username", player);
+          String salt = MySQL.getfromtable(Config.script_tableprefix+"users", "`salt`", "username", player);
           return passwordHash(password, salt);
       } catch (NoSuchAlgorithmException e) {
           e.printStackTrace();

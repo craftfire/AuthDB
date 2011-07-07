@@ -34,7 +34,7 @@ public class DLE {
     //
     PreparedStatement ps;
     //
-    ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"users"+"` (`email`,`password`,`name`,`lastdate`,`reg_date`,`logged_ip`,`info`,`signature`,`favorites`,`xfields`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
+    ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`email`,`password`,`name`,`lastdate`,`reg_date`,`logged_ip`,`info`,`signature`,`favorites`,`xfields`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
     ps.setString(1, email); //email
     ps.setString(2, hash); // password
     ps.setString(3, player); //name

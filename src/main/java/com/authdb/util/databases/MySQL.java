@@ -72,7 +72,10 @@ public class MySQL
             Util.Debug("MySQL host: "+Config.database_host);
             Util.Debug("MySQL port: "+Config.database_port);
             Util.Debug("MySQL database: "+Config.database_database);
-            Util.Debug("MySQL prefix: "+Config.database_prefix);
+            if(!Config.custom_enabled)
+            {
+                Util.Debug("MySQL prefix: "+Config.script_tableprefix);
+            }
         }
         
         if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);

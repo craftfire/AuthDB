@@ -115,7 +115,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                           if(phpBB.check_hash(password,hash)) { return true; }
                     }
                     /*else if(type.equals("checkban"))
@@ -123,12 +123,12 @@ public class Util
                         String check = "fail";
                         if(ipAddress != null)
                         {
-                            String userid = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+useridfield+"`", ""+usernamefield+"", player);
-                              check = MySQL.getfromtable(Config.database_prefix+""+bantable+"", "`"+banipfield+"`", ""+bannamefield+"", userid);
+                            String userid = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+useridfield+"`", ""+usernamefield+"", player);
+                              check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+bannamefield+"", userid);
                         }
                         else
                         {
-                            check = MySQL.getfromtable(Config.database_prefix+""+bantable+"", "`"+banipfield+"`", ""+banipfield+"", ipAddress);
+                            check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+banipfield+"", ipAddress);
                         }
                         if(check != "fail") { return true; }
                           else { return false; }
@@ -143,7 +143,7 @@ public class Util
                     number = 2;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                           if(phpBB.check_hash(password,hash)) { return true; }
                     }
                 }
@@ -166,7 +166,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(SMF.check_hash(SMF.hash(1,player, password),hash)) { return true; }
                     }
                 }
@@ -179,7 +179,7 @@ public class Util
                     number = 2;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(SMF.check_hash(SMF.hash(2,player, password),hash)) { return true; }
                     }
                 }
@@ -201,7 +201,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(MyBB.check_hash(MyBB.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
@@ -223,7 +223,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
@@ -236,7 +236,7 @@ public class Util
                     number = 2;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
@@ -257,7 +257,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(Encryption.md5(password).equals(hash)) { return true; }
                     }
                 }
@@ -269,7 +269,7 @@ public class Util
                     number = 2;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         Util.Debug(hash);
                         if(hash.equals(Drupal.user_check_password(password,hash))) { return true; }
                     }
@@ -291,7 +291,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(Joomla.check_hash(password,hash)) { return true; }
                     }
                 }
@@ -303,7 +303,7 @@ public class Util
                     number = 2;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(Joomla.check_hash(password,hash)) { return true; }
                     }
                 }
@@ -324,7 +324,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(Vanilla.check_hash(password,hash)) { return true; }
                     }
                 }
@@ -337,13 +337,13 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(Vanilla.check_hash(password,hash)) { return true; }
                     }
                 }
                 if(type.equals("adduser"))
                 {
-                    String emailcheck =  MySQL.getfromtable(Config.database_prefix+usertable, "`Email`", "Email", email);
+                    String emailcheck =  MySQL.getfromtable(Config.script_tableprefix+usertable, "`Email`", "Email", email);
                     if(emailcheck.equals("fail"))
                     {
                         Vanilla.adduser(number,player, email, password, ipAddress);
@@ -365,7 +365,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(PunBB.check_hash(PunBB.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
@@ -380,14 +380,14 @@ public class Util
                 usertable = "user";
                 if(CheckVersionInRange(XenForo.VersionRange))
                 {
-                    String userid = MySQL.getfromtable(Config.database_prefix+usertable, "`user_id`", "username", player);
+                    String userid = MySQL.getfromtable(Config.script_tableprefix+usertable, "`user_id`", "username", player);
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        Blob hash = MySQL.getfromtableBlob(Config.database_prefix+"user_authenticate", "`data`", "user_id", userid);
+                        Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix+"user_authenticate", "`data`", "user_id", userid);
                         int offset = -1;
                         int chunkSize = 1024;
                         long blobLength = hash.length();
@@ -429,7 +429,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(bbPress.check_hash(password,hash)) { return true; }
                     }
                 }
@@ -450,7 +450,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(DLE.check_hash(DLE.hash(password),hash)) { return true; }
                     }
                 }
@@ -472,7 +472,7 @@ public class Util
                     if(type.equals("checkpassword"))
                     {
                         player = player.toLowerCase();
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(IPB.check_hash(IPB.hash("find", player, password, null),hash)) { return true; }
                     }
                 }
@@ -494,7 +494,7 @@ public class Util
                     number = 1;
                     if(type.equals("checkpassword"))
                     {
-                        String hash = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(XE.check_hash(password,hash)) { return true; }
                     }
                 }
@@ -525,18 +525,18 @@ public class Util
             }
             if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
             {
-                String check = MySQL.getfromtable(Config.database_prefix+usertable, "*", usernamefield, player);
+                String check = MySQL.getfromtable(Config.script_tableprefix+usertable, "*", usernamefield, player);
                 if(check != "fail") { return true; }
             }
             /*else if(Config.HasForumBoard && type.equals("checkban") && !Config.custom_enabled && bantable != null)
             {
-                String check = MySQL.getfromtable(Config.database_prefix+bantable, "*", bannamefield, player);
+                String check = MySQL.getfromtable(Config.script_tableprefix+bantable, "*", bannamefield, player);
                 if(check != "fail") { return true; }
             }*/
             else if(Config.HasForumBoard && type.equals("numusers") && !Config.custom_enabled)
             {
-                if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"` WHERE  `group_id` !=6"); }
-                else { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.database_prefix+usertable+"`"); }
+                if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"` WHERE  `group_id` !=6"); }
+                else { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"`"); }
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
             }
@@ -625,12 +625,12 @@ public class Util
         String check = "fail";
         if(ipAddress != null)
         {
-            String userid = MySQL.getfromtable(Config.database_prefix+""+usertable+"", "`"+useridfield+"`", ""+usernamefield+"", username);
-              check = MySQL.getfromtable(Config.database_prefix+""+bantable+"", "`"+banipfield+"`", ""+bannamefield+"", userid);
+            String userid = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+useridfield+"`", ""+usernamefield+"", username);
+              check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+bannamefield+"", userid);
         }
         else
         {
-            check = MySQL.getfromtable(Config.database_prefix+""+bantable+"", "`"+banipfield+"`", ""+banipfield+"", ipAddress);
+            check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+banipfield+"", ipAddress);
         }
         if(check != "fail") { return true; }
           else { return false; }

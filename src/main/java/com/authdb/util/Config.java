@@ -33,7 +33,7 @@ public class Config
     //               Database
     ///////////////////////////////////////////
     public static boolean database_keepalive;
-    public static String database_driver, database_username,database_password,database_port,database_host,database_database,database_prefix,dbDb;
+    public static String database_driver, database_username,database_password,database_port,database_host,database_database,dbDb;
     
     ///////////////////////////////////////////
     //               Core
@@ -47,7 +47,7 @@ public class Config
         ///////////////////////////////////////////
         //               script
         ///////////////////////////////////////////
-        public static String script_name,script_version,script_salt;
+        public static String script_name,script_version,script_salt,script_tableprefix;
         public static boolean script_updatestatus;
         
         ///////////////////////////////////////////
@@ -169,7 +169,6 @@ public class Config
                     database_port =  GetConfigString("Core.database.port", "3306");
                     database_host =  GetConfigString("Core.database.host", "localhost");
                     database_database = GetConfigString("Core.database.name", "forum");
-                    database_prefix = GetConfigString("Core.database.prefix", "");
                     database_keepalive = GetConfigBoolean("Core.database.keepalive", false);
                     dbDb = "jdbc:mysql://"+database_host+":"+database_port+"/"+database_database;
                     
@@ -178,6 +177,7 @@ public class Config
                     ///////////////////////////////////////////
                     script_name = GetConfigString("Core.script.name", "phpbb").toLowerCase();
                     script_version = GetConfigString("Core.script.version", "3.0.8");
+                    script_tableprefix = GetConfigString("Core.script.tableprefix", "");
                     script_updatestatus = GetConfigBoolean("Core.script.updatestatus", true);
                     script_salt = GetConfigString("Core.script.salt", "");
                     

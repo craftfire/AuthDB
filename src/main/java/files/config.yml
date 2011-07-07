@@ -9,11 +9,11 @@ Core:
     username: root
     password: root
     name: forum
-    prefix: phpbb_
     keepalive: false
   script:
     name: phpBB
     version: 3.0.8
+    tableprefix: phpbb_
   customdb:
     enabled: false
     autocreate: true

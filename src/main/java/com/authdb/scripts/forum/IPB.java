@@ -36,7 +36,7 @@ public class IPB {
             //
             PreparedStatement ps;
             //
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"members"+"` (`name`,`member_group_id`,`email`,`joined`,`ip_address`,`allow_admin_mails`,`last_visit`,`last_activity`,`ignored_users`,`members_display_name`,`members_seo_name`,`members_l_display_name`,`members_l_username`,`members_pass_hash`,`members_pass_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"members"+"` (`name`,`member_group_id`,`email`,`joined`,`ip_address`,`allow_admin_mails`,`last_visit`,`last_activity`,`ignored_users`,`members_display_name`,`members_seo_name`,`members_l_display_name`,`members_l_username`,`members_pass_hash`,`members_pass_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
             ps.setString(1, player); //name
             ps.setInt(2, 3); // member_group_id
             ps.setString(3, email); //email
@@ -54,16 +54,16 @@ public class IPB {
             ps.setString(15, salt); //members_pass_salt
             ps.executeUpdate();
              
-            int userid = MySQL.countitall(Config.database_prefix+"members");
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"pfields_content"+"` (`member_id`)  VALUES (?)", 1);
+            int userid = MySQL.countitall(Config.script_tableprefix+"members");
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"pfields_content"+"` (`member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //member_id
             ps.executeUpdate();
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"profile_portal"+"` (`pp_member_id`)  VALUES (?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"profile_portal"+"` (`pp_member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //pp_member_id
             ps.executeUpdate();
-            String oldcache =  MySQL.getfromtable(Config.database_prefix+"cache_store", "`cs_value`", "cs_key", "stats");
+            String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"cache_store", "`cs_value`", "cs_key", "stats");
             String newcache = Util.ForumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
-            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"cache_store"+"` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
+            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"cache_store"+"` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
             ps.executeUpdate();
         }
     }
@@ -72,7 +72,7 @@ public class IPB {
         if(action.equals("find"))
         {
               try {
-                  String salt = MySQL.getfromtable(Config.database_prefix+"members", "`members_pass_salt`", "members_l_username", player.toLowerCase());
+                  String salt = MySQL.getfromtable(Config.script_tableprefix+"members", "`members_pass_salt`", "members_l_username", player.toLowerCase());
                   return passwordHash(password, salt);
               } catch (NoSuchAlgorithmException e) {
                   e.printStackTrace();

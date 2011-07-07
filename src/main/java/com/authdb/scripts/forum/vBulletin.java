@@ -39,7 +39,7 @@ public class vBulletin {
               ///
               PreparedStatement ps;
               //
-              ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+              ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
             ps.setString(1, "2"); //usergroupid
               ps.setString(2, passwordhashed); // password
             ps.setString(3, passworddate); //passworddate
@@ -56,10 +56,10 @@ public class vBulletin {
             ps.executeUpdate();
             
             
-            int userid = MySQL.countitall(Config.database_prefix+"user");
-            String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
+            int userid = MySQL.countitall(Config.script_tableprefix+"user");
+            String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"datastore", "`data`", "title", "userstats");
             String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
-            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
             ps.executeUpdate();
               
               }
@@ -72,7 +72,7 @@ public class vBulletin {
               ///
               PreparedStatement ps;
               //
-              ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`,`usertitle`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+              ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`,`usertitle`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
             ps.setString(1, "2"); //usergroupid
               ps.setString(2, passwordhashed); // password
             ps.setString(3, passworddate); //passworddate
@@ -89,10 +89,10 @@ public class vBulletin {
             ps.setString(14, "Junior Member"); //usertitle
             ps.executeUpdate();
              
-            int userid = MySQL.countitall(Config.database_prefix+"user");
-            String oldcache =  MySQL.getfromtable(Config.database_prefix+"datastore", "`data`", "title", "userstats");
+            int userid = MySQL.countitall(Config.script_tableprefix+"user");
+            String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"datastore", "`data`", "title", "userstats");
             String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
-            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
             ps.executeUpdate();
           }
     }
@@ -101,7 +101,7 @@ public class vBulletin {
         if(action.equals("find"))
         {
       try {
-          String salt = MySQL.getfromtable(Config.database_prefix+"user", "`salt`", "username", player);
+          String salt = MySQL.getfromtable(Config.script_tableprefix+"user", "`salt`", "username", player);
           return passwordHash(password, salt);
       } catch (NoSuchAlgorithmException e) {
           e.printStackTrace();

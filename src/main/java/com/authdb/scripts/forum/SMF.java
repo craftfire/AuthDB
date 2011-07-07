@@ -41,7 +41,7 @@ public class SMF {
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"members"+"` (`memberName`,`dateRegistered`,`lastLogin`,`realName`,`passwd`,`emailAddress`,`memberIP`,`memberIP2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`messageLabels`,`personalText`,`websiteTitle`,`websiteUrl`,`location`,`ICQ`,`MSN`,`signature`,`avatar`,`usertitle`,`secretQuestion`,`additionalGroups`,`passwordSalt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"members"+"` (`memberName`,`dateRegistered`,`lastLogin`,`realName`,`passwd`,`emailAddress`,`memberIP`,`memberIP2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`messageLabels`,`personalText`,`websiteTitle`,`websiteUrl`,`location`,`ICQ`,`MSN`,`signature`,`avatar`,`usertitle`,`secretQuestion`,`additionalGroups`,`passwordSalt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
         ps.setString(1, player); //memberName
         ps.setLong(2, timestamp); //dateRegistered
         ps.setLong(3, timestamp); //lastLogin
@@ -69,14 +69,14 @@ public class SMF {
         ps.setString(24, salt); //passwordSalt
         ps.executeUpdate();
         
-        userid = MySQL.countitall(Config.database_prefix+"members");
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
+        userid = MySQL.countitall(Config.script_tableprefix+"members");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
         ps.executeUpdate();
     }
     else if(checkid == 2)
@@ -90,7 +90,7 @@ public class SMF {
         //
         PreparedStatement ps;
         ///
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.database_prefix+"members"+"` (`member_name`,`date_registered`,`last_login`,`real_name`,`passwd`,`email_address`,`member_ip`,`member_ip2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`message_labels`,`personal_text`,`website_title`,`website_url`,`location`,`icq`,`msn`,`signature`,`avatar`,`usertitle`,`secret_question`,`additional_groups`,`openid_uri`,`ignore_boards`,`password_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"members"+"` (`member_name`,`date_registered`,`last_login`,`real_name`,`passwd`,`email_address`,`member_ip`,`member_ip2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`message_labels`,`personal_text`,`website_title`,`website_url`,`location`,`icq`,`msn`,`signature`,`avatar`,`usertitle`,`secret_question`,`additional_groups`,`openid_uri`,`ignore_boards`,`password_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
         ps.setString(1, player); //member_name
         ps.setLong(2, timestamp); //date_registered
         ps.setLong(3, timestamp); //last_login
@@ -120,14 +120,14 @@ public class SMF {
         ps.setString(26, salt); //password_salt
         ps.executeUpdate();
         
-        userid = MySQL.countitall(Config.database_prefix+"members");
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
+        userid = MySQL.countitall(Config.script_tableprefix+"members");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.database_prefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
         ps.executeUpdate();
     }
   }
