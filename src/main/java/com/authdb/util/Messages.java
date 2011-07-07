@@ -206,10 +206,18 @@ static int Schedule = 0;
                         { 
                             AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBWelcomeMessage.get(player.getName())); 
                             AuthDB.AuthDBWelcomeMessage.remove(player.getName());
+                            AuthDB.AuthDBWelcomeMessageTime.remove(player.getName());
                         }
                         else
                         {
                             if(!AuthDB.AuthDBWelcomeMessage.containsKey(player.getName())) { AuthDB.AuthDBWelcomeMessage.put(player.getName(), Schedule); }
+                            if(!AuthDB.AuthDBWelcomeMessageTime.containsKey(player.getName())) { AuthDB.AuthDBWelcomeMessageTime.put(player.getName(), Util.TimeStamp()); }
+                            if((AuthDB.AuthDBWelcomeMessageTime.get(player.getName()) + Config.login_show) <= Util.TimeStamp())
+                            {
+                                AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBWelcomeMessage.get(player.getName())); 
+                                AuthDB.AuthDBWelcomeMessage.remove(player.getName());
+                                AuthDB.AuthDBWelcomeMessageTime.remove(player.getName());
+                            }
                             String message = Util.replaceStrings(AuthDB_message_login_prompt,player,null);
                             if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
                             {
@@ -221,7 +229,6 @@ static int Schedule = 0;
                                 player.sendMessage(message);
                             }
                             Util.FillChatField(player, message);
-                           // SendMessage(type,player,null); 
                         }
                     } }, Config.login_delay, Util.ToTicks("seconds", "1"));
                 }

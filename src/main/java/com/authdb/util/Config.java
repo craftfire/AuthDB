@@ -210,7 +210,7 @@ public class Config
                     login_delay = Util.ToTicks(login_delay_time,login_delay_length);
                     login_show_length = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[0];
                     login_show_time = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[1];
-                    login_show = Util.ToTicks(login_show_time,login_show_length);
+                    login_show = Util.ToSeconds(login_show_time,login_show_length);
                     login_timeout_length = Util.split(GetConfigString("Core.login.timeout", "3 minutes"), " ")[0];
                     login_timeout_time = Util.split(GetConfigString("Core.login.timeout", "3 minutes"), " ")[1];
                     login_timeout = Util.ToTicks(login_timeout_time,login_timeout_length);

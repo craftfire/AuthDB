@@ -39,8 +39,8 @@ public class MySQL
             }
             else
             {
-                Util.Log("warning", "MySQL cannot connect to the specified host: "+Config.database_host);
-                Util.Log("warning", "Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                Util.Log("warning", "Cannot connect to MySQL hos: "+Config.database_host);
+                Util.Log("warning", "Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.SendMessage("AuthDB_message_database_failure", null, null);
             }
             return false;

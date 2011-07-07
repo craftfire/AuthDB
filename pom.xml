@@ -70,7 +70,7 @@
       <url>http://repo.craftfire.com</url>
     </repository> -->
     <repository>
-      <id>craftfire-dropbox</id>
+      <id>craftfire-repo</id>
       <url>http://repo.craftfire.com/repo</url>
     </repository>
     <repository>
@@ -138,14 +138,22 @@
         </includes>
       </resource>
       <resource>
-        <targetPath>files/</targetPath>
+        <targetPath>files/config/</targetPath>
         <filtering>true</filtering>
-        <directory>${basedir}/src/main/resources/</directory>
+        <directory>${basedir}/src/main/resources/config/</directory>
         <includes>
           <include>commands.yml</include>
           <include>config.yml</include>
           <include>messages.yml</include>
           <include>customdb.sql</include>
+        </includes>
+      </resource>
+      <resource>
+        <targetPath>files/translations/</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources/translations/</directory>
+        <includes>
+          <include>*.yml</include>
         </includes>
       </resource>
     </resources>

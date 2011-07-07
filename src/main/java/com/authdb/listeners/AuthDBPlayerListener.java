@@ -109,11 +109,9 @@ public boolean CheckTimeout(Player player) throws IOException
             if(this.plugin.TimeoutTask("check2",player, "") == true)
             { 
                 long storedtime = Long.parseLong(this.plugin.db2.get(Encryption.md5(player.getName()+Util.GetIP(player))));
-                if(Config.debug_enable) 
-                    Util.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
+                Util.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
                 long timedifference = timestamp - storedtime;
-                if(Config.debug_enable) 
-                    Util.Debug("Difference: "+timedifference);
+                Util.Debug("Difference: "+timedifference);
                 if(timedifference > Config.session_seconds) { sessionallow = false; }
                 else { sessionallow = true; }
                 
@@ -126,7 +124,7 @@ public boolean CheckTimeout(Player player) throws IOException
             {
                 if(Config.debug_enable) 
                     Util.Debug("Timeout time is: "+Config.login_timeout);
-                Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                    Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
                     public void run() 
                     { 
@@ -151,7 +149,7 @@ public boolean CheckTimeout(Player player) throws IOException
         
         if(sessionallow)
         {
-            Messages.SendMessage("AuthDB_message_login_session", player,null);
+            Messages.SendMessage("AuthDB_message_session_valid", player,null);
             long thetimestamp = System.currentTimeMillis()/1000;
             this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
             this.plugin.authorize(event.getPlayer().getEntityId());
@@ -274,14 +272,14 @@ public boolean CheckTimeout(Player player) throws IOException
             {
                 Messages.SendMessage("AuthDB_message_login_notregistered", player,null);
             }
-              else if (AuthDB.isAuthorized(player.getEntityId())) 
-              {              
-                  Messages.SendMessage("AuthDB_message_login_authorized", player,null);
+            else if (AuthDB.isAuthorized(player.getEntityId())) 
+            {              
+                Messages.SendMessage("AuthDB_message_login_authorized", player,null);
             }
-              else if (split.length < 2) 
-              {
-                  Messages.SendMessage("AuthDB_message_login_usage", player,null);
-              }
+            else if (split.length < 2) 
+            {
+                Messages.SendMessage("AuthDB_message_login_usage", player,null);
+            }
             else if (this.plugin.checkPassword(player.getName(), split[1])) 
             {
                 ItemStack[] inv = this.plugin.getInventory(player.getName());
@@ -292,15 +290,14 @@ public boolean CheckTimeout(Player player) throws IOException
                 long timestamp = System.currentTimeMillis()/1000;
                 this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                 this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-                if(Config.debug_enable) 
-                    Util.Debug("Session started for "+player.getName());
+                Util.Debug("Session started for "+player.getName());
                 Messages.SendMessage("AuthDB_message_login_success", player,null);
             } 
             else
             {
               Messages.SendMessage("AuthDB_message_login_failure", player,null);
             }
-            if(Config.debug_enable) Util.Debug(player.getName()+" login ********");
+            Util.Debug(player.getName()+" login ********");
             event.setMessage("/login ******");
             event.setCancelled(true);
          }
@@ -316,15 +313,15 @@ public boolean CheckTimeout(Player player) throws IOException
                           {
                               ItemStack[] inv = this.plugin.getInventory(player.getName());
                               if (inv != null) { player.getInventory().setContents(inv); }
-                            long thetimestamp = System.currentTimeMillis()/1000;
-                            this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+                              long thetimestamp = System.currentTimeMillis()/1000;
+                              this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
                               this.plugin.authorize(player.getEntityId());
                               long timestamp = System.currentTimeMillis()/1000;
                               this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
-                               this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-                               this.plugin.AuthOtherNamesDB.put(player.getName(),split[1]);
-                               Util.ToFile("write",  player.getName(), split[1]);
-                              if(Config.debug_enable) { Util.Debug("Session started for "+player.getName()); }
+                              this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+                              this.plugin.AuthOtherNamesDB.put(player.getName(),split[1]);
+                              Util.ToFile("write",  player.getName(), split[1]);
+                              Util.Debug("Session started for "+player.getName());
                               if(Config.link_rename) { player.setDisplayName(split[1]); }
                               Messages.SendMessage("AuthDB_message_link_success", player,null);
                           } 

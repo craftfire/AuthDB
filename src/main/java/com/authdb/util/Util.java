@@ -574,6 +574,11 @@ public class Util
         player.sendMessage(text);
     }
     
+    static long TimeStamp()
+    {
+        return System.currentTimeMillis()/1000;
+    }
+    
     boolean CheckingBan(String usertable,String useridfield,String usernamefield,String username,String bantable,String banipfield,String bannamefield, String ipAddress) throws SQLException
     {
         String check = "fail";
@@ -1147,6 +1152,7 @@ public class Util
         {
             location.setY(location.getY() - 1);
         }
+        location.setY(location.getY() + 1);
         return location;
     }
     

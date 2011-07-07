@@ -69,6 +69,7 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, String> db3 = new HashMap<String, String>();
     public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
     public static HashMap<String, Integer> AuthDBWelcomeMessage = new HashMap<String, Integer>();
+    public static HashMap<String, Long> AuthDBWelcomeMessageTime = new HashMap<String, Long>();
     public static HashMap<String, String> AuthPasswordTriesDB = new HashMap<String, String>();
     public static HashMap<String, String> AuthOtherNamesDB = new HashMap<String, String>();
     public static String timeoutFileName = "timeout.db";
@@ -86,6 +87,7 @@ public class AuthDB extends JavaPlugin {
         authorizedIds.clear();
         AuthTimeDB.clear();
         AuthDBWelcomeMessage.clear();
+        AuthDBWelcomeMessageTime.clear();
         AuthOtherNamesDB.clear();
         AuthPasswordTriesDB.clear();
         db.clear();
@@ -130,7 +132,6 @@ public class AuthDB extends JavaPlugin {
             }
 
         */
-        
         Server = getServer();
         Plugin[] plugins = Server.getPluginManager().getPlugins();
         //Util.Debug(System.getProperty("java.version"));
