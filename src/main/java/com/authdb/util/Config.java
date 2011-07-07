@@ -110,6 +110,13 @@ public class Config
         public static boolean guests_commands,guests_movement,guests_inventory,guests_drop,guests_pickup,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
   
         ///////////////////////////////////////////
+        //               protection
+        ///////////////////////////////////////////
+        public static boolean protection_notify;
+        int protection_delay;
+        public static String protection_delay_time,protection_delay_length;
+        
+        ///////////////////////////////////////////
         //               filter
         ///////////////////////////////////////////
         public static String filter_action,filter_username,filter_password,filter_whitelist="";
@@ -277,6 +284,14 @@ public class Config
                     guests_mobtargeting = GetConfigBoolean("Core.guest.mobtargeting", false);
                     guests_pvp = GetConfigBoolean("Core.guest.pvp", false);
               
+                    ///////////////////////////////////////////
+                    //               protection
+                    ///////////////////////////////////////////
+                    protection_notify = GetConfigBoolean("Core.protection.notify", true);
+                    protection_delay_length = Util.split(GetConfigString("Core.protection.delay", "3 seconds"), " ")[0];
+                    protection_delay_time = Util.split(GetConfigString("Core.protection.delay", "3 seconds"), " ")[1];
+                    protection_delay = Util.ToSeconds(protection_delay_time,protection_delay_length);
+                    
                     ///////////////////////////////////////////
                     //               filter
                     ///////////////////////////////////////////

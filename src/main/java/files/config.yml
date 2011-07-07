@@ -32,7 +32,6 @@ Core:
     method: prompt
     action: kick
     tries: 3
-    kick: true
     delay: 4 seconds
     show: 10 seconds
     timeout: 3 minutes
@@ -66,6 +65,9 @@ Core:
     pvp: false
     mobtargeting: false
     mobdamage: false
+  protection:
+    notify: true
+    delay: 3 seconds
   filter:
     action: kick
     username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "
