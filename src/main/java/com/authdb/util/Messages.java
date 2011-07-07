@@ -128,57 +128,113 @@ static int Schedule = 0;
         ///////////////////////////////////////////
         public static String CraftIRC_message_filter_renamed,CraftIRC_message_filter_kicked,CraftIRC_message_filter_whitelist;
     
+    public enum Message 
+    {
+        database_failure (AuthDB_message_database_failure),
+        welcome_guest (AuthDB_message_welcome_guest),
+        guest_notauthorized (AuthDB_message_guest_notauthorized),
+        register_success (AuthDB_message_register_success),
+        register_failure (AuthDB_message_register_failure),
+        register_registered (AuthDB_message_register_registered),
+        register_disabled (AuthDB_message_register_disabled),
+        register_usage (AuthDB_message_register_usage),
+        unregister_success (AuthDB_message_unregister_success),
+        unregister_failure (AuthDB_message_unregister_failure),
+        unregister_usage (AuthDB_message_unregister_usage),
+        login_default (AuthDB_message_login_default),
+        login_prompt (AuthDB_message_login_prompt),
+        login_success (AuthDB_message_login_success),
+        login_failure (AuthDB_message_login_failure),
+        login_authorized (AuthDB_message_login_authorized),
+        login_notregistered (AuthDB_message_login_notregistered),
+        login_usage (AuthDB_message_login_usage),
+        link_success (AuthDB_message_link_success),
+        link_failure (AuthDB_message_link_failure),
+        link_exists (AuthDB_message_link_exists),
+        link_usage (AuthDB_message_link_usage),
+        unlink_success (AuthDB_message_unlink_success),
+        unlink_failure (AuthDB_message_unlink_failure),
+        unlink_nonexist (AuthDB_message_unlink_nonexist),
+        unlink_usage (AuthDB_message_unlink_usage),
+        email_required (AuthDB_message_email_required),
+        email_invalid (AuthDB_message_email_invalid),
+        filter_renamed (AuthDB_message_filter_renamed),
+        filter_username (AuthDB_message_filter_username),
+        filter_password (AuthDB_message_filter_password),
+        filter_whitelist (AuthDB_message_filter_whitelist),
+        username_minimum (AuthDB_message_username_minimum),
+        username_maximum (AuthDB_message_username_maximum),
+        password_minimum (AuthDB_message_password_minimum),
+        password_maximum (AuthDB_message_password_maximum),
+        password_success (AuthDB_message_password_success),
+        password_failure (AuthDB_message_password_failure),
+        password_notregistered (AuthDB_message_password_notregistered),
+        password_usage (AuthDB_message_password_usage),
+        session_valid (AuthDB_message_session_valid),
+        session_protected (AuthDB_message_session_protected),
+        idle_kick (AuthDB_message_idle_kick),
+        idle_whitelist (AuthDB_message_idle_whitelist),
+        left_server ("fake"),
+        kickPlayerIdleLoginMessage ("fake"),
+        OnEnable ("fake"),
+        OnDisable ("fake");
+        private String message;
+
+        Message(String message) {
+            this.message = message;
+        }
+    }
         
-    public static void SendMessage(final String type,final Player player,PlayerLoginEvent event)
+    public static void SendMessage(final Message type,final Player player,PlayerLoginEvent event)
     {
         zCraftIRC.SendMessage(type,player);
-        if(type.equals("AuthDB_message_database_failure")) 
+        if(type.equals(Message.database_failure)) 
         {
             AuthDB.Server.broadcastMessage(Util.replaceStrings(AuthDB_message_database_failure,null,null));
         }
         else if(Config.database_ison)
         {
-            if(type.equals("AuthDB_message_welcome_guest")) 
+            if(type.equals(Message.welcome_guest)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_welcome_guest,player,null));
             }
-            else if(type.equals("AuthDB_message_guest_notauthorized")) 
+            else if(type.equals(Message.guest_notauthorized)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_guest_notauthorized,player,null));
             }
-            else if(type.equals("AuthDB_message_register_success")) 
+            else if(type.equals(Message.register_success)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_success,player,null));
             }
-            else if(type.equals("AuthDB_message_register_failure")) 
+            else if(type.equals(Message.register_failure)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_failure,player,null));
             }
-            else if(type.equals("AuthDB_message_register_registered")) 
+            else if(type.equals(Message.register_registered)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_registered,player,null));
             }
-            else if(type.equals("AuthDB_message_register_disabled")) 
+            else if(type.equals(Message.register_disabled)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_disabled,player,null));
             }
-            else if(type.equals("AuthDB_message_register_usage")) 
+            else if(type.equals(Message.register_usage)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_usage,player,null));
             }
-            else if(type.equals("AuthDB_message_unregister_success")) 
+            else if(type.equals(Message.unregister_success)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unregister_success,player,null));
             }
-            else if(type.equals("AuthDB_message_unregister_failure")) 
+            else if(type.equals(Message.unregister_failure)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unregister_failure,player,null));
             }
-            else if(type.equals("AuthDB_message_unregister_usage")) 
+            else if(type.equals(Message.unregister_usage)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unregister_usage,player,null));
             }
-            else if(type.equals("AuthDB_message_login_default")) 
+            else if(type.equals(Message.login_default)) 
             {
                 if(Config.welcome_enabled)
                 {
@@ -194,7 +250,7 @@ static int Schedule = 0;
                     }
                 }
             }
-            else if(type.equals("AuthDB_message_login_prompt")) 
+            else if(type.equals(Message.login_prompt)) 
             { 
                 if(Config.login_delay > 0 && !AuthDB.AuthDBWelcomeMessage.containsKey(player.getName()))
                 {
@@ -233,7 +289,7 @@ static int Schedule = 0;
                     } }, Config.login_delay, Util.ToTicks("seconds", "1"));
                 }
             }
-            else if(type.equals("AuthDB_message_login_success")) 
+            else if(type.equals(Message.login_success)) 
             {
                 /*//BukkitContrib
                 Player[] online = Bukkit.getServer().getOnlinePlayers();
@@ -281,7 +337,7 @@ static int Schedule = 0;
                 AuthDB.AuthPasswordTriesDB.put(player.getName(), "0");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_success,player,null));
             }
-            else if(type.equals("AuthDB_message_login_failure")) 
+            else if(type.equals(Message.login_failure)) 
             {
                 String temp = AuthDB.AuthPasswordTriesDB.get(player.getName());
                 int tries = Integer.parseInt(temp) + 1;
@@ -296,68 +352,67 @@ static int Schedule = 0;
                       player.sendMessage(Util.replaceStrings(AuthDB_message_login_failure,player,null)); 
                   }
             }
-            else if(type.equals("AuthDB_message_login_authorized")) 
+            else if(type.equals(Message.login_authorized)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_authorized,player,null));
             }
-            else if(type.equals("AuthDB_message_login_notregistered")) 
+            else if(type.equals(Message.login_notregistered)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_notregistered,player,null));
             }
-            else if(type.equals("AuthDB_message_login_usage")) 
+            else if(type.equals(Message.login_usage)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_usage,player,null));
             }
-            else if(type.equals("AuthDB_message_link_success")) 
+            else if(type.equals(Message.link_success)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_success,player,null));
             }
-            else if(type.equals("AuthDB_message_link_failure")) 
+            else if(type.equals(Message.link_failure)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_failure,player,null));
             }
-            else if(type.equals("AuthDB_message_link_exists")) 
+            else if(type.equals(Message.link_exists)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_exists,player,null));
             }
-            else if(type.equals("AuthDB_message_link_usage")) 
+            else if(type.equals(Message.link_usage)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_usage,player,null));
             }
-            else if(type.equals("AuthDB_message_unlink_success")) 
+            else if(type.equals(Message.unlink_success)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_success,player,null));
             }
-            else if(type.equals("AuthDB_message_unlink_failure")) 
+            else if(type.equals(Message.unlink_failure)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_failure,player,null));
             }
-            else if(type.equals("AuthDB_message_unlink_nonexist")) 
+            else if(type.equals(Message.unlink_nonexist)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_nonexist,player,null));
             }
-            else if(type.equals("AuthDB_message_unlink_usage")) 
+            else if(type.equals(Message.unlink_usage)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_usage,player,null));
             }
-            else if(type.equals("AuthDB_message_email_required")) 
+            else if(type.equals(Message.email_required)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_email_required,player,null));
             }
-            else if(type.equals("AuthDB_message_email_invalid")) 
+            else if(type.equals(Message.email_invalid)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_email_invalid,player,null));
             }
-            else if(type.equals("AuthDB_message_filter_renamed")) 
+            else if(type.equals(Message.filter_renamed)) 
             {
-                //player.setDisplayName(Util.CheckFilter("username",player.getName()));
                 player.sendMessage(Util.replaceStrings(AuthDB_message_filter_renamed,player,null));
             }
-            else if(type.equals("AuthDB_message_filter_username")) 
+            else if(type.equals(Message.filter_username)) 
             {
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_filter_username,player,null));
             }
-            else if(type.equals("AuthDB_message_filter_password")) 
+            else if(type.equals(Message.filter_password)) 
             {
                 if(Config.filter_action.equals("kick"))
                 {
@@ -368,59 +423,59 @@ static int Schedule = 0;
                     player.sendMessage(Util.replaceStrings(AuthDB_message_filter_password,player,null));
                 }
             }
-            else if(type.equals("AuthDB_message_filter_whitelist")) 
+            else if(type.equals(Message.filter_whitelist)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_filter_whitelist,player,null));
             }
-            else if(type.equals("AuthDB_message_username_minimum")) 
+            else if(type.equals(Message.username_minimum)) 
             {
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_username_minimum,player,null));
             }
-            else if(type.equals("AuthDB_message_username_maximum")) 
+            else if(type.equals(Message.username_maximum)) 
             {
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_username_maximum,player,null));
             }
-            else if(type.equals("AuthDB_message_password_minimum")) 
+            else if(type.equals(Message.password_minimum)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_minimum,player,null));
             }
-            else if(type.equals("AuthDB_message_password_maximum")) 
+            else if(type.equals(Message.password_maximum)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_maximum,player,null));
             }
-            else if(type.equals("AuthDB_message_password_success")) 
+            else if(type.equals(Message.password_success)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_success,player,null));
             }
-            else if(type.equals("AuthDB_message_password_failure")) 
+            else if(type.equals(Message.password_failure)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_failure,player,null));
             }
-            else if(type.equals("AuthDB_message_password_notregistered")) 
+            else if(type.equals(Message.password_notregistered)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_notregistered,player,null));
             }
-            else if(type.equals("AuthDB_message_password_usage")) 
+            else if(type.equals(Message.password_usage)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_usage,player,null));
             }
-            else if(type.equals("AuthDB_message_session_valid")) 
+            else if(type.equals(Message.session_valid)) 
             {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid,player,null));
             }
-            else if(type.equals("AuthDB_message_session_protected")) 
+            else if(type.equals(Message.session_protected)) 
             {
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_valid,player,null));
             }
-            else if(type.equals("AuthDB_message_idle_kick"))
+            else if(type.equals(Message.idle_kick))
             {
                 player.kickPlayer(Util.replaceStrings(AuthDB_message_idle_kick,player,null));
             }
-            else if(type.equals("AuthDB_message_idle_whitelist"))
+            else if(type.equals(Message.idle_whitelist))
             {
                 //player.sendMessage(Util.replaceStrings(AuthDB_message_idle_whitelist,player,null));
             }
         }
-        else { Messages.SendMessage("AuthDB_message_database_failure", null, null); }
+        else { Messages.SendMessage(Message.database_failure, null, null); }
     }
 }

@@ -54,6 +54,7 @@ import com.authdb.scripts.forum.SMF;
 import com.authdb.scripts.forum.XenForo;
 import com.authdb.scripts.forum.Vanilla;
 import com.authdb.scripts.forum.vBulletin;
+import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.MySQL;
 
 import com.mysql.jdbc.Blob;
@@ -872,7 +873,7 @@ public class Util
         if(method.equals("prompt")) 
             return method;
         else 
-            return "default";
+            return "normal";
     }
     
     public static boolean CheckWhitelist(String whitelist,Player player)
@@ -889,9 +890,9 @@ public class Util
             {
                 if(Config.debug_enable) Debug("FOUND USER IN WHITELIST: "+whitelistname);
                 if(whitelist.equals("idle"))
-                        Messages.SendMessage("AuthDB_message_idle_whitelist", player, null);
+                        Messages.SendMessage(Message.idle_whitelist, player, null);
                 else if(whitelist.equals("username"))
-                    Messages.SendMessage("AuthDB_message_filter_whitelist", player, null);
+                    Messages.SendMessage(Message.filter_whitelist, player, null);
                 return true; 
             }
         }
@@ -903,7 +904,7 @@ public class Util
         if(Config.debug_enable) Debug("Launching function: CheckIdle(Player player)");
         if (!AuthDB.isAuthorized(player.getEntityId()))
         {
-             Messages.SendMessage("kickPlayerIdleLoginMessage", player, null);
+             Messages.SendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
     } 
     

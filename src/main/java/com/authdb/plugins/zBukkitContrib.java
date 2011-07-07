@@ -30,12 +30,9 @@ public class zBukkitContrib {
             }
             counter++;
         }
-        Util.Debug("COUNTER: "+counter2);
         if(counter2 <= 4 && counter2 >= 2) { 
-            Util.Debug("HELLO 1");
             return true; 
             }
-        Util.Debug("HELLO 2");
         return false;
     }
 }

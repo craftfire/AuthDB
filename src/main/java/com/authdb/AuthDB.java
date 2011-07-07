@@ -46,6 +46,7 @@ import com.authdb.plugins.zCraftIRC;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
+import com.authdb.util.Messages.Message;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
@@ -82,7 +83,7 @@ public class AuthDB extends JavaPlugin {
         Util.Log("info", pluginname + " plugin " + pluginversion + " has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
         if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
-            zCraftIRC.SendMessage("disconnect",null);
+            zCraftIRC.SendMessage(Message.OnDisable,null);
         disableInventory();
         authorizedIds.clear();
         AuthTimeDB.clear();
@@ -179,7 +180,7 @@ public class AuthDB extends JavaPlugin {
               Util.Log("info","Found supported plugin: " + checkCraftIRC.getDescription().getName());
               this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                     @Override
-                    public void run() { if(checkCraftIRC.isEnabled()) { zCraftIRC.SendMessage("connect", null); } } }, 100);
+                    public void run() { if(checkCraftIRC.isEnabled()) { zCraftIRC.SendMessage(Message.OnEnable, null); } } }, 100);
               
           }
           final Plugin Backpack = getServer().getPluginManager().getPlugin("Backpack");
@@ -303,19 +304,19 @@ public class AuthDB extends JavaPlugin {
         password = Matcher.quoteReplacement(password);
         if(password.length() < Integer.parseInt(Config.password_minimum))
         {
-            Messages.SendMessage("AuthDB_message_password_minimum", theplayer, null);
+            Messages.SendMessage(Message.password_minimum, theplayer, null);
             return false;
         }
         else if(password.length() > Integer.parseInt(Config.password_maximum))
         {
-            Messages.SendMessage("AuthDB_message_password_maximum", theplayer, null);
+            Messages.SendMessage(Message.password_maximum, theplayer, null);
             return false;
         }
         if(!Config.database_keepalive) { MySQL.connect(); }
         String player = theplayer.getName();
         if (!Util.CheckFilter("password",password))
         {
-            Messages.SendMessage("AuthDB_message_badcharacters_password", theplayer, null);
+            Messages.SendMessage(Message.filter_password, theplayer, null);
         }
         else
         {
