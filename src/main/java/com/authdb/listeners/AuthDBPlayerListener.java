@@ -215,10 +215,11 @@ public boolean CheckTimeout(Player player) throws IOException
     // plugin.getServer().getScheduler().scheduleSyncDelayedTask;
      Player player = event.getPlayer();
      Messages.SendMessage(Message.left_server, player,null);
-     if(AuthDB.AuthDBWelcomeMessage.containsKey(player.getName())) 
+     if(AuthDB.AuthDBSpamMessage.containsKey(player.getName())) 
      { 
-         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBWelcomeMessage.get(player.getName())); 
-         AuthDB.AuthDBWelcomeMessage.remove(player.getName());
+         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName())); 
+         AuthDB.AuthDBSpamMessage.remove(player.getName());
+         AuthDB.AuthDBSpamMessageTime.remove(player.getName());
      }
      if(event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1)
      {

@@ -21,7 +21,6 @@ import com.authdb.plugins.zCraftIRC;
 public class Messages
 {
 static AuthDB plugin = new AuthDB();
-static int Schedule = 0;
 ///////////////////////////////////////////
 //  messages
 ///////////////////////////////////////////    
@@ -236,58 +235,11 @@ static int Schedule = 0;
             }
             else if(type.equals(Message.login_default)) 
             {
-                if(Config.welcome_enabled)
-                {
-                    String message = Util.replaceStrings(AuthDB_message_login_default,player,null);
-                    if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
-                    {
-                        message = message.replaceAll(player.getName(), player.getDisplayName());
-                        player.sendMessage(message);
-                    }
-                    else
-                    {
-                        player.sendMessage(message);
-                    }
-                }
+                Util.SpamText(player, Message.login_default.toString());
             }
             else if(type.equals(Message.login_prompt)) 
             { 
-                if(Config.login_delay > 0 && !AuthDB.AuthDBWelcomeMessage.containsKey(player.getName()))
-                {
-                    Schedule = AuthDB.Server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
-                    @Override
-                    public void run() 
-                    { 
-                        if(AuthDB.isAuthorized(player.getEntityId()))     
-                        { 
-                            AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBWelcomeMessage.get(player.getName())); 
-                            AuthDB.AuthDBWelcomeMessage.remove(player.getName());
-                            AuthDB.AuthDBWelcomeMessageTime.remove(player.getName());
-                        }
-                        else
-                        {
-                            if(!AuthDB.AuthDBWelcomeMessage.containsKey(player.getName())) { AuthDB.AuthDBWelcomeMessage.put(player.getName(), Schedule); }
-                            if(!AuthDB.AuthDBWelcomeMessageTime.containsKey(player.getName())) { AuthDB.AuthDBWelcomeMessageTime.put(player.getName(), Util.TimeStamp()); }
-                            if((AuthDB.AuthDBWelcomeMessageTime.get(player.getName()) + Config.login_show) <= Util.TimeStamp())
-                            {
-                                AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBWelcomeMessage.get(player.getName())); 
-                                AuthDB.AuthDBWelcomeMessage.remove(player.getName());
-                                AuthDB.AuthDBWelcomeMessageTime.remove(player.getName());
-                            }
-                            String message = Util.replaceStrings(AuthDB_message_login_prompt,player,null);
-                            if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
-                            {
-                                message = message.replaceAll(player.getName(), player.getDisplayName());
-                                player.sendMessage(message);
-                            }
-                            else
-                            {
-                                player.sendMessage(message);
-                            }
-                            Util.FillChatField(player, message);
-                        }
-                    } }, Config.login_delay, Util.ToTicks("seconds", "1"));
-                }
+                Util.SpamText(player, Message.login_prompt.toString());
             }
             else if(type.equals(Message.login_success)) 
             {

@@ -61,7 +61,7 @@ import com.mysql.jdbc.Blob;
 
 public class Util
 {  
-    
+    static int Schedule = 0;
     public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException
     {
         if(Config.database_ison)
@@ -573,6 +573,46 @@ public class Util
     {
         for (int i = 0; i < 20; i++) { player.sendMessage(""); }
         player.sendMessage(text);
+    }
+    
+    static void SpamText(final Player player, final String text)
+    {
+        if(Config.login_delay > 0 && !AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
+        {
+            Schedule = AuthDB.Server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
+            @Override
+            public void run() 
+            { 
+                if(AuthDB.isAuthorized(player.getEntityId()))     
+                { 
+                    AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName())); 
+                    AuthDB.AuthDBSpamMessage.remove(player.getName());
+                    AuthDB.AuthDBSpamMessageTime.remove(player.getName());
+                }
+                else
+                {
+                    if(!AuthDB.AuthDBSpamMessage.containsKey(player.getName())) { AuthDB.AuthDBSpamMessage.put(player.getName(), Schedule); }
+                    if(!AuthDB.AuthDBSpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDBSpamMessageTime.put(player.getName(), Util.TimeStamp()); }
+                    if((AuthDB.AuthDBSpamMessageTime.get(player.getName()) + Config.login_show) <= Util.TimeStamp())
+                    {
+                        AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName())); 
+                        AuthDB.AuthDBSpamMessage.remove(player.getName());
+                        AuthDB.AuthDBSpamMessageTime.remove(player.getName());
+                    }
+                    String message = Util.replaceStrings(text,player,null);
+                    if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
+                    {
+                        message = message.replaceAll(player.getName(), player.getDisplayName());
+                        player.sendMessage(message);
+                    }
+                    else
+                    {
+                        player.sendMessage(message);
+                    }
+                    Util.FillChatField(player, message);
+                }
+            } }, Config.login_delay, Util.ToTicks("seconds", "1"));
+        }
     }
     
     static long TimeStamp()
