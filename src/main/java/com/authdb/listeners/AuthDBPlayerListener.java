@@ -62,7 +62,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
         String name = player.getName();
         if (Util.CheckFilter("username",name) == false && Util.CheckWhitelist("username",player) == false)
         {
-          if(Config.debug_enable) Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
+          Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
           if(Config.filter_action.equals("kick")) Messages.SendMessage(Message.filter_username, player, event);
         }
     }
@@ -82,8 +82,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
 
 public boolean CheckTimeout(Player player) throws IOException
 {
-    if(Config.debug_enable) 
-        Util.Debug("Launching function: CheckTimeout(Player player))");
+    Util.Debug("Launching function: CheckTimeout(Player player))");
     if (AuthDB.isAuthorized(player.getEntityId()) == false && this.plugin.TimeoutTask("check",player, ""+Schedule))
     {
         Messages.SendMessage(Message.idle_kick, player, null);
@@ -104,7 +103,7 @@ public boolean CheckTimeout(Player player) throws IOException
     }
     this.plugin.AuthPasswordTriesDB.put(player.getName(),"0");
     try {
-        if(Config.session_length != "0" || Config.session_length != null)
+        if(Config.session_length != 0)
         {
             long timestamp = System.currentTimeMillis()/1000;
             if(this.plugin.TimeoutTask("check2",player, "") == true)
@@ -113,7 +112,7 @@ public boolean CheckTimeout(Player player) throws IOException
                 Util.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
                 long timedifference = timestamp - storedtime;
                 Util.Debug("Difference: "+timedifference);
-                if(timedifference > Config.session_seconds) { sessionallow = false; }
+                if(timedifference > Config.session_length) { sessionallow = false; }
                 else { sessionallow = true; }
                 
             }
@@ -123,7 +122,6 @@ public boolean CheckTimeout(Player player) throws IOException
         try {
             if(Config.login_timeout > 0 && sessionallow == false)
             {
-                if(Config.debug_enable) 
                     Util.Debug("Timeout time is: "+Config.login_timeout);
                     Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
@@ -137,8 +135,7 @@ public boolean CheckTimeout(Player player) throws IOException
                         } 
                     } }, Config.login_timeout);
                 if(this.plugin.TimeoutTask("add",player, ""+Schedule))
-                    if(Config.debug_enable) 
-                        Util.Debug(player.getName()+" added to the CheckTimeoutTaskList");
+                    Util.Debug(player.getName()+" added to the CheckTimeoutTaskList");
                 this.plugin.updateDb();
             }
         if(Config.custom_enabled) if(Config.custom_encryption == null) { player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT."); }
@@ -212,7 +209,6 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerQuit(PlayerQuitEvent event)
   {
-    // plugin.getServer().getScheduler().scheduleSyncDelayedTask;
      Player player = event.getPlayer();
      Messages.SendMessage(Message.left_server, player,null);
      if(AuthDB.AuthDBSpamMessage.containsKey(player.getName())) 
@@ -226,12 +222,11 @@ public boolean CheckTimeout(Player player) throws IOException
          player.setHealth(20);
          player.teleport(player.getWorld().getSpawnLocation());
      }
-    // Util.Debug("PLAYER HEALTH:"+event.getPlayer().getHealth());
      try {
         if(this.plugin.TimeoutTask("check",player, "0"))
          {
             int TaskID = Integer.parseInt(this.plugin.TimeoutGetTaskID(player));
-            if(Config.debug_enable) Util.Debug(player.getName()+" is in the TimeoutTaskList with ID: "+TaskID);
+            Util.Debug(player.getName()+" is in the TimeoutTaskList with ID: "+TaskID);
             if(this.plugin.TimeoutTask("remove",player, "0"))
             {
                 Util.Debug(player.getName()+" was removed from the TimeoutTaskList");
@@ -242,7 +237,7 @@ public boolean CheckTimeout(Player player) throws IOException
         else { Util.Debug("Could not find "+player.getName()+" in the timeout list, no need to remove."); }
         this.plugin.updateDb();
     } catch (IOException e) {
-        if(Config.debug_enable) Util.Debug("Error with the timeout list, can't cancel task?");
+        Util.Debug("Error with the timeout list, can't cancel task?");
         e.printStackTrace();
     }
         long thetimestamp = System.currentTimeMillis()/1000;
@@ -332,7 +327,7 @@ public boolean CheckTimeout(Player player) throws IOException
                     else { Messages.SendMessage(Message.link_exists, player,null); }
                 }
                 else { Messages.SendMessage(Message.link_usage, player,null); }
-                if(Config.debug_enable) Util.Debug(player.getName()+" link ******** ********");
+                Util.Debug(player.getName()+" link ******** ********");
                 event.setMessage("/link ****** ********");
                 event.setCancelled(true);
             }
@@ -397,7 +392,7 @@ public boolean CheckTimeout(Player player) throws IOException
                     long timestamp = System.currentTimeMillis()/1000;
                     this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                     this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-                    if(Config.debug_enable)  { Util.Debug("Session started for "+player.getName()); }
+                    Util.Debug("Session started for "+player.getName());
                     this.plugin.authorize(player.getEntityId());
                     long thetimestamp = System.currentTimeMillis()/1000;
                     this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
@@ -471,8 +466,7 @@ public boolean CheckTimeout(Player player) throws IOException
                     long timestamp = System.currentTimeMillis()/1000;
                     this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                     this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-                    if(Config.debug_enable) 
-                        Util.Debug("Session started for "+player.getName());
+                    Util.Debug("Session started for "+player.getName());
                     Messages.SendMessage(Message.login_success, player,null);
                 } else {
                   /* ItemStack[] inv = this.plugin.getInventory(player.getName());
@@ -482,8 +476,7 @@ public boolean CheckTimeout(Player player) throws IOException
                       } */
                       Messages.SendMessage(Message.login_failure, player,null);
                   }
-                  if(Config.debug_enable) 
-                      Util.Debug(player.getName()+" login ********");
+                  Util.Debug(player.getName()+" login ********");
                   event.setMessage(" has logged in!");
                   event.setCancelled(true);  
               }

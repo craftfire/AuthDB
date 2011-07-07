@@ -195,7 +195,14 @@ static AuthDB plugin = new AuthDB();
         {
             if(type.equals(Message.welcome_guest)) 
             {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_welcome_guest,player,null));
+                if(Config.register_force)
+                {
+                    Util.SpamText(player, Message.welcome_guest.toString(), Config.register_delay, Config.register_show);
+                }
+                else
+                {
+                    player.sendMessage(Util.replaceStrings(AuthDB_message_welcome_guest,player,null));
+                }
             }
             else if(type.equals(Message.guest_notauthorized)) 
             {
@@ -235,11 +242,11 @@ static AuthDB plugin = new AuthDB();
             }
             else if(type.equals(Message.login_default)) 
             {
-                Util.SpamText(player, Message.login_default.toString());
+                Util.SpamText(player, Message.login_default.toString(), Config.login_delay, Config.login_show);
             }
             else if(type.equals(Message.login_prompt)) 
             { 
-                Util.SpamText(player, Message.login_prompt.toString());
+                Util.SpamText(player, Message.login_prompt.toString(), Config.login_delay, Config.login_show);
             }
             else if(type.equals(Message.login_success)) 
             {

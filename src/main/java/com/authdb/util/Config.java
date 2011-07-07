@@ -67,6 +67,8 @@ public class Config
         //               register
         ///////////////////////////////////////////
         public static boolean register_enabled,register_force;
+        public static String register_delay_length,register_delay_time,register_timeout_length,register_timeout_time,register_show_length,register_show_time;
+        public static int register_delay,register_timeout,register_show;
         
         ///////////////////////////////////////////
         //               login
@@ -99,8 +101,8 @@ public class Config
         //               session
         ///////////////////////////////////////////
         public static boolean session_protect;
-        public static String session_time,session_length,session_start;
-        public static int session_seconds;
+        public static String session_time,session_thelength,session_start;
+        public static int session_length;
 
         ///////////////////////////////////////////
         //               guests
@@ -198,6 +200,15 @@ public class Config
                     ///////////////////////////////////////////
                     register_enabled = GetConfigBoolean("Core.register.enabled", true);
                     register_force = GetConfigBoolean("Core.register.force", true);
+                    register_delay_length = Util.split(GetConfigString("Core.register.delay", "4 seconds"), " ")[0];
+                    register_delay_time = Util.split(GetConfigString("Core.register.delay", "4 seconds"), " ")[1];
+                    register_delay = Util.ToTicks(register_delay_time,register_delay_length);
+                    register_show_length = Util.split(GetConfigString("Core.register.show", "10 seconds"), " ")[0];
+                    register_show_time = Util.split(GetConfigString("Core.register.show", "10 seconds"), " ")[1];
+                    register_show = Util.ToSeconds(register_show_time,register_show_length);
+                    register_timeout_length = Util.split(GetConfigString("Core.register.timeout", "3 minutes"), " ")[0];
+                    register_timeout_time = Util.split(GetConfigString("Core.register.timeout", "3 minutes"), " ")[1];
+                    register_timeout = Util.ToTicks(register_timeout_time,register_timeout_length);
                     
                     ///////////////////////////////////////////
                     //               login
@@ -205,8 +216,8 @@ public class Config
                     login_method = GetConfigString("Core.login.method", "prompt");
                     login_tries = GetConfigString("Core.login.tries", "3");
                     login_action = Util.GetAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
-                    login_delay_length = Util.split(GetConfigString("Core.login.delay", "2 seconds"), " ")[0];
-                    login_delay_time = Util.split(GetConfigString("Core.login.delay", "2 seconds"), " ")[1];
+                    login_delay_length = Util.split(GetConfigString("Core.login.delay", "4 seconds"), " ")[0];
+                    login_delay_time = Util.split(GetConfigString("Core.login.delay", "4 seconds"), " ")[1];
                     login_delay = Util.ToTicks(login_delay_time,login_delay_length);
                     login_show_length = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[0];
                     login_show_time = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[1];
@@ -244,11 +255,10 @@ public class Config
                     //               session
                     ///////////////////////////////////////////
                     session_protect = GetConfigBoolean("Core.session.protect", true);
-                    session_time = GetConfigString("Core.session.time", "minutes");
-                    session_length = GetConfigString("Core.session.length", "60");
-                    session_seconds = Util.ToSeconds(session_time,session_length);
-                    session_start = GetConfigString("Core.session.start", "login");
-                    session_start = Util.CheckSessionStart(session_start);
+                    session_thelength = Util.split(GetConfigString("Core.session.length", "1 hour"), " ")[0];
+                    session_time = Util.split(GetConfigString("Core.session.length", "1 hour"), " ")[1];
+                    session_length = Util.ToSeconds(session_time,session_thelength);
+                    session_start = Util.CheckSessionStart(GetConfigString("Core.session.start", "login"));
                     
                     ///////////////////////////////////////////
                     //               guests

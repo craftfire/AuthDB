@@ -575,7 +575,7 @@ public class Util
         player.sendMessage(text);
     }
     
-    static void SpamText(final Player player, final String text)
+    static void SpamText(final Player player, final String text, final int delay, final int show)
     {
         if(Config.login_delay > 0 && !AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
         {
@@ -593,7 +593,7 @@ public class Util
                 {
                     if(!AuthDB.AuthDBSpamMessage.containsKey(player.getName())) { AuthDB.AuthDBSpamMessage.put(player.getName(), Schedule); }
                     if(!AuthDB.AuthDBSpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDBSpamMessageTime.put(player.getName(), Util.TimeStamp()); }
-                    if((AuthDB.AuthDBSpamMessageTime.get(player.getName()) + Config.login_show) <= Util.TimeStamp())
+                    if((AuthDB.AuthDBSpamMessageTime.get(player.getName()) + show) <= Util.TimeStamp())
                     {
                         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName())); 
                         AuthDB.AuthDBSpamMessage.remove(player.getName());
@@ -611,7 +611,7 @@ public class Util
                     }
                     Util.FillChatField(player, message);
                 }
-            } }, Config.login_delay, Util.ToTicks("seconds", "1"));
+            } }, delay, Util.ToTicks("seconds", "1"));
         }
     }
     

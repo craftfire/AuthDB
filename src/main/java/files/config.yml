@@ -25,15 +25,15 @@ Core:
   register:
     enabled: true
     force: true
-/    delay: 2 seconds
-/    show: 10 seconds
-/    timeout: 3 minutes
+    delay: 4 seconds
+    show: 10 seconds
+    timeout: 3 minutes
   login:
     method: prompt
     action: kick
     tries: 3
     kick: true
-    delay: 2 seconds
+    delay: 4 seconds
     show: 10 seconds
     timeout: 3 minutes
   link:
@@ -50,15 +50,8 @@ Core:
     maximum: 16
   session:
     start: login
-/   length: 1 hour
-    time: minutes
-    length: 60
+    length: 1 hour
     protect: true
-  idle:
-    time: seconds
-    length: 30
-    kick: true
-    whitelist: Contex,Wulfspider
   guest:
     commands: false
     chat: false
@@ -74,7 +67,7 @@ Core:
     mobtargeting: false
     mobdamage: false
   filter:
-/    action: kick
+    action: kick
     username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "
     password: "&"
     whitelist: Contex,Wulfspider
