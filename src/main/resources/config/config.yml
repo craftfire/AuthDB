@@ -1,7 +1,7 @@
 Core:
   plugin:
-    debugmode: false
-    usagestats: true
+    debugmode: false    # Set to true to enable debugging output in server console.
+    usagestats: true    # Set to false to disable usage stats reporting to devs.
   database:
     driver: mysql
     host: localhost

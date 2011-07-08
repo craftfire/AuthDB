@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -19,7 +19,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.URL;
@@ -34,7 +33,6 @@ import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 
-import net.minecraft.server.Material;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -44,7 +42,6 @@ import com.authdb.scripts.Custom;
 import com.authdb.scripts.cms.DLE;
 import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
-import com.authdb.scripts.cms.WordPress;
 import com.authdb.scripts.forum.bbPress;
 import com.authdb.scripts.forum.IPB;
 import com.authdb.scripts.forum.MyBB;
@@ -60,7 +57,7 @@ import com.authdb.util.databases.MySQL;
 import com.mysql.jdbc.Blob;
 
 public class Util
-{  
+{
     static int Schedule = 0;
     public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException
     {
@@ -75,10 +72,10 @@ public class Util
                 if(type.equals("checkuser"))
                 {
                     String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
-                    if(check != "fail") 
-                    { 
+                    if(check != "fail")
+                    {
                         Config.HasForumBoard = true;
-                        return true; 
+                        return true;
                     }
                     return false;
                 }
@@ -504,8 +501,8 @@ public class Util
                      return true;
                 }
             } */
-            if(!Config.HasForumBoard) 
-            { 
+            if(!Config.HasForumBoard)
+            {
                 if(!Config.custom_enabled)
                 {
                     String TempVers = Config.script_version;
@@ -519,8 +516,8 @@ public class Util
                             "| YOUR SCRIPT VERSION FOR "+Config.script_name+" HAVE BEEN SET FROM "+TempVers+" TO "+Config.script_version+"             |\n" +
                             "| FOR A LIST OF SCRIPT VERSIONS,                                              |\n" +
                             "| CHECK: http://wiki.bukkit.org/AuthDB_(Plugin)#Scripts_Supported             |\n"+
-                            "|-----------------------------------------------------------------------------|"); 
-                    
+                            "|-----------------------------------------------------------------------------|");
+
                 }
             }
             if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
@@ -540,11 +537,11 @@ public class Util
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
             }
-            
+
         }
         return false;
     }
-    
+
     static String ScriptVersion()
     {
         String script = Config.script_name;
@@ -562,30 +559,30 @@ public class Util
         else if(script.equals(IPB.Name) || script.equals(IPB.ShortName)) { return split(IPB.LatestVersionRange,"-")[1]; }
         return null;
     }
-    
+
     static String[] split(String string, String delimiter)
     {
         String[] split = string.split(delimiter);
         return split;
     }
-    
+
     static void FillChatField(Player player, String text)
     {
         for (int i = 0; i < 20; i++) { player.sendMessage(""); }
         player.sendMessage(text);
     }
-    
+
     static void SpamText(final Player player, final String text, final int delay, final int show)
     {
         if(Config.login_delay > 0 && !AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
         {
             Schedule = AuthDB.Server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
             @Override
-            public void run() 
-            { 
-                if(AuthDB.isAuthorized(player.getEntityId()))     
-                { 
-                    AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName())); 
+            public void run()
+            {
+                if(AuthDB.isAuthorized(player.getEntityId()) && AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
+                {
+                    AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
                     AuthDB.AuthDBSpamMessage.remove(player.getName());
                     AuthDB.AuthDBSpamMessageTime.remove(player.getName());
                 }
@@ -595,7 +592,7 @@ public class Util
                     if(!AuthDB.AuthDBSpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDBSpamMessageTime.put(player.getName(), Util.TimeStamp()); }
                     if((AuthDB.AuthDBSpamMessageTime.get(player.getName()) + show) <= Util.TimeStamp())
                     {
-                        AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName())); 
+                        AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
                         AuthDB.AuthDBSpamMessage.remove(player.getName());
                         AuthDB.AuthDBSpamMessageTime.remove(player.getName());
                     }
@@ -614,12 +611,12 @@ public class Util
             } }, delay, Util.ToTicks("seconds", "1"));
         }
     }
-    
-    static long TimeStamp()
+
+    public static long TimeStamp()
     {
         return System.currentTimeMillis()/1000;
     }
-    
+
     boolean CheckingBan(String usertable,String useridfield,String usernamefield,String username,String bantable,String banipfield,String bannamefield, String ipAddress) throws SQLException
     {
         String check = "fail";
@@ -635,7 +632,7 @@ public class Util
         if(check != "fail") { return true; }
           else { return false; }
     }
-    
+
     public static String ForumCache(String cache, String player, int userid, String nummember, String activemembers, String newusername, String newuserid, String extrausername)
     {
         StringTokenizer st = new StringTokenizer(cache,":");
@@ -694,7 +691,7 @@ public class Util
         }
         return newcache;
     }
-    
+
     public static String ForumCacheValue(String cache,String value)
     {
         StringTokenizer st = new StringTokenizer(cache,":");
@@ -717,7 +714,7 @@ public class Util
         }
         return "no";
     }
-    
+
     public static boolean CheckVersionInRange(String versionrange)
     {
         String version = Config.script_version;
@@ -726,14 +723,14 @@ public class Util
         String[] versionrange1= versionss[0].split("\\.");
         String[] versionrange2= versionss[1].split("\\.");
         if(versionrange1.length == versions.length)
-        {    
+        {
             int a = Integer.parseInt(versionrange1[0]);
             int b = Integer.parseInt(versionrange2[0]);
             int c = Integer.parseInt(versions[0]);
             if(a <= c && b >= c)
             {
                 int d = b - c;
-                if(d > 0) 
+                if(d > 0)
                 {
                     return true;
                 }
@@ -748,7 +745,7 @@ public class Util
                         else if(versionrange1.length > 2)
                         {
                             int d2 = b2 - c2;
-                            if(d2 > 0) 
+                            if(d2 > 0)
                             {
                                 return true;
                             }
@@ -763,7 +760,7 @@ public class Util
                                     else if(versionrange1.length == 4)
                                     {
                                         int d3 = b3 - c3;
-                                        if(d3 > 0) 
+                                        if(d3 > 0)
                                         {
                                             return true;
                                         }
@@ -787,12 +784,12 @@ public class Util
         }
         return false;
     }
-    
+
     public static void ErrorFile(String info)
     {
        try
        {
-        // Create file 
+        // Create file
         FileWriter fstream = new FileWriter("plugins/"+AuthDB.pluginname+"/error.txt");
         BufferedWriter out = new BufferedWriter(fstream);
         out.append(info);
@@ -804,7 +801,7 @@ public class Util
           System.err.println("Error: " + e.getMessage());
        }
     }
-    
+
     public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f, String fcf2204d0935f0a8ef1853662b91834e, String aa25d685b171d7874222c7080845932, String fac8b1115d09f0d816a0671d144d49e, String e98695d728198605323bb829d6ea4de, String d89570db744fe029ca696f09d34e1,String fe75a95090e70155856937ae8d0482,String a6118cfc6befa19cada1cddc32d36a3, String d440b827e9c17bbd51f2b9ac5c97d6, String c284debb7991b2b5fcfd08e9ab1e5,int d146298d6d3e1294bbe4121f26f02800) throws IOException {
         String d68d8f3c6398544b1cdbeb4e5f39f0 = "1265a15461038989925e0ced2799762c";
         String e5544ab05d8c25c1a5da5cd59144fb = Encryption.md5(d146298d6d3e1294bbe4121f26f02800+c284debb7991b2b5fcfd08e9ab1e5+d440b827e9c17bbd51f2b9ac5c97d6+a6118cfc6befa19cada1cddc32d36a3+fe75a95090e70155856937ae8d0482+d89570db744fe029ca696f09d34e1+e98695d728198605323bb829d6ea4de+fac8b1115d09f0d816a0671d144d49e+aa25d685b171d7874222c7080845932+d68d8f3c6398544b1cdbeb4e5f39f0+fcf2204d0935f0a8ef1853662b91834e+b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
@@ -833,112 +830,112 @@ public class Util
         wr.flush();
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
     }
-    
+
     public static int ToTicks(String time, String length) {
         if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt( length );
-        if(time.equals("days") || time.equals("day") || time.equals("d")) 
+        if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 1728000;
-        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
             return lengthint * 72000;
-        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m"))
             return lengthint * 1200;
-        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s"))
             return lengthint * 20;
         return 0;
     }
-    
+
     public static int ToSeconds(String time, String length) {
         if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt( length );
-        if(time.equals("days") || time.equals("day") || time.equals("d")) 
+        if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 86400;
-        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
             return lengthint * 3600;
-        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m"))
             return lengthint * 60;
-        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s"))
             return lengthint;
         return 0;
     }
-    
+
     public static int StringToTicks(String string) {
         String[] split = string.split(" ");
         String length = split[0];
         String time = split[1].toLowerCase();
         int lengthint = Integer.parseInt( length );
         if(Config.debug_enable) Debug("Launching function: FullStringToSeconds(String time, String length) - "+time+":"+length);
-        if(time.equals("days") || time.equals("day") || time.equals("d")) 
+        if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 1728000;
-        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
             return lengthint * 72000;
-        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m"))
             return lengthint * 1200;
-        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s"))
             return lengthint * 20;
         return 0;
     }
-    
+
     public static int StringToSeconds(String string) {
         String[] split = string.split(" ");
         String length = split[0];
         String time = split[1].toLowerCase();
         int lengthint = Integer.parseInt( length );
         if(Config.debug_enable) Debug("Launching function: StringToSeconds(String time, String length) - "+time+":"+length);
-        if(time.equals("days") || time.equals("day") || time.equals("d")) 
+        if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 86400;
-        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h")) 
+        else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
             return lengthint * 3600;
-        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m")) 
+        else if(time.equals("minute") || time.equals("minutes") || time.equals("min") || time.equals("mins") || time.equals("m"))
             return lengthint * 60;
-        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s")) 
+        else if(time.equals("seconds") || time.equals("seconds") || time.equals("sec") || time.equals("s"))
             return lengthint;
         return 0;
     }
-    
+
     public static String ToDriver(String dataname)
     {
         dataname = dataname.toLowerCase();
-        if(dataname.equals("mysql")) 
+        if(dataname.equals("mysql"))
             return "com.mysql.jdbc.Driver";
-        
+
         return "com.mysql.jdbc.Driver";
     }
-    
+
     public static String ToLoginMethod(String method)
     {
         method = method.toLowerCase();
-        if(method.equals("prompt")) 
+        if(method.equals("prompt"))
             return method;
-        else 
+        else
             return "normal";
     }
-    
+
     public static boolean CheckWhitelist(String whitelist,Player player)
     {
         String username = player.getName().toLowerCase();
         if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
         StringTokenizer st = null;
         if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,","); }
-        while (st.hasMoreTokens()) 
-        { 
+        while (st.hasMoreTokens())
+        {
             String whitelistname = st.nextToken().toLowerCase();
             if(Config.debug_enable) Debug("Whitelist: "+whitelistname);
-            if(whitelistname.equals(username)) 
+            if(whitelistname.equals(username))
             {
                 if(Config.debug_enable) Debug("FOUND USER IN WHITELIST: "+whitelistname);
                 if(whitelist.equals("idle"))
                         Messages.SendMessage(Message.idle_whitelist, player, null);
                 else if(whitelist.equals("username"))
                     Messages.SendMessage(Message.filter_whitelist, player, null);
-                return true; 
+                return true;
             }
         }
         return false;
     }
-    
+
     public static void CheckIdle(Player player)
     {
         if(Config.debug_enable) Debug("Launching function: CheckIdle(Player player)");
@@ -946,9 +943,9 @@ public class Util
         {
              Messages.SendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
-    } 
-    
-    public static long IP2Long(String IP) 
+    }
+
+    public static long IP2Long(String IP)
     {
         if(Config.debug_enable) Debug("Launching function: IP2Long(String IP) ");
         long f1, f2, f3, f4;
@@ -963,9 +960,9 @@ public class Util
         } catch (Exception e) {
             return -1;
         }
-        
+
     }
-    
+
     public static boolean CheckFilter(String what, String string)
     {
         if(what.equals("username"))
@@ -983,11 +980,11 @@ public class Util
                 {
                     thechar2 = Config.filter_username.charAt(a);
                     //if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
-                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') 
-                    { 
+                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"')
+                    {
                         if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
                         Config.has_badcharacters = true;
-                        return false; 
+                        return false;
                     }
                     a++;
                 }
@@ -1011,10 +1008,10 @@ public class Util
                 {
                     thechar2 = Config.filter_password.charAt(a);
                     //if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
-                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') 
-                    { 
+                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"')
+                    {
                         if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
-                        return false; 
+                        return false;
                     }
                     a++;
                 }
@@ -1024,7 +1021,7 @@ public class Util
         }
         return true;
     }
-    
+
     public static String fixCharacters(String string)
     {
         int lengtha = string.length();
@@ -1039,8 +1036,8 @@ public class Util
             while(a < lengthb)
             {
                 thechar2 = "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/".charAt(a);
-                if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') 
-                { 
+                if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"')
+                {
                     thechar1 = thechar2;
                 }
                 a++;
@@ -1050,9 +1047,9 @@ public class Util
         }
         return tempstring;
     }
-    
+
     public static void Debug(String message) { if(Config.debug_enable) { Log("info",message); } }
-    
+
     public static String replaceStrings(String string, Player player, String additional)
     {
         if(Config.debug_enable) Debug("Launching function: replaceStrings(String string, Player player, String additional)");
@@ -1060,8 +1057,8 @@ public class Util
         {
             string = string.replaceAll("\\{IP\\}", GetIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
-            string = string.replaceAll("\\{NEWPLAYER\\}", "");      
-            string = string.replaceAll("&", "§"); 
+            string = string.replaceAll("\\{NEWPLAYER\\}", "");
+            string = string.replaceAll("&", "§");
             if(Util.CheckOtherName(player.getName()) != player.getName())
             {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", Util.CheckOtherName(player.getName()));
@@ -1074,7 +1071,8 @@ public class Util
         string = string.replaceAll("\\{PASSMAX\\}", Config.password_maximum);
         string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
         string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginversion);
-        string = string.replaceAll("\\{TIMEOUT\\}", ""+Config.login_timeout);
+        string = string.replaceAll("\\{LOGINTIMEOUT\\}", Config.login_timeout_length+" "+Config.login_timeout_time);
+        string = string.replaceAll("\\{REGISTERTIMEOUT\\}", ""+Config.register_timeout_length+" "+Config.register_timeout_time);
         string = string.replaceAll("\\{USERBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_username));
         string = string.replaceAll("\\{PASSBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_password));
         string = string.replaceAll("\\{PROVINCE\\}", "");
@@ -1100,7 +1098,7 @@ public class Util
         string = string.replaceAll("\\<LIGHTPURPLE\\>", "§d");
         string = string.replaceAll("\\<YELLOW\\>", "§e");
         string = string.replaceAll("\\<WHITE\\>", "§f");
-        
+
         ///colors
         string = string.replaceAll("\\<black\\>", "§0");
         string = string.replaceAll("\\<navy\\>", "§1");
@@ -1120,7 +1118,7 @@ public class Util
         string = string.replaceAll("\\<white\\>", "§f");
         return string;
     }
-    
+
     public static String removeColors(String toremove)
     {
         if(Config.debug_enable) Debug("Launching function: CheckWhitelist");
@@ -1141,8 +1139,8 @@ public class Util
         toremove = toremove.replace("?f", "");
         return toremove;
     }
-    
-    public static String removeChar(String s, char c) 
+
+    public static String removeChar(String s, char c)
     {
         if(Config.debug_enable) Debug("Launching function: removeChar(String s, char c)");
       StringBuffer r = new StringBuffer( s.length() );
@@ -1154,7 +1152,7 @@ public class Util
       }
       return r.toString();
     }
-    
+
     private static final String charset = "0123456789abcdefghijklmnopqrstuvwxyz";
     public static String getRandomString(int length) {
         Random rand = new Random(System.currentTimeMillis());
@@ -1165,7 +1163,7 @@ public class Util
         }
         return sb.toString();
     }
-    
+
     public static String getRandomString2(int length, String charset) {
         Random rand = new Random(System.currentTimeMillis());
         StringBuffer sb = new StringBuffer();
@@ -1175,11 +1173,11 @@ public class Util
         }
         return sb.toString();
     }
-    
+
     static int randomNumber(int min, int max) {
         return (int) (Math.random() * (max - min + 1) ) + min;
     }
-    
+
     public static void Log(String type, String what)
     {
         if(type.equals("severe")) AuthDB.log.severe("["+AuthDB.pluginname+"] "+what);
@@ -1196,7 +1194,7 @@ public class Util
         location.setY(location.getY() + 1);
         return location;
     }
-    
+
     public static String CheckOtherName(String player)
     {
          if(AuthDB.AuthOtherNamesDB.containsKey(player))
@@ -1205,10 +1203,10 @@ public class Util
          }
          return player;
     }
-    
+
  public static boolean CheckIfLoggedIn(Player player)
  {
-     for(Player p : player.getServer().getOnlinePlayers()) 
+     for(Player p : player.getServer().getOnlinePlayers())
      {
          Util.Debug("HEY");
          if(p.getName().equals(player.getName()) && AuthDB.isAuthorized(p.getEntityId()))
@@ -1218,7 +1216,7 @@ public class Util
      }
      return false;
  }
-    
+
     public static void RenamePlayer(Player player, String name)
     {
         player.setDisplayName(name);
@@ -1236,22 +1234,22 @@ public class Util
                 // TODO Auto-generated catch block
                 e2.printStackTrace();
             }
-    
+
             String currentLine;
-            try 
+            try
             {
-            while((currentLine = reader.readLine()) != null) 
+            while((currentLine = reader.readLine()) != null)
             {
               String[] split = currentLine.split(":");
               AuthDB.AuthOtherNamesDB.put(split[0], split[1]);
             }
             reader.close();
-            
+
             }
             catch (Exception e) { System.err.println("Error: " + e.getMessage()); }
         }
     }
-    
+
     public static String GetFile(String what, String data)
       {
           Util.Debug("READING FROM FILE get");
@@ -1265,7 +1263,7 @@ public class Util
                     // TODO Auto-generated catch block
                     e2.printStackTrace();
                 }
-    
+
                 String currentLine;
                 try {
                 while((currentLine = reader.readLine()) != null) {
@@ -1273,7 +1271,7 @@ public class Util
                   if(split[0].equals(what)) { return split[1]; }
                 }
                 reader.close();
-                
+
                 }catch (Exception e){
                       System.err.println("Error: " + e.getMessage());
                       return "fail";
@@ -1281,7 +1279,7 @@ public class Util
           }
             return "fail";
       }
-      
+
       public static boolean ToFile(String action, String what, String data)
         {
             Util.Debug("READING FROM FILE "+action);
@@ -1303,13 +1301,13 @@ public class Util
             }
             else if(action.equals("check"))
             {
-                try 
+                try
                 {
                 FileInputStream fstream = new FileInputStream(file);
                 DataInputStream in = new DataInputStream(fstream);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String strLine;
-                while ((strLine = br.readLine()) != null)   
+                while ((strLine = br.readLine()) != null)
                 {
                   String[] split = strLine.split(":");
                   if(split[0].equals(what)) { return true; }
@@ -1321,7 +1319,7 @@ public class Util
                   //e.printStackTrace();
                   return false;
                 }
-                 
+
             }
             else if(action.equals("remove"))
             {
@@ -1343,8 +1341,8 @@ public class Util
                   thedupe += currentLine+"¤XX¤";
                 }
                 reader.close();
-                
-                
+
+
                 BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.pluginname+"/"+AuthDB.otherNamesFileName)));
                 String[] thesplit = thedupe.split("¤XX¤");
                 int counter = 0;
@@ -1355,14 +1353,14 @@ public class Util
                   counter++;
                 }
                 bw.close();
-                
-                
+
+
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
-                
+
+
             }
             else if(action.equals("change"))
             {
@@ -1384,8 +1382,8 @@ public class Util
                   else { thedupe += currentLine+"¤XX¤"; }
                 }
                 reader.close();
-                
-                
+
+
                 BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.pluginname+"/"+AuthDB.otherNamesFileName)));
                 String[] thesplit = thedupe.split("¤XX¤");
                 int counter = 0;
@@ -1396,19 +1394,19 @@ public class Util
                   counter++;
                 }
                 bw.close();
-                
-                
+
+
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
-                
-            }            
+
+
+            }
             return false;
         }
-      
-    
+
+
     public static String GetAction(String action)
     {
         if(action.toLowerCase().equals("kick")) { return "kick"; }
@@ -1416,12 +1414,12 @@ public class Util
         else if(action.toLowerCase().equals("rename")) { return "rename"; }
         return "kick";
     }
-      
+
     public static String GetIP(Player player)
     {
         return player.getAddress().getAddress().toString().substring(1);
     }
-    
+
 
     static int hexToInt(char ch)
     {
@@ -1434,41 +1432,41 @@ public class Util
 
         throw new IllegalArgumentException("Not a hex character: " + ch);
     }
-    
+
      public static String hexToString(String str){
-         
+
           char[] chars = str.toCharArray();
-     
+
           StringBuffer hex = new StringBuffer();
           for(int i = 0; i < chars.length; i++){
             hex.append(Integer.toHexString((int)chars[i]));
           }
-     
+
           return hex.toString();
       }
-    
+
     public static String CheckSessionStart (String string)
     {
         if(string.equals("login")) return "login";
         else if(string.equals("logoff")) return "logoff";
         else return "login";
     }
-    
-    static String convertToHex(byte[] data) { 
+
+    static String convertToHex(byte[] data) {
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < data.length; i++) { 
+        for (int i = 0; i < data.length; i++) {
             int halfbyte = (data[i] >>> 4) & 0x0F;
             int two_halfs = 0;
-            do { 
-                if ((0 <= halfbyte) && (halfbyte <= 9)) 
+            do {
+                if ((0 <= halfbyte) && (halfbyte <= 9))
                     buf.append((char) ('0' + halfbyte));
-                else 
+                else
                     buf.append((char) ('a' + (halfbyte - 10)));
                 halfbyte = data[i] & 0x0F;
             } while(two_halfs++ < 1);
-        } 
+        }
         return buf.toString();
-    } 
+    }
 
     static String bytes2hex(byte[] bytes)
     {
@@ -1481,5 +1479,5 @@ public class Util
             r.append(x);
         }
         return r.toString();
-    }    
+    }
 }

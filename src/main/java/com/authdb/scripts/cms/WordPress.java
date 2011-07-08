@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -17,12 +17,12 @@ import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
 
 public class WordPress {
-    
+
     public static String Name = "wordpress";
     public static String ShortName = "wp";
     public static String VersionRange = "3.1.3-3.1.4";
     public static String LatestVersionRange = VersionRange;
-    
+
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {
     if(checkid == 1)
@@ -37,13 +37,13 @@ public class WordPress {
         ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`user_login`,`user_pass`,`user_nicename`,`user_email`,`user_registered`,`display_name`)  VALUES (?,?,?,?,?,?)", 1);
         ps.setString(1, player); //user_login
         ps.setString(2, passwordhashed); //user_pass
-        ps.setString(3, player); //user_nicename    
+        ps.setString(3, player); //user_nicename
         ps.setString(4, email); //user_email
         ps.setString(5, realdate); //user_registered
         ps.setString(6, player); //display_name
         ///
         ps.executeUpdate();
-        
+
         /*
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
@@ -55,7 +55,7 @@ public class WordPress {
  }
 
   private static String itoa64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  
+
   public static String hash(String password) {
     String random_state = unique_id();
     String random = "";

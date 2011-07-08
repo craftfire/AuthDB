@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -18,13 +18,13 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class Vanilla {
-    
+
     public static String Name = "vanilla";
     public static String ShortName = "van";
     public static String VersionRange = "2.0.17.8-2.0.17.8";
     public static String VersionRange2 = "2.0.17.9-2.0.17.9";
     public static String LatestVersionRange = VersionRange2;
-        
+
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
       long timestamp = System.currentTimeMillis()/1000;
@@ -39,7 +39,7 @@ public class Vanilla {
               usertable = "user";
               roletable = "userrole";
           }
-    
+
         if(checkid == 1 || checkid == 2)
           {
               String passwordhashed = hash(password);
@@ -51,7 +51,7 @@ public class Vanilla {
               ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+usertable+"` (`Name`,`Password`,`HashMethod`,`Email`,`Gender`,`Preferences`,`Permissions`,`Attributes`,`DateFirstVisit`,`DateLastActive`,`DateInserted`,`DateUpdated`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", 1);
             ps.setString(1, player); //Name
               ps.setString(2, passwordhashed); // Password
-            ps.setString(3, "Vanilla"); //HashMethod    
+            ps.setString(3, "Vanilla"); //HashMethod
             ps.setString(4, email); //Email
               ps.setString(5, "m"); //Gender
               ps.setString(6, "a:1:{s:13:\"Authenticator\";s:8:\"password\";}"); //Preferences
@@ -62,25 +62,25 @@ public class Vanilla {
             ps.setString(11, realdate); //DateInserted
             ps.setString(12, realdate); //DateUpdated
             ps.executeUpdate();
-            
+
             int userid = MySQL.countitall(Config.script_tableprefix+usertable);
-            
+
             ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
             ps.setInt(1, userid); //UserID
             ps.setInt(2, 3); //RoleID
             ps.executeUpdate();
-            
+
             ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
             ps.setInt(1, userid); //UserID
             ps.setInt(2, 8); //RoleID
             ps.executeUpdate();
-              
+
           }
     }
-    
+
 
     private static String itoa64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    
+
     public static String hash(String password) {
       String random_state = unique_id();
       String random = "";

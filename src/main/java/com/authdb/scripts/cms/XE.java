@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -17,12 +17,12 @@ import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
 
 public class XE {
-    
+
     public static String Name = "xpress engine";
     public static String ShortName = "xe";
     public static String VersionRange = "1.0.3-1.0.3";
     public static String LatestVersionRange = VersionRange;
-    
+
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
     long timestamp = System.currentTimeMillis()/1000;
@@ -64,7 +64,7 @@ public class XE {
         ps.executeUpdate();
     } */
   }
-  
+
     public static boolean check_hash(String passwordhash, String hash)
     {
         if(passwordhash.equals(hash)) return true;

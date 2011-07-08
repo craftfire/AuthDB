@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -16,8 +16,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public class Encryption
-{  
-    
+{
+
     public static String Encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
         if(encryption.equals("md5")) return md5(toencrypt);
@@ -27,7 +27,7 @@ public class Encryption
         Config.custom_encryption = "md5";
         return md5(toencrypt);
     }
-    
+
     public static String hash(int length, String charset,int RangeFrom, int RangeTo)
     {
         if(charset.equals("none"))
@@ -50,7 +50,7 @@ public class Encryption
             return sb.toString();
         }
     }
-    
+
     public static String md5(String data)
     {
         try
@@ -69,17 +69,17 @@ public class Encryption
             throw new RuntimeException(e);
         }
     }
-    
-    public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException  
-    { 
+
+    public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException
+    {
         MessageDigest md;
         md = MessageDigest.getInstance("SHA-1");
         byte[] sha1hash = new byte[40];
         md.update(text.getBytes("iso-8859-1"), 0, text.length());
         sha1hash = md.digest();
         return Util.convertToHex(sha1hash);
-    } 
-    
+    }
+
     public static String SHA256(String text)
     {
         MessageDigest md = null;
@@ -90,7 +90,7 @@ public class Encryption
             e.printStackTrace();
         }
         md.update(text.getBytes());
- 
+
         byte byteData[] = md.digest();
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < byteData.length; i++) {
@@ -104,7 +104,7 @@ public class Encryption
         }
         return hexString.toString();
     }
-    
+
     public static String SHA512(String text)
     {
         StringBuffer sb = new StringBuffer();
@@ -118,7 +118,7 @@ public class Encryption
 
             for (int i = 0; i < digestBytes.length; i++) {
                 hex = Integer.toHexString(0xFF & digestBytes[i]);
-                if (hex.length() < 2) 
+                if (hex.length() < 2)
                     sb.append("0");
                 sb.append(hex);
                 }
@@ -129,7 +129,7 @@ public class Encryption
 
         return new String(sb);
     }
-   
+
     public static String pack(String hex)
     {
         StringBuffer buf = new StringBuffer();

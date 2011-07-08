@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -19,21 +19,21 @@ import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
 
 /**
- * Port of phpBB3 password handling to Java. 
+ * Port of phpBB3 password handling to Java.
  * See phpBB3/includes/functions.php
  * Edited by Contex
- * 
+ *
  * @author lars
  * @author Contex
  */
 public class phpBB {
-    
+
     public static String VersionRange = "3.0.0-3.0.8";
     public static String VersionRange2 = "2.0.0-2.0.23";
     public static String LatestVersionRange = VersionRange;
     public static String Name = "phpbb";
     public static String ShortName = "phpbb";
-    
+
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {
     if(checkid==1)
@@ -66,23 +66,23 @@ public class phpBB {
         ///
         ps.setString(17, ipAddress); //user_ip
         ps.executeUpdate();
-        
+
         userid = MySQL.countitall(Config.script_tableprefix+"users");
-        
+
         ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
         ps.setInt(1, 2);
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.setInt(4, 0);
         ps.executeUpdate();
-        
+
         ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
         ps.setInt(1, 7);
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.setInt(4, 0);
         ps.executeUpdate();
-        
+
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
@@ -98,14 +98,14 @@ public class phpBB {
         PreparedStatement ps;
         //
         int userid = 0;
-        
-        
+
+
         String query = "SELECT user_id FROM `"+Config.script_tableprefix+"users"+"` ORDER BY `user_id` DESC LIMIT 0 , 1";
         Statement stmt = MySQL.mysql.createStatement();
         ResultSet rs = stmt.executeQuery( query );
         if (rs.next()) { userid = rs.getInt(1); }
         userid = userid + 1;
-        
+
         ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`user_active`,`username`,`user_password`,`user_lastvisit`,`user_regdate`,`user_email`,`user_id`)  VALUES (?,?,?,?,?,?,?)", 1);
         ps.setInt(1, 1); //user_active
         ps.setString(2, player.toLowerCase()); //username
@@ -116,9 +116,9 @@ public class phpBB {
         ps.setInt(7, userid); //user_id
         ///
         ps.executeUpdate();
-        
+
         userid = MySQL.countitall(Config.script_tableprefix+"users");
-        
+
         ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user_group"+"` (`group_id`,`user_id`,`user_pending`)  VALUES (?,?,?)", 1);
         ps.setInt(1, 3);
         ps.setInt(2, userid);
@@ -134,9 +134,9 @@ public class phpBB {
     }
  }
 
-    
+
   private static String itoa64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  
+
   public static String phpbb_hash(String password) {
     String random_state = unique_id();
     String random = "";

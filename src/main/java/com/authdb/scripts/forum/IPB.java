@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -20,12 +20,12 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class IPB {
-      
+
     public static String Name = "ipboard";
     public static String ShortName = "ipb";
     public static String VersionRange = "3.1.3-3.1.4";
     public static String LatestVersionRange = VersionRange;
-      
+
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
     {
         if(checkid == 1)
@@ -53,7 +53,7 @@ public class IPB {
             ps.setString(14, hash); //members_pass_hash
             ps.setString(15, salt); //members_pass_salt
             ps.executeUpdate();
-             
+
             int userid = MySQL.countitall(Config.script_tableprefix+"members");
             ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"pfields_content"+"` (`member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //member_id
@@ -67,7 +67,7 @@ public class IPB {
             ps.executeUpdate();
         }
     }
-      
+
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
         if(action.equals("find"))
         {
@@ -100,7 +100,7 @@ public class IPB {
           if(passwordhash.equals(hash)) return true;
           else return false;
       }
-      
+
       public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
       {
       return Encryption.md5(Encryption.md5(salt) + Encryption.md5(password));

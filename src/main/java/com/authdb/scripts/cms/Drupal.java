@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -19,13 +19,13 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class Drupal {
-    
+
     public static String VersionRange = "6.20-6.20";
     public static String VersionRange2 = "7.0-7.0";
     public static String LatestVersionRange = VersionRange2;
     public static String Name = "drupal";
     public static String ShortName = "dru";
-    
+
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
     long timestamp = System.currentTimeMillis()/1000;
@@ -46,7 +46,7 @@ public class Drupal {
         ps.setString(8, email); //init
         ps.executeUpdate();
     }
-    
+
     else if(checkid == 2)
     {
         String hash = user_hash_password(password,0);
@@ -64,14 +64,14 @@ public class Drupal {
         ps.executeUpdate();
     }
   }
-    
+
       private static String itoa64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
       private static final int DRUPAL_MIN_HASH_COUNT =  7;
       private static final int DRUPAL_MAX_HASH_COUNT = 30;
       private static final int DRUPAL_HASH_COUNT     = 14;
       private static final int DRUPAL_HASH_LENGTH    = 55;
-     
-     
+
+
       public static String hash(String password) {
         String random_state = unique_id();
         String random = "";
@@ -96,7 +96,7 @@ public class Drupal {
 
         return Encryption.SHA256(password);
       }
-      
+
       private static String password_base64_encode(String input, int count)
        {
         String  output = "";
@@ -119,14 +119,14 @@ public class Drupal {
           if (i++ >= count) break;
 
           output += itoa64.charAt((value >> 18) & 0x3f);
-         } 
+         }
         while (i < count);
 
         return output;
-       }    
-      
+       }
+
       private static int password_get_count_log2(String setting) { return itoa64.indexOf(setting.charAt(3)); }
-      
+
       private static int password_enforce_log2_boundaries(int count_log2)
        {
         if (count_log2 < DRUPAL_MIN_HASH_COUNT) {
@@ -142,7 +142,7 @@ public class Drupal {
       private static String unique_id() {
         return unique_id("c");
       }
-      
+
       private static String password_generate_salt(int count_log2)
        {
         String output = "$S$";
@@ -158,7 +158,7 @@ public class Drupal {
         output += password_base64_encode(new String(randomBytes), 6);
         return output;
        }
-      
+
       private static String password_crypt(String algo, String password, String setting)
        {
         // The first 12 characters of an existing hash are its setting string.
@@ -171,7 +171,7 @@ public class Drupal {
         // Hashes may be imported from elsewhere, so we allow != DRUPAL_HASH_COUNT
         if (count_log2 < DRUPAL_MIN_HASH_COUNT || count_log2 > DRUPAL_MAX_HASH_COUNT) return null; //throw new RuntimeException("Bad Hash count : " + count_log2);
 
-        String salt = setting.substring(4, 12); 
+        String salt = setting.substring(4, 12);
         // Hashes must have an 8 character salt.
         if (salt.length() != 8) return null; //throw new RuntimeException("Bad salt length : " + salt.length());
 
@@ -184,11 +184,11 @@ public class Drupal {
         try
          {
           hash = Encryption.Encrypt(algo, salt+password);
-          
-          do 
+
+          do
            {
             hash = Encryption.Encrypt(algo, hash + password);
-           } 
+           }
           while (--count>=0);
          }
         catch(Exception e) { e.printStackTrace(); return null; }
@@ -207,18 +207,18 @@ public class Drupal {
         Util.Debug("DERP 2 : "+expected);
         Util.Debug("FASCE:"+(output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
         return (output.length() == expected) ? output.substring(0, DRUPAL_HASH_LENGTH) : null;
-       }  
-      
-      
+       }
+
+
       public static String user_hash_password(String password, int count_log2)
        {
         if(count_log2<0 || count_log2 >DRUPAL_MAX_HASH_COUNT)
          count_log2 = DRUPAL_HASH_COUNT; // Use the standard iteration count.
 
         return password_crypt("sha512", password, password_generate_salt(count_log2));
-       } 
-      
-      
+       }
+
+
       public static boolean user_check_password(String password, String crypted_password)
        {
         String real_hash;
@@ -226,7 +226,7 @@ public class Drupal {
          {
           // This may be an updated password from user_update_7000(). Such hashes
           // have 'U' added as the first character and need an extra md5().
-          real_hash = crypted_password.substring(1); 
+          real_hash = crypted_password.substring(1);
           password = Encryption.md5(password);
          }
         else
@@ -234,7 +234,7 @@ public class Drupal {
           real_hash = crypted_password;
          }
 
-        String type = real_hash.substring(0, 3), hash; 
+        String type = real_hash.substring(0, 3), hash;
 
 
         if(type.equals("$S$")) // A normal Drupal 7 password using sha512.
@@ -246,8 +246,8 @@ public class Drupal {
           return false;
 
         return real_hash == hash; //what do they do here ?!
-       }  
-      
+       }
+
       private static String unique_id(String extra) {
         return "1234567890abcdef";
       }

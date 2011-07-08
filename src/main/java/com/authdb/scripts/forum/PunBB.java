@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -19,13 +19,13 @@ import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
 
 public class PunBB {
-    
+
     public static String Name = "punbb";
     public static String ShortName = "pun";
     public static String VersionRange = "1.3.4-1.3.5";
     public static String LatestVersionRange = VersionRange;
-    
-    
+
+
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
   {
     if(checkid == 1)
@@ -36,7 +36,7 @@ public class PunBB {
         //
         String salt = Encryption.hash(12,"none",33, 126);
         String hash = hash("create",player,password,salt);
-        
+
         ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`group_id`,`username`,`password`,`salt`,`email`,`registered`,`registration_ip`,`last_visit`)  VALUES (?,?,?,?,?,?,?,?)", 1);
         ps.setInt(1, 3); //group_id
         ps.setString(2, player); //username
@@ -48,7 +48,7 @@ public class PunBB {
         ps.setLong(8, timestamp); //last_visit
         ///
         ps.executeUpdate();
-        
+
         /*
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
@@ -91,7 +91,7 @@ public class PunBB {
           if(passwordhash.equals(hash)) return true;
           else return false;
       }
-      
+
       public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
       {
           return Encryption.SHA1(salt + Encryption.SHA1(password));

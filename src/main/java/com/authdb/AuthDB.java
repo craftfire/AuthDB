@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -58,7 +58,7 @@ public class AuthDB extends JavaPlugin {
     public static AuthDB plugin;
     PluginDescriptionFile pluginFile = getDescription();
     public static String pluginname = "AuthDB";
-    public static String pluginversion = "2.3.0 indev";
+    public static String pluginversion = "dev-SNAPSHOT";
     public static CraftIRC craftircHandle;
     //
     private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -69,16 +69,17 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, String> db2 = new HashMap<String, String>();
     public static HashMap<String, String> db3 = new HashMap<String, String>();
     public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
+    public static HashMap<String, Long> AuthDBRemindLogin = new HashMap<String, Long>();
     public static HashMap<String, Integer> AuthDBSpamMessage = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDBSpamMessageTime = new HashMap<String, Long>();
     public static HashMap<String, String> AuthPasswordTriesDB = new HashMap<String, String>();
     public static HashMap<String, String> AuthOtherNamesDB = new HashMap<String, String>();
-    public static String timeoutFileName = "timeout.db";
-    public static String otherNamesFileName = "othernames.db";
+    public static String timeoutFileName = "data/timeout.db";
+    public static String otherNamesFileName = "data/othernames.db";
     public static Logger log = Logger.getLogger("Minecraft");
     public HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
 
-    public void onDisable() 
+    public void onDisable()
     {
         Util.Log("info", pluginname + " plugin " + pluginversion + " has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
@@ -87,6 +88,7 @@ public class AuthDB extends JavaPlugin {
         disableInventory();
         authorizedIds.clear();
         AuthTimeDB.clear();
+        AuthDBRemindLogin.clear();
         AuthDBSpamMessage.clear();
         AuthDBSpamMessageTime.clear();
         AuthOtherNamesDB.clear();
@@ -97,11 +99,12 @@ public class AuthDB extends JavaPlugin {
         MySQL.close();
      }
 
-    public void onEnable() 
-    {     
+    public void onEnable()
+    {
         plugin = new AuthDB();
-        /* File file = new File("plugins/"+pluginname+"/AuthDB_Ban.jar");
-            
+        CheckOldFiles();
+        /* File file = new File("plugins/"+pluginname+"/addons/AuthDB_Ban.jar");
+
             URLClassLoader clazzLoader = null;
             try {
                 clazzLoader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
@@ -110,7 +113,7 @@ public class AuthDB extends JavaPlugin {
                 e3.printStackTrace();
             }
 //            System.class.getClassLoader()
-            
+
             JarFile jarFile = null;
             try {
                 jarFile = new JarFile(file);
@@ -119,13 +122,13 @@ public class AuthDB extends JavaPlugin {
                 e2.printStackTrace();
             }
             Enumeration<JarEntry> entries = jarFile.entries();
-            
+
             while (entries.hasMoreElements()) {
                 JarEntry element = entries.nextElement();
                 if (element.getName().endsWith(".class")) {
                     try {
                         Class c = clazzLoader.loadClass(element.getName().replaceAll(".class", "").replaceAll("/", "."));
-                        
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -152,27 +155,26 @@ public class AuthDB extends JavaPlugin {
                 Plugins += "*_*";
             counter++;
         }
-        
-        File f = new File("plugins/"+pluginname+"/messages.yml");
+        File f = new File("plugins/"+pluginname+"/config/messages.yml");
         if ( !f.exists() )
         {
-            Util.Log("info", "messages.yml could not be found in plugins/AuthDB/! Creating messages.yml!");
-            DefaultFile("messages.yml");
+            Util.Log("info", "messages.yml could not be found in plugins/AuthDB/config/! Creating messages.yml!");
+            DefaultFile("messages.yml","config");
 
             //getServer().getPluginManager().disablePlugin(((Plugin) (this)));
             //return;
         }
-        new Config("messages","plugins/"+pluginname+"/", "messages.yml");
-        
-        f = new File("plugins/"+pluginname+"/config.yml");
+        new Config("messages","plugins/"+pluginname+"/config/", "messages.yml");
+
+        f = new File("plugins/"+pluginname+"/config/config.yml");
         if ( !f.exists() )
         {
-            Util.Log("info", "config.yml could not be found in plugins/AuthDB/! Creating config.yml!");
-            DefaultFile("config.yml");
+            Util.Log("info", "config.yml could not be found in plugins/AuthDB/config/! Creating config.yml!");
+            DefaultFile("config.yml","config");
            // getServer().getPluginManager().disablePlugin(((Plugin) (this)));
            // return;
         }
-        new Config("config","plugins/"+pluginname+"/", "config.yml");
+        new Config("config","plugins/"+pluginname+"/config/", "config.yml");
 
           final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
           if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
@@ -181,7 +183,7 @@ public class AuthDB extends JavaPlugin {
               this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                     @Override
                     public void run() { if(checkCraftIRC.isEnabled()) { zCraftIRC.SendMessage(Message.OnEnable, null); } } }, 100);
-              
+
           }
           final Plugin Backpack = getServer().getPluginManager().getPlugin("Backpack");
           if (Backpack != null) { Config.HasBackpack = true; }
@@ -205,13 +207,13 @@ public class AuthDB extends JavaPlugin {
         PropertyManager TheSettings = new PropertyManager(new File("server.properties"));
         if (TheSettings.getBoolean("online-mode", true)) { Config.OnlineMode = true; }
         UpdateLinkedNames();
-        
+
         MySQL.connect();
-        try 
+        try
         {
             Util.CheckScript("numusers",Config.script_name,null,null,null,null);
-        } 
-        catch (SQLException e) 
+        }
+        catch (SQLException e)
         {
             if(Config.custom_enabled && Config.custom_autocreate)
             {
@@ -226,7 +228,7 @@ public class AuthDB extends JavaPlugin {
                     PreparedStatement ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
-                } 
+                }
                 catch (SQLException e1) {
                     Util.Log("info", "Failed creating user table "+Config.custom_table);
                     // TODO Auto-generated catch block
@@ -239,37 +241,54 @@ public class AuthDB extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        
+
         Util.AddOtherNamesToDB();
-        
+
         Util.Log("info", pluginname + " plugin " + pluginversion + " is enabled");
         if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
         if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
         Util.Log("info", pluginname + " is developed by CraftFire <dev@craftfire.com>");
-        
+
         String thescript = "",theversion = "";
         if(Config.custom_enabled) { thescript = "custom"; }
-        else 
-        { 
-            thescript = Config.script_name; 
+        else
+        {
+            thescript = Config.script_name;
             theversion = Config.script_version;
         }
         String online = ""+getServer().getOnlinePlayers().length;
         String max = ""+getServer().getMaxPlayers();
         if(Config.usagestats_enabled)
         {
-            try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); } 
+            try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); }
             catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send usage stats to main server."); }
         }
     }
 
+    void CheckOldFiles()
+    {
+        File data = new File(getDataFolder()+"\\data\\","");
+        if (!data.exists()) { data.mkdir(); }
+        data = new File(getDataFolder()+"\\inventory\\","");
+        if (!data.exists()) { data.mkdir(); }
+        data = new File(getDataFolder()+"\\","othernames.db");
+        if (data.exists()) 
+        { 
+            data.renameTo(new File(getDataFolder()+"\\data\\","othernames.db")); 
+        }
+        data = new File(getDataFolder()+"\\","idle.db");
+        if (data.exists()) 
+        { 
+            data.renameTo(new File(getDataFolder()+"\\data\\","timeout.db")); 
+        }
+    }
 
     public static boolean isAuthorized(int id) { return authorizedIds.contains(Integer.valueOf(id)); }
-    public void unauthorize(int id) { AuthDB.authorizedIds.remove(Integer.valueOf(id)); } 
+    public void unauthorize(int id) { AuthDB.authorizedIds.remove(Integer.valueOf(id)); }
     public void authorize(int id) { AuthDB.authorizedIds.add(Integer.valueOf(id)); }
-    public boolean checkPassword(String player, String password) 
+    public boolean checkPassword(String player, String password)
      {
-        try 
+        try
         {
             if(!Config.database_keepalive) { MySQL.connect(); }
             password = Matcher.quoteReplacement(password);
@@ -279,28 +298,28 @@ public class AuthDB extends JavaPlugin {
             }
             if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password,null,null)) return true;
             if(!Config.database_keepalive) { MySQL.close(); }
-        } 
-        catch (SQLException e) 
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
             Stop("ERRORS in checking password. Plugin will NOT work. Disabling it.");
         }
         return false;
     }
-    
+
     public boolean isWithinRange(int number, int around, int range){
         int difference = Math.abs(around - number);
         return difference <= range;
     }
-    
+
     void Stop(String error)
     {
         Util.Log("warning",error);
         getServer().getPluginManager().disablePlugin(((org.bukkit.plugin.Plugin) (this)));
     }
-     
-    public boolean register(Player theplayer, String password, String email, String ipAddress) throws IOException, SQLException 
-    {    
+
+    public boolean register(Player theplayer, String password, String email, String ipAddress) throws IOException, SQLException
+    {
         password = Matcher.quoteReplacement(password);
         if(password.length() < Integer.parseInt(Config.password_minimum))
         {
@@ -329,7 +348,7 @@ public class AuthDB extends JavaPlugin {
     public boolean isRegistered(String when, String player) {
         boolean dupe = false;
         boolean checkneeded = true;
-        //if(Config.debug_enable) 
+        //if(Config.debug_enable)
             //Util.Debug("Running function: isRegistered(String player)");
         if(when.equals("join"))
         {
@@ -345,7 +364,7 @@ public class AuthDB extends JavaPlugin {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            //if(!Config.HasForumBoard) 
+            //if(!Config.HasForumBoard)
                 //Stop("Can't find a forum board, stopping the plugin.");
             if(!Config.database_keepalive) { MySQL.close(); }
             if(!dupe)
@@ -371,7 +390,7 @@ public class AuthDB extends JavaPlugin {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            //if(!Config.HasForumBoard) 
+            //if(!Config.HasForumBoard)
                 //Stop("Can't find a forum board, stopping the plugin.");
             if(!Config.database_keepalive) { MySQL.close(); }
             if(!dupe)
@@ -381,7 +400,7 @@ public class AuthDB extends JavaPlugin {
         else
         {
             if(this.db3.containsKey(Encryption.md5(player)))
-            { 
+            {
                 //if(Config.debug_enable) Util.Debug("Found cache registration for "+player);
                 String check =db3.get(Encryption.md5(player));
                 if(check.equals("yes"))
@@ -406,13 +425,13 @@ public class AuthDB extends JavaPlugin {
                         db3.put(Encryption.md5(player), "yes");
                         dupe = true;
                     }
-                    //if(!Config.HasForumBoard) 
+                    //if(!Config.HasForumBoard)
                         //Stop("Can't find a forum board, stopping the plugin.");
                     if(!Config.database_keepalive) { MySQL.close(); }
                     if(!dupe)
                         db3.put(Encryption.md5(player), "no");
                     return dupe;
-                } catch (SQLException e) 
+                } catch (SQLException e)
                 {
                     e.printStackTrace();
                     Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
@@ -435,11 +454,11 @@ public class AuthDB extends JavaPlugin {
     }
 
       public void storeInventory(String player, ItemStack[] theinventory) throws IOException {
-        File inv = new File(getDataFolder(), player + "_inv");
+        File inv = new File(getDataFolder()+"\\inventory\\", player + "_inv");
         if (inv.exists()) { return; }
         inv.createNewFile();
         BufferedWriter bw = new BufferedWriter(new FileWriter(inv));
-        for (short i = 0; i < theinventory.length; i = (short)(i + 1)) 
+        for (short i = 0; i < theinventory.length; i = (short)(i + 1))
         {
             if(theinventory[i] != null)
             {
@@ -450,7 +469,7 @@ public class AuthDB extends JavaPlugin {
         }
         bw.close();
       }
-    
+
     public void disableInventory()
     {
         Set pl = inventories.keySet();
@@ -464,17 +483,17 @@ public class AuthDB extends JavaPlugin {
        }
         inventories.clear();
     }
-    
+
     public String TimeoutGetTaskID(Player player)
     {
         return (String)db.get(player.getName().toLowerCase());
-    } 
-    
+    }
+
     public String GetSessionTime(Player player)
     {
         return this.db.get(player.getName());
-    } 
-    
+    }
+
       public void updateDb() throws IOException {
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), timeoutFileName)));
             Set<String> keys = this.db.keySet();
@@ -487,10 +506,10 @@ public class AuthDB extends JavaPlugin {
             bw.close();
           }
 
-    
+
     public void UpdateLinkedNames()
     {
-        for (Player player : this.getServer().getOnlinePlayers()) 
+        for (Player player : this.getServer().getOnlinePlayers())
         {
             if(Util.CheckOtherName(player.getName()) != player.getName())
             {
@@ -498,15 +517,15 @@ public class AuthDB extends JavaPlugin {
             }
         }
     }
-      
-    public boolean TimeoutTask(String type,Player player, String TaskID) throws IOException 
+
+    public boolean TimeoutTask(String type,Player player, String TaskID) throws IOException
     {
         if(type.equals("add"))
         {
             this.db.put(player.getName().toLowerCase(), TaskID);
             return true;
         }
-        
+
         else if(type.equals("remove"))
         {
             this.db.remove(player.getName());
@@ -521,7 +540,7 @@ public class AuthDB extends JavaPlugin {
             this.db2.put(player.getName(), TaskID);
             return true;
         }
-        
+
         else if(type.equals("remove2"))
         {
             this.db2.remove(player.getName());
@@ -533,10 +552,10 @@ public class AuthDB extends JavaPlugin {
         }
         return false;
     }
-    
+
     public ItemStack[] getInventory(String player)
       {
-        File f = new File(getDataFolder(), player + "_inv");
+        File f = new File(getDataFolder()+"\\inventory\\", player + "_inv");
 
         if (f.exists()) {
             ItemStack[] inv;
@@ -580,19 +599,19 @@ public class AuthDB extends JavaPlugin {
 
         return null;
       }
-    
+
       public void deleteInventory(String player) {
-            File f = new File(getDataFolder(), player + "_inv");
+            File f = new File(getDataFolder()+"\\inventory\\", player + "_inv");
             if (f.exists())
               f.delete();
           }
-        
-     private void DefaultFile(String name) {
-            File actual = new File(getDataFolder(), name);
-            File direc = new File(getDataFolder(),"");
+
+     private void DefaultFile(String name, String folder) {
+            File actual = new File(getDataFolder()+"\\"+folder+"\\", name);
+            File direc = new File(getDataFolder()+"\\"+folder+"\\","");
             if (!direc.exists()) { direc.mkdir(); }
             if (!actual.exists()) {
-              java.io.InputStream input = getClass().getResourceAsStream("/files/" + name);
+              java.io.InputStream input = getClass().getResourceAsStream("/files/config/" + name);
               if (input != null) {
                   java.io.FileOutputStream output = null;
                 try
@@ -625,5 +644,5 @@ public class AuthDB extends JavaPlugin {
               }
             }
           }
-      
+
 }

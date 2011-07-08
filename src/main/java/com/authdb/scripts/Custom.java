@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -18,7 +18,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
 
-  public class Custom 
+  public class Custom
   {
       public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
         {
@@ -52,7 +52,7 @@ import com.authdb.util.databases.MySQL;
                 ps.executeUpdate();
             }
         }
-      
+
       public static String hash(String player, String password) {
             return password;
           }
@@ -60,7 +60,7 @@ import com.authdb.util.databases.MySQL;
     public static boolean check_hash(String passwordhash, String hash)
     {
         try {
-            if(Encryption.Encrypt(Config.custom_encryption, passwordhash).equals(hash)) 
+            if(Encryption.Encrypt(Config.custom_encryption, passwordhash).equals(hash))
                 return true;
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
@@ -71,9 +71,9 @@ import com.authdb.util.databases.MySQL;
         }
         return false;
     }
-    
+
     public static String SaltIt(String password)
     {
-        return password;    
+        return password;
     }
 }

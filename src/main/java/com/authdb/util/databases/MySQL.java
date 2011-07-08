@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -26,7 +26,7 @@ import com.mysql.jdbc.Blob;
 public class MySQL
 {
     public static Connection mysql = null;
-    
+
     public static boolean check()
     {
         try {
@@ -48,9 +48,9 @@ public class MySQL
         }
         return true;
     }
-    
+
     public static void close() { if (mysql != null) try { mysql.close(); } catch (SQLException localSQLException) { } }
-    
+
     public static void connect()
     {
         try {
@@ -61,7 +61,7 @@ public class MySQL
             Messages.SendMessage(Message.database_failure, null, null);
             if(Config.debug_enable) e.printStackTrace();
         }
-        
+
         if(Config.debug_enable)
         {
             Util.Debug("Lauching function: connect()");
@@ -77,11 +77,11 @@ public class MySQL
                 Util.Debug("MySQL prefix: "+Config.script_tableprefix);
             }
         }
-        
+
         if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
         try {
             Config.database_ison = true;
-            
+
             mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
         } catch (SQLException e) {
             Config.database_ison = false;
@@ -99,7 +99,7 @@ public class MySQL
             }
         }
     }
-    
+
     public static int countitall(String table) throws SQLException
     {
         String query = "SELECT LAST_INSERT_ID() FROM `"+table+"` LIMIT 1";
@@ -109,13 +109,13 @@ public class MySQL
         if (rs.next()) { dupe = rs.getInt(1); }
         return dupe;
     }
-    
+
     public static void query(String query) throws SQLException
     {
         Statement stmt = mysql.createStatement();
         stmt.executeUpdate(query);
     }
-    
+
     public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException
     {
         String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'%";
@@ -125,7 +125,7 @@ public class MySQL
         if (rs.next()) { dupe = rs.getString(1); }
         return dupe;
     }
-    
+
     public static String getfromtable2(String table,String column1,String column2, String column3, String value, String value2) throws SQLException
     {
         String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` = '"+value2+"'";
@@ -135,7 +135,7 @@ public class MySQL
         if (rs.next()) { dupe = rs.getString(1); }
         return dupe;
     }
-    
+
     public static String getfromtablelike(String table,String column1,String column2, String column3, String value, String value2) throws SQLException
     {
         String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'%";
@@ -145,7 +145,7 @@ public class MySQL
         if (rs.next()) { dupe = rs.getString(1); }
         return dupe;
     }
-    
+
     public static String getfromtable(String table,String column1,String column2,String value) throws SQLException
     {
         String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"'";
@@ -155,7 +155,7 @@ public class MySQL
         if (rs.next()) { dupe = rs.getString(1); }
         return dupe;
     }
-    
+
     public static String Unix_Timestamp() throws SQLException
     {
         String query = "SELECT UNIX_TIMESTAMP()";
@@ -165,7 +165,7 @@ public class MySQL
         if (rs.next()) { dupe = rs.getString(1); }
         return dupe;
     }
-    
+
     public static Blob getfromtableBlob(String table,String column1,String column2,String value) throws SQLException
     {
         String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"'";

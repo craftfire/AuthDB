@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -92,7 +92,7 @@ public boolean CheckTimeout(Player player) throws IOException
 }
 
   public void onPlayerJoin(PlayerJoinEvent event)
-  { 
+  {
     final Player player = event.getPlayer();
     player.teleport(Util.LandLocation(player.getLocation()));
     if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
@@ -107,32 +107,32 @@ public boolean CheckTimeout(Player player) throws IOException
         {
             long timestamp = System.currentTimeMillis()/1000;
             if(this.plugin.TimeoutTask("check2",player, "") == true)
-            { 
+            {
                 long storedtime = Long.parseLong(this.plugin.db2.get(Encryption.md5(player.getName()+Util.GetIP(player))));
                 Util.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
                 long timedifference = timestamp - storedtime;
                 Util.Debug("Difference: "+timedifference);
                 if(timedifference > Config.session_length) { sessionallow = false; }
                 else { sessionallow = true; }
-                
+
             }
             else { sessionallow = false; }
         }
-            
+
         try {
             if(Config.login_timeout > 0 && sessionallow == false)
             {
                     Util.Debug("Timeout time is: "+Config.login_timeout);
                     Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
-                    public void run() 
-                    { 
+                    public void run()
+                    {
                         try {
                             CheckTimeout(player);
                         } catch (IOException e) {
                             Util.Log("warning", "Error checking if player was in the timeout list");
                             e.printStackTrace();
-                        } 
+                        }
                     } }, Config.login_timeout);
                 if(this.plugin.TimeoutTask("add",player, ""+Schedule))
                     Util.Debug(player.getName()+" added to the CheckTimeoutTaskList");
@@ -144,7 +144,7 @@ public boolean CheckTimeout(Player player) throws IOException
              player.setHealth(20);
              player.teleport(player.getWorld().getSpawnLocation());
          }
-        
+
         if(sessionallow)
         {
             Messages.SendMessage(Message.session_valid, player,null);
@@ -152,17 +152,17 @@ public boolean CheckTimeout(Player player) throws IOException
             this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
             this.plugin.authorize(event.getPlayer().getEntityId());
         }
-        else if (this.plugin.isRegistered("join",player.getName()) || this.plugin.isRegistered("join",Util.CheckOtherName(player.getName()))) 
+        else if (this.plugin.isRegistered("join",player.getName()) || this.plugin.isRegistered("join",Util.CheckOtherName(player.getName())))
         {
-            if(Config.HasBackpack) 
-            { 
-                BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player); 
+            if(Config.HasBackpack)
+            {
+                BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                 BackpackPlayer.createBackpack();
-                this.plugin.storeInventory(player.getName(), BackpackPlayer.getContents()); 
+                this.plugin.storeInventory(player.getName(), BackpackPlayer.getContents());
             }
-            else 
-            { 
-                this.plugin.storeInventory(player.getName(), player.getInventory().getContents()); 
+            else
+            {
+                this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
             }
             player.getInventory().clear();
              plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(!AuthDB.isAuthorized(player.getEntityId())) { if(player.getInventory() != null) {  player.getInventory().clear(); } } } } , 20);
@@ -172,22 +172,22 @@ public boolean CheckTimeout(Player player) throws IOException
              }
              else
              {
-                 Messages.SendMessage(Message.login_default, player,null);
+                 Messages.SendMessage(Message.login_normal, player,null);
              }
-         } 
-        else if (Config.register_force) 
+         }
+        else if (Config.register_force)
         {
-            if(Config.HasBackpack) 
-            { 
+            if(Config.HasBackpack)
+            {
                 BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                 BackpackPlayer.createBackpack();
-                this.plugin.storeInventory(player.getName(), BackpackPlayer.getInventory().getContents()); 
+                this.plugin.storeInventory(player.getName(), BackpackPlayer.getInventory().getContents());
             }
             else { this.plugin.storeInventory(player.getName(), player.getInventory().getContents()); }
                player.getInventory().clear();
               Messages.SendMessage(Message.welcome_guest, player,null);
           }
-         else if (!Config.register_force) { 
+         else if (!Config.register_force) {
                       Messages.SendMessage(Message.welcome_guest, player,null);
              }
          else {
@@ -211,9 +211,9 @@ public boolean CheckTimeout(Player player) throws IOException
   {
      Player player = event.getPlayer();
      Messages.SendMessage(Message.left_server, player,null);
-     if(AuthDB.AuthDBSpamMessage.containsKey(player.getName())) 
-     { 
-         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName())); 
+     if(AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
+     {
+         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
          AuthDB.AuthDBSpamMessage.remove(player.getName());
          AuthDB.AuthDBSpamMessageTime.remove(player.getName());
      }
@@ -245,14 +245,14 @@ public boolean CheckTimeout(Player player) throws IOException
             this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+thetimestamp);
         this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
         this.plugin.unauthorize(player.getEntityId());
-        
+
      if (CheckGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.CheckOtherName(player.getName())) == false)
       {
          ItemStack[] theinv = new ItemStack[36];
          player.getInventory().setContents(theinv);
       }
   }
-  
+
   public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
   {
       String Contrib = event.getMessage();
@@ -262,22 +262,22 @@ public boolean CheckTimeout(Player player) throws IOException
       {
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
-    
+
         if (split[0].equals("/login"))
         {
             if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.CheckOtherName(player.getName())) == false)
             {
                 Messages.SendMessage(Message.login_notregistered, player,null);
             }
-            else if (AuthDB.isAuthorized(player.getEntityId())) 
-            {              
+            else if (AuthDB.isAuthorized(player.getEntityId()))
+            {
                 Messages.SendMessage(Message.login_authorized, player,null);
             }
-            else if (split.length < 2) 
+            else if (split.length < 2)
             {
                 Messages.SendMessage(Message.login_usage, player,null);
             }
-            else if (this.plugin.checkPassword(player.getName(), split[1])) 
+            else if (this.plugin.checkPassword(player.getName(), split[1]))
             {
                 ItemStack[] inv = this.plugin.getInventory(player.getName());
                 if (inv != null) { player.getInventory().setContents(inv); }
@@ -289,7 +289,7 @@ public boolean CheckTimeout(Player player) throws IOException
                 this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
                 Util.Debug("Session started for "+player.getName());
                 Messages.SendMessage(Message.login_success, player,null);
-            } 
+            }
             else
             {
               Messages.SendMessage(Message.login_failure, player,null);
@@ -302,11 +302,11 @@ public boolean CheckTimeout(Player player) throws IOException
         {
             if(Config.link_enabled)
             {
-                if (split.length == 3) 
+                if (split.length == 3)
                 {
                     if(Util.CheckOtherName(player.getName()).equals(player.getName()))
                     {
-                          if (this.plugin.checkPassword(split[1], split[2])) 
+                          if (this.plugin.checkPassword(split[1], split[2]))
                           {
                               ItemStack[] inv = this.plugin.getInventory(player.getName());
                               if (inv != null) { player.getInventory().setContents(inv); }
@@ -321,7 +321,7 @@ public boolean CheckTimeout(Player player) throws IOException
                               Util.Debug("Session started for "+player.getName());
                               if(Config.link_rename) { player.setDisplayName(split[1]); }
                               Messages.SendMessage(Message.link_success, player,null);
-                          } 
+                          }
                           else { Messages.SendMessage(Message.link_failure, player,null); }
                     }
                     else { Messages.SendMessage(Message.link_exists, player,null); }
@@ -336,11 +336,11 @@ public boolean CheckTimeout(Player player) throws IOException
         {
             if(Config.unlink_enabled)
                 {
-                if (split.length == 3) 
+                if (split.length == 3)
                 {
                     if(Util.CheckOtherName(player.getName()).equals(player.getDisplayName()))
                     {
-                          if (this.plugin.checkPassword(split[1], split[2])) 
+                          if (this.plugin.checkPassword(split[1], split[2]))
                           {
                               ItemStack[] inv = this.plugin.getInventory(player.getName());
                               if (inv != null) { player.getInventory().setContents(inv); }
@@ -351,7 +351,7 @@ public boolean CheckTimeout(Player player) throws IOException
                                Util.ToFile("remove", player.getName(), null);
                                if(Config.unlink_rename) { player.setDisplayName(player.getName()); }
                               Messages.SendMessage(Message.unlink_success, player,null);
-                          } 
+                          }
                           else { Messages.SendMessage(Message.unlink_failure, player,null); }
                     }
                     else { Messages.SendMessage(Message.unlink_nonexist, player,null); }
@@ -380,8 +380,8 @@ public boolean CheckTimeout(Player player) throws IOException
                       Messages.SendMessage(Message.email_invalid, player,null);
           else {
             try {
-               if (split.length >= 3 || ( !email && split.length >= 2 )) 
-               { 
+               if (split.length >= 3 || ( !email && split.length >= 2 ))
+               {
                    String themail = null;
                    if(!email) { themail = null; }
                    else { themail = split[2]; }
@@ -400,7 +400,7 @@ public boolean CheckTimeout(Player player) throws IOException
                       while(temploc.getBlock().getTypeId() == 0) { temploc.setY(temploc.getY() - 1); }
                       temploc.setY(temploc.getY() + 1);
                       event.getPlayer().teleport(temploc);
-                      
+
                     Messages.SendMessage(Message.register_success, player,null);
                 }
             }
@@ -415,8 +415,8 @@ public boolean CheckTimeout(Player player) throws IOException
           Util.Debug(player.getName()+" register ********");
           event.setMessage("/register *****");
           event.setCancelled(true);
-         } 
-         else if (!AuthDB.isAuthorized(player.getEntityId())) 
+         }
+         else if (!AuthDB.isAuthorized(player.getEntityId()))
          {
           if (!CheckGuest(player,Config.guests_commands))
           {
@@ -433,7 +433,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerMove(PlayerMoveEvent event)
   {
-    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId())) 
+    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
     {
           if (!CheckGuest(event.getPlayer(),Config.guests_movement))
             {
@@ -451,9 +451,9 @@ public boolean CheckTimeout(Player player) throws IOException
           {
               String[] split = event.getMessage().split(" ");
               Player player = event.getPlayer();
-              if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.CheckOtherName(player.getName()))) 
+              if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.CheckOtherName(player.getName())))
               {
-                    if (AuthDB.isAuthorized(player.getEntityId())) {              
+                    if (AuthDB.isAuthorized(player.getEntityId())) {
                               Messages.SendMessage(Message.login_authorized, player,null);
                   }
                   else if (split.length > 1) {
@@ -478,10 +478,10 @@ public boolean CheckTimeout(Player player) throws IOException
                   }
                   Util.Debug(player.getName()+" login ********");
                   event.setMessage(" has logged in!");
-                  event.setCancelled(true);  
+                  event.setCancelled(true);
               }
               event.setMessage("");
-              event.setCancelled(true);  
+              event.setCancelled(true);
           }
           else if(!CheckGuest(event.getPlayer(),Config.guests_chat))
           {
@@ -489,8 +489,8 @@ public boolean CheckTimeout(Player player) throws IOException
           }
     }
   }
-  
-  public void onPlayerPickupItem(PlayerPickupItemEvent event) 
+
+  public void onPlayerPickupItem(PlayerPickupItemEvent event)
   {
         if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
         {
@@ -500,7 +500,7 @@ public boolean CheckTimeout(Player player) throws IOException
               }
         }
   }
-  
+
   public void onPlayerInteract(PlayerInteractEvent event)
   {
         if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
@@ -511,8 +511,8 @@ public boolean CheckTimeout(Player player) throws IOException
               }
         }
   }
-  
-  public void onPlayerDropItem(PlayerDropItemEvent event) 
+
+  public void onPlayerDropItem(PlayerDropItemEvent event)
   {
         if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
         {
@@ -526,8 +526,8 @@ public boolean CheckTimeout(Player player) throws IOException
               }
         }
   }
-  
-  public void onPlayerRespawn(PlayerRespawnEvent event) 
+
+  public void onPlayerRespawn(PlayerRespawnEvent event)
   {
          if(event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1)
          {
@@ -535,15 +535,38 @@ public boolean CheckTimeout(Player player) throws IOException
              event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
          }
   }
-  
-    public boolean CheckGuest(Player player,boolean what)
+
+    boolean CheckGuest(Player player,boolean what)
     {
      if(what)
      {
-      if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false)
-      {
-              return true;
-      }
+         if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false)
+         {
+             return true;
+         }
+     }
+     else if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false)
+     {
+         if(!this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
+         {
+             this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp());
+             Messages.SendMessage(Message.guest_notauthorized, player, null);
+         }
+         else
+         {
+             if((Util.TimeStamp() + Config.protection_delay) > Util.TimeStamp())
+             {
+                 Messages.SendMessage(Message.guest_notauthorized, player, null);
+                 this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp());
+             }
+         }
+     }
+     else
+     {
+         if(this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
+         {  
+             this.plugin.AuthDBRemindLogin.remove(player.getName());
+         }
      }
      return false;
     }

@@ -144,8 +144,8 @@
         <includes>
           <include>commands.yml</include>
           <include>config.yml</include>
-          <include>messages.yml</include>
           <include>customdb.sql</include>
+          <include>messages.yml</include>
         </includes>
       </resource>
       <resource>

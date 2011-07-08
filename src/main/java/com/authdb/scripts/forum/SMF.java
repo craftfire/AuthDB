@@ -2,8 +2,8 @@
 (C) Copyright 2011 CraftFire <dev@craftfire.com>
 Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
@@ -20,13 +20,13 @@ import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
 
 public class SMF {
-    
+
     public static String VersionRange = "1.1.1-1.1.13";
     public static String VersionRange2 = "2.0.0.0-2.0.0.5";
     public static String LatestVersionRange = VersionRange2;
     public static String Name = "simple machines";
     public static String ShortName = "smf";
-    
+
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
   {
     long timestamp = System.currentTimeMillis()/1000;
@@ -68,7 +68,7 @@ public class SMF {
         ps.setString(23, ""); //additionalGroups
         ps.setString(24, salt); //passwordSalt
         ps.executeUpdate();
-        
+
         userid = MySQL.countitall(Config.script_tableprefix+"members");
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
@@ -119,7 +119,7 @@ public class SMF {
         ps.setString(25, ""); //ignore_boards
         ps.setString(26, salt); //password_salt
         ps.executeUpdate();
-        
+
         userid = MySQL.countitall(Config.script_tableprefix+"members");
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
@@ -131,7 +131,7 @@ public class SMF {
         ps.executeUpdate();
     }
   }
-    
+
   public static String hash(int checkid, String player, String password) {
     if(checkid == 1)
     {
