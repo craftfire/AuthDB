@@ -16,6 +16,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
+import com.authdb.util.Messages;
+import com.authdb.util.Util;
+import com.authdb.util.Messages.Message;
 
 public class AuthDBBlockListener extends BlockListener
 {
@@ -59,13 +62,36 @@ public class AuthDBBlockListener extends BlockListener
 
     public boolean CheckGuest(Player player,boolean what)
     {
-     if(what)
-     {
-      if (!this.plugin.isRegistered("checkguest",player.getName()))
-      {
-              return true;
-      }
-     }
+        if(what)
+        {
+            if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false)
+            {
+                return true;
+            }
+        }
+        else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false)
+        {
+            if(!this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
+            {
+                this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
+                Messages.SendMessage(Message.guest_notauthorized, player, null);
+            }
+            else
+            {
+                if(this.plugin.AuthDBRemindLogin.get(player.getName()) < Util.TimeStamp())
+                {
+                    Messages.SendMessage(Message.guest_notauthorized, player, null);
+                    this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
+                }
+            }
+        }
+        else
+        {
+            if(Config.protection_notify && this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
+            {  
+                this.plugin.AuthDBRemindLogin.remove(player.getName());
+            }
+        }
      return false;
     }
 }

@@ -10,7 +10,7 @@ Core:
     failure: "<rose>Registration failed!"
     exists: "<rose>You are already registered!"
     disabled: "<rose>Registration is disabled!"
- /   timeout: "Kicked because you failed to register within {REGISTERTIMEOUT}."
+    timeout: "HERE THIS Kicked because you failed to register within {REGISTERTIMEOUT}."
     usage: "<rose>Correct usage is: /register <password> <email>"
   login:
     normal: "<yellow>Welcome back <white>{PLAYER}<yellow>! Please use /login <password>"
@@ -19,7 +19,7 @@ Core:
     failure: "<rose>Password incorrect, please try again."
     authorized: "<rose>You are already logged in!"
     notregistered: "<rose>You are not registered yet!"
- /   timeout: "Kicked because you failed to login within {LOGINTIMEOUT}."
+    timeout: "HERE THIS Kicked because you failed to login within {LOGINTIMEOUT}."
     usage: "<rose>Correct usage is: /login <password>"
   link:
     success: "<lightgreen>Username linked successfully!. You are now logged in."
