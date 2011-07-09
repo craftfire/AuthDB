@@ -108,6 +108,7 @@ public class AuthDB extends JavaPlugin {
     public void onEnable()
     {
         plugin = new AuthDB();
+        SetupPluginInformation();
         CheckOldFiles();
         CheckPermissions();
         Server = getServer();
@@ -573,6 +574,14 @@ public class AuthDB extends JavaPlugin {
             if(this.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { return true; }
         }
         return false;
+    }
+    
+    void SetupPluginInformation()
+    {
+        PluginName = getDescription().getName();
+        PluginVersion = getDescription().getVersion();
+        PluginWebsite = getDescription().getWebsite();
+        PluginDescrption = getDescription().getDescription();
     }
 
     public ItemStack[] getInventory(String player)
