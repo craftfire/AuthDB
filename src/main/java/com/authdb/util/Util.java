@@ -1099,16 +1099,16 @@ public class Util
         string = string.replaceAll("\\{WHITE\\}", "§f");
 
         string = string.replaceAll("\\{BLACK\\}", "§0");
-        string = string.replaceAll("\\{DARK BLUE\\}", "§1");
-        string = string.replaceAll("\\{DARK GREEN\\}", "§2");
-        string = string.replaceAll("\\{DARK TEAL\\}", "§3");
-        string = string.replaceAll("\\{DARK RED\\}", "§4");
+        string = string.replaceAll("\\{DARKBLUE\\}", "§1");
+        string = string.replaceAll("\\{DARKGREEN\\}", "§2");
+        string = string.replaceAll("\\{DARKTEAL\\}", "§3");
+        string = string.replaceAll("\\{DARKRED\\}", "§4");
         string = string.replaceAll("\\{PURPLE\\}", "§5");
         string = string.replaceAll("\\{GOLD\\}", "§6");
         string = string.replaceAll("\\{GRAY\\}", "§7");
-        string = string.replaceAll("\\{DARK GRAY\\}", "§8");
+        string = string.replaceAll("\\{DARKGRAY\\}", "§8");
         string = string.replaceAll("\\{BLUE\\}", "§9");
-        string = string.replaceAll("\\{BRIGHT GREEN\\}", "§a");
+        string = string.replaceAll("\\{BRIGHTGREEN\\}", "§a");
         string = string.replaceAll("\\{TEAL\\}", "§b");
         string = string.replaceAll("\\{RED\\}", "§c");
         string = string.replaceAll("\\{PINK\\}", "§d");
@@ -1134,16 +1134,16 @@ public class Util
         string = string.replaceAll("\\{white\\}", "§f");
         
         string = string.replaceAll("\\{black\\}", "§0");
-        string = string.replaceAll("\\{dark blue\\}", "§1");
-        string = string.replaceAll("\\{dark green\\}", "§2");
-        string = string.replaceAll("\\{dark teal\\}", "§3");
-        string = string.replaceAll("\\{dark red\\}", "§4");
+        string = string.replaceAll("\\{darkblue\\}", "§1");
+        string = string.replaceAll("\\{darkgreen\\}", "§2");
+        string = string.replaceAll("\\{darkteal\\}", "§3");
+        string = string.replaceAll("\\{darkred\\}", "§4");
         string = string.replaceAll("\\{purple\\}", "§5");
         string = string.replaceAll("\\{gold\\}", "§6");
         string = string.replaceAll("\\{gray\\}", "§7");
-        string = string.replaceAll("\\{dark gray\\}", "§8");
+        string = string.replaceAll("\\{darkgray\\}", "§8");
         string = string.replaceAll("\\{blue\\}", "§9");
-        string = string.replaceAll("\\{bright green\\}", "§a");
+        string = string.replaceAll("\\{brightgreen\\}", "§a");
         string = string.replaceAll("\\{teal\\}", "§b");
         string = string.replaceAll("\\{red\\}", "§c");
         string = string.replaceAll("\\{pink\\}", "§d");
