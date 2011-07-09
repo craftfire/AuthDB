@@ -319,19 +319,19 @@ public class AuthDB extends JavaPlugin {
 
     void CheckOldFiles()
     {
-        File data = new File(getDataFolder()+"\\data\\","");
+        File data = new File(getDataFolder()+"/data/","");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"\\inventory\\","");
+        data = new File(getDataFolder()+"/inventory/","");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"\\","othernames.db");
+        data = new File(getDataFolder()+"/","othernames.db");
         if (data.exists()) 
         { 
-            data.renameTo(new File(getDataFolder()+"\\data\\","othernames.db")); 
+            data.renameTo(new File(getDataFolder()+"/data/","othernames.db")); 
         }
-        data = new File(getDataFolder()+"\\","idle.db");
+        data = new File(getDataFolder()+"/","idle.db");
         if (data.exists()) 
         { 
-            data.renameTo(new File(getDataFolder()+"\\data\\","timeout.db")); 
+            data.renameTo(new File(getDataFolder()+"/data/","timeout.db")); 
         }
     }
 
@@ -506,7 +506,7 @@ public class AuthDB extends JavaPlugin {
     }
 
       public void storeInventory(String player, ItemStack[] theinventory) throws IOException {
-        File inv = new File(getDataFolder()+"\\inventory\\", player + "_inv");
+        File inv = new File(getDataFolder()+"/inventory/", player + "_inv");
         if (inv.exists()) { return; }
         inv.createNewFile();
         BufferedWriter bw = new BufferedWriter(new FileWriter(inv));
@@ -607,7 +607,7 @@ public class AuthDB extends JavaPlugin {
 
     public ItemStack[] getInventory(String player)
       {
-        File f = new File(getDataFolder()+"\\inventory\\", player + "_inv");
+        File f = new File(getDataFolder()+"/inventory/", player + "_inv");
 
         if (f.exists()) {
             ItemStack[] inv;
@@ -653,14 +653,14 @@ public class AuthDB extends JavaPlugin {
       }
 
       public void deleteInventory(String player) {
-            File f = new File(getDataFolder()+"\\inventory\\", player + "_inv");
+            File f = new File(getDataFolder()+"/inventory/", player + "_inv");
             if (f.exists())
               f.delete();
           }
 
      private void DefaultFile(String name, String folder) {
-            File actual = new File(getDataFolder()+"\\"+folder+"\\", name);
-            File direc = new File(getDataFolder()+"\\"+folder+"\\","");
+            File actual = new File(getDataFolder()+"/"+folder+"/", name);
+            File direc = new File(getDataFolder()+"/"+folder+"/","");
             if (!direc.exists()) { direc.mkdir(); }
             if (!actual.exists()) {
               java.io.InputStream input = getClass().getResourceAsStream("/files/config/" + name);

@@ -72,7 +72,7 @@
   <repositories>
     <repository>
       <id>craftfire-repo</id>
-      <url>http://repo.craftfire.com</url>
+      <url>http://repo.craftfire.com/repo</url>
     </repository>
     <repository>
       <id>bukkit-repo</id>
