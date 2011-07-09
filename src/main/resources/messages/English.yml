@@ -1,0 +1,72 @@
+Core:
+  database:
+    failure:  "<rose>Database connection failed! Access is denied! Contact admin."
+  welcome:
+    guest: "<yellow>Welcome <white>guest<yellow>! Please use /register <password> <email> or                        /link <otherusername> <password>"
+  guest:
+    notauthorized: "<rose>You are not authorized to do that! Login or register for access."
+  register:
+    success: "<lightgreen>You have successfully registered! You are now logged in."
+    failure: "<rose>Registration failed!"
+    exists: "<rose>You are already registered!"
+    disabled: "<rose>Registration is disabled!"
+    timeout: "HERE THIS Kicked because you failed to register within {REGISTERTIMEOUT}."
+    usage: "<rose>Correct usage is: /register <password> <email>"
+  login:
+    normal: "<yellow>Welcome back <white>{PLAYER}<yellow>! Please use /login <password>"
+    prompt: "Auth<lightblue>DB <lightgray>> <white>Welcome <lightblue>{PLAYER}<white>! Please enter your password:"
+    success: "<lightgreen>Password accepted. Welcome!"
+    failure: "<rose>Password incorrect, please try again."
+    authorized: "<rose>You are already logged in!"
+    notregistered: "<rose>You are not registered yet!"
+    timeout: "HERE THIS Kicked because you failed to login within {LOGINTIMEOUT}."
+    usage: "<rose>Correct usage is: /login <password>"
+  link:
+    success: "<lightgreen>Username linked successfully!. You are now logged in."
+    failure: "<rose>Username linking failed!"
+    exists: "<rose>You are already linked to a username!"
+    usage: "<rose>Correct usage is: /link <otherusername> <password>"
+  unlink:
+    success: "<lightgreen>Username unlinked successfully!"
+    failure: "<rose>Username unlinking failed!"
+    nonexist: "<rose>You do not have a linked username!"
+    usage: "<rose>Correct usage is: /link <otherusername> <password>"
+  email:
+    required: "<rose>Email required for registration!"
+    invalid: "<rose>Email invalid! Please try again!"
+    badcharacters: "<rose>Email contains bad characters!  {BADCHARACTERS}!"
+  username:
+    minimum: "Your username does not meet the minimum requirement of {USERMIN} characters!"
+    maximum: "Your username does not meet the maximum requirement of {USERMAX} characters!"
+  password:
+    minimum: "<rose>Your password does not meet the minimum requirement of {PASSMIN} characters!"
+    maximum: "<rose>Your password does not meet the maximum requirement of {PASSMAX} characters!"
+  session:
+    valid: "<lightgreen>Hey, I remember you! You are logged in!"
+    protected: "Sorry, a player with that name is already logged in on this server."
+  idle:
+    kicked: "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}."
+    whitelist: "<lightgreen>{PLAYER} is on the idle <white>whitelist<lightgreen>, bypassing restrictions!"
+  filter:
+    username: "Kicked because username contains bad characters.  {USERBADCHARACTERS}!"
+    password: "<rose>Password contains bad characters!  {PASSBADCHARACTERS}!"
+    whitelist: "<lightgreen>{PLAYER} is on the filter <white>whitelist<lightgreen>, bypassing restrictions!"
+
+Plugins:
+  CraftIRC:
+    status:
+      join: "{PLAYER} has joined the server from {REGION}, {COUNTRY} ({IP})."
+      quit: "{PLAYER} has quit the server."
+    register:
+      success: "{PLAYER} just registered successfully!"
+      failure: "{PLAYER} had some errors while registering!"
+      registered: "{PLAYER} had a lapse in memory and tried to register again."
+    password:
+      success: "{PLAYER} logged in successfully!"
+      failure: "{PLAYER} tried to login with the wrong password!"
+    idle:
+      kicked: "{PLAYER} kicked from failure to login within {IDLELENGTH} {IDLETIME}."
+      whitelist: "{PLAYER} is on the idle whitelist, bypassing restrictions!"
+    filter:
+      kicked: "{PLAYER} was kicked due to bad characters in username!"
+      whitelist: "{PLAYER} is on the filter whitelist, bypassing restrictions!"
