@@ -76,11 +76,11 @@ public static void SendMessage(Message type,Player player)
             }
             else if(type.equals(Message.OnEnable))
             {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix,null,"")+" "+"%b%"+AuthDB.pluginname+" "+AuthDB.pluginversion+"%b% has started successfully.", Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix,null,"")+" "+"%b%"+AuthDB.AuthDBPlugin.name.name()+" "+AuthDB.AuthDBPlugin.version.name()+"%b% has started successfully.", Config.CraftIRC_tag);
             }
             else if(type.equals(Message.OnDisable))
             {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix,null,"")+" "+"%b%"+AuthDB.pluginname+" "+AuthDB.pluginversion+"%b% has stopped successfully.", Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix,null,"")+" "+"%b%"+AuthDB.AuthDBPlugin.name.name()+" "+AuthDB.AuthDBPlugin.version.name()+"%b% has stopped successfully.", Config.CraftIRC_tag);
             }
         }
     }
