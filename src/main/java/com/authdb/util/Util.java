@@ -962,7 +962,7 @@ public class Util
         }
 
     }
-
+    
     public static boolean CheckFilter(String what, String string)
     {
         if(what.equals("username"))
@@ -1076,46 +1076,83 @@ public class Util
         string = string.replaceAll("\\{USERBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_username));
         string = string.replaceAll("\\{PASSBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_password));
         string = string.replaceAll("\\{NEWLINE\\}", "\n");
+        string = string.replaceAll("\\{newline\\}", "\n");
         string = string.replaceAll("\\{N\\}", "\n");
+        string = string.replaceAll("\\{n\\}", "\n");
 
         ///COLORS
-        string = string.replaceAll("\\<BLACK\\>", "§0");
-        string = string.replaceAll("\\<NAVY\\>", "§1");
-        string = string.replaceAll("\\<GREEN\\>", "§2");
-        string = string.replaceAll("\\<BLUE\\>", "§3");
-        string = string.replaceAll("\\<RED\\>", "§4");
-        string = string.replaceAll("\\<PURPLE\\>", "§5");
-        string = string.replaceAll("\\<GOLD\\>", "§6");
-        string = string.replaceAll("\\<LIGHTGRAY\\>", "§7");
-        string = string.replaceAll("\\<GRAY\\>", "§8");
-        string = string.replaceAll("\\<DARKPURPLE\\>", "§9");
-        string = string.replaceAll("\\<LIGHTGREEN\\>", "§a");
-        string = string.replaceAll("\\<LIGHTBLUE\\>", "§b");
-        string = string.replaceAll("\\<ROSE\\>", "§c");
-        string = string.replaceAll("\\<LIGHTPURPLE\\>", "§d");
-        string = string.replaceAll("\\<YELLOW\\>", "§e");
-        string = string.replaceAll("\\<WHITE\\>", "§f");
+        string = string.replaceAll("\\{BLACK\\}", "§0");
+        string = string.replaceAll("\\{NAVY\\}", "§1");
+        string = string.replaceAll("\\{GREEN\\}", "§2");
+        string = string.replaceAll("\\{BLUE\\}", "§3");
+        string = string.replaceAll("\\{RED\\}", "§4");
+        string = string.replaceAll("\\{PURPLE\\}", "§5");
+        string = string.replaceAll("\\{GOLD\\}", "§6");
+        string = string.replaceAll("\\{LIGHTGRAY\\}", "§7");
+        string = string.replaceAll("\\{GRAY\\}", "§8");
+        string = string.replaceAll("\\{DARKPURPLE\\}", "§9");
+        string = string.replaceAll("\\{LIGHTGREEN\\}", "§a");
+        string = string.replaceAll("\\{LIGHTBLUE\\}", "§b");
+        string = string.replaceAll("\\{ROSE\\}", "§c");
+        string = string.replaceAll("\\{LIGHTPURPLE\\}", "§d");
+        string = string.replaceAll("\\{YELLOW\\}", "§e");
+        string = string.replaceAll("\\{WHITE\\}", "§f");
+
+        string = string.replaceAll("\\{BLACK\\}", "§0");
+        string = string.replaceAll("\\{DARK BLUE\\}", "§1");
+        string = string.replaceAll("\\{DARK GREEN\\}", "§2");
+        string = string.replaceAll("\\{DARK TEAL\\}", "§3");
+        string = string.replaceAll("\\{DARK RED\\}", "§4");
+        string = string.replaceAll("\\{PURPLE\\}", "§5");
+        string = string.replaceAll("\\{GOLD\\}", "§6");
+        string = string.replaceAll("\\{GRAY\\}", "§7");
+        string = string.replaceAll("\\{DARK GRAY\\}", "§8");
+        string = string.replaceAll("\\{BLUE\\}", "§9");
+        string = string.replaceAll("\\{BRIGHT GREEN\\}", "§a");
+        string = string.replaceAll("\\{TEAL\\}", "§b");
+        string = string.replaceAll("\\{RED\\}", "§c");
+        string = string.replaceAll("\\{PINK\\}", "§d");
+        string = string.replaceAll("\\{YELLOW\\}", "§e");
+        string = string.replaceAll("\\{WHITE\\}", "§f");
 
         ///colors
-        string = string.replaceAll("\\<black\\>", "§0");
-        string = string.replaceAll("\\<navy\\>", "§1");
-        string = string.replaceAll("\\<green\\>", "§2");
-        string = string.replaceAll("\\<blue\\>", "§3");
-        string = string.replaceAll("\\<red\\>", "§4");
-        string = string.replaceAll("\\<purple\\>", "§5");
-        string = string.replaceAll("\\<gold\\>", "§6");
-        string = string.replaceAll("\\<lightgray\\>", "§7");
-        string = string.replaceAll("\\<gray\\>", "§8");
-        string = string.replaceAll("\\<darkpurple\\>", "§9");
-        string = string.replaceAll("\\<lightgreen\\>", "§a");
-        string = string.replaceAll("\\<lightblue\\>", "§b");
-        string = string.replaceAll("\\<rose\\>", "§c");
-        string = string.replaceAll("\\<lightpurple\\>", "§d");
-        string = string.replaceAll("\\<yellow\\>", "§e");
-        string = string.replaceAll("\\<white\\>", "§f");
+        string = string.replaceAll("\\{black\\}", "§0");
+        string = string.replaceAll("\\{navy\\}", "§1");
+        string = string.replaceAll("\\{green\\}", "§2");
+        string = string.replaceAll("\\{blue\\}", "§3");
+        string = string.replaceAll("\\{red\\}", "§4");
+        string = string.replaceAll("\\{purple\\}", "§5");
+        string = string.replaceAll("\\{gold\\}", "§6");
+        string = string.replaceAll("\\{lightgray\\}", "§7");
+        string = string.replaceAll("\\{gray\\}", "§8");
+        string = string.replaceAll("\\{darkpurple\\}", "§9");
+        string = string.replaceAll("\\{lightgreen\\}", "§a");
+        string = string.replaceAll("\\{lightblue\\}", "§b");
+        string = string.replaceAll("\\{rose\\}", "§c");
+        string = string.replaceAll("\\{lightpurple\\}", "§d");
+        string = string.replaceAll("\\{yellow\\}", "§e");
+        string = string.replaceAll("\\{white\\}", "§f");
+        
+        string = string.replaceAll("\\{black\\}", "§0");
+        string = string.replaceAll("\\{dark blue\\}", "§1");
+        string = string.replaceAll("\\{dark green\\}", "§2");
+        string = string.replaceAll("\\{dark teal\\}", "§3");
+        string = string.replaceAll("\\{dark red\\}", "§4");
+        string = string.replaceAll("\\{purple\\}", "§5");
+        string = string.replaceAll("\\{gold\\}", "§6");
+        string = string.replaceAll("\\{gray\\}", "§7");
+        string = string.replaceAll("\\{dark gray\\}", "§8");
+        string = string.replaceAll("\\{blue\\}", "§9");
+        string = string.replaceAll("\\{bright green\\}", "§a");
+        string = string.replaceAll("\\{teal\\}", "§b");
+        string = string.replaceAll("\\{red\\}", "§c");
+        string = string.replaceAll("\\{pink\\}", "§d");
+        string = string.replaceAll("\\{yellow\\}", "§e");
+        string = string.replaceAll("\\{white\\}", "§f");
+        
         return string;
     }
-
+    
     public static String removeColors(String toremove)
     {
         if(Config.debug_enable) Debug("Launching function: CheckWhitelist");

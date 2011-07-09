@@ -43,6 +43,7 @@ public class Config
         //               plugin
         ///////////////////////////////////////////
         public static boolean autoupdate_enable,debug_enable,usagestats_enabled;
+        public static String language;
 
         ///////////////////////////////////////////
         //               script
@@ -156,6 +157,7 @@ public class Config
                     ///////////////////////////////////////////
                     //               plugin
                     ///////////////////////////////////////////
+                    language = GetConfigString("Core.plugin.language", "English");
                     autoupdate_enable = GetConfigBoolean("Core.plugin.autoupdate", true);
                     debug_enable = GetConfigBoolean("Core.plugin.debugmode", false);
                     usagestats_enabled = GetConfigBoolean("Core.plugin.usagestats", true);

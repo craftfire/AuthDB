@@ -1,81 +1,82 @@
 Core:
   plugin:
-    debugmode: false    # Set to true to enable debugging output in server console.
-    usagestats: true    # Set to false to disable usage stats reporting to devs.
+    language: English                                # Language translation file to use for messages.
+    debugmode: false                                 # Set to true to enable debugging mode and additional console output.
+    usagestats: true                                 # Set to false to disable usage stats reporting to CraftFire devs.
   database:
-    driver: mysql
-    host: localhost
-    port: 3306
-    username: root
-    password: root
-    name: forum
-    keepalive: false
+    driver: mysql                                    # Database driver to use. Leave this alone as MySQL is currently the only supported driver.
+    host: localhost                                  # MySQL server hostname, domain, IP, or localhost for local connections.
+    port: 3306                                       # Port used for connecting to your MySQL server. This is usually 3306.
+    username: root                                   # Username used to connect to your database. I hope you aren't using root!
+    password: root                                   # Set the password used to connect to your database. I hope you actually set a password other than root!
+    name: forum                                      # Set the name of the database you are connecting to.
+    keepalive: false                                 # Set the prefix of the database you are connecting to if you use one.
   script:
-    name: phpBB
-    version: 3.0.8
+    name: phpBB                                      # Set the name of the script you are using.
+    version: 3.0.8                                   # Set the version of the script you are using.
     tableprefix: phpbb_
   customdb:
-    enabled: false
-    autocreate: true
-    table: authdb_users
-    userfield: username
-    passfield: password
-    emailfield: email
-    encryption: md5
+    enabled: false                                   # 
+    autocreate: true                                 # 
+    table: authdb_users                              # 
+    userfield: username                              # 
+    passfield: password                              # 
+    emailfield: email                                # 
+    encryption: md5                                  # 
   register:
-    enabled: true
-    force: true
-    delay: 4 seconds
-    show: 10 seconds
-    timeout: 3 minutes
+    enabled: true                                    # 
+    force: true                                      # 
+    delay: 4 seconds                                 # 
+    show: 10 seconds                                 # 
+    timeout: 3 minutes                               # 
   login:
-    method: prompt
-    action: kick
-    tries: 3
-    delay: 4 seconds
-    show: 10 seconds
-    timeout: 3 minutes
+    method: prompt                                   # Set to normal to use /login password method or prompt for password input only.
+    action: kick                                     # 
+    tries: 3                                         # 
+    delay: 4 seconds                                 # 
+    show: 10 seconds                                 # 
+    timeout: 3 minutes                               # 
   link:
-    enabled: true
-    rename: true
+    enabled: true                                    # 
+    rename: true                                     # 
   unlink:
-    enabled: true
-    rename: true
+    enabled: true                                    # 
+    rename: true                                     # 
   username:
-    minimum: 3
-    maximum: 16
+    minimum: 3                                       # 
+    maximum: 16                                      # 
   password:
-    minimum: 6
-    maximum: 16
+    minimum: 6                                       # 
+    maximum: 16                                      # 
   session:
-    start: login
-    length: 1 hour
-    protect: true
+    start: login                                     # 
+    length: 1 hour                                   # 
+    protect: true                                    # 
   guest:
-    commands: false
-    chat: false
-    building: false
-    destruction: false
-    movement: false
-    interactions: false
-    inventory: false
-    drop: false
-    pickup: false
-    health: false
-    pvp: false
-    mobtargeting: false
-    mobdamage: false
+    commands: false                                  # 
+    chat: false                                      # 
+    building: false                                  # 
+    destruction: false                               # 
+    movement: false                                  # 
+    interactions: false                              # 
+    inventory: false                                 # 
+    drop: false                                      # 
+    pickup: false                                    # 
+    health: false                                    # 
+    pvp: false                                       # 
+    mobtargeting: false                              # 
+    mobdamage: false                                 # 
   protection:
-    notify: true
-    delay: 3 seconds
+    notify: true                                     # 
+    delay: 3 seconds                                 # 
   filter:
     action: kick
-    username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "
-    password: "&"
-    whitelist: Contex,Wulfspider
+    username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "    # 
+    password: "&"                                    # 
+    whitelist: Contex,Wulfspider                     # 
 
 Plugins:
   CraftIRC:
-    enabled: false
-    tag: admin
-    prefix: "%b%%green%[{PLUGIN}]%k%%b%"
+    enabled: false                                   # 
+    tag: admin                                       # 
+    prefix: "%b%%green%[{PLUGIN}]%k%%b%"             # 

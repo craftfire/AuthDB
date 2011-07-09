@@ -24,9 +24,20 @@ public class zPermissions
 
     public enum Permission
     {
-        command_logoff ("command.logoff"),
+        command_login ("command.login"),
+        command_logout ("command.logout"),
         command_reload ("command.reload"),
-        command_users ("command.users");
+        command_users ("command.users"),
+        command_register ("command.register"),
+        command_unregister ("command.unregister"),
+        command_password ("command.password"),
+        command_email ("command.email"),
+        command_link ("command.link"),
+        command_unlink ("command.unlink"),
+        command_admin_logout ("command.admin.logout"),
+        command_admin_login ("command.admin.login"),
+        command_admin_unregister ("command.admin.unregister"),
+        command_admin_password ("command.admin.password");
 
         private String permission;
         Permission(String permission) { this.permission = permission; }
@@ -36,7 +47,6 @@ public class zPermissions
     {
       if(HasPlugin)
       {
-          Util.Debug("HAS PLUGIN");
           if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.name())) return true;
           else if (player.isOp()) return true;
       }

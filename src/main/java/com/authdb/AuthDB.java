@@ -72,9 +72,9 @@ public class AuthDB extends JavaPlugin {
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
     private static List<Integer> authorizedIds = new ArrayList<Integer>();
     public static HashMap<String, String> db = new HashMap<String, String>();
-    public static HashMap<String, String> db2 = new HashMap<String, String>();
-    public static HashMap<String, String> db3 = new HashMap<String, String>();
-    public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
+    public  HashMap<String, String> db2 = new HashMap<String, String>();
+    public  HashMap<String, String> db3 = new HashMap<String, String>();
+    public  HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
     public static HashMap<String, Long> AuthDBRemindLogin = new HashMap<String, Long>();
     public static HashMap<String, Integer> AuthDBSpamMessage = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDBSpamMessageTime = new HashMap<String, Long>();
@@ -110,7 +110,6 @@ public class AuthDB extends JavaPlugin {
         plugin = new AuthDB();
         SetupPluginInformation();
         CheckOldFiles();
-        CheckPermissions();
         Server = getServer();
         Plugin[] plugins = Server.getPluginManager().getPlugins();
         //Util.Debug(System.getProperty("java.version"));
@@ -130,18 +129,7 @@ public class AuthDB extends JavaPlugin {
                 Plugins += "*_*";
             counter++;
         }
-        File f = new File("plugins/"+PluginName+"/config/messages.yml");
-        if ( !f.exists() )
-        {
-            Util.Log("info", "messages.yml could not be found in plugins/AuthDB/config/! Creating messages.yml!");
-            DefaultFile("messages.yml","config");
-
-            //getServer().getPluginManager().disablePlugin(((Plugin) (this)));
-            //return;
-        }
-        new Config("messages","plugins/"+PluginName+"/config/", "messages.yml");
-
-        f = new File("plugins/"+PluginName+"/config/config.yml");
+        File f = new File("plugins/"+PluginName+"/config/config.yml");
         if ( !f.exists() )
         {
             Util.Log("info", "config.yml could not be found in plugins/AuthDB/config/! Creating config.yml!");
@@ -150,8 +138,10 @@ public class AuthDB extends JavaPlugin {
            // return;
         }
         new Config("config","plugins/"+PluginName+"/config/", "config.yml");
+        LoadMessages();
 
           final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
+          CheckPermissions();
           if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
               craftircHandle = ((CraftIRC)checkCraftIRC);
               Util.Log("info","Found supported plugin: " + checkCraftIRC.getDescription().getName());
@@ -242,34 +232,98 @@ public class AuthDB extends JavaPlugin {
     
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) 
     { 
-        String NoPermission = "You do not have permission to use this command.";
-        if (cmd.getName().equalsIgnoreCase("authdb") && sender instanceof Player)
+        if(sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if(args.length == 0)
+            Player player = (Player)sender;
+            String NoPermission = "You do not have permission to use this command.";
+            if (cmd.getName().equalsIgnoreCase("authdb"))
             {
-                player.sendMessage(PluginName+" v"+PluginVersion);
-                player.sendMessage(PluginName + " is developed by CraftFire <dev@craftfire.com>");
-                player.sendMessage(PluginWebsite);
-            }
-            if(args.length == 1)
-            {
-                if(args[0].equalsIgnoreCase("reload") && zPermissions.IsAllowed(player, Permission.command_reload))
+                if(args.length == 0)
                 {
-                    new Config("config","plugins/"+PluginName+"/config/", "config.yml");
-                    new Config("config","plugins/"+PluginName+"/config/", "messages.yml");
-                    player.sendMessage("AuthDB has been successfully reloaded!");
+                    player.sendMessage("§b Name: §f "+PluginName+" §4 "+PluginVersion);
+                    player.sendMessage("§b "+PluginName + " is developed by §4 CraftFire �e<dev@craftfire.com>");
+                    player.sendMessage("§d "+PluginWebsite);
+                }
+                if(args.length == 1)
+                {
+                    if(args[0].equalsIgnoreCase("reload") && zPermissions.IsAllowed(player, Permission.command_reload))
+                    {
+                        new Config("config","plugins/"+PluginName+"/config/", "config.yml");
+                        LoadMessages();
+                        player.sendMessage("§a AuthDB has been successfully reloaded!");
+                        return true;
+                    }
+                    else
+                    {
+                        player.sendMessage(NoPermission);
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else if (cmd.getName().equalsIgnoreCase("logout") && zPermissions.IsAllowed(player, Permission.command_logout))
+            {
+                if(args.length == 0)
+                {
+                    if(Logout(player))
+                    {
+                        player.sendMessage("§aSucessfully logged out!");
+                        return true;
+                    }
+                    else
+                    {
+                        player.sendMessage("§aYou are not logged in!");
+                        return true;
+                    }
+                }
+                else if(args.length == 1 && zPermissions.IsAllowed(player, Permission.command_admin_logout))
+                {
+                    String PlayerName = args[0];
+                    for (Player p : player.getServer().getOnlinePlayers()) 
+                    {
+                        if(p.getName().equalsIgnoreCase(PlayerName) || p.getName().startsWith(PlayerName.substring(0, 2)))
+                        {
+                            if(Logout(p))
+                            {
+                                player.sendMessage("Successfully logged out player '"+p.getName()+"'.");
+                                p.sendMessage("You have been logged out by an admin.");
+                                return true;
+                            }
+                            else
+                            {
+                                player.sendMessage("You cannot logout player '"+p.getName()+"' because the player is not logged in.");
+                                return true;
+                            }
+                        }
+                    }
+                    player.sendMessage("§aCould not find player '"+PlayerName+"', please try again.");
                     return true;
                 }
-                else
-                {
-                    player.sendMessage(NoPermission);
-                    return false;
-                }
+            }
+        }
+
+        return false;
+    }
+    
+    public boolean Logout(Player player)
+    {
+        if(isAuthorized(player.getEntityId()))
+        {
+            if(AuthTimeDB.containsKey(player.getName()))
+            { 
+                AuthTimeDB.remove(player.getName()); 
+            }
+            unauthorize(player.getEntityId());
+            if(db3.containsKey(Encryption.md5(player.getName())))
+            { 
+                db3.remove(Encryption.md5(player.getName())); 
+            }
+            if(db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
+            { 
+                db2.remove(Encryption.md5(player.getName()+Util.GetIP(player))); 
             }
             return true;
         }
-
         return false;
     }
     
@@ -293,6 +347,10 @@ public class AuthDB extends JavaPlugin {
         File data = new File(getDataFolder()+"/data/","");
         if (!data.exists()) { data.mkdir(); }
         data = new File(getDataFolder()+"/inventory/","");
+        if (!data.exists()) { data.mkdir(); }
+        data = new File(getDataFolder()+"/messages/","");
+        if (!data.exists()) { data.mkdir(); }
+        data = new File(getDataFolder()+"/config/","");
         if (!data.exists()) { data.mkdir(); }
         data = new File(getDataFolder()+"/","othernames.db");
         if (data.exists()) 
@@ -367,7 +425,31 @@ public class AuthDB extends JavaPlugin {
         if(!Config.database_keepalive) { MySQL.close(); }
         return true;
     }
-
+    
+    void LoadMessages()
+    {
+        String[] Languages = {"English"};
+        boolean Set = false;
+        String Language = "English";
+        for(int i=0; i<Languages.length; i++)
+        {
+            File f = new File("plugins/"+PluginName+"/messages/"+Languages[i]+".yml");
+            if ( !f.exists() )
+            {
+                Util.Log("info", Languages[i]+".yml could not be found in plugins/AuthDB/messages/! Creating "+Languages[i]+".yml!");
+                DefaultFile(Languages[i]+".yml","messages");
+            }
+            if(Config.language.equalsIgnoreCase(Languages[i])) 
+            { 
+                Set = true;
+                Language = Languages[i]; 
+            }
+        }
+        if(!Set) { Util.Log("info", "Could not find message setup for language: "+Config.language+", using default language: "+Language); }
+        else { Util.Debug("Message language set to "+Language); }
+        new Config("messages","plugins/"+PluginName+"/messages/", Language+".yml");
+    }    
+    
     public boolean isRegistered(String when, String player) {
         boolean dupe = false;
         boolean checkneeded = true;
@@ -642,7 +724,7 @@ public class AuthDB extends JavaPlugin {
             File direc = new File(getDataFolder()+"/"+folder+"/","");
             if (!direc.exists()) { direc.mkdir(); }
             if (!actual.exists()) {
-              java.io.InputStream input = getClass().getResourceAsStream("/files/config/" + name);
+              java.io.InputStream input = getClass().getResourceAsStream("/files/"+folder+"/" + name);
               if (input != null) {
                   java.io.FileOutputStream output = null;
                 try

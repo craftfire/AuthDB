@@ -257,7 +257,6 @@ public boolean CheckTimeout(Player player) throws IOException
   {
       String Contrib = event.getMessage();
       Contrib = Contrib.replaceAll("/", "");
-      Util.Debug(""+zBukkitContrib.CheckCommand("2.0.0"));
       if(!zBukkitContrib.CheckCommand(Contrib))
       {
         String[] split = event.getMessage().split(" ");
