@@ -29,6 +29,8 @@ import java.util.regex.Pattern;
 import net.minecraft.server.PropertyManager;
 
 import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -43,6 +45,8 @@ import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
 import com.authdb.plugins.zCraftIRC;
+import com.authdb.plugins.zPermissions;
+import com.authdb.plugins.zPermissions.Permission;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
@@ -51,6 +55,8 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
+import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class AuthDB extends JavaPlugin {
     //
@@ -103,6 +109,7 @@ public class AuthDB extends JavaPlugin {
     {
         plugin = new AuthDB();
         CheckOldFiles();
+        CheckPermissions();
         /* File file = new File("plugins/"+pluginname+"/addons/AuthDB_Ban.jar");
 
             URLClassLoader clazzLoader = null;
@@ -262,6 +269,51 @@ public class AuthDB extends JavaPlugin {
         {
             try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),pluginversion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); }
             catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send usage stats to main server."); }
+        }
+    }
+    
+    public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) 
+    { 
+        String NoPermission = "You do not have permission to use this command.";
+        Util.Log("info", "HEEEEEEEEEEEELO");
+        Util.Debug("HERE1 "+cmd.getName());
+        if (cmd.getName().equalsIgnoreCase("authdb") && sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            if(args.length == 1)
+            {
+                Util.Debug("HERE2 "+args[0]);
+                if(args[0].equalsIgnoreCase("reload") && zPermissions.IsAllowed(player, Permission.command_reload))
+                {
+                    new Config("config","plugins/"+pluginname+"/config/", "config.yml");
+                    new Config("config","plugins/"+pluginname+"/config/", "messages.yml");
+                    player.sendMessage("AuthDB has been successfully reloaded!");
+                    return true;
+                }
+                else
+                {
+                    player.sendMessage(NoPermission);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+    
+    void CheckPermissions()
+    {
+        Plugin Check = getServer().getPluginManager().getPlugin("Permissions");
+        if (Check != null)
+        {
+            zPermissions.permissionsHandler = ((Permissions)Check).getHandler();
+            Util.Log("info","Found supported plugin: " + Check.getDescription().getName() + " "+Check.getDescription().getVersion());
+            zPermissions. HasPlugin = true;
+        }
+        else
+        {
+            Util.Log("info","Could not load a permissions plugin, going over to OP!");
         }
     }
 

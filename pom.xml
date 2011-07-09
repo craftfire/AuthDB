@@ -1,37 +1,42 @@
 <!--
   Maven build file for AuthDB
+
   Copyright (c) 2011 CraftFire <http://www.craftfire.com>
-  The CraftFire team members are Contex and Wulfspider
   AuthDB is licensed under Creative Commons CC BY-NC-ND 3.0
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <!-- Project information -->
   <groupId>com.authdb</groupId>
   <artifactId>authdb</artifactId>
   <version>dev-SNAPSHOT</version>
   <name>AuthDB</name>
-  <url>http://www.craftfire.com</url>
+  <url>http://craftfire.com</url>
   <description>Script and custom MySQL database user authentication plugin for CraftBukkit.</description>
-  <!--<licenses>
-    <license>
-      <name>MIT</name>
-      <url>LICENSE.txt</url>
-      <distribution>repo</distribution>
-      <comments>The MIT License is a free software license originating at the Massachusetts Institute of Technology (MIT), used by the MIT X Consortium.</comments>
-    </license>
-  </licenses> -->
 
+  <!-- License -->
+  <licenses>
+    <license>
+      <name>Creative Commons CC BY-NC-ND 3.0</name>
+      <url>http://creativecommons.org/licenses/by-nc-nd/3.0/</url>
+      <distribution>repo</distribution>
+      <comments>This license only allows others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.</comments>
+    </license>
+  </licenses>
+
+  <!-- Organization -->
   <organization>
     <name>CraftFire</name>
-    <url>http://www.craftfire.com</url>
+    <url>http://craftfire.com</url>
   </organization>
 
+  <!-- Team members -->
   <developers>
     <developer>
       <id>Contex</id>
       <email>contex@craftfire.com</email>
       <roles>
-        <role>architect</role>
         <role>developer</role>
       </roles>
       <timezone>+1</timezone>
@@ -43,7 +48,6 @@
       <email>wulfspider@craftfire.com</email>
       <roles>
         <role>architect</role>
-        <role>developer</role>
       </roles>
       <timezone>-5</timezone>
       <properties>
@@ -64,14 +68,11 @@
     </repository>
   </distributionManagement> -->
 
+  <!-- Repository locations -->
   <repositories>
-    <!-- <repository>
-      <id>craftfire-repo</id>
-      <url>http://repo.craftfire.com</url>
-    </repository> -->
     <repository>
       <id>craftfire-repo</id>
-      <url>http://repo.craftfire.com/repo</url>
+      <url>http://repo.craftfire.com</url>
     </repository>
     <repository>
       <id>bukkit-repo</id>
@@ -106,6 +107,11 @@
     </dependency>
 
     <!-- Third-party plugins -->
+    <dependency>
+      <groupId>com.nijikokun.bukkit</groupId>
+      <artifactId>Permissions</artifactId>
+      <version>3.1.6</version>
+    </dependency>
     <dependency>
       <groupId>com.ensifera.animosity</groupId>
       <artifactId>craftirc</artifactId>
@@ -145,13 +151,12 @@
           <include>commands.yml</include>
           <include>config.yml</include>
           <include>customdb.sql</include>
-          <include>messages.yml</include>
         </includes>
       </resource>
       <resource>
         <targetPath>files/translations/</targetPath>
         <filtering>true</filtering>
-        <directory>${basedir}/src/main/resources/translations/</directory>
+        <directory>${basedir}/src/main/resources/messages/</directory>
         <includes>
           <include>*.yml</include>
         </includes>

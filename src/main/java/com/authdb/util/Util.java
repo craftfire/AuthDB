@@ -1075,11 +1075,9 @@ public class Util
         string = string.replaceAll("\\{REGISTERTIMEOUT\\}", ""+Config.register_timeout_length+" "+Config.register_timeout_time);
         string = string.replaceAll("\\{USERBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_username));
         string = string.replaceAll("\\{PASSBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_password));
-        string = string.replaceAll("\\{PROVINCE\\}", "");
-        string = string.replaceAll("\\{STATE\\}", "");
-        string = string.replaceAll("\\{COUNTRY\\}", "");
-        string = string.replaceAll("\\{REGION\\}", "");
-        string = string.replaceAll("\\{AGE\\}", "");
+        string = string.replaceAll("\\{NEWLINE\\}", "\n");
+        string = string.replaceAll("\\{N\\}", "\n");
+        string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginname);
 
         ///COLORS
         string = string.replaceAll("\\<BLACK\\>", "§0");

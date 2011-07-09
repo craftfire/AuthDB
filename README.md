@@ -2,7 +2,7 @@ AuthDB
 ======
 Script and custom MySQL database user authentication plugin for CraftBukkit.
 
-Website: [http://www.craftfire.coom](http://www.craftfire.com)
+Website: [http://www.craftfire.com](http://www.craftfire.com)
 Bugs/Suggestions: [http://www.craftfire.com/issues](http://www.craftfire.com/issues)
 
 Coding and Pull Request Conventions

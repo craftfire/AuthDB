@@ -15,8 +15,11 @@ commands:
     description: Login to your account.
     usage: /<command> <password>
   logout:
-    description: 
-    usage: /<command>
+    description: Logout yourself or specified player.
+    usage: /<command> <player>
   setspawn:
-    description: 
+    description: Set spawn locations for guests and registered players.
     usage: /<command> <group>
+  authdb:
+    description: Set of commands to reload, show version, and more.
+    usage: /<command> <extra>
