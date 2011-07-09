@@ -196,7 +196,7 @@ public boolean CheckTimeout(Player player) throws IOException
                 this.plugin.authorize(event.getPlayer().getEntityId());
           }
         } catch (IOException e) {
-          Util.Log("severe","["+AuthDB.AuthDBPlugin.name.name()+"] Inventory file error:");
+          Util.Log("severe","["+AuthDB.PluginName+"] Inventory file error:");
           player.kickPlayer("inventory protection kicked");
            e.printStackTrace();
         player.sendMessage(Color.red + "Error happend, report to admins!");

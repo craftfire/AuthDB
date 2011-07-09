@@ -37,7 +37,7 @@ public class zPermissions
       if(HasPlugin)
       {
           Util.Debug("HAS PLUGIN");
-          if(permissionsHandler.has(player, AuthDB.AuthDBPlugin.name.name().toLowerCase() + "." + permission.name())) return true;
+          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.name())) return true;
           else if (player.isOp()) return true;
       }
       else if (player.isOp()) return true;

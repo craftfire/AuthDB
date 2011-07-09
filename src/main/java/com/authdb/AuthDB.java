@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,7 +87,7 @@ public class AuthDB extends JavaPlugin {
 
     public void onDisable()
     {
-        Util.Log("info",  AuthDBPlugin.name.name() + " plugin " + AuthDBPlugin.version.name() + " has been disabled");
+        Util.Log("info",  PluginName + " plugin " + PluginVersion + " has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
         if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
             zCraftIRC.SendMessage(Message.OnDisable,null);
@@ -107,7 +108,6 @@ public class AuthDB extends JavaPlugin {
     public void onEnable()
     {
         plugin = new AuthDB();
-        SetupPluginInformation();
         CheckOldFiles();
         CheckPermissions();
         Server = getServer();
@@ -129,7 +129,7 @@ public class AuthDB extends JavaPlugin {
                 Plugins += "*_*";
             counter++;
         }
-        File f = new File("plugins/"+AuthDBPlugin.name.name()+"/config/messages.yml");
+        File f = new File("plugins/"+PluginName+"/config/messages.yml");
         if ( !f.exists() )
         {
             Util.Log("info", "messages.yml could not be found in plugins/AuthDB/config/! Creating messages.yml!");
@@ -138,9 +138,9 @@ public class AuthDB extends JavaPlugin {
             //getServer().getPluginManager().disablePlugin(((Plugin) (this)));
             //return;
         }
-        new Config("messages","plugins/"+AuthDBPlugin.name.name()+"/config/", "messages.yml");
+        new Config("messages","plugins/"+PluginName+"/config/", "messages.yml");
 
-        f = new File("plugins/"+AuthDBPlugin.name.name()+"/config/config.yml");
+        f = new File("plugins/"+PluginName+"/config/config.yml");
         if ( !f.exists() )
         {
             Util.Log("info", "config.yml could not be found in plugins/AuthDB/config/! Creating config.yml!");
@@ -148,7 +148,7 @@ public class AuthDB extends JavaPlugin {
            // getServer().getPluginManager().disablePlugin(((Plugin) (this)));
            // return;
         }
-        new Config("config","plugins/"+AuthDBPlugin.name.name()+"/config/", "config.yml");
+        new Config("config","plugins/"+PluginName+"/config/", "config.yml");
 
           final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
           if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
@@ -218,10 +218,10 @@ public class AuthDB extends JavaPlugin {
 
         Util.AddOtherNamesToDB();
 
-        Util.Log("info", AuthDBPlugin.name.name() + " plugin " + AuthDBPlugin.version.name() + " is enabled");
+        Util.Log("info", PluginName + " plugin " + PluginVersion + " is enabled");
         if(Config.debug_enable) Util.Log("info", "Debug is ENABLED, get ready for some heavy spam");
         if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Log("info", "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
-        Util.Log("info", AuthDBPlugin.name.name() + " is developed by CraftFire <dev@craftfire.com>");
+        Util.Log("info", PluginName + " is developed by CraftFire <dev@craftfire.com>");
 
         String thescript = "",theversion = "";
         if(Config.custom_enabled) { thescript = "custom"; }
@@ -234,7 +234,7 @@ public class AuthDB extends JavaPlugin {
         String max = ""+getServer().getMaxPlayers();
         if(Config.usagestats_enabled)
         {
-            try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),AuthDBPlugin.version.name(),System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); }
+            try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),PluginVersion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); }
             catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send usage stats to main server."); }
         }
     }
@@ -247,16 +247,16 @@ public class AuthDB extends JavaPlugin {
             Player player = (Player) sender;
             if(args.length == 0)
             {
-                player.sendMessage(AuthDBPlugin.name.name()+" v"+AuthDBPlugin.version.name());
-                player.sendMessage(AuthDBPlugin.name.name() + " is developed by CraftFire <dev@craftfire.com>");
-                player.sendMessage(AuthDBPlugin.website.name());
+                player.sendMessage(PluginName+" v"+PluginVersion);
+                player.sendMessage(PluginName + " is developed by CraftFire <dev@craftfire.com>");
+                player.sendMessage(PluginWebsite);
             }
             if(args.length == 1)
             {
                 if(args[0].equalsIgnoreCase("reload") && zPermissions.IsAllowed(player, Permission.command_reload))
                 {
-                    new Config("config","plugins/"+AuthDBPlugin.name.name()+"/config/", "config.yml");
-                    new Config("config","plugins/"+AuthDBPlugin.name.name()+"/config/", "messages.yml");
+                    new Config("config","plugins/"+PluginName+"/config/", "config.yml");
+                    new Config("config","plugins/"+PluginName+"/config/", "messages.yml");
                     player.sendMessage("AuthDB has been successfully reloaded!");
                     return true;
                 }
@@ -492,25 +492,6 @@ public class AuthDB extends JavaPlugin {
         bw.close();
       }
 
-      public static enum AuthDBPlugin
-      {
-          name (PluginName),
-          version (PluginVersion),
-          website (PluginWebsite),
-          description (PluginDescrption);
-
-          private String info;
-          AuthDBPlugin(String info) { this.info = info; }
-      }
-      
-      void SetupPluginInformation()
-      {
-          PluginName = getDescription().getName();
-          PluginVersion = getDescription().getVersion();
-          PluginWebsite = getDescription().getWebsite();
-          PluginDescrption = getDescription().getDescription();
-      }
-      
     public void disableInventory()
     {
         Set pl = inventories.keySet();
@@ -665,7 +646,7 @@ public class AuthDB extends JavaPlugin {
                     output.write(buf, 0, length);
                   }
 
-                  System.out.println("["+AuthDBPlugin.name.name()+"] Written default setup for " + name);
+                  System.out.println("["+PluginName+"] Written default setup for " + name);
                 } catch (Exception e) {
                   e.printStackTrace();
                 } finally {

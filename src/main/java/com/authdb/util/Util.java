@@ -790,7 +790,7 @@ public class Util
        try
        {
         // Create file
-        FileWriter fstream = new FileWriter("plugins/"+AuthDB.AuthDBPlugin.name.name()+"/error.txt");
+        FileWriter fstream = new FileWriter("plugins/"+AuthDB.PluginName+"/error.txt");
         BufferedWriter out = new BufferedWriter(fstream);
         out.append(info);
         //Close the output stream
@@ -1069,8 +1069,8 @@ public class Util
         string = string.replaceAll("\\{USERMAX\\}", Config.username_maximum);
         string = string.replaceAll("\\{PASSMIN\\}", Config.password_minimum);
         string = string.replaceAll("\\{PASSMAX\\}", Config.password_maximum);
-        string = string.replaceAll("\\{PLUGIN\\}", AuthDB.AuthDBPlugin.name.name());
-        string = string.replaceAll("\\{VERSION\\}", AuthDB.AuthDBPlugin.version.name());
+        string = string.replaceAll("\\{PLUGIN\\}", AuthDB.PluginName);
+        string = string.replaceAll("\\{VERSION\\}", AuthDB.PluginVersion);
         string = string.replaceAll("\\{LOGINTIMEOUT\\}", Config.login_timeout_length+" "+Config.login_timeout_time);
         string = string.replaceAll("\\{REGISTERTIMEOUT\\}", ""+Config.register_timeout_length+" "+Config.register_timeout_time);
         string = string.replaceAll("\\{USERBADCHARACTERS\\}",Matcher.quoteReplacement(Config.filter_username));
@@ -1177,9 +1177,9 @@ public class Util
 
     public static void Log(String type, String what)
     {
-        if(type.equals("severe")) AuthDB.log.severe("["+AuthDB.AuthDBPlugin.name.name()+"] "+what);
-        else if(type.equals("info")) AuthDB.log.info("["+AuthDB.AuthDBPlugin.name.name()+"] "+what);
-        else if(type.equals("warning")) AuthDB.log.warning("["+AuthDB.AuthDBPlugin.name.name()+"] "+what);
+        if(type.equals("severe")) AuthDB.log.severe("["+AuthDB.PluginName+"] "+what);
+        else if(type.equals("info")) AuthDB.log.info("["+AuthDB.PluginName+"] "+what);
+        else if(type.equals("warning")) AuthDB.log.warning("["+AuthDB.PluginName+"] "+what);
     }
 
     public static Location LandLocation(Location location)
@@ -1221,7 +1221,7 @@ public class Util
 
     public static void AddOtherNamesToDB()
     {
-        File file = new File("plugins/"+AuthDB.AuthDBPlugin.name.name()+"/"+AuthDB.otherNamesFileName);
+        File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
         if (file.exists())
         {
             BufferedReader reader = null;
@@ -1250,7 +1250,7 @@ public class Util
     public static String GetFile(String what, String data)
       {
           Util.Debug("READING FROM FILE get");
-          File file = new File("plugins/"+AuthDB.AuthDBPlugin.name.name()+"/"+AuthDB.otherNamesFileName);
+          File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
           if (file.exists())
           {
               BufferedReader reader = null;
@@ -1280,7 +1280,7 @@ public class Util
       public static boolean ToFile(String action, String what, String data)
         {
             Util.Debug("READING FROM FILE "+action);
-            File file = new File("plugins/"+AuthDB.AuthDBPlugin.name.name()+"/"+AuthDB.otherNamesFileName);
+            File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
             if(action.equals("write"))
             {
                   try
@@ -1340,7 +1340,7 @@ public class Util
                 reader.close();
 
 
-                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.AuthDBPlugin.name.name()+"/"+AuthDB.otherNamesFileName)));
+                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName)));
                 String[] thesplit = thedupe.split("¤XX¤");
                 int counter = 0;
                 while (counter < thesplit.length)
@@ -1381,7 +1381,7 @@ public class Util
                 reader.close();
 
 
-                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.AuthDBPlugin.name.name()+"/"+AuthDB.otherNamesFileName)));
+                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName)));
                 String[] thesplit = thedupe.split("¤XX¤");
                 int counter = 0;
                 while (counter < thesplit.length)
