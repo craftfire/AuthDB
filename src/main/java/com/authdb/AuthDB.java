@@ -253,10 +253,7 @@ public class AuthDB extends JavaPlugin {
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
                         return true;
                     }
-                    player.sendMessage(NoPermission);
-                    return false;
                 }
-                return true;
             }
             else if (cmd.getName().equalsIgnoreCase("logout") && zPermissions.IsAllowed(player, Permission.command_logout))
             {
@@ -296,8 +293,6 @@ public class AuthDB extends JavaPlugin {
                     player.sendMessage("§aCould not find player '"+PlayerName+"', please try again.");
                     return true;
                 }
-                player.sendMessage(NoPermission);
-                return true;
             }
             else if (cmd.getName().equalsIgnoreCase("login") && zPermissions.IsAllowed(player, Permission.command_login))
             {
@@ -324,36 +319,6 @@ public class AuthDB extends JavaPlugin {
                     player.sendMessage("§aCould not find player '"+PlayerName+"', please try again.");
                     return true;
                 }
-                player.sendMessage(NoPermission);
-                return true;
-            }
-            else if (cmd.getName().equalsIgnoreCase("link") && zPermissions.IsAllowed(player, Permission.command_link))
-            {
-                if(Config.link_enabled)
-                {
-                    if (args.length == 2)
-                    {
-                        if(Util.CheckOtherName(player.getName()).equals(player.getName()))
-                        {
-                              if (this.plugin.checkPassword(args[0], args[1]))
-                              {
-                                  if(Link(player,args[0]))
-                                  {
-                                      Messages.SendMessage(Message.link_success, player,null);
-                                      return true;
-                                  }
-                              }
-                              Messages.SendMessage(Message.link_failure, player,null);
-                              return true;
-                        }
-                        Messages.SendMessage(Message.link_exists, player,null);
-                        return true;
-                    }
-                    Messages.SendMessage(Message.link_usage, player,null);
-                    return true;
-                }
-                player.sendMessage("Linking is not enabled");
-                return true;
             }
             player.sendMessage(NoPermission);
             return true;

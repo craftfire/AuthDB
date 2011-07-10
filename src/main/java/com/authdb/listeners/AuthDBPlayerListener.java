@@ -297,6 +297,40 @@ public boolean CheckTimeout(Player player) throws IOException
             event.setMessage("/login ******");
             event.setCancelled(true);
          }
+        else if (split[0].equals("/link"))
+        {
+            if(Config.link_enabled)
+            {
+                if (split.length == 3)
+                {
+                    if(Util.CheckOtherName(player.getName()).equals(player.getName()))
+                    {
+                          if (this.plugin.checkPassword(split[1], split[2]))
+                          {
+                              ItemStack[] inv = this.plugin.getInventory(player.getName());
+                              if (inv != null) { player.getInventory().setContents(inv); }
+                              long thetimestamp = System.currentTimeMillis()/1000;
+                              this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+                              this.plugin.authorize(player.getEntityId());
+                              long timestamp = System.currentTimeMillis()/1000;
+                              this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
+                              this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+                              this.plugin.AuthOtherNamesDB.put(player.getName(),split[1]);
+                              Util.ToFile("write",  player.getName(), split[1]);
+                              Util.Debug("Session started for "+player.getName());
+                              if(Config.link_rename) { player.setDisplayName(split[1]); }
+                              Messages.SendMessage(Message.link_success, player,null);
+                          }
+                          else { Messages.SendMessage(Message.link_failure, player,null); }
+                    }
+                    else { Messages.SendMessage(Message.link_exists, player,null); }
+                }
+                else { Messages.SendMessage(Message.link_usage, player,null); }
+                Util.Debug(player.getName()+" link ******** ********");
+                event.setMessage("/link ****** ********");
+                event.setCancelled(true);
+            }
+         }
         else if (split[0].equals("/unlink"))
         {
             if(Config.unlink_enabled)
