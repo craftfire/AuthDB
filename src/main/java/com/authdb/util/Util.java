@@ -58,6 +58,7 @@ import com.mysql.jdbc.Blob;
 
 public class Util
 {
+    
     static int Schedule = 0;
     public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException
     {
@@ -580,7 +581,7 @@ public class Util
             @Override
             public void run()
             {
-                if(AuthDB.isAuthorized(player.getEntityId()) && AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
+                if(AuthDB.isAuthorized(player) && AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
                 {
                     AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
                     AuthDB.AuthDBSpamMessage.remove(player.getName());
@@ -939,7 +940,7 @@ public class Util
     public static void CheckIdle(Player player)
     {
         if(Config.debug_enable) Debug("Launching function: CheckIdle(Player player)");
-        if (!AuthDB.isAuthorized(player.getEntityId()))
+        if (!AuthDB.isAuthorized(player))
         {
              Messages.SendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
@@ -1242,8 +1243,7 @@ public class Util
  {
      for(Player p : player.getServer().getOnlinePlayers())
      {
-         Util.Debug("HEY");
-         if(p.getName().equals(player.getName()) && AuthDB.isAuthorized(p.getEntityId()))
+         if(p.getName().equals(player.getName()) && AuthDB.isAuthorized(p))
          {
              return true;
          }

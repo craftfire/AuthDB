@@ -34,13 +34,17 @@ public AuthDBEntityListener(AuthDB instance)
 
 public void onEntityTarget(EntityTargetEvent event)
 {
-  if (((event.getEntity() instanceof Monster)) && (event.getTarget() instanceof Player) && AuthDB.isAuthorized(event.getTarget().getEntityId()) == false)
+  if((event.getTarget() instanceof Player))
   {
-      Player p = (Player)event.getTarget();
-        if (!CheckGuest(p,Config.guests_mobtargeting))
-        {
-            event.setCancelled(true);
-        }
+      Player player = (Player)event.getTarget();
+      if (((event.getEntity() instanceof Monster)) && (event.getTarget() instanceof Player) && plugin.isAuthorized(player) == false)
+      {
+          Player p = (Player)event.getTarget();
+            if (!CheckGuest(p,Config.guests_mobtargeting))
+            {
+                event.setCancelled(true);
+            }
+      }
   }
 }
 
@@ -92,7 +96,7 @@ public void onEntityDamage(EntityDamageEvent event)
                      {
                        event.setCancelled(true);
                      }
-                   else if (this.plugin.isRegistered("health",p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
+                   else if (this.plugin.isRegistered("health",p.getName()) == true && plugin.isAuthorized(p) == false)
                    {
                        event.setCancelled(true);
                    }
@@ -100,7 +104,7 @@ public void onEntityDamage(EntityDamageEvent event)
            }
            else
            {
-               if (this.plugin.isRegistered("health",p.getName()) == true && AuthDB.isAuthorized(p.getEntityId()) == false)
+               if (this.plugin.isRegistered("health",p.getName()) == true && plugin.isAuthorized(p) == false)
                {
                    event.setCancelled(true);
                    return;
@@ -141,7 +145,7 @@ public void onEntityDamage(EntityDamageEvent event)
              }
          }
      }
-     else if (this.plugin.isRegistered("checkguest",player.getName()) == true && AuthDB.isAuthorized(player.getEntityId()) == true)
+     else if (this.plugin.isRegistered("checkguest",player.getName()) == true && plugin.isAuthorized(player) == true)
      {
          if(Config.protection_notify && this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
          {  

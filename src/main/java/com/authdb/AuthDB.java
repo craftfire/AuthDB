@@ -57,6 +57,7 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.Util;
 import com.authdb.util.databases.eBean;
 import com.authdb.util.databases.MySQL;
+import com.avaje.ebean.EbeanServer;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
 import com.nijiko.permissions.PermissionHandler;
@@ -66,6 +67,7 @@ public class AuthDB extends JavaPlugin {
     //
     public static org.bukkit.Server Server;
     public static AuthDB plugin;
+    public static EbeanServer Database;
     public PluginDescriptionFile pluginFile = getDescription();
     public static String PluginName,PluginVersion,PluginWebsite, PluginDescrption;
     public static CraftIRC craftircHandle;
@@ -73,7 +75,7 @@ public class AuthDB extends JavaPlugin {
     private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
     private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
-    private static List<Integer> authorizedIds = new ArrayList<Integer>();
+    private static List<String> authorizedNames = new ArrayList<String>();
     public static HashMap<String, String> db = new HashMap<String, String>();
     public  HashMap<String, String> db2 = new HashMap<String, String>();
     public  HashMap<String, String> db3 = new HashMap<String, String>();
@@ -95,7 +97,7 @@ public class AuthDB extends JavaPlugin {
         if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
             zCraftIRC.SendMessage(Message.OnDisable,null);
         disableInventory();
-        authorizedIds.clear();
+        authorizedNames.clear();
         AuthTimeDB.clear();
         AuthDBRemindLogin.clear();
         AuthDBSpamMessage.clear();
@@ -114,6 +116,7 @@ public class AuthDB extends JavaPlugin {
         SetupPluginInformation();
         CheckOldFiles();
         Server = getServer();
+        Database = getDatabase();
         Plugin[] plugins = Server.getPluginManager().getPlugins();
         //Util.Debug(System.getProperty("java.version"));
         /*Util.Debug(System.getProperty("java.io.tmpdir"));
@@ -333,7 +336,7 @@ public class AuthDB extends JavaPlugin {
     
     public boolean Link(Player player, String name)
     {
-        if(isAuthorized(player.getEntityId()))
+        if(isAuthorized(player))
         {
             ItemStack[] inv = getInventory(player.getName());
             if (inv != null) { player.getInventory().setContents(inv); }
@@ -342,7 +345,7 @@ public class AuthDB extends JavaPlugin {
             { 
                 AuthTimeDB.put(player.getName(), ""+timestamp);
             }
-            authorize(player.getEntityId());
+            authorize(player);
             if(!db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
             { 
                 db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
@@ -381,13 +384,13 @@ public class AuthDB extends JavaPlugin {
         
     public boolean Logout(Player player)
     {
-        if(isAuthorized(player.getEntityId()))
+        if(isAuthorized(player))
         {
             if(AuthTimeDB.containsKey(player.getName()))
             { 
                 AuthTimeDB.remove(player.getName()); 
             }
-            unauthorize(player.getEntityId());
+            unauthorize(player);
             if(db3.containsKey(Encryption.md5(player.getName())))
             { 
                 db3.remove(Encryption.md5(player.getName())); 
@@ -403,14 +406,14 @@ public class AuthDB extends JavaPlugin {
     
     public boolean Login(Player player)
     {
-        if(!isAuthorized(player.getEntityId()))
+        if(!isAuthorized(player))
         {
             long timestamp = Util.TimeStamp();
             if(!AuthTimeDB.containsKey(player.getName()))
             { 
                 AuthTimeDB.put(player.getName(), ""+timestamp);
             }
-            authorize(player.getEntityId());
+            authorize(player);
             if(!db3.containsKey(Encryption.md5(player.getName())))
             { 
                 db3.put(Encryption.md5(player.getName()), "yes");
@@ -463,9 +466,33 @@ public class AuthDB extends JavaPlugin {
         }
     }
 
-    public static boolean isAuthorized(int id) { return authorizedIds.contains(Integer.valueOf(id)); }
-    public void unauthorize(int id) { AuthDB.authorizedIds.remove(Integer.valueOf(id)); }
-    public void authorize(int id) { AuthDB.authorizedIds.add(Integer.valueOf(id)); }
+    public static boolean isAuthorized(Player player) 
+    { 
+        if(authorizedNames.contains(player.getName())) { return true; }
+        eBean eBeanClass = Database.find(eBean.class).where().ieq("playerName", player.getName()).ieq("authorized","true").findUnique();
+        if (eBeanClass != null)
+        {
+            authorizedNames.add(player.getName()); 
+            return true;
+        }
+        return false;
+    }
+    public void unauthorize(Player player) 
+    { 
+        authorizedNames.remove(player.getName()); 
+    }
+    public void authorize(Player player) 
+    { 
+        authorizedNames.add(player.getName()); 
+        eBean eBeanClass = (eBean) getDatabase().find(eBean.class).where().ieq("playerName", player.getName()).findUnique();
+        if (eBeanClass == null)
+        {
+            eBeanClass = new eBean();
+            eBeanClass.setPlayer(player);
+            eBeanClass.setAuthorized("true");
+        }
+        getDatabase().save(eBeanClass);
+    }
     public boolean checkPassword(String player, String password)
      {
         try

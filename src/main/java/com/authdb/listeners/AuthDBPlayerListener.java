@@ -86,7 +86,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
 public boolean CheckTimeout(Player player) throws IOException
 {
     Util.Debug("Launching function: CheckTimeout(Player player))");
-    if (AuthDB.isAuthorized(player.getEntityId()) == false && this.plugin.TimeoutTask("check",player, ""+Schedule))
+    if (plugin.isAuthorized(player) == false && this.plugin.TimeoutTask("check",player, ""+Schedule))
     {
         Messages.SendMessage(Message.idle_kick, player, null);
         return true;
@@ -153,7 +153,7 @@ public boolean CheckTimeout(Player player) throws IOException
             Messages.SendMessage(Message.session_valid, player,null);
             long thetimestamp = System.currentTimeMillis()/1000;
             this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-            this.plugin.authorize(event.getPlayer().getEntityId());
+            this.plugin.authorize(event.getPlayer());
         }
         else if (this.plugin.isRegistered("join",player.getName()) || this.plugin.isRegistered("join",Util.CheckOtherName(player.getName())))
         {
@@ -168,7 +168,7 @@ public boolean CheckTimeout(Player player) throws IOException
                 this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
             }
             player.getInventory().clear();
-             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(!AuthDB.isAuthorized(player.getEntityId())) { if(player.getInventory() != null) {  player.getInventory().clear(); } } } } , 20);
+             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(!plugin.isAuthorized(player)) { if(player.getInventory() != null) {  player.getInventory().clear(); } } } } , 20);
              if(Util.ToLoginMethod(Config.login_method).equals("prompt"))
              {
                  Messages.SendMessage(Message.login_prompt, player,null);
@@ -196,7 +196,7 @@ public boolean CheckTimeout(Player player) throws IOException
          else {
                 long thetimestamp = System.currentTimeMillis()/1000;
                 this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-                this.plugin.authorize(event.getPlayer().getEntityId());
+                this.plugin.authorize(player);
           }
         } catch (IOException e) {
           Util.Log("severe","["+AuthDB.PluginName+"] Inventory file error:");
@@ -247,7 +247,7 @@ public boolean CheckTimeout(Player player) throws IOException
         if(Config.session_start.equals("logoff"))
             this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+thetimestamp);
         this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-        this.plugin.unauthorize(player.getEntityId());
+        this.plugin.unauthorize(player);
 
      if (CheckGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.CheckOtherName(player.getName())) == false)
       {
@@ -271,7 +271,7 @@ public boolean CheckTimeout(Player player) throws IOException
             {
                 Messages.SendMessage(Message.login_notregistered, player,null);
             }
-            else if (AuthDB.isAuthorized(player.getEntityId()))
+            else if (plugin.isAuthorized(player))
             {
                 Messages.SendMessage(Message.login_authorized, player,null);
             }
@@ -285,7 +285,7 @@ public boolean CheckTimeout(Player player) throws IOException
                 if (inv != null) { player.getInventory().setContents(inv); }
                 long thetimestamp = System.currentTimeMillis()/1000;
                 this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-                this.plugin.authorize(player.getEntityId());
+                this.plugin.authorize(player);
                 long timestamp = System.currentTimeMillis()/1000;
                 this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                 this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
@@ -314,7 +314,7 @@ public boolean CheckTimeout(Player player) throws IOException
                               if (inv != null) { player.getInventory().setContents(inv); }
                               long thetimestamp = System.currentTimeMillis()/1000;
                               this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-                              this.plugin.authorize(player.getEntityId());
+                              this.plugin.authorize(player);
                               long timestamp = System.currentTimeMillis()/1000;
                               this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                               this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
@@ -346,7 +346,7 @@ public boolean CheckTimeout(Player player) throws IOException
                           {
                               ItemStack[] inv = this.plugin.getInventory(player.getName());
                               if (inv != null) { player.getInventory().setContents(inv); }
-                              this.plugin.unauthorize(player.getEntityId());
+                              this.plugin.unauthorize(player);
                               this.plugin.db2.remove(Encryption.md5(player.getName()+Util.GetIP(player)));
                               this.plugin.db3.remove(Encryption.md5(player.getName()));
                                this.plugin.AuthOtherNamesDB.remove(player.getName());
@@ -396,7 +396,7 @@ public boolean CheckTimeout(Player player) throws IOException
                     this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                     this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
                     Util.Debug("Session started for "+player.getName());
-                    this.plugin.authorize(player.getEntityId());
+                    this.plugin.authorize(player);
                     long thetimestamp = System.currentTimeMillis()/1000;
                     this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
                       Location temploc = event.getPlayer().getLocation();
@@ -419,7 +419,7 @@ public boolean CheckTimeout(Player player) throws IOException
           event.setMessage("/register *****");
           event.setCancelled(true);
          }
-         else if (!AuthDB.isAuthorized(player.getEntityId()))
+         else if (!plugin.isAuthorized(player))
          {
           if (!CheckGuest(player,Config.guests_commands))
           {
@@ -437,7 +437,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerMove(PlayerMoveEvent event)
   {
-    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+    if (!plugin.isAuthorized(event.getPlayer()))
     {
           if (!CheckGuest(event.getPlayer(),Config.guests_movement))
             {
@@ -449,7 +449,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerChat(PlayerChatEvent event)
   {
-    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+    if (!plugin.isAuthorized(event.getPlayer()))
     {
         Player player = event.getPlayer();
         if(zPermissions.IsAllowed(player, Permission.command_login))
@@ -459,7 +459,7 @@ public boolean CheckTimeout(Player player) throws IOException
               String[] split = event.getMessage().split(" ");
               if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.CheckOtherName(player.getName())))
               {
-                    if (AuthDB.isAuthorized(player.getEntityId())) {
+                    if (plugin.isAuthorized(player)) {
                               Messages.SendMessage(Message.login_authorized, player,null);
                   }
                   else if (split.length > 1) {
@@ -468,7 +468,7 @@ public boolean CheckTimeout(Player player) throws IOException
                   else if (this.plugin.checkPassword(player.getName(), split[0]) || this.plugin.checkPassword(Util.CheckOtherName(player.getName()), split[0])) {
                     ItemStack[] inv = this.plugin.getInventory(player.getName());
                     if (inv != null) { player.getInventory().setContents(inv); }
-                    this.plugin.authorize(player.getEntityId());
+                    this.plugin.authorize(player);
                     long timestamp = System.currentTimeMillis()/1000;
                     this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                     this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
@@ -499,7 +499,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerPickupItem(PlayerPickupItemEvent event)
   {
-        if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+        if (!plugin.isAuthorized(event.getPlayer()))
         {
              if (!CheckGuest(event.getPlayer(),Config.guests_pickup))
               {
@@ -510,7 +510,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerInteract(PlayerInteractEvent event)
   {
-        if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+        if (!plugin.isAuthorized(event.getPlayer()))
         {
              if (!CheckGuest(event.getPlayer(),Config.guests_interact))
               {
@@ -521,7 +521,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerDropItem(PlayerDropItemEvent event)
   {
-        if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+        if (!plugin.isAuthorized(event.getPlayer()))
         {
              if (this.plugin.isRegistered("dropitem",event.getPlayer().getName()) || this.plugin.isRegistered("dropitem",Util.CheckOtherName(event.getPlayer().getName())))
              {

@@ -30,7 +30,7 @@ public class AuthDBBlockListener extends BlockListener
   }
 
   public void onBlockPlace(BlockPlaceEvent event) {
-    if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+    if (!plugin.isAuthorized(event.getPlayer()))
     {
       if (!CheckGuest(event.getPlayer(),Config.guests_build))
         {
@@ -40,7 +40,7 @@ public class AuthDBBlockListener extends BlockListener
   }
 
   public void onBlockDamage(BlockDamageEvent event) {
-   if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
+   if (!plugin.isAuthorized(event.getPlayer()))
    {
         if (!CheckGuest(event.getPlayer(),Config.guests_destroy))
         {

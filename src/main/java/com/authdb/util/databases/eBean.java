@@ -1,6 +1,14 @@
+/**
+(C) Copyright 2011 CraftFire <dev@craftfire.com>
+Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
+or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+**/
+
 package com.authdb.util.databases;
 
-import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
 import javax.persistence.Entity;
@@ -9,10 +17,6 @@ import javax.persistence.Table;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Sammy
- */
 @Entity()
 @Table(name = "authdb_users")
 public class eBean {
@@ -21,12 +25,9 @@ public class eBean {
     private int id;
     @NotNull
     private String playerName;
-    @Length(max = 30)
     @NotEmpty
-    private String name;
+    private String authorized; 
 
-    @NotEmpty
-    private String Test;
 
     public void setId(int id) {
         this.id = id;
@@ -35,15 +36,7 @@ public class eBean {
     public int getId() {
         return id;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    
     public String getPlayerName() {
         return playerName;
     }
@@ -60,11 +53,11 @@ public class eBean {
         this.playerName = player.getName();
     }
 
-    public String getTest(){
-        return Test;
+    public String getAuthorized(){
+        return authorized;
     }
 
-    public void setTest(String test){
-        this.Test = test;
+    public void setAuthorized(String authorized){
+        this.authorized = authorized;
     }
 }
