@@ -1,6 +1,0 @@
-Core:
-  register: /register {PASSWORD} {EMAIL}
-  login: /login {PASSWORD}
-  logout: /logout
-  setspawn: /authdb setspawn {GROUP}
-  reload: /authdb reload

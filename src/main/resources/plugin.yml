@@ -2,7 +2,7 @@ name: AuthDB
 main: com.authdb.AuthDB
 version: dev-SNAPSHOT
 website: http://www.authdb.com
-description: Provides script and custom database user authentication through MySQL.
+description: Script and custom database user authentication through MySQL.
 authors:
   - CraftFire
   - Contex
@@ -17,8 +17,14 @@ commands:
   logout:
     description: Logout yourself or specified player.
     usage: /<command> <player>
+  link:
+    description: Links you to another account.
+    usage: /<command> <player> <password>
+  unlink:
+    description: Unlinks you from the other account.
+    usage: /<command> <player> <password>
   setspawn:
-    description: Set spawn locations for guests and registered players.
+    description: Set spawn locations for guest and registered player groups.
     usage: /<command> <group>
   authdb:
     description: Set of commands to reload, show version, and more.

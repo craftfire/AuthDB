@@ -1,0 +1,14 @@
+en:
+  commands:
+    register: "/register {PASSWORD} {EMAIL}"
+    login: "/login {PASSWORD}"
+    logout: "/logout"
+    setspawn: "/auth setspawn {GROUP}"
+    reload: "/auth reload"
+
+  aliases:
+    register: "/r {PASSWORD} {EMAIL}"
+    login: "/l {PASSWORD}"
+    logout: "/lo"
+    setspawn: "/ss {GROUP}"
+    reload: "/ar"

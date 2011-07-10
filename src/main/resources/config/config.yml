@@ -1,6 +1,6 @@
 Core:
   plugin:
-    language: English                                # Language translation file to use for messages.
+    language: en                                     # Language translation file to use for messages.
     debugmode: false                                 # Set to true to enable debugging mode and additional console output.
     usagestats: true                                 # Set to false to disable usage stats reporting to CraftFire devs.
   database:

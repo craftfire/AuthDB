@@ -1,8 +1,18 @@
-Core:
+en:
+  time:
+    millisecond: millisecond
+    milliseconds: milliseconds
+    second: second
+    seconds: seconds
+    hour: hour
+    hours: hours
+    hours: hours
+    day: day
+    days: days
   database:
     failure: "{RED}Database connection failed! Access is denied! Contact the server admin."
   welcome:
-    guest: "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use /register <password> <email> or /link <otherusername> <password>"
+    guest: "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use /register password email or /link otherusername password"
   guest:
     notauthorized: "{RED}You are not authorized to do that! Login or register for access."
   register:
@@ -11,26 +21,26 @@ Core:
     exists: "{RED}You are already registered!"
     disabled: "{RED}Registration is disabled!"
     timeout: "Kicked because you failed to register within {REGISTERTIMEOUT}."
-    usage: "{RED}Correct usage is /register <password> <email>"
+    usage: "{RED}Correct usage is: /register password email"
   login:
-    normal: "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use /login <password>"
+    normal: "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use /login password"
     prompt: "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:"
     success: "{BRIGHTGREEN}Password accepted. Welcome!"
     failure: "{RED}Password incorrect, please try again."
     authorized: "{RED}You are already logged in!"
     notregistered: "{RED}You are not registered yet!"
     timeout: "Kicked because you failed to login within {LOGINTIMEOUT}."
-    usage: "{RED}Correct usage is /login <password>"
+    usage: "{RED}Correct usage is: /login password"
   link:
     success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
     failure: "{RED}Username linking failed!"
     exists: "{RED}You are already linked to a username!"
-    usage: "{RED}Correct usage is /link <otherusername> <password>"
+    usage: "{RED}Correct usage is: /link otherusername password"
   unlink:
     success: "{BRIGHTGREEN}Username unlinked successfully!"
     failure: "{RED}Username unlinking failed!"
     nonexist: "{RED}You do not have a linked username!"
-    usage: "{RED}Correct usage is /link <otherusername> <password>"
+    usage: "{RED}Correct usage is: /link otherusername password"
   email:
     required: "{RED}Email required for registration!"
     invalid: "{RED}Email invalid! Please try again!"
@@ -52,7 +62,7 @@ Core:
     password: "{RED}Password contains bad characters! {PASSBADCHARACTERS}!"
     whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
 
-Plugins:
+
   CraftIRC:
     status:
       join: "{PLAYER} has joined the server."

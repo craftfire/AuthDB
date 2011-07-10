@@ -253,11 +253,8 @@ public class AuthDB extends JavaPlugin {
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
                         return true;
                     }
-                    else
-                    {
-                        player.sendMessage(NoPermission);
-                        return false;
-                    }
+                    player.sendMessage(NoPermission);
+                    return false;
                 }
                 return true;
             }
@@ -299,12 +296,103 @@ public class AuthDB extends JavaPlugin {
                     player.sendMessage("§aCould not find player '"+PlayerName+"', please try again.");
                     return true;
                 }
+                player.sendMessage(NoPermission);
+                return true;
             }
+            else if (cmd.getName().equalsIgnoreCase("login") && zPermissions.IsAllowed(player, Permission.command_login))
+            {
+                if(args.length == 1 && zPermissions.IsAllowed(player, Permission.command_admin_login))
+                {
+                    String PlayerName = args[0];
+                    for (Player p : player.getServer().getOnlinePlayers()) 
+                    {
+                        if(p.getName().equalsIgnoreCase(PlayerName) || p.getName().startsWith(PlayerName.substring(0, 2)))
+                        {
+                            if(Login(p))
+                            {
+                                player.sendMessage("Successfully logged in player '"+p.getName()+"'.");
+                                p.sendMessage("You have been logged in by an admin.");
+                                return true;
+                            }
+                            else
+                            {
+                                player.sendMessage("You cannot login player '"+p.getName()+"' because the player is already logged in.");
+                                return true;
+                            }
+                        }
+                    }
+                    player.sendMessage("§aCould not find player '"+PlayerName+"', please try again.");
+                    return true;
+                }
+                player.sendMessage(NoPermission);
+                return true;
+            }
+            else if (cmd.getName().equalsIgnoreCase("link") && zPermissions.IsAllowed(player, Permission.command_link))
+            {
+                if(Config.link_enabled)
+                {
+                    if (args.length == 2)
+                    {
+                        if(Util.CheckOtherName(player.getName()).equals(player.getName()))
+                        {
+                              if (this.plugin.checkPassword(args[0], args[1]))
+                              {
+                                  if(Link(player,args[0]))
+                                  {
+                                      Messages.SendMessage(Message.link_success, player,null);
+                                      return true;
+                                  }
+                              }
+                              Messages.SendMessage(Message.link_failure, player,null);
+                              return true;
+                        }
+                        Messages.SendMessage(Message.link_exists, player,null);
+                        return true;
+                    }
+                    Messages.SendMessage(Message.link_usage, player,null);
+                    return true;
+                }
+                player.sendMessage("Linking is not enabled");
+                return true;
+            }
+            player.sendMessage(NoPermission);
+            return true;
         }
-
         return false;
     }
     
+    public boolean Link(Player player, String name)
+    {
+        if(isAuthorized(player.getEntityId()))
+        {
+            ItemStack[] inv = getInventory(player.getName());
+            if (inv != null) { player.getInventory().setContents(inv); }
+            long timestamp = Util.TimeStamp();
+            if(!AuthTimeDB.containsKey(player.getName()))
+            { 
+                AuthTimeDB.put(player.getName(), ""+timestamp);
+            }
+            authorize(player.getEntityId());
+            if(!db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
+            { 
+                db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+            }
+            if(!db3.containsKey(Encryption.md5(player.getName())))
+            { 
+                db3.put(Encryption.md5(player.getName()), "yes");
+            }
+            if(!AuthOtherNamesDB.containsKey(Encryption.md5((player.getName()))))
+            { 
+                AuthOtherNamesDB.put(player.getName(),name);
+            }
+            Util.ToFile("write",  player.getName(), name);
+            Util.Debug("Session started for "+player.getName());
+            if(Config.link_rename) { player.setDisplayName(name); }
+            return true;
+        }
+        return false;
+    }
+        
     public boolean Logout(Player player)
     {
         if(isAuthorized(player.getEntityId()))
@@ -322,6 +410,31 @@ public class AuthDB extends JavaPlugin {
             { 
                 db2.remove(Encryption.md5(player.getName()+Util.GetIP(player))); 
             }
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean Login(Player player)
+    {
+        if(!isAuthorized(player.getEntityId()))
+        {
+            long timestamp = Util.TimeStamp();
+            if(!AuthTimeDB.containsKey(player.getName()))
+            { 
+                AuthTimeDB.put(player.getName(), ""+timestamp);
+            }
+            authorize(player.getEntityId());
+            if(!db3.containsKey(Encryption.md5(player.getName())))
+            { 
+                db3.put(Encryption.md5(player.getName()), "yes");
+            }
+            if(db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
+            { 
+                db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
+            }
+            ItemStack[] inv = getInventory(player.getName());
+            if (inv != null) { player.getInventory().setContents(inv); }
             return true;
         }
         return false;

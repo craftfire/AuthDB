@@ -10,7 +10,6 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.authdb.plugins;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Util;
@@ -47,7 +46,7 @@ public class zPermissions
     {
       if(HasPlugin)
       {
-          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.name())) return true;
+          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.permission)) return true;
           else if (player.isOp()) return true;
       }
       else if (player.isOp()) return true;
