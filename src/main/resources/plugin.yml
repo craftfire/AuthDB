@@ -2,6 +2,7 @@ name: AuthDB
 main: com.authdb.AuthDB
 version: dev-SNAPSHOT
 website: http://www.authdb.com
+database: true
 description: Script and custom database user authentication through MySQL.
 authors:
   - CraftFire

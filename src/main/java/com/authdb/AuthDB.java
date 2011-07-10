@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.PersistenceException;
+
 import net.minecraft.server.PropertyManager;
 
 import org.bukkit.Material;
@@ -53,6 +55,7 @@ import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Util;
+import com.authdb.util.databases.eBean;
 import com.authdb.util.databases.MySQL;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
@@ -173,6 +176,8 @@ public class AuthDB extends JavaPlugin {
         if (TheSettings.getBoolean("online-mode", true)) { Config.OnlineMode = true; }
         UpdateLinkedNames();
 
+        setupDatabase();
+        
         MySQL.connect();
         try
         {
@@ -356,6 +361,22 @@ public class AuthDB extends JavaPlugin {
             return true;
         }
         return false;
+    }
+    
+    private void setupDatabase() {
+        try {
+            getDatabase().find(eBean.class).findRowCount();
+        } catch (PersistenceException ex) {
+            System.out.println("Installing database for " + getDescription().getName() + " due to first time usage");
+            installDDL();
+        }
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+        List<Class<?>> list = new ArrayList<Class<?>>();
+        list.add(eBean.class);
+        return list;
     }
         
     public boolean Logout(Player player)
