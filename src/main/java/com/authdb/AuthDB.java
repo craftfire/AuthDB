@@ -54,6 +54,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Messages.Message;
+import com.authdb.util.Processes;
 import com.authdb.util.Util;
 import com.authdb.util.databases.eBean;
 import com.authdb.util.databases.MySQL;
@@ -75,11 +76,11 @@ public class AuthDB extends JavaPlugin {
     private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
     private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
-    private static List<String> authorizedNames = new ArrayList<String>();
+    public static List<String> authorizedNames = new ArrayList<String>();
     public static HashMap<String, String> db = new HashMap<String, String>();
-    public  HashMap<String, String> db2 = new HashMap<String, String>();
-    public  HashMap<String, String> db3 = new HashMap<String, String>();
-    public  HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
+    public static HashMap<String, String> db2 = new HashMap<String, String>();
+    public static HashMap<String, String> db3 = new HashMap<String, String>();
+    public static  HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
     public static HashMap<String, Long> AuthDBRemindLogin = new HashMap<String, Long>();
     public static HashMap<String, Integer> AuthDBSpamMessage = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDBSpamMessageTime = new HashMap<String, Long>();
@@ -112,7 +113,7 @@ public class AuthDB extends JavaPlugin {
 
     public void onEnable()
     {
-        plugin = new AuthDB();
+        plugin = this;
         SetupPluginInformation();
         CheckOldFiles();
         Server = getServer();
@@ -267,7 +268,7 @@ public class AuthDB extends JavaPlugin {
             {
                 if(args.length == 0)
                 {
-                    if(Logout(player))
+                    if(Processes.Logout(player))
                     {
                         player.sendMessage("§aSucessfully logged out!");
                         return true;
@@ -281,21 +282,19 @@ public class AuthDB extends JavaPlugin {
                 else if(args.length == 1 && zPermissions.IsAllowed(player, Permission.command_admin_logout))
                 {
                     String PlayerName = args[0];
-                    for (Player p : player.getServer().getOnlinePlayers()) 
+                    List<Player> players = sender.getServer().matchPlayer(PlayerName);
+                    if(!players.isEmpty())
                     {
-                        if(p.getName().equalsIgnoreCase(PlayerName) || p.getName().startsWith(PlayerName.substring(0, 2)))
+                        if(Processes.Logout(players.get(0)))
                         {
-                            if(Logout(p))
-                            {
-                                player.sendMessage("Successfully logged out player '"+p.getName()+"'.");
-                                p.sendMessage("You have been logged out by an admin.");
-                                return true;
-                            }
-                            else
-                            {
-                                player.sendMessage("You cannot logout player '"+p.getName()+"' because the player is not logged in.");
-                                return true;
-                            }
+                            player.sendMessage("Successfully logged out player '"+players.get(0).getName()+"'.");
+                            players.get(0).sendMessage("You have been logged out by an admin.");
+                            return true;
+                        }
+                        else
+                        {
+                            player.sendMessage("You cannot logout player '"+players.get(0).getName()+"' because the player is not logged in.");
+                            return true;
                         }
                     }
                     player.sendMessage("§aCould not find player '"+PlayerName+"', please try again.");
@@ -307,21 +306,19 @@ public class AuthDB extends JavaPlugin {
                 if(args.length == 1 && zPermissions.IsAllowed(player, Permission.command_admin_login))
                 {
                     String PlayerName = args[0];
-                    for (Player p : player.getServer().getOnlinePlayers()) 
+                    List<Player> players = sender.getServer().matchPlayer(PlayerName);
+                    if(!players.isEmpty())
                     {
-                        if(p.getName().equalsIgnoreCase(PlayerName) || p.getName().startsWith(PlayerName.substring(0, 2)))
+                        if(Processes.Logout(players.get(0)))
                         {
-                            if(Login(p))
-                            {
-                                player.sendMessage("Successfully logged in player '"+p.getName()+"'.");
-                                p.sendMessage("You have been logged in by an admin.");
-                                return true;
-                            }
-                            else
-                            {
-                                player.sendMessage("You cannot login player '"+p.getName()+"' because the player is already logged in.");
-                                return true;
-                            }
+                            player.sendMessage("Successfully logged in player '"+players.get(0).getName()+"'.");
+                            players.get(0).sendMessage("You have been logged in by an admin.");
+                            return true;
+                        }
+                        else
+                        {
+                            player.sendMessage("You cannot login player '"+players.get(0).getName()+"' because the player is already logged in.");
+                            return true;
                         }
                     }
                     player.sendMessage("§aCould not find player '"+PlayerName+"', please try again.");
@@ -334,43 +331,11 @@ public class AuthDB extends JavaPlugin {
         return false;
     }
     
-    public boolean Link(Player player, String name)
-    {
-        if(isAuthorized(player))
-        {
-            ItemStack[] inv = getInventory(player.getName());
-            if (inv != null) { player.getInventory().setContents(inv); }
-            long timestamp = Util.TimeStamp();
-            if(!AuthTimeDB.containsKey(player.getName()))
-            { 
-                AuthTimeDB.put(player.getName(), ""+timestamp);
-            }
-            authorize(player);
-            if(!db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
-            { 
-                db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-            }
-            if(!db3.containsKey(Encryption.md5(player.getName())))
-            { 
-                db3.put(Encryption.md5(player.getName()), "yes");
-            }
-            if(!AuthOtherNamesDB.containsKey(Encryption.md5((player.getName()))))
-            { 
-                AuthOtherNamesDB.put(player.getName(),name);
-            }
-            Util.ToFile("write",  player.getName(), name);
-            Util.Debug("Session started for "+player.getName());
-            if(Config.link_rename) { player.setDisplayName(name); }
-            return true;
-        }
-        return false;
-    }
-    
     private void setupDatabase() {
         try {
             getDatabase().find(eBean.class).findRowCount();
         } catch (PersistenceException ex) {
-            System.out.println("Installing database for " + getDescription().getName() + " due to first time usage");
+            Util.Log("info","Installing persistence database for " + PluginName + " due to first time usage");
             installDDL();
         }
     }
@@ -382,52 +347,6 @@ public class AuthDB extends JavaPlugin {
         return list;
     }
         
-    public boolean Logout(Player player)
-    {
-        if(isAuthorized(player))
-        {
-            if(AuthTimeDB.containsKey(player.getName()))
-            { 
-                AuthTimeDB.remove(player.getName()); 
-            }
-            unauthorize(player);
-            if(db3.containsKey(Encryption.md5(player.getName())))
-            { 
-                db3.remove(Encryption.md5(player.getName())); 
-            }
-            if(db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
-            { 
-                db2.remove(Encryption.md5(player.getName()+Util.GetIP(player))); 
-            }
-            return true;
-        }
-        return false;
-    }
-    
-    public boolean Login(Player player)
-    {
-        if(!isAuthorized(player))
-        {
-            long timestamp = Util.TimeStamp();
-            if(!AuthTimeDB.containsKey(player.getName()))
-            { 
-                AuthTimeDB.put(player.getName(), ""+timestamp);
-            }
-            authorize(player);
-            if(!db3.containsKey(Encryption.md5(player.getName())))
-            { 
-                db3.put(Encryption.md5(player.getName()), "yes");
-            }
-            if(db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
-            { 
-                db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
-            }
-            ItemStack[] inv = getInventory(player.getName());
-            if (inv != null) { player.getInventory().setContents(inv); }
-            return true;
-        }
-        return false;
-    }
     
     void CheckPermissions()
     {
@@ -469,7 +388,7 @@ public class AuthDB extends JavaPlugin {
     public static boolean isAuthorized(Player player) 
     { 
         if(authorizedNames.contains(player.getName())) { return true; }
-        eBean eBeanClass = Database.find(eBean.class).where().ieq("playerName", player.getName()).ieq("authorized","true").findUnique();
+        eBean eBeanClass = eBean.find(player, eBean.Column.authorized, "true");
         if (eBeanClass != null)
         {
             authorizedNames.add(player.getName()); 
@@ -477,22 +396,7 @@ public class AuthDB extends JavaPlugin {
         }
         return false;
     }
-    public void unauthorize(Player player) 
-    { 
-        authorizedNames.remove(player.getName()); 
-    }
-    public void authorize(Player player) 
-    { 
-        authorizedNames.add(player.getName()); 
-        eBean eBeanClass = (eBean) getDatabase().find(eBean.class).where().ieq("playerName", player.getName()).findUnique();
-        if (eBeanClass == null)
-        {
-            eBeanClass = new eBean();
-            eBeanClass.setPlayer(player);
-            eBeanClass.setAuthorized("true");
-        }
-        getDatabase().save(eBeanClass);
-    }
+
     public boolean checkPassword(String player, String password)
      {
         try
@@ -792,15 +696,17 @@ public class AuthDB extends JavaPlugin {
         PluginDescrption = getDescription().getDescription();
     }
 
-    public ItemStack[] getInventory(String player)
+    public static ItemStack[] getInventory(Player player)
       {
-        File f = new File(getDataFolder()+"/inventory/", player + "_inv");
-
-        if (f.exists()) {
+       // File f = new File(plugin.getDataFolder()+"/inventory/", player + "_inv");
+        eBean eBeanClass = eBean.find(player, column1, value1);
+        if (eBeanClass != null) 
+        {
             ItemStack[] inv;
             if(Config.HasBackpack) { inv = new ItemStack[252]; }
             else { inv = new ItemStack[36]; }
-          try {
+          try 
+          {
             Scanner s = new Scanner(f);
             short i = 0;
             while (s.hasNextLine()) {
