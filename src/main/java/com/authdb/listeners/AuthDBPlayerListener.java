@@ -30,6 +30,8 @@ import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
 import com.authdb.plugins.zBukkitContrib;
+import com.authdb.plugins.zPermissions;
+import com.authdb.plugins.zPermissions.Permission;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
@@ -42,6 +44,7 @@ import com.afforess.backpack.BackpackPlayer;
 public class AuthDBPlayerListener extends PlayerListener
 {
   private final AuthDB plugin;
+  String NoPermission = "You do not have permission to use this command.";
   boolean sessionallow;
   int Schedule;
 
@@ -262,7 +265,7 @@ public boolean CheckTimeout(Player player) throws IOException
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
 
-        if (split[0].equals("/login"))
+        if (split[0].equals("/login") && zPermissions.IsAllowed(player, Permission.command_login))
         {
             if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.CheckOtherName(player.getName())) == false)
             {
@@ -297,7 +300,7 @@ public boolean CheckTimeout(Player player) throws IOException
             event.setMessage("/login ******");
             event.setCancelled(true);
          }
-        else if (split[0].equals("/link"))
+        else if (split[0].equals("/link") && zPermissions.IsAllowed(player, Permission.command_link))
         {
             if(Config.link_enabled)
             {
@@ -331,7 +334,7 @@ public boolean CheckTimeout(Player player) throws IOException
                 event.setCancelled(true);
             }
          }
-        else if (split[0].equals("/unlink"))
+        else if (split[0].equals("/unlink") && zPermissions.IsAllowed(player, Permission.command_unlink))
         {
             if(Config.unlink_enabled)
                 {
@@ -361,7 +364,8 @@ public boolean CheckTimeout(Player player) throws IOException
                 event.setCancelled(true);
             }
          }
-        else if (split[0].equals("/register")) {
+        else if (split[0].equals("/register") && zPermissions.IsAllowed(player, Permission.command_register)) 
+        {
             Boolean email = true;
             if(Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
           if (!Config.register_enabled)
@@ -423,6 +427,7 @@ public boolean CheckTimeout(Player player) throws IOException
               event.setCancelled(true);
           }
         }
+         else { player.sendMessage(NoPermission); }
      }
      else
      {
@@ -446,10 +451,12 @@ public boolean CheckTimeout(Player player) throws IOException
   {
     if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
     {
+        Player player = event.getPlayer();
+        if(zPermissions.IsAllowed(player, Permission.command_login))
+        {
           if(Util.ToLoginMethod(Config.login_method).equals("prompt") && (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.CheckOtherName(event.getPlayer().getName()))))
           {
               String[] split = event.getMessage().split(" ");
-              Player player = event.getPlayer();
               if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.CheckOtherName(player.getName())))
               {
                     if (AuthDB.isAuthorized(player.getEntityId())) {
@@ -486,6 +493,7 @@ public boolean CheckTimeout(Player player) throws IOException
           {
               event.setCancelled(true);
           }
+        }
     }
   }
 
