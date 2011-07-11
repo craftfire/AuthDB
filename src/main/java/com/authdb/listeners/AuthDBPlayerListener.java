@@ -36,6 +36,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Messages.Message;
+import com.authdb.util.Processes;
 import com.authdb.util.Util;
 
 import com.afforess.backpack.BackpackManager;
@@ -153,7 +154,7 @@ public boolean CheckTimeout(Player player) throws IOException
             Messages.SendMessage(Message.session_valid, player,null);
             long thetimestamp = System.currentTimeMillis()/1000;
             this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-            this.plugin.authorize(event.getPlayer());
+            Processes.Login(event.getPlayer());
         }
         else if (this.plugin.isRegistered("join",player.getName()) || this.plugin.isRegistered("join",Util.CheckOtherName(player.getName())))
         {
@@ -161,11 +162,11 @@ public boolean CheckTimeout(Player player) throws IOException
             {
                 BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                 BackpackPlayer.createBackpack();
-                this.plugin.storeInventory(player.getName(), BackpackPlayer.getContents());
+                this.plugin.storeInventory(player, BackpackPlayer.getContents());
             }
             else
             {
-                this.plugin.storeInventory(player.getName(), player.getInventory().getContents());
+                this.plugin.storeInventory(player, player.getInventory().getContents());
             }
             player.getInventory().clear();
              plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(!plugin.isAuthorized(player)) { if(player.getInventory() != null) {  player.getInventory().clear(); } } } } , 20);
@@ -184,9 +185,9 @@ public boolean CheckTimeout(Player player) throws IOException
             {
                 BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                 BackpackPlayer.createBackpack();
-                this.plugin.storeInventory(player.getName(), BackpackPlayer.getInventory().getContents());
+                this.plugin.storeInventory(player, BackpackPlayer.getInventory().getContents());
             }
-            else { this.plugin.storeInventory(player.getName(), player.getInventory().getContents()); }
+            else { this.plugin.storeInventory(player, player.getInventory().getContents()); }
                player.getInventory().clear();
               Messages.SendMessage(Message.welcome_guest, player,null);
           }
@@ -196,7 +197,7 @@ public boolean CheckTimeout(Player player) throws IOException
          else {
                 long thetimestamp = System.currentTimeMillis()/1000;
                 this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-                this.plugin.authorize(player);
+                Processes.Login(player);
           }
         } catch (IOException e) {
           Util.Log("severe","["+AuthDB.PluginName+"] Inventory file error:");
@@ -247,7 +248,7 @@ public boolean CheckTimeout(Player player) throws IOException
         if(Config.session_start.equals("logoff"))
             this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+thetimestamp);
         this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-        this.plugin.unauthorize(player);
+        Processes.Logout(player);
 
      if (CheckGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.CheckOtherName(player.getName())) == false)
       {
@@ -281,11 +282,11 @@ public boolean CheckTimeout(Player player) throws IOException
             }
             else if (this.plugin.checkPassword(player.getName(), split[1]))
             {
-                ItemStack[] inv = this.plugin.getInventory(player.getName());
+                ItemStack[] inv = this.plugin.getInventory(player);
                 if (inv != null) { player.getInventory().setContents(inv); }
                 long thetimestamp = System.currentTimeMillis()/1000;
                 this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-                this.plugin.authorize(player);
+                Processes.Login(player);
                 long timestamp = System.currentTimeMillis()/1000;
                 this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                 this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
@@ -310,11 +311,11 @@ public boolean CheckTimeout(Player player) throws IOException
                     {
                           if (this.plugin.checkPassword(split[1], split[2]))
                           {
-                              ItemStack[] inv = this.plugin.getInventory(player.getName());
+                              ItemStack[] inv = this.plugin.getInventory(player);
                               if (inv != null) { player.getInventory().setContents(inv); }
                               long thetimestamp = System.currentTimeMillis()/1000;
                               this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
-                              this.plugin.authorize(player);
+                              Processes.Login(player);
                               long timestamp = System.currentTimeMillis()/1000;
                               this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                               this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
@@ -344,9 +345,9 @@ public boolean CheckTimeout(Player player) throws IOException
                     {
                           if (this.plugin.checkPassword(split[1], split[2]))
                           {
-                              ItemStack[] inv = this.plugin.getInventory(player.getName());
+                              ItemStack[] inv = this.plugin.getInventory(player);
                               if (inv != null) { player.getInventory().setContents(inv); }
-                              this.plugin.unauthorize(player);
+                              Processes.Logout(player);
                               this.plugin.db2.remove(Encryption.md5(player.getName()+Util.GetIP(player)));
                               this.plugin.db3.remove(Encryption.md5(player.getName()));
                                this.plugin.AuthOtherNamesDB.remove(player.getName());
@@ -390,13 +391,13 @@ public boolean CheckTimeout(Player player) throws IOException
                    else { themail = split[2]; }
                 if(this.plugin.register(player, split[1], themail,Util.GetIP(player)))
                 {
-                    ItemStack[] inv = this.plugin.getInventory(player.getName());
+                    ItemStack[] inv = this.plugin.getInventory(player);
                     if (inv != null) { player.getInventory().setContents(inv); }
                     long timestamp = System.currentTimeMillis()/1000;
                     this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                     this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
                     Util.Debug("Session started for "+player.getName());
-                    this.plugin.authorize(player);
+                    Processes.Login(player);
                     long thetimestamp = System.currentTimeMillis()/1000;
                     this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
                       Location temploc = event.getPlayer().getLocation();
@@ -466,16 +467,16 @@ public boolean CheckTimeout(Player player) throws IOException
                               player.sendMessage("§bPlease type in the password for "+Util.CheckOtherName(player.getName()));
                   }
                   else if (this.plugin.checkPassword(player.getName(), split[0]) || this.plugin.checkPassword(Util.CheckOtherName(player.getName()), split[0])) {
-                    ItemStack[] inv = this.plugin.getInventory(player.getName());
+                    ItemStack[] inv = this.plugin.getInventory(player);
                     if (inv != null) { player.getInventory().setContents(inv); }
-                    this.plugin.authorize(player);
+                    Processes.Login(player);
                     long timestamp = System.currentTimeMillis()/1000;
                     this.plugin.db3.put(Encryption.md5(player.getName()), "yes");
                     this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
                     Util.Debug("Session started for "+player.getName());
                     Messages.SendMessage(Message.login_success, player,null);
                 } else {
-                  /* ItemStack[] inv = this.plugin.getInventory(player.getName());
+                  /* ItemStack[] inv = this.plugin.getInventory(player);
                       if (inv != null)
                       {
                           player.getInventory().setContents(inv);

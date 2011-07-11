@@ -9,6 +9,8 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.util.databases;
 
+import java.util.ArrayList;
+
 import com.authdb.AuthDB;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
@@ -17,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @Entity()
 @Table(name = "authdb_users")
@@ -33,6 +36,16 @@ public class eBean {
 
         private String name;
         Column(String name) { this.name = name; }
+    }
+    
+    public static void SetupPlayer(Player player)
+    {
+        eBean eBeanClass = eBean.find(player);
+        if (eBeanClass == null) 
+        {
+            
+            AuthDB.Database.save(eBeanClass);
+        }
     }
     
     public static eBean find(Player player)
@@ -67,7 +80,7 @@ public class eBean {
     private String passwordhash; 
     private String salt;
     private String othername;
-    private String[] inventory;
+    private String inventory;
 
 
     public void setId(int id) {
@@ -110,11 +123,11 @@ public class eBean {
         this.reload = reload;
     }
     
-    public String getPasswordHash(){
+    public String getPasswordhash(){
         return passwordhash;
     }
 
-    public void setPasswordHash(String passwordhash){
+    public void setPasswordhash(String passwordhash){
         this.passwordhash = passwordhash;
     }
     
@@ -134,11 +147,11 @@ public class eBean {
         this.othername = othername;
     }
     
-    public String[] getInventory(){
+    public String getInventory(){
         return inventory;
     }
 
-    public void setInventory(String[] inventory){
+    public void setInventory(String inventory){
         this.inventory = inventory;
     }
 }

@@ -93,6 +93,9 @@ public class AuthDB extends JavaPlugin {
 
     public void onDisable()
     {
+        for (Player p : getServer().getOnlinePlayers()) {
+            Processes.Logout(p);
+          }
         Util.Log("info",  PluginName + " plugin " + PluginVersion + " has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
         if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
@@ -388,7 +391,7 @@ public class AuthDB extends JavaPlugin {
     public static boolean isAuthorized(Player player) 
     { 
         if(authorizedNames.contains(player.getName())) { return true; }
-        eBean eBeanClass = eBean.find(player, eBean.Column.authorized, "true");
+        eBean eBeanClass = eBean.find(player);
         if (eBeanClass != null)
         {
             authorizedNames.add(player.getName()); 
@@ -588,21 +591,27 @@ public class AuthDB extends JavaPlugin {
             return false;
     }
 
-      public void storeInventory(String player, ItemStack[] theinventory) throws IOException {
-        File inv = new File(getDataFolder()+"/inventory/", player + "_inv");
-        if (inv.exists()) { return; }
-        inv.createNewFile();
-        BufferedWriter bw = new BufferedWriter(new FileWriter(inv));
-        for (short i = 0; i < theinventory.length; i = (short)(i + 1))
+      public void storeInventory(Player player, ItemStack[] inventory) throws IOException {
+        String inv = "";
+       // ArrayList<String> invt = new ArrayList<String>();
+        for (short i = 0; i < inventory.length; i = (short)(i + 1))
         {
-            if(theinventory[i] != null)
+            if(inventory[i] != null)
             {
-                bw.write(theinventory[i].getTypeId() + ":" + theinventory[i].getAmount() + ":" + (theinventory[i].getData() == null ? "" : Byte.valueOf(theinventory[i].getData().getData())) + ":" + theinventory[i].getDurability());
+                inv += inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability()+",";
+            //   invt.add(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability());
             }
-            else { bw.write("0:0::0"); }
-            bw.newLine();
+          //  else { invt.add("0:0:0:0"); }
+            else {inv += "0:0:0:0,"; }
+           // bw.newLine();
         }
-        bw.close();
+          
+          eBean eBeanClass = eBean.find(player);
+          if (eBeanClass != null) 
+          {
+              eBeanClass.setInventory(inv);
+              AuthDB.Database.save(eBeanClass);
+          }
       }
 
     public void disableInventory()
@@ -699,57 +708,54 @@ public class AuthDB extends JavaPlugin {
     public static ItemStack[] getInventory(Player player)
       {
        // File f = new File(plugin.getDataFolder()+"/inventory/", player + "_inv");
-        eBean eBeanClass = eBean.find(player, column1, value1);
+        eBean eBeanClass = eBean.find(player);
         if (eBeanClass != null) 
         {
-            ItemStack[] inv;
-            if(Config.HasBackpack) { inv = new ItemStack[252]; }
-            else { inv = new ItemStack[36]; }
-          try 
-          {
-            Scanner s = new Scanner(f);
-            short i = 0;
-            while (s.hasNextLine()) {
-              String line = s.nextLine();
-              String[] split = line.split(":");
-              if (split.length == 4) {
-                int type = Integer.valueOf(split[0]).intValue();
-                inv[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
-
-                short dur = Short.valueOf(split[3]).shortValue();
-                if (dur > 0)
-                  inv[i].setDurability(dur);
-                byte dd;
-                if (split[2].length() == 0)
-                  dd = 0;
-                else
-                  dd = Byte.valueOf(split[2]).byteValue();
-                Material mat = Material.getMaterial(type);
-                if (mat == null)
-                  inv[i].setData(new MaterialData(type, dd));
-                else
-                  inv[i].setData(mat.getNewData(dd));
-                i = (short)(i + 1);
-              }
+            String data = eBeanClass.getInventory();
+            if(data != "" && data != null)
+            {
+                String[] inv = Util.split(data, ",");
+                ItemStack[] inventory = null;
+                
+                for(int i=0; i<inv.length - 1; i++)
+                {
+                    String line = inv[i];
+                    String[] split = line.split(":");
+                    if (split.length == 4) {
+                      int type = Integer.valueOf(split[0]).intValue();
+                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
+    
+                      short dur = Short.valueOf(split[3]).shortValue();
+                      if (dur > 0)
+                          inventory[i].setDurability(dur);
+                      byte dd;
+                      if (split[2].length() == 0)
+                        dd = 0;
+                      else
+                        dd = Byte.valueOf(split[2]).byteValue();
+                      Material mat = Material.getMaterial(type);
+                      if (mat == null)
+                          inventory[i].setData(new MaterialData(type, dd));
+                      else
+                          inventory[i].setData(mat.getNewData(dd));
+                      i = (short)(i + 1);
+                    }
+                  }
+                
+                eBeanClass.setInventory(null);
+                AuthDB.Database.save(eBeanClass);
+                return inventory;
             }
-            s.close();
-            if (!f.delete())
-                Util.Log("warning","Unable to delete user inventory file: " + player + "_inv");
-          } catch (IOException e) {
-              Util.Log("severe", "Inventory file read error:");
-            e.printStackTrace();
-          }
-          return inv;
         }
-
         return null;
       }
 
-      public void deleteInventory(String player) {
-            File f = new File(getDataFolder()+"/inventory/", player + "_inv");
-            if (f.exists())
-              f.delete();
-          }
+      public void deleteInventory(String player) 
+      {
+        File f = new File(getDataFolder()+"/inventory/", player + "_inv");
+        if (f.exists())
+          f.delete();
+      }
 
      private void DefaultFile(String name, String folder) {
             File actual = new File(getDataFolder()+"/"+folder+"/", name);

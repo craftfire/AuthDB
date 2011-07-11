@@ -561,7 +561,7 @@ public class Util
         return null;
     }
 
-    static String[] split(String string, String delimiter)
+    public static String[] split(String string, String delimiter)
     {
         String[] split = string.split(delimiter);
         return split;

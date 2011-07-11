@@ -20,6 +20,7 @@ public class Processes
                 eBean eBeanClass = eBean.find(player, eBean.Column.authorized, "true");
                 if (eBeanClass != null)
                 {
+                    Util.Debug("IS AUTHED");
                     eBeanClass.setAuthorized("false");
                     AuthDB.Database.save(eBeanClass);
                 }
