@@ -9,23 +9,36 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.security.CodeSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.persistence.PersistenceException;
 
@@ -370,9 +383,11 @@ public class AuthDB extends JavaPlugin {
     {
         File data = new File(getDataFolder()+"/data/","");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"/inventory/","");
+        data = new File(getDataFolder()+"/translations/","");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"/messages/","");
+        data = new File(getDataFolder()+"/translations/commands/","");
+        if (!data.exists()) { data.mkdir(); }
+        data = new File(getDataFolder()+"/translations/messages/","");
         if (!data.exists()) { data.mkdir(); }
         data = new File(getDataFolder()+"/config/","");
         if (!data.exists()) { data.mkdir(); }
@@ -434,7 +449,6 @@ public class AuthDB extends JavaPlugin {
 
     public boolean register(Player theplayer, String password, String email, String ipAddress) throws IOException, SQLException
     {
-        password = Matcher.quoteReplacement(password);
         if(password.length() < Integer.parseInt(Config.password_minimum))
         {
             Messages.SendMessage(Message.password_minimum, theplayer, null);
@@ -459,28 +473,77 @@ public class AuthDB extends JavaPlugin {
         return true;
     }
     
+    List<String> getResourceListing(String path) {
+        InputStream in = getClass().getResourceAsStream(path);
+        ArrayList<String> temp = new ArrayList<String>();
+        BufferedReader rdr = new BufferedReader(new InputStreamReader(in));
+        String line;
+        try {
+            while ((line = rdr.readLine()) != null) {
+                temp.add(line);
+                System.out.println("file: " + line);
+            }
+            rdr.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return temp;
+    } 
+    
     void LoadMessages()
     {
-        String[] Languages = {"English"};
-        boolean Set = false;
+        String type = "messages";
         String Language = "English";
-        for(int i=0; i<Languages.length; i++)
-        {
-            File f = new File("plugins/"+PluginName+"/messages/"+Languages[i]+".yml");
-            if ( !f.exists() )
-            {
-                Util.Log("info", Languages[i]+".yml could not be found in plugins/AuthDB/messages/! Creating "+Languages[i]+".yml!");
-                DefaultFile(Languages[i]+".yml","messages");
+        String[] LanguagesAll = new File(getDataFolder()+"/translations/"+type+"/").list();
+        boolean Set = false;
+        CodeSource src = getClass().getProtectionDomain().getCodeSource();
+
+        if( src != null ) {
+
+            try {
+                URL jar = src.getLocation();
+                ZipInputStream zip = new ZipInputStream( jar.openStream());
+                ZipEntry ze = null;
+                
+                while( ( ze = zip.getNextEntry() ) != null ) {
+                    String fileName = ze.getName();
+                    if( fileName.startsWith("files/translations/"+type+"/") && fileName.endsWith(".yml") ) 
+                    {
+                        fileName = fileName.replace("files/translations/"+type+"/", "");
+                        File f = new File(getDataFolder()+"/translations/"+type+"/"+fileName);
+                        if ( !f.exists() )
+                        {
+                            Util.Log("info", fileName+" could not be found in plugins/AuthDB/translations/"+type+"/! Creating "+fileName);
+                            DefaultFile(fileName,"translations/"+type);
+                        }
+                        if((Config.language+".yml").equalsIgnoreCase(fileName)) 
+                        { 
+                            Set = true;
+                            Language = fileName; 
+                        } 
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if(Config.language.equalsIgnoreCase(Languages[i])) 
-            { 
-                Set = true;
-                Language = Languages[i]; 
+
+         }
+        if(!Set)
+        {
+            for(int i=0; i<LanguagesAll.length; i++)
+            {
+                if(Config.language.equalsIgnoreCase(LanguagesAll[i])) 
+                { 
+                    Set = true;
+                    Language = LanguagesAll[i]; 
+                }
             }
         }
-        if(!Set) { Util.Log("info", "Could not find message setup for language: "+Config.language+", using default language: "+Language); }
-        else { Util.Debug("Message language set to "+Language); }
-        new Config("messages","plugins/"+PluginName+"/messages/", Language+".yml");
+        if(!Set) { Util.Log("info", "Could not find translation files for "+Config.language+"; defaulting to "+Language); }
+        else { Util.Debug(type+" language set to "+Language); }
+        new Config("messages",getDataFolder()+"/translations/"+type+"/", Language+".yml");
+        
     }    
     
     public boolean isRegistered(String when, String player) {

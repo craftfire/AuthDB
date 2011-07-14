@@ -1,4 +1,4 @@
-en:
+Core:
   commands:
     register: "/register {PASSWORD} {EMAIL}"
     login: "/login {PASSWORD}"

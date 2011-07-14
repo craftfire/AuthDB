@@ -1,4 +1,4 @@
-en:
+Core:
   time:
     millisecond: millisecond
     milliseconds: milliseconds
@@ -62,7 +62,7 @@ en:
     password: "{RED}Password contains bad characters! {PASSBADCHARACTERS}!"
     whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
 
-
+Plugins:
   CraftIRC:
     status:
       join: "{PLAYER} has joined the server."
