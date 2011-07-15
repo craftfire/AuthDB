@@ -143,6 +143,15 @@ public class Config
             public static boolean CraftIRC_messages_enabled,CraftIRC_messages_welcome_enabled,CraftIRC_messages_register_enabled,CraftIRC_messages_unregister_enabled,CraftIRC_messages_login_enabled,CraftIRC_messages_email_enabled,CraftIRC_messages_username_enabled,CraftIRC_messages_password_enabled,CraftIRC_messages_idle_enabled;
 
 
+            ///////////////////////////////////////////
+            //               commands
+            ///////////////////////////////////////////
+            public static String commands_register,commands_link,commands_unlink,commands_login,commands_logout,commands_setspawn,commands_reload;
+            public static String aliases_register,aliases_link,aliases_unlink,aliases_login,aliases_logout,aliases_setspawn,aliases_reload;
+
+            
+            
+            
       public static Configuration template = null;
 
       public Config(String config, String directory, String filename) {
@@ -476,7 +485,25 @@ public class Config
                     Messages.CraftIRC_message_filter_whitelist = Config.GetConfigString("Plugins.CraftIRC.filter.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
 
             }
-
+            else if(config.equals("commands"))
+            {
+                commands_register = Config.GetConfigString("Core.commands.register", "/register");
+                commands_link = Config.GetConfigString("Core.commands.link", "/link");
+                commands_unlink = Config.GetConfigString("Core.commands.unlink", "/unlink");
+                commands_login = Config.GetConfigString("Core.commands.login", "/login");
+                commands_logout = Config.GetConfigString("Core.commands.logout", "/logout");
+                commands_setspawn = Config.GetConfigString("Core.commands.setspawn", "/authdb setspawn");
+                commands_reload = Config.GetConfigString("Core.commands.reload", "/authdb reload");
+                
+                aliases_register = Config.GetConfigString("Core.aliases.register", "/r");
+                aliases_link = Config.GetConfigString("Core.aliases.link", "/li");
+                aliases_unlink = Config.GetConfigString("Core.aliases.unlink", "/ul");
+                aliases_login = Config.GetConfigString("Core.aliases.login", "/l");
+                aliases_logout = Config.GetConfigString("Core.aliases.logout", "/lo");
+                aliases_setspawn = Config.GetConfigString("Core.aliases.setspawn", "/s");
+                aliases_reload = Config.GetConfigString("Core.aliases.reload", "/ar");
+                save("Core.aliases.reload","HELLO");
+            }
       }
 
       public static String GetConfigString(String key, String defaultvalue)

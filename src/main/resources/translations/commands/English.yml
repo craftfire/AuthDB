@@ -1,14 +1,18 @@
 Core:
   commands:
-    register: "/register {PASSWORD} {EMAIL}"
-    login: "/login {PASSWORD}"
+    register: "/register"
+    link: "/link"
+    unlink: "/unlink"
+    login: "/login"
     logout: "/logout"
-    setspawn: "/auth setspawn {GROUP}"
-    reload: "/auth reload"
+    setspawn: "/authdb setspawn"
+    reload: "/authdb reload"
 
   aliases:
-    register: "/r {PASSWORD} {EMAIL}"
-    login: "/l {PASSWORD}"
+    register: "/r"
+    link: "/li"
+    unlink: "/ul"
+    login: "/l"
     logout: "/lo"
-    setspawn: "/ss {GROUP}"
+    setspawn: "/ss"
     reload: "/ar"

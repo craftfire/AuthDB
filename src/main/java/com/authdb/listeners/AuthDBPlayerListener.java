@@ -61,13 +61,13 @@ public void onPlayerLogin(PlayerLoginEvent event)
     {
         Messages.SendMessage(Message.session_protected, player, event);
     }
-    if(Config.filter_action.equals("kick") || Config.filter_action.equals("rename"))
+    if(Config.filter_action.equalsIgnoreCase("kick") || Config.filter_action.equalsIgnoreCase("rename"))
     {
         String name = player.getName();
         if (Util.CheckFilter("username",name) == false && Util.CheckWhitelist("username",player) == false)
         {
           Util.Debug("The player is not in the whitelist and has bad characters in his/her name");
-          if(Config.filter_action.equals("kick")) Messages.SendMessage(Message.filter_username, player, event);
+          if(Config.filter_action.equalsIgnoreCase("kick")) Messages.SendMessage(Message.filter_username, player, event);
         }
     }
     if(player.getName().length() < Integer.parseInt(Config.username_minimum))
@@ -170,7 +170,7 @@ public boolean CheckTimeout(Player player) throws IOException
             }
             player.getInventory().clear();
              plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(!plugin.isAuthorized(player)) { if(player.getInventory() != null) {  player.getInventory().clear(); } } } } , 20);
-             if(Util.ToLoginMethod(Config.login_method).equals("prompt"))
+             if(Util.ToLoginMethod(Config.login_method).equalsIgnoreCase("prompt"))
              {
                  Messages.SendMessage(Message.login_prompt, player,null);
              }
@@ -245,7 +245,7 @@ public boolean CheckTimeout(Player player) throws IOException
         e.printStackTrace();
     }
         long thetimestamp = System.currentTimeMillis()/1000;
-        if(Config.session_start.equals("logoff"))
+        if(Config.session_start.equalsIgnoreCase("logoff"))
             this.plugin.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+thetimestamp);
         this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
         Processes.Logout(player);
@@ -266,7 +266,7 @@ public boolean CheckTimeout(Player player) throws IOException
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
 
-        if (split[0].equals("/login") && zPermissions.IsAllowed(player, Permission.command_login))
+        if ((split[0].equalsIgnoreCase(Config.commands_login) || split[0].equalsIgnoreCase(Config.aliases_login)) && zPermissions.IsAllowed(player, Permission.command_login))
         {
             if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.CheckOtherName(player.getName())) == false)
             {
@@ -298,10 +298,10 @@ public boolean CheckTimeout(Player player) throws IOException
               Messages.SendMessage(Message.login_failure, player,null);
             }
             Util.Debug(player.getName()+" login ********");
-            event.setMessage("/login ******");
+            event.setMessage(Config.commands_login+" ******");
             event.setCancelled(true);
          }
-        else if (split[0].equals("/link") && zPermissions.IsAllowed(player, Permission.command_link))
+        else if ((split[0].equalsIgnoreCase(Config.commands_link) || split[0].equalsIgnoreCase(Config.aliases_link)) && zPermissions.IsAllowed(player, Permission.command_link))
         {
             if(Config.link_enabled)
             {
@@ -331,11 +331,11 @@ public boolean CheckTimeout(Player player) throws IOException
                 }
                 else { Messages.SendMessage(Message.link_usage, player,null); }
                 Util.Debug(player.getName()+" link ******** ********");
-                event.setMessage("/link ****** ********");
+                event.setMessage(Config.commands_unlink+" ****** ********");
                 event.setCancelled(true);
             }
          }
-        else if (split[0].equals("/unlink") && zPermissions.IsAllowed(player, Permission.command_unlink))
+        else if ((split[0].equalsIgnoreCase(Config.commands_unlink) || split[0].equalsIgnoreCase(Config.aliases_unlink) ) && zPermissions.IsAllowed(player, Permission.command_unlink))
         {
             if(Config.unlink_enabled)
                 {
@@ -361,11 +361,11 @@ public boolean CheckTimeout(Player player) throws IOException
                 }
                 else { Messages.SendMessage(Message.unlink_usage, player,null); }
                 Util.Debug(player.getName()+" unlink ******** ********");
-                event.setMessage("/unlink ****** ********");
+                event.setMessage(Config.commands_unlink+" ****** ********");
                 event.setCancelled(true);
             }
          }
-        else if (split[0].equals("/register") && zPermissions.IsAllowed(player, Permission.command_register)) 
+        else if ((split[0].equalsIgnoreCase(Config.commands_register) || split[0].equalsIgnoreCase(Config.aliases_register) ) && zPermissions.IsAllowed(player, Permission.command_register)) 
         {
             Boolean email = true;
             if(Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
@@ -417,7 +417,7 @@ public boolean CheckTimeout(Player player) throws IOException
             }
           }
           Util.Debug(player.getName()+" register ********");
-          event.setMessage("/register *****");
+          event.setMessage(Config.commands_register+" *****");
           event.setCancelled(true);
          }
          else if (!plugin.isAuthorized(player))
@@ -455,7 +455,7 @@ public boolean CheckTimeout(Player player) throws IOException
         Player player = event.getPlayer();
         if(zPermissions.IsAllowed(player, Permission.command_login))
         {
-          if(Util.ToLoginMethod(Config.login_method).equals("prompt") && (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.CheckOtherName(event.getPlayer().getName()))))
+          if(Util.ToLoginMethod(Config.login_method).equalsIgnoreCase("prompt") && (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.CheckOtherName(event.getPlayer().getName()))))
           {
               String[] split = event.getMessage().split(" ");
               if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.CheckOtherName(player.getName())))

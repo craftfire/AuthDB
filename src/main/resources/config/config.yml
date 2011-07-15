@@ -1,6 +1,6 @@
 Core:
   plugin:
-    language: en                                     # Language translation file to use for messages.
+    language: English                                # Language translation file to use for messages.
     debugmode: false                                 # Set to true to enable debugging mode and additional console output.
     usagestats: true                                 # Set to false to disable usage stats reporting to CraftFire devs.
   database:
@@ -10,11 +10,11 @@ Core:
     username: root                                   # Username used to connect to your database. I hope you aren't using root!
     password: root                                   # Set the password used to connect to your database. I hope you actually set a password other than root!
     name: forum                                      # Set the name of the database you are connecting to.
-    keepalive: false                                 # Set the prefix of the database you are connecting to if you use one.
+    keepalive: false                                 # Set to true to keep database connection alive.
   script:
     name: phpBB                                      # Set the name of the script you are using.
     version: 3.0.8                                   # Set the version of the script you are using.
-    tableprefix: phpbb_
+    tableprefix: phpbb_                              # Set the prefix of the database you are connecting to if you use one.
   customdb:
     enabled: false                                   # 
     autocreate: true                                 # 

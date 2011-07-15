@@ -12,6 +12,8 @@ package com.authdb;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -157,11 +159,18 @@ public class AuthDB extends JavaPlugin {
         {
             Util.Log("info", "config.yml could not be found in plugins/AuthDB/config/! Creating config.yml!");
             DefaultFile("config.yml","config");
-           // getServer().getPluginManager().disablePlugin(((Plugin) (this)));
-           // return;
         }
         new Config("config","plugins/"+PluginName+"/config/", "config.yml");
-        LoadMessages();
+        
+        f = new File(getDataFolder()+"/config/customdb.sql");
+        if ( !f.exists() )
+        {
+            Util.Log("info", "customdb.sql could not be found in plugins/AuthDB/config/! Creating customdb.sql!");
+            DefaultFile("customdb.sql","config");
+        }
+        
+        LoadYml("messages");
+        LoadYml("commands");
 
           final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
           CheckPermissions();
@@ -209,11 +218,37 @@ public class AuthDB extends JavaPlugin {
             {
                 String enter = "\n";
                 Util.Log("info", "Creating default table schema for "+Config.custom_table);
-                Util.Debug(enter+"CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` ("+enter+"`id` int(4) NOT NULL auto_increment,"+enter+"`username` varchar(40) NOT NULL,"+enter+"`password` varchar(40) NOT NULL,"+enter+"`email` varchar(100) NOT NULL,"+enter+"PRIMARY KEY (`id`),"+enter+"UNIQUE KEY `username` (`username`)"+enter+") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
-                String query = "CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` (`id` int(4) NOT NULL auto_increment,`username` varchar(40) NOT NULL,`password` varchar(40) NOT NULL,`email` varchar(100) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY `username` (`username`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+                
+                StringBuilder query = new StringBuilder();
+                String NL = System.getProperty("line.separator");
+                Scanner scanner = null;
+                try {
+                    scanner = new Scanner(new FileInputStream(getDataFolder()+"/config/customdb.sql"));
+                } catch (FileNotFoundException e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                }
+                try {
+                  while (scanner.hasNextLine()){
+                      String line = scanner.nextLine();
+                      if(line.contains("CREATE TABLE"))
+                      {
+                          query.append("CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` (" + NL);
+                      }
+                      else
+                      {
+                          query.append(line + NL);
+                      }
+                  }
+                }
+                finally{
+                  scanner.close();
+                }
+                
+                Util.Debug(enter+query);
                 try
                 {
-                    MySQL.query(query);
+                    MySQL.query(""+query);
                     Util.Log("info", "Sucessfully created table "+Config.custom_table);
                     PreparedStatement ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
                     ResultSet rs = ps.executeQuery();
@@ -255,6 +290,13 @@ public class AuthDB extends JavaPlugin {
         }
     }
     
+    public String CommandString(String command)
+    {
+        String[] temp = Util.split(command, " ");
+        command =  temp[0].replaceAll("/", "");
+        return command;
+    }
+    
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) 
     { 
         if(sender instanceof Player)
@@ -269,18 +311,22 @@ public class AuthDB extends JavaPlugin {
                     player.sendMessage("§b "+PluginName + " is developed by §4 CraftFire �e<dev@craftfire.com>");
                     player.sendMessage("§d "+PluginWebsite);
                 }
+            }
+            else if (cmd.getName().equalsIgnoreCase(CommandString(Config.commands_reload)) || cmd.getName().equalsIgnoreCase(CommandString(Config.aliases_reload)))
+            {
                 if(args.length == 1)
                 {
-                    if(args[0].equalsIgnoreCase("reload") && zPermissions.IsAllowed(player, Permission.command_reload))
+                    if(zPermissions.IsAllowed(player, Permission.command_reload))
                     {
                         new Config("config","plugins/"+PluginName+"/config/", "config.yml");
-                        LoadMessages();
+                        LoadYml("commands");
+                        LoadYml("messages");
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
                         return true;
                     }
                 }
             }
-            else if (cmd.getName().equalsIgnoreCase("logout") && zPermissions.IsAllowed(player, Permission.command_logout))
+            else if (cmd.getName().equalsIgnoreCase(CommandString(Config.commands_logout)) || cmd.getName().equalsIgnoreCase(CommandString(Config.aliases_logout)))
             {
                 if(args.length == 0)
                 {
@@ -317,7 +363,7 @@ public class AuthDB extends JavaPlugin {
                     return true;
                 }
             }
-            else if (cmd.getName().equalsIgnoreCase("login") && zPermissions.IsAllowed(player, Permission.command_login))
+            else if (isAuthorized(player) && (cmd.getName().equalsIgnoreCase(CommandString(Config.commands_login)) || cmd.getName().equalsIgnoreCase(CommandString(Config.aliases_login))))
             {
                 if(args.length == 1 && zPermissions.IsAllowed(player, Permission.command_admin_login))
                 {
@@ -491,9 +537,8 @@ public class AuthDB extends JavaPlugin {
         return temp;
     } 
     
-    void LoadMessages()
+    void LoadYml(String type)
     {
-        String type = "messages";
         String Language = "English";
         String[] LanguagesAll = new File(getDataFolder()+"/translations/"+type+"/").list();
         boolean Set = false;
