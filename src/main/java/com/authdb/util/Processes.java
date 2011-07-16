@@ -18,13 +18,12 @@ public class Processes
             { 
                 AuthDB.AuthTimeDB.remove(player.getName()); 
             }
-                AuthDB.authorizedNames.remove(player.getName()); 
-                eBean eBeanClass = eBean.find(player, eBean.Column.authorized, "true");
-                if (eBeanClass != null)
-                {
-                    eBeanClass.setAuthorized("false");
-                    AuthDB.Database.save(eBeanClass);
-                }
+            
+            AuthDB.authorizedNames.remove(player.getName()); 
+            eBean eBeanClass = eBean.CheckPlayer(player);
+            eBeanClass.setAuthorized("false");
+            AuthDB.Database.save(eBeanClass);
+                
             if(AuthDB.db3.containsKey(Encryption.md5(player.getName())))
             { 
                 AuthDB.db3.remove(Encryption.md5(player.getName())); 
@@ -72,13 +71,8 @@ public class Processes
                 AuthDB.AuthTimeDB.put(player.getName(), ""+timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
-            eBean eBeanClass = eBean.find(player);
-            if (eBeanClass == null)
-            {
-                eBeanClass = new eBean();
-                eBeanClass.setPlayer(player);
-                eBeanClass.setAuthorized("true");
-            }
+            eBean eBeanClass = eBean.CheckPlayer(player);
+            eBeanClass.setAuthorized("true");
             AuthDB.Database.save(eBeanClass);
             if(!AuthDB.db3.containsKey(Encryption.md5(player.getName())))
             { 
@@ -107,14 +101,11 @@ public class Processes
                 AuthDB.AuthTimeDB.put(player.getName(), ""+timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
-            eBean eBeanClass = eBean.find(player);
-            if (eBeanClass == null)
-            {
-                eBeanClass = new eBean();
-                eBeanClass.setPlayer(player);
-                eBeanClass.setAuthorized("true");
-                eBeanClass.setOthername(name);
-            }
+            
+            eBean eBeanClass = eBean.CheckPlayer(player);
+            eBeanClass.setAuthorized("true");
+            AuthDB.Database.save(eBeanClass);
+            
             if(!AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
             { 
                 AuthDB.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);

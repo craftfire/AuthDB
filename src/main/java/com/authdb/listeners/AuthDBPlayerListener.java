@@ -63,6 +63,13 @@ public void onPlayerLogin(PlayerLoginEvent event)
     {
         event.disallow(Result.KICK_OTHER, "You can't join the server when the server has no connection to MySQL.");
     }*/
+    try 
+    { 
+        Util.CheckScript("syncpassword", Config.script_name, player.getName(), null, null, null); 
+        Util.CheckScript("syncsalt", Config.script_name, player.getName(), null, null, null);
+    } 
+    catch (SQLException e) { e.printStackTrace(); }
+    
     if (Config.session_protect && Util.CheckIfLoggedIn(player))
     {
         Messages.SendMessage(Message.session_protected, player, event);

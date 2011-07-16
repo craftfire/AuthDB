@@ -18,6 +18,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
+import com.authdb.util.databases.eBean;
 
 public class vBulletin {
 
@@ -101,8 +102,9 @@ public class vBulletin {
         if(action.equals("find"))
         {
       try {
-          String salt = MySQL.getfromtable(Config.script_tableprefix+"user", "`salt`", "username", player);
-          return passwordHash(password, salt);
+          eBean eBeanClass = eBean.CheckPlayer(player);
+          String StoredSalt = eBeanClass.getSalt();
+          return passwordHash(password, StoredSalt);
       } catch (NoSuchAlgorithmException e) {
           e.printStackTrace();
       } catch (UnsupportedEncodingException e) {

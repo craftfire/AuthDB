@@ -9,17 +9,18 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.util.databases;
 
-import java.util.ArrayList;
 
 import com.authdb.AuthDB;
-import com.avaje.ebean.validation.NotEmpty;
+import com.authdb.util.Util;
+
 import com.avaje.ebean.validation.NotNull;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 @Entity()
 @Table(name = "authdb_users")
@@ -27,42 +28,110 @@ public class eBean {
 
     public static enum Column
     {
-        authorized ("authorized"),
-        reload ("reload"),
+        playername ("playername"),
+        linkednames ("linkednames"),
+        password ("password"),
+        email ("email"),
         salt ("salt"),
-        passwordhash ("passwordhash"),
-        othername ("othername"),
-        inventory ("inventory");
+        inventory ("inventory"),
+        armorinventory ("armorinventory"),
+        activated ("activated"),
+        authorized ("authorized"),
+        timeout ("timeout"),
+        reloadtime ("reloadtime"),
+        ip ("ip");
 
         private String name;
         Column(String name) { this.name = name; }
     }
     
-    public static void SetupPlayer(Player player)
+    public static eBean CheckPlayer(String player)
     {
         eBean eBeanClass = eBean.find(player);
         if (eBeanClass == null) 
         {
-            
+            eBeanClass = new eBean();
+            eBeanClass.setPlayerName(player);
+            AuthDB.Database.save(eBeanClass);
+        }
+        return eBeanClass;
+    }
+    
+    public static eBean CheckPlayer(Player player)
+    {
+        eBean eBeanClass = eBean.find(player);
+        if (eBeanClass == null) 
+        {
+            eBeanClass = new eBean();
+            eBeanClass.setPlayer(player);
+            AuthDB.Database.save(eBeanClass);
+        }
+        return eBeanClass;
+    }
+    
+    public static void save(eBean eBeanClass)
+    {
+        AuthDB.Database.save(eBeanClass);
+    }
+    
+    public static void CheckPassword(String player, String password)
+    {
+        eBean eBeanClass = CheckPlayer(player);
+        if(eBeanClass.getPassword() != password)
+        {
+            Util.Debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
+            eBeanClass.setPassword(password);
             AuthDB.Database.save(eBeanClass);
         }
     }
     
+    public static void CheckSalt(String player, String salt)
+    {
+        eBean eBeanClass = CheckPlayer(player);
+        if(eBeanClass.getSalt() != salt)
+        {
+            Util.Debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
+            eBeanClass.setSalt(salt);
+            AuthDB.Database.save(eBeanClass);
+        }
+    }
+    
+    public static void CheckIP(String player, String IP)
+    {
+        eBean eBeanClass = CheckPlayer(player);
+        if(eBeanClass.getIP() != IP)
+        {
+            Util.Debug("IP in persistence is different than the player's IP, syncing IP's.");
+            eBeanClass.setIP(IP);
+            AuthDB.Database.save(eBeanClass);
+        }
+    }
+    
+    public static eBean find(String player)
+    {
+        eBean eBeanClass = CheckPlayer(player);
+        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).findUnique();
+        return eBeanClass;
+    }
+    
     public static eBean find(Player player)
     {
-        eBean eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playerName", player.getName()).findUnique();
+        eBean eBeanClass = CheckPlayer(player);
+        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).findUnique();
         return eBeanClass;
     }
     
     public static eBean find(Player player, Column column1, String value1)
     {
-        eBean eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playerName", player.getName()).ieq(column1.name,value1).findUnique();
+        eBean eBeanClass = CheckPlayer(player);
+        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).findUnique();
         return eBeanClass;
     }
     
     public static boolean find(Player player, Column column1, String value1, Column column2, String value2)
     {
-        eBean eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playerName", player.getName()).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
+        eBean eBeanClass = CheckPlayer(player);
+        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
         if (eBeanClass != null)
         {
            return true;
@@ -73,14 +142,18 @@ public class eBean {
     @Id
     private int id;
     @NotNull
-    private String playerName;
-    @NotEmpty
-    private String authorized; 
-    private String reload; 
-    private String passwordhash; 
+    private String playername;
+    private String linkednames;
+    private String password;
     private String salt;
-    private String othername;
+    private String ip;
+    private String email;
     private String inventory;
+    private String armorinventory; 
+    private String activated; 
+    private String authorized;
+    private String timeout;
+    private long reloadtime;
 
 
     public void setId(int id) {
@@ -92,19 +165,27 @@ public class eBean {
     }
     
     public String getPlayerName() {
-        return playerName;
+        return playername;
     }
 
     public void setPlayerName(String ply) {
-        this.playerName = ply;
+        this.playername = ply;
     }
 
     public Player getPlayer() {
-        return Bukkit.getServer().getPlayer(playerName);
+        return Bukkit.getServer().getPlayer(playername);
+    }
+
+    public String getEmail() {
+       return email;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
     }
 
     public void setPlayer(Player player) {
-        this.playerName = player.getName();
+        this.playername = player.getName();
     }
 
     public String getAuthorized(){
@@ -115,20 +196,20 @@ public class eBean {
         this.authorized = authorized;
     }
     
-    public String getReload(){
-        return reload;
+    public long getReloadtime(){
+        return reloadtime;
     }
 
-    public void setReload(String reload){
-        this.reload = reload;
+    public void setReloadtime(long reloadtime){
+        this.reloadtime = reloadtime;
     }
     
-    public String getPasswordhash(){
-        return passwordhash;
+    public String getPassword(){
+        return password;
     }
 
-    public void setPasswordhash(String passwordhash){
-        this.passwordhash = passwordhash;
+    public void setPassword(String password){
+        this.password = password;
     }
     
     public String getSalt(){
@@ -139,12 +220,28 @@ public class eBean {
         this.salt = salt;
     }
     
-    public String getOthername(){
-        return othername;
+    public String getActivated(){
+        return activated;
     }
 
-    public void setOthername(String othername){
-        this.othername = othername;
+    public void setActivated(String activated){
+        this.activated = activated;
+    }
+    
+    public String getIP(){
+        return ip;
+    }
+
+    public void setIP(String ip){
+        this.ip = ip;
+    }
+    
+    public String getLinkednames(){
+        return linkednames;
+    }
+
+    public void setLinkednames(String linkednames){
+        this.linkednames = linkednames;
     }
     
     public String getInventory(){
@@ -153,5 +250,13 @@ public class eBean {
 
     public void setInventory(String inventory){
         this.inventory = inventory;
+    }
+    
+    public String getArmorInventory(){
+        return armorinventory;
+    }
+
+    public void setArmorInventory(String armorinventory){
+        this.armorinventory = armorinventory;
     }
 }

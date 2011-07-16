@@ -14,9 +14,13 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.bukkit.entity.Player;
+
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.databases.MySQL;
+import com.authdb.util.databases.eBean;
+import com.avaje.ebean.Ebean;
 
   public class Custom
   {

@@ -18,24 +18,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.security.CodeSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,7 +69,6 @@ import com.authdb.util.databases.MySQL;
 import com.avaje.ebean.EbeanServer;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class AuthDB extends JavaPlugin {
@@ -108,9 +100,13 @@ public class AuthDB extends JavaPlugin {
 
     public void onDisable()
     {
-        for (Player p : getServer().getOnlinePlayers()) {
+        for (Player p : getServer().getOnlinePlayers()) 
+        {
+            eBean eBeanClass = eBean.find(p);
+            eBeanClass.setReloadtime(Util.TimeStamp());
+            eBean.save(eBeanClass);
             Processes.Logout(p);
-          }
+        }
         Util.Log("info",  PluginName + " plugin " + PluginVersion + " has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
         if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
@@ -452,7 +448,7 @@ public class AuthDB extends JavaPlugin {
     public static boolean isAuthorized(Player player) 
     { 
         if(authorizedNames.contains(player.getName())) { return true; }
-        eBean eBeanClass = eBean.find(player);
+        eBean eBeanClass = eBean.find(player,eBean.Column.authorized,"true");
         if (eBeanClass != null)
         {
             authorizedNames.add(player.getName()); 
@@ -715,11 +711,8 @@ public class AuthDB extends JavaPlugin {
         }
           
           eBean eBeanClass = eBean.find(player);
-          if (eBeanClass != null) 
-          {
-              eBeanClass.setInventory(inv);
-              AuthDB.Database.save(eBeanClass);
-          }
+          eBeanClass.setInventory(inv);
+          AuthDB.Database.save(eBeanClass);
       }
 
     public void disableInventory()

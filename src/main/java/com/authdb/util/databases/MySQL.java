@@ -119,7 +119,7 @@ public class MySQL
 
     public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException
     {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'%";
+        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'% LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery( query );
         String dupe = "fail";
@@ -129,7 +129,7 @@ public class MySQL
 
     public static String getfromtable2(String table,String column1,String column2, String column3, String value, String value2) throws SQLException
     {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` = '"+value2+"'";
+        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` = '"+value2+"' LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery( query );
         String dupe = "fail";
@@ -139,7 +139,7 @@ public class MySQL
 
     public static String getfromtablelike(String table,String column1,String column2, String column3, String value, String value2) throws SQLException
     {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'%";
+        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'% LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery( query );
         String dupe = "fail";
@@ -149,7 +149,7 @@ public class MySQL
 
     public static String getfromtable(String table,String column1,String column2,String value) throws SQLException
     {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"'";
+        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery( query );
         String dupe = "fail";
@@ -169,7 +169,7 @@ public class MySQL
 
     public static Blob getfromtableBlob(String table,String column1,String column2,String value) throws SQLException
     {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"'";
+        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery( query );
         Blob dupe = null;
