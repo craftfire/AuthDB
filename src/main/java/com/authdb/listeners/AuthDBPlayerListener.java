@@ -40,6 +40,7 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
+import com.authdb.util.databases.eBean;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -63,12 +64,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
     {
         event.disallow(Result.KICK_OTHER, "You can't join the server when the server has no connection to MySQL.");
     }*/
-    try 
-    { 
-        Util.CheckScript("syncpassword", Config.script_name, player.getName(), null, null, null); 
-        Util.CheckScript("syncsalt", Config.script_name, player.getName(), null, null, null);
-    } 
-    catch (SQLException e) { e.printStackTrace(); }
+    eBean.sync(player);
     
     if (Config.session_protect && Util.CheckIfLoggedIn(player))
     {
@@ -111,6 +107,7 @@ public boolean CheckTimeout(Player player) throws IOException
   public void onPlayerJoin(PlayerJoinEvent event)
   {
     final Player player = event.getPlayer();
+    eBean.CheckIP(player.getName(), Util.GetIP(player));
     player.teleport(Util.LandLocation(player.getLocation()));
     if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
     {

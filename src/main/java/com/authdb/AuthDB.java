@@ -102,9 +102,12 @@ public class AuthDB extends JavaPlugin {
     {
         for (Player p : getServer().getOnlinePlayers()) 
         {
-            eBean eBeanClass = eBean.find(p);
-            eBeanClass.setReloadtime(Util.TimeStamp());
-            eBean.save(eBeanClass);
+            eBean eBeanClass = eBean.CheckPlayer(p);
+            if(eBeanClass.getAuthorized().equalsIgnoreCase("true"))
+            {
+                eBeanClass.setReloadtime(Util.TimeStamp());
+                eBean.save(eBeanClass);
+            }
             Processes.Logout(p);
         }
         Util.Log("info",  PluginName + " plugin " + PluginVersion + " has been disabled");
@@ -261,6 +264,7 @@ public class AuthDB extends JavaPlugin {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            
         }
 
         Util.AddOtherNamesToDB();
@@ -283,6 +287,14 @@ public class AuthDB extends JavaPlugin {
         {
             try { Util.PostInfo(getServer().getServerName(),getServer().getVersion(),PluginVersion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins,online,max,Server.getPort()); }
             catch (IOException e1) { if(Config.debug_enable) Util.Debug("Could not send usage stats to main server."); }
+        }
+        for (Player p : getServer().getOnlinePlayers()) 
+        {
+            eBean eBeanClass = eBean.CheckPlayer(p);
+            if(eBeanClass.getReloadtime() + 20 > Util.TimeStamp())
+            {
+                Processes.Login(p);
+            }
         }
     }
     
@@ -816,7 +828,7 @@ public class AuthDB extends JavaPlugin {
             if(data != "" && data != null)
             {
                 String[] inv = Util.split(data, ",");
-                ItemStack[] inventory = null;
+                ItemStack[] inventory = new ItemStack[36];
                 
                 for(int i=0; i<inv.length - 1; i++)
                 {

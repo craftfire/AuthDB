@@ -126,7 +126,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(phpBB.check_hash(password,StoredPassword)) { return true; }
+                        if(StoredPassword != null && phpBB.check_hash(password,StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(phpBB.check_hash(password,hash)) { return true; }
@@ -158,7 +158,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(phpBB.check_hash(password,StoredPassword)) { return true; }
+                        if(StoredPassword != null && phpBB.check_hash(password,StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(phpBB.check_hash(password,hash)) { return true; }
@@ -185,7 +185,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(SMF.check_hash(SMF.hash(1,player, password),StoredPassword)) { return true; }
+                        if(StoredPassword != null && SMF.check_hash(SMF.hash(1,player, password),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(SMF.check_hash(SMF.hash(1,player, password),hash)) { return true; }
@@ -202,7 +202,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(SMF.check_hash(SMF.hash(2,player, password),StoredPassword)) { return true; }
+                        if(StoredPassword != null && SMF.check_hash(SMF.hash(2,player, password),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(SMF.check_hash(SMF.hash(2,player, password),hash)) { return true; }
@@ -229,7 +229,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(MyBB.check_hash(MyBB.hash("find",player,password, ""),StoredPassword)) { return true; }
+                        if(StoredPassword != null && MyBB.check_hash(MyBB.hash("find",player,password, ""),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(MyBB.check_hash(MyBB.hash("find",player,password, ""),hash)) { return true; }
@@ -256,7 +256,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),StoredPassword)) { return true; }
+                        if(StoredPassword != null && vBulletin.check_hash(vBulletin.hash("find",player,password, ""),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
@@ -273,7 +273,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),StoredPassword)) { return true; }
+                        if(StoredPassword != null && vBulletin.check_hash(vBulletin.hash("find",player,password, ""),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
@@ -298,7 +298,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(Encryption.md5(password).equals(StoredPassword)) { return true; }
+                        if(StoredPassword != null && Encryption.md5(password).equals(StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(Encryption.md5(password).equals(hash)) { return true; }
@@ -314,7 +314,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(StoredPassword.equals(Drupal.user_check_password(password,StoredPassword))) { return true; }
+                        if(StoredPassword != null && StoredPassword.equals(Drupal.user_check_password(password,StoredPassword))) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(hash.equals(Drupal.user_check_password(password,hash))) { return true; }
@@ -339,7 +339,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(Joomla.check_hash(password,StoredPassword)) { return true; }
+                        if(StoredPassword != null && Joomla.check_hash(password,StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(Joomla.check_hash(password,hash)) { return true; }
@@ -355,7 +355,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(Joomla.check_hash(password,StoredPassword)) { return true; }
+                        if(StoredPassword != null && Joomla.check_hash(password,StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(Joomla.check_hash(password,hash)) { return true; }
@@ -380,7 +380,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(Vanilla.check_hash(password,StoredPassword)) { return true; }
+                        if(StoredPassword != null && Vanilla.check_hash(password,StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(Vanilla.check_hash(password,hash)) { return true; }
@@ -426,7 +426,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(PunBB.check_hash(PunBB.hash("find",player,password, ""),StoredPassword)) { return true; }
+                        if(StoredPassword != null && PunBB.check_hash(PunBB.hash("find",player,password, ""),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(PunBB.check_hash(PunBB.hash("find",player,password, ""),hash)) { return true; }
@@ -475,7 +475,7 @@ public class Util
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         String StoredSalt = eBeanClass.getSalt();
-                        if(XenForo.check_hash(XenForo.hash(1, StoredSalt, password),StoredPassword)) { return true; }
+                        if(StoredPassword != null && StoredSalt != null && XenForo.check_hash(XenForo.hash(1, StoredSalt, password),StoredPassword)) { return true; }
                         eBean.CheckSalt(player, thesalt);
                         eBean.CheckPassword(player, thehash);
                         if(XenForo.check_hash(XenForo.hash(1, thesalt, password),thehash)) { return true; }
@@ -500,7 +500,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(bbPress.check_hash(password,StoredPassword)) { return true; }
+                        if(StoredPassword != null && bbPress.check_hash(password,StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(bbPress.check_hash(password,hash)) { return true; }
@@ -525,7 +525,7 @@ public class Util
                     {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(DLE.check_hash(DLE.hash(password),StoredPassword)) { return true; }
+                        if(StoredPassword != null && DLE.check_hash(DLE.hash(password),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(DLE.check_hash(DLE.hash(password),hash)) { return true; }
@@ -552,7 +552,7 @@ public class Util
                         player = player.toLowerCase();
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
-                        if(IPB.check_hash(IPB.hash("find", player, password, null),StoredPassword)) { return true; }
+                        if(StoredPassword != null && IPB.check_hash(IPB.hash("find", player, password, null),StoredPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         eBean.CheckPassword(player, hash);
                         if(IPB.check_hash(IPB.hash("find", player, password, null),hash)) { return true; }
@@ -625,13 +625,13 @@ public class Util
             }
             else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled)
             {
-                String hash = MySQL.getfromtable(Config.script_tableprefix, "`"+passwordfield+"`", usernamefield, player);
+                String hash = MySQL.getfromtable(Config.script_tableprefix+usertable, "`"+passwordfield+"`", usernamefield, player);
                 eBean.CheckPassword(player, hash);
                 return true;
             }
             else if(Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "")
             {
-                String salt = MySQL.getfromtable(Config.script_tableprefix, "`"+saltfield+"`", usernamefield, player);
+                String salt = MySQL.getfromtable(Config.script_tableprefix+usertable, "`"+saltfield+"`", usernamefield, player);
                 eBean.CheckSalt(player, salt);
                 return true;
             }

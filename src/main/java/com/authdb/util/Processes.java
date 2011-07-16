@@ -73,6 +73,7 @@ public class Processes
             AuthDB.authorizedNames.add(player.getName());
             eBean eBeanClass = eBean.CheckPlayer(player);
             eBeanClass.setAuthorized("true");
+            eBeanClass.setRegistred("true");
             AuthDB.Database.save(eBeanClass);
             if(!AuthDB.db3.containsKey(Encryption.md5(player.getName())))
             { 

@@ -10,7 +10,10 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.authdb.util.databases;
 
 
+import java.sql.SQLException;
+
 import com.authdb.AuthDB;
+import com.authdb.util.Config;
 import com.authdb.util.Util;
 
 import com.avaje.ebean.validation.NotNull;
@@ -47,24 +50,24 @@ public class eBean {
     
     public static eBean CheckPlayer(String player)
     {
-        eBean eBeanClass = eBean.find(player);
+        eBean eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).findUnique();
         if (eBeanClass == null) 
         {
             eBeanClass = new eBean();
-            eBeanClass.setPlayerName(player);
-            AuthDB.Database.save(eBeanClass);
+            eBeanClass.setPlayername(player);
+            save(eBeanClass);
         }
         return eBeanClass;
     }
     
     public static eBean CheckPlayer(Player player)
     {
-        eBean eBeanClass = eBean.find(player);
+        eBean eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).findUnique();
         if (eBeanClass == null) 
         {
             eBeanClass = new eBean();
             eBeanClass.setPlayer(player);
-            AuthDB.Database.save(eBeanClass);
+            save(eBeanClass);
         }
         return eBeanClass;
     }
@@ -74,10 +77,25 @@ public class eBean {
         AuthDB.Database.save(eBeanClass);
     }
     
+    public static void sync(Player player)
+    {
+        try 
+        { 
+            eBean eBeanClass = CheckPlayer(player.getName());
+            String registred = eBeanClass.getRegistred();
+            if(registred != null && registred.equalsIgnoreCase("true"))
+            {
+                Util.CheckScript("syncpassword", Config.script_name, player.getName(), null, null, null); 
+                Util.CheckScript("syncsalt", Config.script_name, player.getName(), null, null, null);
+            }
+        } 
+        catch (SQLException e) { e.printStackTrace(); }
+    }
+    
     public static void CheckPassword(String player, String password)
     {
         eBean eBeanClass = CheckPlayer(player);
-        if(eBeanClass.getPassword() != password)
+        if(eBeanClass.getPassword() == null || eBeanClass.getPassword().equals(password) == false)
         {
             Util.Debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
             eBeanClass.setPassword(password);
@@ -88,7 +106,7 @@ public class eBean {
     public static void CheckSalt(String player, String salt)
     {
         eBean eBeanClass = CheckPlayer(player);
-        if(eBeanClass.getSalt() != salt)
+        if(eBeanClass.getSalt() == null || eBeanClass.getSalt().equals(salt) == false)
         {
             Util.Debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
             eBeanClass.setSalt(salt);
@@ -99,10 +117,10 @@ public class eBean {
     public static void CheckIP(String player, String IP)
     {
         eBean eBeanClass = CheckPlayer(player);
-        if(eBeanClass.getIP() != IP)
+        if(eBeanClass.getIp() == null || eBeanClass.getIp().equals(IP) == false)
         {
             Util.Debug("IP in persistence is different than the player's IP, syncing IP's.");
-            eBeanClass.setIP(IP);
+            eBeanClass.setIp(IP);
             AuthDB.Database.save(eBeanClass);
         }
     }
@@ -151,8 +169,9 @@ public class eBean {
     private String inventory;
     private String armorinventory; 
     private String activated; 
+    private String registred;
     private String authorized;
-    private String timeout;
+    private long timeout;
     private long reloadtime;
 
 
@@ -164,11 +183,11 @@ public class eBean {
         return id;
     }
     
-    public String getPlayerName() {
+    public String getPlayername() {
         return playername;
     }
 
-    public void setPlayerName(String ply) {
+    public void setPlayername(String ply) {
         this.playername = ply;
     }
 
@@ -228,11 +247,11 @@ public class eBean {
         this.activated = activated;
     }
     
-    public String getIP(){
+    public String getIp(){
         return ip;
     }
 
-    public void setIP(String ip){
+    public void setIp(String ip){
         this.ip = ip;
     }
     
@@ -252,11 +271,27 @@ public class eBean {
         this.inventory = inventory;
     }
     
-    public String getArmorInventory(){
+    public String getRegistred(){
+        return registred;
+    }
+
+    public void setRegistred(String registred){
+        this.registred = registred;
+    }
+    
+    public long getTimeout(){
+        return timeout;
+    }
+
+    public void setTimeout(long timeout){
+        this.timeout = timeout;
+    }
+    
+    public String getArmorinventory(){
         return armorinventory;
     }
 
-    public void setArmorInventory(String armorinventory){
+    public void setArmorinventory(String armorinventory){
         this.armorinventory = armorinventory;
     }
 }
