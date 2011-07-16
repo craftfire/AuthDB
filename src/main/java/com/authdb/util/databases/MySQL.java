@@ -37,14 +37,15 @@ public class MySQL
                 Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
                 Messages.SendMessage(Message.database_failure, null, null);
                 e.printStackTrace();
+                return false;
             }
             else
             {
-                Util.Log("warning", "Cannot connect to MySQL hos: "+Config.database_host);
+                Util.Log("warning", "Cannot connect to MySQL host: "+Config.database_host);
                 Util.Log("warning", "Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.SendMessage(Message.database_failure, null, null);
+                return false;
             }
-            return false;
         }
         return true;
     }

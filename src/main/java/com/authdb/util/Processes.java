@@ -1,5 +1,7 @@
 package com.authdb.util;
 
+import java.io.IOException;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,7 +22,6 @@ public class Processes
                 eBean eBeanClass = eBean.find(player, eBean.Column.authorized, "true");
                 if (eBeanClass != null)
                 {
-                    Util.Debug("IS AUTHED");
                     eBeanClass.setAuthorized("false");
                     AuthDB.Database.save(eBeanClass);
                 }
@@ -31,6 +32,30 @@ public class Processes
             if(AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player))))
             { 
                 AuthDB.db2.remove(Encryption.md5(player.getName()+Util.GetIP(player))); 
+            }
+            if(AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
+            {
+                AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
+                AuthDB.AuthDBSpamMessage.remove(player.getName());
+                AuthDB.AuthDBSpamMessageTime.remove(player.getName());
+            }
+            try {
+                if(AuthDB.plugin.TimeoutTask("check",player, "0"))
+                 {
+                    int TaskID = Integer.parseInt(AuthDB.plugin.TimeoutGetTaskID(player));
+                    Util.Debug(player.getName()+" is in the TimeoutTaskList with ID: "+TaskID);
+                    if(AuthDB.plugin.TimeoutTask("remove",player, "0"))
+                    {
+                        Util.Debug(player.getName()+" was removed from the TimeoutTaskList");
+                        AuthDB.Server.getScheduler().cancelTask(TaskID);
+                    }
+                    else { Util.Debug("Could not remove "+player.getName()+" from the timeout list."); }
+                 }
+                else { Util.Debug("Could not find "+player.getName()+" in the timeout list, no need to remove."); }
+                AuthDB.plugin.updateDb();
+            } catch (IOException e) {
+                Util.Debug("Error with the timeout list, can't cancel task?");
+                e.printStackTrace();
             }
             return true;
         }

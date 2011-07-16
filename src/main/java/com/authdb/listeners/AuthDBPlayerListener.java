@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -38,6 +39,7 @@ import com.authdb.util.Messages;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -57,6 +59,10 @@ public class AuthDBPlayerListener extends PlayerListener
 public void onPlayerLogin(PlayerLoginEvent event)
 {
     Player player = event.getPlayer();
+    /*if (!MySQL.check())
+    {
+        event.disallow(Result.KICK_OTHER, "You can't join the server when the server has no connection to MySQL.");
+    }*/
     if (Config.session_protect && Util.CheckIfLoggedIn(player))
     {
         Messages.SendMessage(Message.session_protected, player, event);
