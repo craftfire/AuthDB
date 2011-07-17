@@ -486,6 +486,60 @@ public class Util
                     XenForo.adduser(number,player, email, password, ipAddress);
                     return true;
                 }
+                else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled)
+                {
+                    String userid = MySQL.getfromtable(Config.script_tableprefix+usertable, "`user_id`", "username", player);
+                    Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix+"user_authenticate", "`data`", "user_id", userid);
+                    int offset = -1;
+                    int chunkSize = 1024;
+                    long blobLength = hash.length();
+                    if(chunkSize > blobLength) {
+                    chunkSize = (int)blobLength;
+                    }
+                    char buffer[] = new char[chunkSize];
+                    StringBuilder stringBuffer = new StringBuilder();
+                    Reader reader = new InputStreamReader(hash.getBinaryStream());
+
+                    try {
+                        while((offset = reader.read(buffer)) != -1) {
+                        stringBuffer.append(buffer,0,offset);
+                        }
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    String cache = stringBuffer.toString();
+                    String thehash = ForumCacheValue(cache,"hash");
+                    eBean.CheckPassword(player, thehash);
+                    return true;
+                }
+                else if(Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "")
+                {
+                    String userid = MySQL.getfromtable(Config.script_tableprefix+usertable, "`user_id`", "username", player);
+                    Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix+"user_authenticate", "`data`", "user_id", userid);
+                    int offset = -1;
+                    int chunkSize = 1024;
+                    long blobLength = hash.length();
+                    if(chunkSize > blobLength) {
+                    chunkSize = (int)blobLength;
+                    }
+                    char buffer[] = new char[chunkSize];
+                    StringBuilder stringBuffer = new StringBuilder();
+                    Reader reader = new InputStreamReader(hash.getBinaryStream());
+
+                    try {
+                        while((offset = reader.read(buffer)) != -1) {
+                        stringBuffer.append(buffer,0,offset);
+                        }
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    String cache = stringBuffer.toString();
+                    String thesalt = ForumCacheValue(cache,"salt");
+                    eBean.CheckSalt(player, thesalt);
+                    return true;
+                }
             }
             else if(script.equals(bbPress.Name) || script.equals(bbPress.ShortName))
             {
