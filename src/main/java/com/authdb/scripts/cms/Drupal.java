@@ -186,7 +186,7 @@ public class Drupal {
            }
           while (--count>=0);
          }
-        catch(Exception e) { e.printStackTrace(); return null; }
+        catch(Exception e) { Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName()); return null; }
 
         int len  = hash.length();
         String output =  setting + password_base64_encode(hash, len);
@@ -194,13 +194,13 @@ public class Drupal {
         // _password_base64_encode() of a 64 byte sha512 will always be 86 characters.
         int expected = (int) (12 + Math.ceil((8 * len) / 6));
 
-        //Util.Debug("HASH DERP:"+output);
-        Util.Debug("TEST 2"+password_base64_encode(hash, len));
-        Util.Debug("TEST 2"+password_base64_encode(hash, len).length());
-        Util.Debug("HASH DERP:"+output.substring(0, 55));
-        Util.Debug("DERP 1 : "+output.length());
-        Util.Debug("DERP 2 : "+expected);
-        Util.Debug("FASCE:"+(output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
+        //Logging.Debug("HASH DERP:"+output);
+        Util.Logging.Debug("TEST 2"+password_base64_encode(hash, len));
+        Util.Logging.Debug("TEST 2"+password_base64_encode(hash, len).length());
+        Util.Logging.Debug("HASH DERP:"+output.substring(0, 55));
+        Util.Logging.Debug("DERP 1 : "+output.length());
+        Util.Logging.Debug("DERP 2 : "+expected);
+        Util.Logging.Debug("FASCE:"+(output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
         return (output.length() == expected) ? output.substring(0, DRUPAL_HASH_LENGTH) : null;
        }
 

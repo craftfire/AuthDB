@@ -17,6 +17,7 @@ import java.util.Random;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
+import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class SMF {
@@ -135,9 +136,9 @@ public class SMF {
               String temp = player+password;
             return Encryption.SHA1(temp);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         }
     }
     else if(checkid == 2) {
@@ -145,9 +146,9 @@ public class SMF {
               String temp = player+password;
             return Encryption.SHA1(temp);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         }
     }
     return "fail";

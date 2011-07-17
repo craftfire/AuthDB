@@ -16,6 +16,7 @@ import java.sql.SQLException;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
+import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class DLE {
@@ -53,10 +54,10 @@ public class DLE {
         return passwordHash(password);
     } catch (NoSuchAlgorithmException e) {
         // TODO Auto-generated catch block
-        e.printStackTrace();
+        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
     } catch (UnsupportedEncodingException e) {
         // TODO Auto-generated catch block
-        e.printStackTrace();
+        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
     }
       return "fail";
     }

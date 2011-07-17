@@ -80,13 +80,13 @@ public class eBean {
                 Util.CheckScript("syncsalt", Config.script_name, player.getName(), null, null, null);
             }
         } 
-        catch (SQLException e) { e.printStackTrace(); }
+        catch (SQLException e) { Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName()); }
     }
     
     public static void CheckPassword(String player, String password) {
         eBean eBeanClass = CheckPlayer(player);
         if(eBeanClass.getPassword() == null || eBeanClass.getPassword().equals(password) == false) {
-            Util.Debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
+            Util.Logging.Debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
             eBeanClass.setPassword(password);
             AuthDB.Database.save(eBeanClass);
         }
@@ -95,7 +95,7 @@ public class eBean {
     public static void CheckSalt(String player, String salt) {
         eBean eBeanClass = CheckPlayer(player);
         if(eBeanClass.getSalt() == null || eBeanClass.getSalt().equals(salt) == false) {
-            Util.Debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
+            Util.Logging.Debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
             eBeanClass.setSalt(salt);
             AuthDB.Database.save(eBeanClass);
         }
@@ -104,7 +104,7 @@ public class eBean {
     public static void CheckIP(String player, String IP) {
         eBean eBeanClass = CheckPlayer(player);
         if(eBeanClass.getIp() == null || eBeanClass.getIp().equals(IP) == false) {
-            Util.Debug("IP in persistence is different than the player's IP, syncing IP's.");
+            Util.Logging.Debug("IP in persistence is different than the player's IP, syncing IP's.");
             eBeanClass.setIp(IP);
             AuthDB.Database.save(eBeanClass);
         }

@@ -54,7 +54,7 @@ public void onEntityDamage(EntityDamageEvent event) {
                long difference = timestamp - Integer.parseInt(this.plugin.AuthTimeDB.get(p.getName()));
                if(difference < 5)
                {
-                   Util.Debug("Time difference: "+difference+", canceling damage.");
+                   Util.Logging.Debug("Time difference: "+difference+", canceling damage.");
                    event.setCancelled(true);
                }
            }

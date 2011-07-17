@@ -35,18 +35,18 @@ public class Processes {
                 if(AuthDB.plugin.TimeoutTask("check",player, "0"))
                  {
                     int TaskID = Integer.parseInt(AuthDB.plugin.TimeoutGetTaskID(player));
-                    Util.Debug(player.getName()+" is in the TimeoutTaskList with ID: "+TaskID);
+                    Util.Logging.Debug(player.getName()+" is in the TimeoutTaskList with ID: "+TaskID);
                     if(AuthDB.plugin.TimeoutTask("remove",player, "0")) {
-                        Util.Debug(player.getName()+" was removed from the TimeoutTaskList");
+                        Util.Logging.Debug(player.getName()+" was removed from the TimeoutTaskList");
                         AuthDB.Server.getScheduler().cancelTask(TaskID);
                     }
-                    else { Util.Debug("Could not remove "+player.getName()+" from the timeout list."); }
+                    else { Util.Logging.Debug("Could not remove "+player.getName()+" from the timeout list."); }
                  }
-                else { Util.Debug("Could not find "+player.getName()+" in the timeout list, no need to remove."); }
+                else { Util.Logging.Debug("Could not find "+player.getName()+" in the timeout list, no need to remove."); }
                 AuthDB.plugin.updateDb();
             } catch (IOException e) {
-                Util.Debug("Error with the timeout list, can't cancel task?");
-                e.printStackTrace();
+                Util.Logging.Debug("Error with the timeout list, can't cancel task?");
+                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
             }
             return true;
         }

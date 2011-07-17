@@ -237,14 +237,14 @@ static AuthDB plugin = new AuthDB();
                 final ContribPlayer cplayer = (ContribPlayer)player;
                 final AppearanceManager Manager = BukkitContrib.getAppearanceManager();
                 final String URLBefore = Manager.getSkinUrl(cplayer, player);
-                Util.Log("info", "URL Before: "+URLBefore);
+                Util.Logging.Info( "URL Before: "+URLBefore);
                  AuthDB.Server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
                      @Override public void run()
                  {
-                     Util.Log("info", "RUNNING!");
+                     Util.Logging.Info( "RUNNING!");
                      final String URLAfter = Manager.getSkinUrl(cplayer, playerz);
-                     Util.Log("info", "URL After: "+URLAfter);
-                    // Util.Log("info", "URL NAO: "+URLAfter);
+                     Util.Logging.Info( "URL After: "+URLAfter);
+                    // Util.Logging.Info( "URL NAO: "+URLAfter);
                      Manager.resetGlobalSkin(playerz);
                      Manager.setGlobalSkin(playerz, URLAfter);
                     // Manager.resetAllSkins();
@@ -253,18 +253,18 @@ static AuthDB plugin = new AuthDB();
                     final Player playerz = player;
                     final ContribPlayer cplayer = (ContribPlayer)players;
                     final String URL2 = Manager.getSkinUrl(cplayer, players);
-                    Util.Log("info", "URL2 "+URL2);
+                    Util.Logging.Info( "URL2 "+URL2);
                     //Manager.resetAllCloaks() ;
                     //plugin.UpdateSkin();
                     final String URL = Manager.getSkinUrl(cplayer, players);
-                    Util.Log("info", "URL1: "+URL);
+                    Util.Logging.Info( "URL1: "+URL);
                      AuthDB.Server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
                          @Override public void run()
                      {
-                         Util.Log("info", "RUNNING!");
+                         Util.Logging.Info( "RUNNING!");
                          Manager.setGlobalSkin(players, URL);
                          final String URL2 = Manager.getSkinUrl(cplayer, players);
-                         Util.Log("info", "URLLLL: "+URL);
+                         Util.Logging.Info( "URLLLL: "+URL);
                         // Manager.resetAllSkins();
                      } }, 100);
                      */

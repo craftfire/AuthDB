@@ -22,7 +22,7 @@ public class Encryption
         if(encryption.equals("md5")) return md5(toencrypt);
         else if(encryption.equals("sha1")) return SHA1(toencrypt);
         else if(encryption.equals("sha512")) return SHA512(toencrypt);
-        if(Config.debug_enable) Util.Log("info","Could not find encryption method: "+Config.custom_encryption+", using default: md5");
+        if(Config.debug_enable) Util.Logging.Info("Could not find encryption method: "+Config.custom_encryption+", using default: md5");
         Config.custom_encryption = "md5";
         return md5(toencrypt);
     }
@@ -76,7 +76,7 @@ public class Encryption
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         }
         md.update(text.getBytes());
 

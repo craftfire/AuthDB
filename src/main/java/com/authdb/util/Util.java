@@ -61,7 +61,7 @@ import com.mysql.jdbc.Blob;
 public class Util
 {
  
-    static LoggingManager Logging = new LoggingManager();
+    public static LoggingManager Logging = new LoggingManager();
     
     static int Schedule = 0;
     public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException {
@@ -99,7 +99,7 @@ public class Util
                 else if(type.equals("numusers")) {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
                     ResultSet rs = ps.executeQuery();
-                    if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+                    if (rs.next()) { Util.Logging.Info( rs.getInt("countit") + " user registrations in database"); }
                 }
             }
             else if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) {
@@ -410,7 +410,7 @@ public class Util
                             }
                         } catch (IOException e) {
                             // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                         }
                         String cache = stringBuffer.toString();
                         String thehash = ForumCacheValue(cache,"hash");
@@ -447,7 +447,7 @@ public class Util
                         }
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                     }
                     String cache = stringBuffer.toString();
                     String thehash = ForumCacheValue(cache,"hash");
@@ -473,7 +473,7 @@ public class Util
                         }
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                     }
                     String cache = stringBuffer.toString();
                     String thesalt = ForumCacheValue(cache,"salt");
@@ -569,7 +569,7 @@ public class Util
                 if(!Config.custom_enabled) {
                     String TempVers = Config.script_version;
                     Config.script_version = ScriptVersion();
-                    Log("warning","\n" +
+                    Logging.Info("\n" +
                             "|-----------------------------------------------------------------------------|\n" +
                             "|--------------------------------AUTHDB WARNING-------------------------------|\n" +
                             "|-----------------------------------------------------------------------------|\n" +
@@ -594,7 +594,7 @@ public class Util
                 if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"` WHERE  `group_id` !=6"); }
                 else { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"`"); }
                 ResultSet rs = ps.executeQuery();
-                if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
+                if (rs.next()) { Util.Logging.Info( rs.getInt("countit") + " user registrations in database"); }
             }
             else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
                 String hash = MySQL.getfromtable(Config.script_tableprefix+usertable, "`"+passwordfield+"`", usernamefield, player);
@@ -867,7 +867,7 @@ public class Util
     }
 
     public static int ToTicks(String time, String length) {
-        if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
+       Util.Logging.Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt( length );
         if(time.equals("days") || time.equals("day") || time.equals("d"))
@@ -882,7 +882,7 @@ public class Util
     }
 
     public static int ToSeconds(String time, String length) {
-        if(Config.debug_enable) Debug("Launching function: ToSeconds(String time, String length) - "+time+":"+length);
+        Util.Logging.Debug("Launching function: ToSeconds(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt( length );
         if(time.equals("days") || time.equals("day") || time.equals("d"))
@@ -901,7 +901,7 @@ public class Util
         String length = split[0];
         String time = split[1].toLowerCase();
         int lengthint = Integer.parseInt( length );
-        if(Config.debug_enable) Debug("Launching function: FullStringToSeconds(String time, String length) - "+time+":"+length);
+        Util.Logging.Debug("Launching function: FullStringToSeconds(String time, String length) - "+time+":"+length);
         if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 1728000;
         else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
@@ -918,7 +918,7 @@ public class Util
         String length = split[0];
         String time = split[1].toLowerCase();
         int lengthint = Integer.parseInt( length );
-        if(Config.debug_enable) Debug("Launching function: StringToSeconds(String time, String length) - "+time+":"+length);
+        Util.Logging.Debug("Launching function: StringToSeconds(String time, String length) - "+time+":"+length);
         if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 86400;
         else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
@@ -948,14 +948,14 @@ public class Util
 
     public static boolean CheckWhitelist(String whitelist,Player player) {
         String username = player.getName().toLowerCase();
-        if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
+        Util.Logging.Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
         StringTokenizer st = null;
         if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,","); }
         while (st.hasMoreTokens()) {
             String whitelistname = st.nextToken().toLowerCase();
-            if(Config.debug_enable) Debug("Whitelist: "+whitelistname);
+            Util.Logging.Debug("Whitelist: "+whitelistname);
             if(whitelistname.equals(username)) {
-                if(Config.debug_enable) Debug("FOUND USER IN WHITELIST: "+whitelistname);
+                Util.Logging.Debug("FOUND USER IN WHITELIST: "+whitelistname);
                 if(whitelist.equals("idle"))
                         Messages.SendMessage(Message.idle_whitelist, player, null);
                 else if(whitelist.equals("username"))
@@ -967,14 +967,14 @@ public class Util
     }
 
     public static void CheckIdle(Player player) {
-        if(Config.debug_enable) Debug("Launching function: CheckIdle(Player player)");
+        Util.Logging.Debug("Launching function: CheckIdle(Player player)");
         if (!AuthDB.isAuthorized(player)) {
              Messages.SendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
     }
 
     public static long IP2Long(String IP) {
-        if(Config.debug_enable) Debug("Launching function: IP2Long(String IP) ");
+        Util.Logging.Debug("Launching function: IP2Long(String IP) ");
         long f1, f2, f3, f4;
         String tokens[] = IP.split("\\.");
         if (tokens.length != 4) return -1;
@@ -992,7 +992,7 @@ public class Util
     
     public static boolean CheckFilter(String what, String string) {
         if(what.equals("username")) {
-            if(Config.debug_enable) Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_username);
+            Util.Logging.Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_username);
             int lengtha = string.length();
             int lengthb = Config.filter_username.length();
             int i = 0;
@@ -1002,9 +1002,9 @@ public class Util
                 int a = 0;
                 while(a < lengthb) {
                     thechar2 = Config.filter_username.charAt(a);
-                    //if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
+                    //Logging.Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
                     if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') {
-                        if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
+                        Util.Logging.Debug("FOUND BAD CHARACTER!!: "+thechar2);
                         Config.has_badcharacters = true;
                         return false;
                     }
@@ -1016,7 +1016,7 @@ public class Util
             return true;
         }
         else if(what.equals("password")) {
-            if(Config.debug_enable) Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_password);
+            Util.Logging.Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_password);
             int lengtha = string.length();
             int lengthb = Config.filter_password.length();
             int i = 0;
@@ -1026,9 +1026,9 @@ public class Util
                 int a = 0;
                 while(a < lengthb) {
                     thechar2 = Config.filter_password.charAt(a);
-                    //if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
+                    //Logging.Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
                     if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') {
-                        if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
+                        Util.Logging.Debug("FOUND BAD CHARACTER!!: "+thechar2);
                         return false;
                     }
                     a++;
@@ -1062,10 +1062,8 @@ public class Util
         return tempstring;
     }
 
-    public static void Debug(String message) { if(Config.debug_enable) { Log("info",message); } }
-
     public static String replaceStrings(String string, Player player, String additional) {
-        Logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
+        Util.Logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
         if(!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
             string = string.replaceAll("\\{IP\\}", GetIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
@@ -1165,7 +1163,7 @@ public class Util
     }
     
     public static String removeColors(String toremove) {
-        if(Config.debug_enable) Debug("Launching function: CheckWhitelist");
+        Util.Logging.Debug("Launching function: CheckWhitelist");
         toremove = toremove.replace("?0", "");
         toremove = toremove.replace("?2", "");
         toremove = toremove.replace("?3", "");
@@ -1185,7 +1183,7 @@ public class Util
     }
 
     public static String removeChar(String s, char c) {
-        if(Config.debug_enable) Debug("Launching function: removeChar(String s, char c)");
+        Util.Logging.Debug("Launching function: removeChar(String s, char c)");
       StringBuffer r = new StringBuffer( s.length() );
       r.setLength( s.length() );
       int current = 0;
@@ -1219,12 +1217,6 @@ public class Util
 
     static int randomNumber(int min, int max) {
         return (int) (Math.random() * (max - min + 1) ) + min;
-    }
-
-    public static void Log(String type, String what) {
-        if(type.equals("severe")) AuthDB.log.severe("["+AuthDB.PluginName+"] "+what);
-        else if(type.equals("info")) AuthDB.log.info("["+AuthDB.PluginName+"] "+what);
-        else if(type.equals("warning")) AuthDB.log.warning("["+AuthDB.PluginName+"] "+what);
     }
 
     public static Location LandLocation(Location location) {
@@ -1266,7 +1258,7 @@ public class Util
                 reader = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException e2) {
                 // TODO Auto-generated catch block
-                e2.printStackTrace();
+                Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
             }
 
             String currentLine;
@@ -1283,7 +1275,7 @@ public class Util
     }
 
     public static String GetFile(String what, String data) {
-          Util.Debug("READING FROM FILE get");
+          Util.Logging.Debug("READING FROM FILE get");
           File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
           if (file.exists())
           {
@@ -1292,7 +1284,7 @@ public class Util
                     reader = new BufferedReader(new FileReader(file));
                 } catch (FileNotFoundException e2) {
                     // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                    Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
 
                 String currentLine;
@@ -1312,7 +1304,7 @@ public class Util
       }
 
       public static boolean ToFile(String action, String what, String data) {
-            Util.Debug("READING FROM FILE "+action);
+            Util.Logging.Debug("READING FROM FILE "+action);
             File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
             if(action.equals("write")) {
                   try
@@ -1323,7 +1315,7 @@ public class Util
                     out.newLine();
                     out.close();
                     }catch (Exception e){
-                      e.printStackTrace();
+                      Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                       return false;
                     }
                   return true;
@@ -1342,7 +1334,7 @@ public class Util
                // br.close();
                 in.close();
                 }catch (Exception e){
-                  //e.printStackTrace();
+                  //Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                   return false;
                 }
 
@@ -1354,7 +1346,7 @@ public class Util
                     reader = new BufferedReader(new FileReader(file));
                 } catch (FileNotFoundException e2) {
                     // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                    Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
 
                 String currentLine;
@@ -1381,7 +1373,7 @@ public class Util
 
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
 
 
@@ -1393,7 +1385,7 @@ public class Util
                     reader = new BufferedReader(new FileReader(file));
                 } catch (FileNotFoundException e2) {
                     // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                    Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
 
                 String currentLine;
@@ -1420,7 +1412,7 @@ public class Util
 
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
 
 

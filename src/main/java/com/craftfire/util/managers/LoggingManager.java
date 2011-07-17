@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Stack;
 
+import com.authdb.util.Util;
+
 public class LoggingManager {
 
     PluginManager PluginManager = new PluginManager();
@@ -34,10 +36,16 @@ public class LoggingManager {
     
     public void Warning(String line) { 
         PluginManager.Plugin.log.warning("["+PluginManager.Plugin.PluginName+"] "+line);
-}
+    }
     
-    public void StackTrace(StackTraceElement[] stack) { 
+    public void StackTrace(StackTraceElement[] stack, String function, int linenumber, String classname, String file) { 
+       Error("--------------------------- STACKTRACE ERROR ---------------------------");
+       Error("Class name: "+classname);
+       Error("File name: "+file);
+       Error("Function name: "+function);
+       Error("Error line: "+linenumber);
        Error("--------------------------- STACKTRACE START ---------------------------");
+       
        for(int i = 0; i < stack.length; i++) {
            Error(stack[i].toString());
        }
@@ -63,7 +71,7 @@ public class LoggingManager {
                 data.createNewFile();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }
         FileWriter Writer;
@@ -76,7 +84,7 @@ public class LoggingManager {
             Out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         }
     }
 }

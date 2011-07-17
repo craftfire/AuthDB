@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
+import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 import com.authdb.util.databases.eBean;
 import com.avaje.ebean.Ebean;
@@ -30,10 +31,10 @@ import com.avaje.ebean.Ebean;
                     password = Encryption.Encrypt(Config.custom_encryption,password);
                 } catch (NoSuchAlgorithmException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 } catch (UnsupportedEncodingException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
             }
             //
@@ -62,10 +63,10 @@ import com.avaje.ebean.Ebean;
                 return true;
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
-        e.printStackTrace();
+        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
     } catch (UnsupportedEncodingException e) {
         // TODO Auto-generated catch block
-            e.printStackTrace();
+            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return false;
     }

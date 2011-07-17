@@ -36,7 +36,7 @@ public class MySQL
             if(Config.debug_enable) {
                 Logging.Warning("MYSQL CANNOT CONNECT!!!");
                 Messages.SendMessage(Message.database_failure, null, null);
-                e.printStackTrace();
+                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 return false;
             }
             else {
@@ -58,24 +58,24 @@ public class MySQL
             Config.database_ison = false;
             Logging.Warning("CANNOT FIND DATABASE DRIVER!!!");
             Messages.SendMessage(Message.database_failure, null, null);
-            if(Config.debug_enable) e.printStackTrace();
+            if(Config.debug_enable) Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
         }
 
         if(Config.debug_enable) {
-            Logging.Debug("Lauching function: connect()");
-            Logging.Debug("MySQL: "+Config.dbDb);
-            Logging.Debug("MySQL driver: "+Config.database_driver);
-            Logging.Debug("MySQL username: "+Config.database_username);
-            Logging.Debug("MySQL password: "+Config.database_password);
-            Logging.Debug("MySQL host: "+Config.database_host);
-            Logging.Debug("MySQL port: "+Config.database_port);
-            Logging.Debug("MySQL database: "+Config.database_database);
+            Util.Logging.Debug("Lauching function: connect()");
+            Util.Logging.Debug("MySQL: "+Config.dbDb);
+            Util.Logging.Debug("MySQL driver: "+Config.database_driver);
+            Util.Logging.Debug("MySQL username: "+Config.database_username);
+            Util.Logging.Debug("MySQL password: "+Config.database_password);
+            Util.Logging.Debug("MySQL host: "+Config.database_host);
+            Util.Logging.Debug("MySQL port: "+Config.database_port);
+            Util.Logging.Debug("MySQL database: "+Config.database_database);
             if(!Config.custom_enabled) {
-                Logging.Debug("MySQL prefix: "+Config.script_tableprefix);
+                Util.Logging.Debug("MySQL prefix: "+Config.script_tableprefix);
             }
         }
 
-        Logging.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+        Util.Logging.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
         try {
             Config.database_ison = true;
 
@@ -85,8 +85,8 @@ public class MySQL
             if(Config.debug_enable) {
                 Logging.Warning("MYSQL CANNOT CONNECT!!!");
                 Messages.SendMessage(Message.database_failure, null, null);
-                Logging.StackTrace(e.getStackTrace());
-                //e.printStackTrace();
+                Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                //Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
             }
             else {
                 Logging.Warning("MySQL cannot connect to the specified host: "+Config.database_host);
