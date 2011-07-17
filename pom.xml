@@ -16,6 +16,12 @@
     <url>http://craftfire.com</url>
     <description>Script and custom MySQL database user authentication plugin for CraftBukkit.</description>
 
+    <properties>
+        <project.version>dev-SNAPSHOT</project.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skipTests>true</skipTests>
+    </properties>
+
     <!-- License -->
     <licenses>
         <license>
@@ -234,10 +240,5 @@
         </plugins>
 
     </build>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <skipTests>true</skipTests>
-    </properties>
 
 </project>
