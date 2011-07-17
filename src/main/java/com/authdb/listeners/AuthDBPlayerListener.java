@@ -158,6 +158,11 @@ public boolean CheckTimeout(Player player) throws IOException
              player.setHealth(20);
              player.teleport(player.getWorld().getSpawnLocation());
          }
+         eBean eBeanClass = eBean.CheckPlayer(player);
+         if(eBeanClass.getReloadtime() + 30 > Util.TimeStamp())
+         {
+             sessionallow = true;
+         }
 
         if(sessionallow)
         {

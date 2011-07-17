@@ -10,6 +10,9 @@ Core:
     days: days
   database:
     failure: "{RED}Database connection failed! Access is denied! Contact the server admin."
+  reload:
+    success: "AuthDB has successfully reloaded!"
+    failure: ""
   welcome:
     guest: "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email or {LINKCMD} otherusername password"
   guest:
@@ -29,7 +32,18 @@ Core:
     authorized: "{RED}You are already logged in!"
     notregistered: "{RED}You are not registered yet!"
     timeout: "Kicked because you failed to login within {LOGINTIMEOUT}."
+    admin: "You have been logged in by an admin."
+    adminsuccess: "Successfully logged in player, {PLAYER}."
+    adminfailure: "You cannot login player {PLAYER}! That player is already logged in."
+    adminnotfound: "Could not find player, {PLAYER}! Please try again."
     usage: "{RED}Correct usage is: {LOGINCMD} password"
+  logout:
+    success: "Successfully logged out!"
+    failure: "You are not logged in!"
+    admin: "You have been logged out by an admin."
+    adminsuccess: "Successfully logged out player, {PLAYER}."
+    adminfailure: "You cannot logout player, {PLAYER}! That player is not logged in."
+    adminnotfound: "Could not find player, {PLAYER}! Please try again."
   link:
     success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
     failure: "{RED}Username linking failed!"
@@ -60,6 +74,8 @@ Core:
     username: "Kicked because username contains bad characters. {USERBADCHARACTERS}!"
     password: "{RED}Password contains bad characters! {PASSBADCHARACTERS}!"
     whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
+  protection:
+    denied: "You do not have permission to use that command."
 
 Plugins:
   CraftIRC:

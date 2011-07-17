@@ -354,99 +354,99 @@ public class Config
                     ///////////////////////////////////////////
                     //               welcome
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_database_failure = Config.GetConfigString("Core.database.failure", "<rose>Database connection failed! Access is denied! Contact admin.");
+                    Messages.AuthDB_message_database_failure = Config.GetConfigString("Core.database.failure", "{RED}Database connection failed! Access is denied! Contact admin.");
                     ///////////////////////////////////////////
                     //               welcome
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_welcome_guest = (String)Config.GetConfigString("Core.welcome.guest", "<yellow>Welcome <white>guest<yellow>! Please register with /register <password> <email>");
-                    //Messages.AuthDB_message_welcome_user = (String)Config.GetConfigString("Core.welcome.user", "<yellow>Welcome back <white>{PLAYER}<yellow>! Please login with /login <password>");
+                    Messages.AuthDB_message_welcome_guest = (String)Config.GetConfigString("Core.welcome.guest", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please register with /register password email");
+                    //Messages.AuthDB_message_welcome_user = (String)Config.GetConfigString("Core.welcome.user", "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please login with /login password");
 
                     ///////////////////////////////////////////
                     //               guest
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_guest_notauthorized = Config.GetConfigString("Core.guest.notauthorized", "<rose>You are not authorized to do that!");
+                    Messages.AuthDB_message_guest_notauthorized = Config.GetConfigString("Core.guest.notauthorized", "{RED}You are not authorized to do that!");
 
                     ///////////////////////////////////////////
                     //               register
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_register_success = Config.GetConfigString("Core.register.success", "<rose>You have been registered!");
-                    Messages.AuthDB_message_register_failure = Config.GetConfigString("Core.register.failure", "<rose>Registration failed!");
-                    Messages.AuthDB_message_register_registered = Config.GetConfigString("Core.register.exists", "<rose>You are already registered!");
-                    Messages.AuthDB_message_register_disabled = Config.GetConfigString("Core.register.disabled", "<rose>Registration not allowed!");
-                    Messages.AuthDB_message_register_usage = Config.GetConfigString("Core.register.usage", "<rose>Correct usage is: /register <password> <email>");
+                    Messages.AuthDB_message_register_success = Config.GetConfigString("Core.register.success", "{RED}You have been registered!");
+                    Messages.AuthDB_message_register_failure = Config.GetConfigString("Core.register.failure", "{RED}Registration failed!");
+                    Messages.AuthDB_message_register_registered = Config.GetConfigString("Core.register.exists", "{RED}You are already registered!");
+                    Messages.AuthDB_message_register_disabled = Config.GetConfigString("Core.register.disabled", "{RED}Registration not allowed!");
+                    Messages.AuthDB_message_register_usage = Config.GetConfigString("Core.register.usage", "{RED}Correct usage is: /register password email");
 
                     ///////////////////////////////////////////
                     //               unregister
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_unregister_success = Config.GetConfigString("Core.unregister.success", "<lightgreen>Unregistered successfully!");
-                    Messages.AuthDB_message_unregister_failure = Config.GetConfigString("Core.unregister.failure", "<rose>An error occurred while unregistering!");
-                    Messages.AuthDB_message_unregister_usage = Config.GetConfigString("Core.unregister.usage", "<rose>Correct usage is: /unregister <password>");
+                    Messages.AuthDB_message_unregister_success = Config.GetConfigString("Core.unregister.success", "{BRIGHTGREEN}Unregistered successfully!");
+                    Messages.AuthDB_message_unregister_failure = Config.GetConfigString("Core.unregister.failure", "{RED}An error occurred while unregistering!");
+                    Messages.AuthDB_message_unregister_usage = Config.GetConfigString("Core.unregister.usage", "{RED}Correct usage is: /unregister password");
 
                     ///////////////////////////////////////////
                     //               login
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_login_normal = Config.GetConfigString("Core.login.normal", "<yellow>Welcome back <white>{PLAYER}<yellow>! Please use /login <password>");
-                    Messages.AuthDB_message_login_prompt = Config.GetConfigString("Core.login.prompt", "Auth<lightblue>DB <grey>> <white>Welcome <lightblue>{PLAYER}<white>! Please enter your password:");
-                    Messages.AuthDB_message_login_success = Config.GetConfigString("Core.login.success", "<lightgreen>Password accepted. Welcome!");
-                    Messages.AuthDB_message_login_failure = Config.GetConfigString("Core.login.failure", "<rose>Password incorrect, please try again.");
-                    Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.login.authorized", "<lightgreen>You are already logged in!");;
-                    Messages.AuthDB_message_login_notregistered = Config.GetConfigString("Core.login.notregistered", "<rose>You are not registred yet!");
-                    Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.login.usage", "<rose>Correct usage is: /login <password>");
+                    Messages.AuthDB_message_login_normal = Config.GetConfigString("Core.login.normal", "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use /login password");
+                    Messages.AuthDB_message_login_prompt = Config.GetConfigString("Core.login.prompt", "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:");
+                    Messages.AuthDB_message_login_success = Config.GetConfigString("Core.login.success", "{BRIGHTGREEN}Password accepted. Welcome!");
+                    Messages.AuthDB_message_login_failure = Config.GetConfigString("Core.login.failure", "{RED}Password incorrect, please try again.");
+                    Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.login.authorized", "{BRIGHTGREEN}You are already logged in!");;
+                    Messages.AuthDB_message_login_notregistered = Config.GetConfigString("Core.login.notregistered", "{RED}You are not registred yet!");
+                    Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.login.usage", "{RED}Correct usage is: /login password");
 
                     ///////////////////////////////////////////
                     //               link
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_link_success = Config.GetConfigString("Core.link.success", "<lightgreen>You have successfully linked!. You are now logged in");
-                    Messages.AuthDB_message_link_failure = Config.GetConfigString("Core.link.failure", "<rose>Error while linking!");
-                    Messages.AuthDB_message_link_exists = Config.GetConfigString("Core.link.exists", "<rose>You are already linked to a username!");
-                    Messages.AuthDB_message_link_usage = Config.GetConfigString("Core.link.usage", "<rose>Correct usage is: /link <otherusername> <password>");
+                    Messages.AuthDB_message_link_success = Config.GetConfigString("Core.link.success", "{BRIGHTGREEN}You have successfully linked!. You are now logged in");
+                    Messages.AuthDB_message_link_failure = Config.GetConfigString("Core.link.failure", "{RED}Error while linking!");
+                    Messages.AuthDB_message_link_exists = Config.GetConfigString("Core.link.exists", "{RED}You are already linked to a username!");
+                    Messages.AuthDB_message_link_usage = Config.GetConfigString("Core.link.usage", "{RED}Correct usage is: /link otherusername password");
 
                     ///////////////////////////////////////////
                     //               unlink
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_unlink_success = Config.GetConfigString("Core.unlink.success", "<lightgreen>You have successfully unlinked!");
-                    Messages.AuthDB_message_unlink_failure = Config.GetConfigString("Core.unlink.failure", "<rose>Error while unlinking!");
-                    Messages.AuthDB_message_unlink_nonexist = Config.GetConfigString("Core.unlink.nonexist", "<rose>You do not have a linked username!");
-                    Messages.AuthDB_message_unlink_usage = Config.GetConfigString("Core.unlink.usage", "<rose>Correct usage is: /unlink <otherusername> <password>");
+                    Messages.AuthDB_message_unlink_success = Config.GetConfigString("Core.unlink.success", "{BRIGHTGREEN}You have successfully unlinked!");
+                    Messages.AuthDB_message_unlink_failure = Config.GetConfigString("Core.unlink.failure", "{RED}Error while unlinking!");
+                    Messages.AuthDB_message_unlink_nonexist = Config.GetConfigString("Core.unlink.nonexist", "{RED}You do not have a linked username!");
+                    Messages.AuthDB_message_unlink_usage = Config.GetConfigString("Core.unlink.usage", "{RED}Correct usage is: /unlink otherusername password");
 
                     ///////////////////////////////////////////
                     //               email
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_email_required = Config.GetConfigString("Core.email.required", "<rose>Email required for registration!");
-                    Messages.AuthDB_message_email_invalid = Config.GetConfigString("Core.email.invalid", "<rose>Invalid email! Please try again!");
+                    Messages.AuthDB_message_email_required = Config.GetConfigString("Core.email.required", "{RED}Email required for registration!");
+                    Messages.AuthDB_message_email_invalid = Config.GetConfigString("Core.email.invalid", "{RED}Invalid email! Please try again!");
 
                     ///////////////////////////////////////////
                     //               filter
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_filter_renamed = Config.GetConfigString("Core.filter.renamed", "<rose>{PLAYER} renamed to {PLAYERNEW} due to bad characters: {USERBADCHARACTERS}.");
-                    Messages.AuthDB_message_filter_username = Config.GetConfigString("Core.filter.username", "<rose>Username contains bad characters: {USERBADCHARACTERS}!");
-                    Messages.AuthDB_message_filter_password = Config.GetConfigString("Core.filter.password", "<rose>Password contains bad characters: {PASSBADCHARACTERS}!");
-                    Messages.AuthDB_message_filter_whitelist = Config.GetConfigString("Core.filter.whitelist", "<lightgreen>{PLAYER} is on the filter <white>whitelist<lightgreen>, bypassing restrictions!");
+                    Messages.AuthDB_message_filter_renamed = Config.GetConfigString("Core.filter.renamed", "{RED}{PLAYER} renamed to {PLAYERNEW} due to bad characters: {USERBADCHARACTERS}.");
+                    Messages.AuthDB_message_filter_username = Config.GetConfigString("Core.filter.username", "{RED}Username contains bad characters: {USERBADCHARACTERS}!");
+                    Messages.AuthDB_message_filter_password = Config.GetConfigString("Core.filter.password", "{RED}Password contains bad characters: {PASSBADCHARACTERS}!");
+                    Messages.AuthDB_message_filter_whitelist = Config.GetConfigString("Core.filter.whitelist", "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!");
 
                     ///////////////////////////////////////////
                     //               username
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_username_minimum = Config.GetConfigString("Core.username.minimum", "<rose>Your username does not meet the minimum requirement of {USERMIN} characters!");
-                    Messages.AuthDB_message_username_maximum = Config.GetConfigString("Core.username.maximum", "<rose>Your username does not meet the maximum requirement of {USERMAX} characters!");
+                    Messages.AuthDB_message_username_minimum = Config.GetConfigString("Core.username.minimum", "{RED}Your username does not meet the minimum requirement of {USERMIN} characters!");
+                    Messages.AuthDB_message_username_maximum = Config.GetConfigString("Core.username.maximum", "{RED}Your username does not meet the maximum requirement of {USERMAX} characters!");
 
                     ///////////////////////////////////////////
                     //               password
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_password_minimum = Config.GetConfigString("Core.password.minimum", "<rose>Your password does not meet the minimum requirement of {PASSMIN} characters!");
-                    Messages.AuthDB_message_password_maximum = Config.GetConfigString("Core.password.maximum", "<rose>Your password does not meet the maximum requirement of {PASSMAX} characters!");
-                    Messages.AuthDB_message_password_success = Config.GetConfigString("Core.password.success", "<lightgreen>Password changed successfully!");
-                    Messages.AuthDB_message_password_failure = Config.GetConfigString("Core.password.failure", "<rose>Error! Password change failed!");
-                    Messages.AuthDB_message_password_notregistered = Config.GetConfigString("Core.password.notregistered", "<rose>Register first!");
-                    Messages.AuthDB_message_password_usage = Config.GetConfigString("Core.password.usage", "<rose>Correct usage is: /password <oldpassword> <password>");
+                    Messages.AuthDB_message_password_minimum = Config.GetConfigString("Core.password.minimum", "{RED}Your password does not meet the minimum requirement of {PASSMIN} characters!");
+                    Messages.AuthDB_message_password_maximum = Config.GetConfigString("Core.password.maximum", "{RED}Your password does not meet the maximum requirement of {PASSMAX} characters!");
+                    Messages.AuthDB_message_password_success = Config.GetConfigString("Core.password.success", "{BRIGHTGREEN}Password changed successfully!");
+                    Messages.AuthDB_message_password_failure = Config.GetConfigString("Core.password.failure", "{RED}Error! Password change failed!");
+                    Messages.AuthDB_message_password_notregistered = Config.GetConfigString("Core.password.notregistered", "{RED}Register first!");
+                    Messages.AuthDB_message_password_usage = Config.GetConfigString("Core.password.usage", "{RED}Correct usage is: /password oldpassword password");
 
-                    Messages.AuthDB_message_session_valid = Config.GetConfigString("Core.session.valid", "<lightgreen>, I remember you! You are logged in!");
-                    Messages.AuthDB_message_session_protected = Config.GetConfigString("Core.session.protected", "<rose>Sorry, a player with that name is already logged in on this server.");
+                    Messages.AuthDB_message_session_valid = Config.GetConfigString("Core.session.valid", "{BRIGHTGREEN}, I remember you! You are logged in!");
+                    Messages.AuthDB_message_session_protected = Config.GetConfigString("Core.session.protected", "{RED}Sorry, a player with that name is already logged in on this server.");
 
                     ///////////////////////////////////////////
                     //               idle
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_idle_kick = Config.GetConfigString("Core.idle.kicked", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
-                    Messages.AuthDB_message_idle_whitelist = Config.GetConfigString("Core.idle.whitelist", "<lightgreen>{PLAYER} is on the idle <white>whitelist<lightgreen>, bypassing restrictions!");
+                    Messages.AuthDB_message_idle_whitelist = Config.GetConfigString("Core.idle.whitelist", "{BRIGHTGREEN}{PLAYER} is on the idle {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!");
 
                 ///////////////////////////////////////////
                 //               CraftIRC
@@ -455,7 +455,7 @@ public class Config
                     ///////////////////////////////////////////
                     //               status
                     ///////////////////////////////////////////
-                    Messages.CraftIRC_message_status_join = Config.GetConfigString("Plugins.CraftIRC.status.join", "{PLAYER} has joined the server from {PROVINCE}{STATE}, {COUNTRY} ({IP}).");
+                    Messages.CraftIRC_message_status_join = Config.GetConfigString("Plugins.CraftIRC.status.join", "{PLAYER} has joined the server.");
                     Messages.CraftIRC_message_status_quit = Config.GetConfigString("Plugins.CraftIRC.status.quit", "{PLAYER} has quit the server.");
 
                     ///////////////////////////////////////////

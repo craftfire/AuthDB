@@ -230,7 +230,7 @@ public class AuthDB extends JavaPlugin {
                 try {
                   while (scanner.hasNextLine()){
                       String line = scanner.nextLine();
-                      if(line.contains("CREATE TABLE"))
+                      if(line.contains("CREATE TABLE") || line.contains("create table"))
                       {
                           query.append("CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` (" + NL);
                       }
@@ -291,7 +291,7 @@ public class AuthDB extends JavaPlugin {
         for (Player p : getServer().getOnlinePlayers()) 
         {
             eBean eBeanClass = eBean.CheckPlayer(p);
-            if(eBeanClass.getReloadtime() + 20 > Util.TimeStamp())
+            if(eBeanClass.getReloadtime() + 30 > Util.TimeStamp())
             {
                 Processes.Login(p);
             }
@@ -300,8 +300,15 @@ public class AuthDB extends JavaPlugin {
     
     public String CommandString(String command)
     {
-        String[] temp = Util.split(command, " ");
-        command =  temp[0].replaceAll("/", "");
+        if(command.contains(" "))
+        {
+            String[] temp = command.split(" ");
+            if(temp.length > 0)
+            {
+                command =  temp[0].replaceAll("/", "");
+            }
+        }
+        else { command = command.replaceAll("/", ""); }
         return command;
     }
     
@@ -595,7 +602,7 @@ public class AuthDB extends JavaPlugin {
         }
         if(!Set) { Util.Log("info", "Could not find translation files for "+Config.language+"; defaulting to "+Language); }
         else { Util.Debug(type+" language set to "+Language); }
-        new Config("messages",getDataFolder()+"/translations/"+type+"/", Language+".yml");
+        new Config(type,getDataFolder()+"/translations/"+type+"/", Language+".yml");
         
     }    
     
