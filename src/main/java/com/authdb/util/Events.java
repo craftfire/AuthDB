@@ -2,8 +2,7 @@ package com.authdb.util;
 
 import org.bukkit.entity.Player;
 
-public class Events 
-{
+public class Events {
     public static void OnAuthDBLogin(Player player) {
         
     }

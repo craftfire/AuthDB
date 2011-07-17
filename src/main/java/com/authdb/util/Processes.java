@@ -8,11 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import com.authdb.AuthDB;
 import com.authdb.util.databases.eBean;
 
-public class Processes 
-{
+public class Processes {
     public static boolean Logout(Player player) {
-        if(AuthDB.isAuthorized(player)) {
-            if(AuthDB.AuthTimeDB.containsKey(player.getName())) { 
+        if(AuthDB.isAuthorized(player)) {
+            if(AuthDB.AuthTimeDB.containsKey(player.getName())) {
                 AuthDB.AuthTimeDB.remove(player.getName()); 
             }
             
@@ -21,13 +20,13 @@ public class Processes
             eBeanClass.setAuthorized("false");
             AuthDB.Database.save(eBeanClass);
                 
-            if(AuthDB.db3.containsKey(Encryption.md5(player.getName()))) { 
+            if(AuthDB.db3.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.db3.remove(Encryption.md5(player.getName())); 
             }
-            if(AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { 
+            if(AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) {
                 AuthDB.db2.remove(Encryption.md5(player.getName()+Util.GetIP(player))); 
             }
-            if(AuthDB.AuthDBSpamMessage.containsKey(player.getName())) {
+            if(AuthDB.AuthDBSpamMessage.containsKey(player.getName())) {
                 AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
                 AuthDB.AuthDBSpamMessage.remove(player.getName());
                 AuthDB.AuthDBSpamMessageTime.remove(player.getName());
@@ -37,7 +36,7 @@ public class Processes
                  {
                     int TaskID = Integer.parseInt(AuthDB.plugin.TimeoutGetTaskID(player));
                     Util.Debug(player.getName()+" is in the TimeoutTaskList with ID: "+TaskID);
-                    if(AuthDB.plugin.TimeoutTask("remove",player, "0")) {
+                    if(AuthDB.plugin.TimeoutTask("remove",player, "0")) {
                         Util.Debug(player.getName()+" was removed from the TimeoutTaskList");
                         AuthDB.Server.getScheduler().cancelTask(TaskID);
                     }
@@ -55,9 +54,9 @@ public class Processes
     }
     
     public static boolean Login(Player player) {
-        if(!AuthDB.isAuthorized(player)) {
+        if(!AuthDB.isAuthorized(player)) {
             long timestamp = Util.TimeStamp();
-            if(!AuthDB.AuthTimeDB.containsKey(player.getName())) { 
+            if(!AuthDB.AuthTimeDB.containsKey(player.getName())) {
                 AuthDB.AuthTimeDB.put(player.getName(), ""+timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
@@ -65,10 +64,10 @@ public class Processes
             eBeanClass.setAuthorized("true");
             eBeanClass.setRegistred("true");
             AuthDB.Database.save(eBeanClass);
-            if(!AuthDB.db3.containsKey(Encryption.md5(player.getName()))) { 
+            if(!AuthDB.db3.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.db3.put(Encryption.md5(player.getName()), "yes");
             }
-            if(AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { 
+            if(AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) {
                 AuthDB.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
             }
             ItemStack[] inv = AuthDB.getInventory(player);
@@ -79,11 +78,11 @@ public class Processes
     }
     
     public boolean Link(Player player, String name) {
-        if(AuthDB.isAuthorized(player)) {
+        if(AuthDB.isAuthorized(player)) {
             ItemStack[] inv = AuthDB.getInventory(player);
             if (inv != null) { player.getInventory().setContents(inv); }
             long timestamp = Util.TimeStamp();
-            if(!AuthDB.AuthTimeDB.containsKey(player.getName())) { 
+            if(!AuthDB.AuthTimeDB.containsKey(player.getName())) {
                 AuthDB.AuthTimeDB.put(player.getName(), ""+timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
@@ -92,13 +91,13 @@ public class Processes
             eBeanClass.setAuthorized("true");
             AuthDB.Database.save(eBeanClass);
             
-            if(!AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { 
+            if(!AuthDB.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) {
                 AuthDB.db2.put(Encryption.md5(player.getName()+Util.GetIP(player)), ""+timestamp);
             }
-            if(!AuthDB.db3.containsKey(Encryption.md5(player.getName()))) { 
+            if(!AuthDB.db3.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.db3.put(Encryption.md5(player.getName()), "yes");
             }
-            if(!AuthDB.AuthOtherNamesDB.containsKey(Encryption.md5((player.getName())))) { 
+            if(!AuthDB.AuthOtherNamesDB.containsKey(Encryption.md5((player.getName())))) {
                 AuthDB.AuthOtherNamesDB.put(player.getName(),name);
             }
             if(Config.link_rename) { player.setDisplayName(name); }
