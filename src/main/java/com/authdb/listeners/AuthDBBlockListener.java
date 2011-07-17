@@ -24,16 +24,13 @@ public class AuthDBBlockListener extends BlockListener
 {
   private final AuthDB plugin;
 
-  public AuthDBBlockListener(AuthDB instance)
-  {
+  public AuthDBBlockListener(AuthDB instance) {
       plugin = instance;
   }
 
   public void onBlockPlace(BlockPlaceEvent event) {
-    if (!plugin.isAuthorized(event.getPlayer()))
-    {
-      if (!CheckGuest(event.getPlayer(),Config.guests_build))
-        {
+    if (!plugin.isAuthorized(event.getPlayer())) {
+      if (!CheckGuest(event.getPlayer(),Config.guests_build)) {
             event.setCancelled(true);
         }
     }
@@ -42,8 +39,7 @@ public class AuthDBBlockListener extends BlockListener
   public void onBlockDamage(BlockDamageEvent event) {
    if (!plugin.isAuthorized(event.getPlayer()))
    {
-        if (!CheckGuest(event.getPlayer(),Config.guests_destroy))
-        {
+        if (!CheckGuest(event.getPlayer(),Config.guests_destroy)) {
             event.setCancelled(true);
         }
    }
@@ -53,42 +49,32 @@ public class AuthDBBlockListener extends BlockListener
   public void onBlockDamage(BlockBreakEvent event) {
        if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
        {
-            if (!CheckGuest(event.getPlayer(),Config.guests_destroy))
-            {
+            if (!CheckGuest(event.getPlayer(),Config.guests_destroy)) {
                 event.setCancelled(true);
             }
        }
       }*/
 
-    public boolean CheckGuest(Player player,boolean what)
-    {
-        if(what)
-        {
-            if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false)
-            {
+    public boolean CheckGuest(Player player,boolean what) {
+        if(what) {
+            if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false) {
                 return true;
             }
         }
-        else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false)
-        {
-            if(!this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
-            {
+        else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false) {
+            if(!this.plugin.AuthDBRemindLogin.containsKey(player.getName())) {
                 this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
                 Messages.SendMessage(Message.guest_notauthorized, player, null);
             }
-            else
-            {
-                if(this.plugin.AuthDBRemindLogin.get(player.getName()) < Util.TimeStamp())
-                {
+            else {
+                if(this.plugin.AuthDBRemindLogin.get(player.getName()) < Util.TimeStamp()) {
                     Messages.SendMessage(Message.guest_notauthorized, player, null);
                     this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
                 }
             }
         }
-        else
-        {
-            if(Config.protection_notify && this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
-            {  
+        else {
+            if(Config.protection_notify && this.plugin.AuthDBRemindLogin.containsKey(player.getName())) {  
                 this.plugin.AuthDBRemindLogin.remove(player.getName());
             }
         }

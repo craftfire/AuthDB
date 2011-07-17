@@ -61,28 +61,22 @@ public class Util
 {
     
     static int Schedule = 0;
-    public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException
-    {
-        if(Config.database_ison)
-        {
+    public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException {
+        if(Config.database_ison) {
             String usertable = null,usernamefield = null, passwordfield = null, saltfield = "";
             boolean bans = false;
             PreparedStatement ps = null;
             int number = 0;
-            if(Config.custom_enabled)
-            {
-                if(type.equals("checkuser"))
-                {
+            if(Config.custom_enabled) {
+                if(type.equals("checkuser")) {
                     String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
-                    if(check != "fail")
-                    {
+                    if(check != "fail") {
                         Config.HasForumBoard = true;
                         return true;
                     }
                     return false;
                 }
-                else if(type.equals("checkpassword"))
-                {
+                else if(type.equals("checkpassword")) {
                     eBean eBeanClass = eBean.find(player);
                     String StoredPassword = eBeanClass.getPassword();
                     if(Custom.check_hash(password,StoredPassword)) { return true; }
@@ -91,29 +85,24 @@ public class Util
                     if(Custom.check_hash(password,hash)) { return true; }
                     return false;
                 }
-                else if(type.equals("syncpassword"))
-                {
+                else if(type.equals("syncpassword")) {
                     String hash = MySQL.getfromtable(Config.custom_table, "`"+Config.custom_passfield+"`", ""+Config.custom_userfield+"", player);
                     eBean.CheckPassword(player, hash);
                     return true;
                 }
-                else if(type.equals("adduser"))
-                {
+                else if(type.equals("adduser")) {
                     Custom.adduser(player, email, password, ipAddress);
                 }
-                else if(type.equals("numusers"))
-                {
+                else if(type.equals("numusers")) {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
                 }
             }
-            else if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName))
-            {
+            else if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) {
                 usertable = "users";
                 //bantable = "banlist";
-                if(CheckVersionInRange(phpBB.VersionRange))
-                {
+                if(CheckVersionInRange(phpBB.VersionRange)) {
                     usernamefield = "username_clean";
                     passwordfield = "user_password";
                     /*useridfield = "user_id";
@@ -122,8 +111,7 @@ public class Util
                     banreasonfield = "";*/
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && phpBB.check_hash(password,StoredPassword)) { return true; }
@@ -131,31 +119,26 @@ public class Util
                         eBean.CheckPassword(player, hash);
                         if(phpBB.check_hash(password,hash)) { return true; }
                     }
-                    /*else if(type.equals("checkban"))
-                    {
+                    /*else if(type.equals("checkban")) {
                         String check = "fail";
-                        if(ipAddress != null)
-                        {
+                        if(ipAddress != null) {
                             String userid = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+useridfield+"`", ""+usernamefield+"", player);
                               check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+bannamefield+"", userid);
                         }
-                        else
-                        {
+                        else {
                             check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+banipfield+"", ipAddress);
                         }
                         if(check != "fail") { return true; }
                           else { return false; }
                     } */
                 }
-                else if(CheckVersionInRange(phpBB.VersionRange2))
-                {
+                else if(CheckVersionInRange(phpBB.VersionRange2)) {
                     usernamefield = "username";
                     passwordfield = "user_password";
                     Config.HasForumBoard = true;
                     bans = true;
                     number = 2;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && phpBB.check_hash(password,StoredPassword)) { return true; }
@@ -164,25 +147,21 @@ public class Util
                         if(phpBB.check_hash(password,hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                      phpBB.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             }
-            else if(script.equals(SMF.Name) || script.equals(SMF.ShortName))
-            {
+            else if(script.equals(SMF.Name) || script.equals(SMF.ShortName)) {
                 usertable = "members";
-                if(CheckVersionInRange(SMF.VersionRange))
-                {
+                if(CheckVersionInRange(SMF.VersionRange)) {
                     usernamefield = "memberName";
                     passwordfield = "passwd";
                     saltfield = "passwordSalt";
                     Config.HasForumBoard = true;
                     bans = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && SMF.check_hash(SMF.hash(1,player, password),StoredPassword)) { return true; }
@@ -191,15 +170,13 @@ public class Util
                         if(SMF.check_hash(SMF.hash(1,player, password),hash)) { return true; }
                     }
                 }
-                else if(CheckVersionInRange(SMF.VersionRange2) || CheckVersionInRange("2.0") || CheckVersionInRange("2.0.0") || CheckVersionInRange("2.0.0.0"))
-                {
+                else if(CheckVersionInRange(SMF.VersionRange2) || CheckVersionInRange("2.0") || CheckVersionInRange("2.0.0") || CheckVersionInRange("2.0.0.0")) {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
                     Config.HasForumBoard = true;
                     bans = true;
                     number = 2;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && SMF.check_hash(SMF.hash(2,player, password),StoredPassword)) { return true; }
@@ -208,25 +185,21 @@ public class Util
                         if(SMF.check_hash(SMF.hash(2,player, password),hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                      SMF.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             }
-            else if(script.equals(MyBB.Name) || script.equals(MyBB.ShortName))
-            {
+            else if(script.equals(MyBB.Name) || script.equals(MyBB.ShortName)) {
                 usertable = "users";
-                if(CheckVersionInRange(MyBB.VersionRange))
-                {
+                if(CheckVersionInRange(MyBB.VersionRange)) {
                     saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     bans = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && MyBB.check_hash(MyBB.hash("find",player,password, ""),StoredPassword)) { return true; }
@@ -235,25 +208,21 @@ public class Util
                         if(MyBB.check_hash(MyBB.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                      MyBB.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             }
-            else if(script.equals(vBulletin.Name) || script.equals(vBulletin.ShortName))
-            {
+            else if(script.equals(vBulletin.Name) || script.equals(vBulletin.ShortName)) {
                 usertable = "user";
-                if(CheckVersionInRange(vBulletin.VersionRange))
-                {
+                if(CheckVersionInRange(vBulletin.VersionRange)) {
                     saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     bans = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && vBulletin.check_hash(vBulletin.hash("find",player,password, ""),StoredPassword)) { return true; }
@@ -262,15 +231,13 @@ public class Util
                         if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
-                else if(CheckVersionInRange(vBulletin.VersionRange2))
-                {
+                else if(CheckVersionInRange(vBulletin.VersionRange2)) {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     bans = true;
                     number = 2;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && vBulletin.check_hash(vBulletin.hash("find",player,password, ""),StoredPassword)) { return true; }
@@ -279,23 +246,19 @@ public class Util
                         if(vBulletin.check_hash(vBulletin.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                      vBulletin.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             }
-            else if(script.equals(Drupal.Name) || script.equals(Drupal.ShortName))
-            {
+            else if(script.equals(Drupal.Name) || script.equals(Drupal.ShortName)) {
                 usertable = "users";
-                if(CheckVersionInRange(Drupal.VersionRange))
-                {
+                if(CheckVersionInRange(Drupal.VersionRange)) {
                     usernamefield = "name";
                     passwordfield = "pass";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && Encryption.md5(password).equals(StoredPassword)) { return true; }
@@ -304,14 +267,12 @@ public class Util
                         if(Encryption.md5(password).equals(hash)) { return true; }
                     }
                 }
-                else if(CheckVersionInRange(Drupal.VersionRange2))
-                {
+                else if(CheckVersionInRange(Drupal.VersionRange2)) {
                     usernamefield = "name";
                     passwordfield = "pass";
                     Config.HasForumBoard = true;
                     number = 2;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && StoredPassword.equals(Drupal.user_check_password(password,StoredPassword))) { return true; }
@@ -320,23 +281,19 @@ public class Util
                         if(hash.equals(Drupal.user_check_password(password,hash))) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                      Drupal.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             }
-            else if(script.equals(Joomla.Name) || script.equals(Joomla.ShortName))
-            {
+            else if(script.equals(Joomla.Name) || script.equals(Joomla.ShortName)) {
                 usertable = "users";
-                if(CheckVersionInRange(Joomla.VersionRange))
-                {
+                if(CheckVersionInRange(Joomla.VersionRange)) {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && Joomla.check_hash(password,StoredPassword)) { return true; }
@@ -345,14 +302,12 @@ public class Util
                         if(Joomla.check_hash(password,hash)) { return true; }
                     }
                 }
-                else if(CheckVersionInRange(Joomla.VersionRange2))
-                {
+                else if(CheckVersionInRange(Joomla.VersionRange2)) {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     number = 2;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && Joomla.check_hash(password,StoredPassword)) { return true; }
@@ -361,23 +316,19 @@ public class Util
                         if(Joomla.check_hash(password,hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                      Joomla.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             }
-            else if(script.equals(Vanilla.Name) || script.equals(Vanilla.ShortName))
-            {
-                if(CheckVersionInRange(Vanilla.VersionRange))
-                {
+            else if(script.equals(Vanilla.Name) || script.equals(Vanilla.ShortName)) {
+                if(CheckVersionInRange(Vanilla.VersionRange)) {
                     usertable = "User";
                     usernamefield = "Name";
                     passwordfield = "Password";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && Vanilla.check_hash(password,StoredPassword)) { return true; }
@@ -386,44 +337,37 @@ public class Util
                         if(Vanilla.check_hash(password,hash)) { return true; }
                     }
                 }
-                else if(CheckVersionInRange(Vanilla.VersionRange2))
-                {
+                else if(CheckVersionInRange(Vanilla.VersionRange2)) {
                     usertable = "user";
                     usernamefield = "Name";
                     passwordfield = "Password";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(Vanilla.check_hash(password,hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                     String emailcheck =  MySQL.getfromtable(Config.script_tableprefix+usertable, "`Email`", "Email", email);
-                    if(emailcheck.equals("fail"))
-                    {
+                    if(emailcheck.equals("fail")) {
                         Vanilla.adduser(number,player, email, password, ipAddress);
                         return true;
                     }
                     return false;
                 }
             }
-            else if(script.equals(PunBB.Name) || script.equals(PunBB.ShortName))
-            {
+            else if(script.equals(PunBB.Name) || script.equals(PunBB.ShortName)) {
                 usertable = "users";
                 //bantable = "bans";
-                if(CheckVersionInRange(PunBB.VersionRange))
-                {
+                if(CheckVersionInRange(PunBB.VersionRange)) {
                 //    bannamefield = "username";
                     saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && PunBB.check_hash(PunBB.hash("find",player,password, ""),StoredPassword)) { return true; }
@@ -432,24 +376,20 @@ public class Util
                         if(PunBB.check_hash(PunBB.hash("find",player,password, ""),hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                     PunBB.adduser(number,player, email, password, ipAddress);
                     return true;
                 }
             }
-            else if(script.equals(XenForo.Name) || script.equals(XenForo.ShortName))
-            {
+            else if(script.equals(XenForo.Name) || script.equals(XenForo.ShortName)) {
                 usertable = "user";
-                if(CheckVersionInRange(XenForo.VersionRange))
-                {
+                if(CheckVersionInRange(XenForo.VersionRange)) {
                     String userid = MySQL.getfromtable(Config.script_tableprefix+usertable, "`user_id`", "username", player);
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix+"user_authenticate", "`data`", "user_id", userid);
                         int offset = -1;
                         int chunkSize = 1024;
@@ -481,13 +421,11 @@ public class Util
                         if(XenForo.check_hash(XenForo.hash(1, thesalt, password),thehash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                     XenForo.adduser(number,player, email, password, ipAddress);
                     return true;
                 }
-                else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled)
-                {
+                else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
                     String userid = MySQL.getfromtable(Config.script_tableprefix+usertable, "`user_id`", "username", player);
                     Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix+"user_authenticate", "`data`", "user_id", userid);
                     int offset = -1;
@@ -513,8 +451,7 @@ public class Util
                     eBean.CheckPassword(player, thehash);
                     return true;
                 }
-                else if(Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "")
-                {
+                else if(Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "") {
                     String userid = MySQL.getfromtable(Config.script_tableprefix+usertable, "`user_id`", "username", player);
                     Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix+"user_authenticate", "`data`", "user_id", userid);
                     int offset = -1;
@@ -541,17 +478,14 @@ public class Util
                     return true;
                 }
             }
-            else if(script.equals(bbPress.Name) || script.equals(bbPress.ShortName))
-            {
+            else if(script.equals(bbPress.Name) || script.equals(bbPress.ShortName)) {
                 usertable = "users";
-                if(CheckVersionInRange(bbPress.VersionRange))
-                {
+                if(CheckVersionInRange(bbPress.VersionRange)) {
                     usernamefield = "user_login";
                     passwordfield = "user_pass";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && bbPress.check_hash(password,StoredPassword)) { return true; }
@@ -560,23 +494,19 @@ public class Util
                         if(bbPress.check_hash(password,hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                     bbPress.adduser(number,player, email, password, ipAddress);
                     return true;
                 }
             }
-            else if(script.equals(DLE.Name) || script.equals(DLE.ShortName))
-            {
+            else if(script.equals(DLE.Name) || script.equals(DLE.ShortName)) {
                 usertable = "users";
-                if(CheckVersionInRange(DLE.VersionRange))
-                {
+                if(CheckVersionInRange(DLE.VersionRange)) {
                     usernamefield = "name";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
                         if(StoredPassword != null && DLE.check_hash(DLE.hash(password),StoredPassword)) { return true; }
@@ -585,24 +515,20 @@ public class Util
                         if(DLE.check_hash(DLE.hash(password),hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                     DLE.adduser(number,player, email, password, ipAddress);
                     return true;
                 }
             }
-            else if(script.equals(IPB.Name) || script.equals(IPB.ShortName))
-            {
+            else if(script.equals(IPB.Name) || script.equals(IPB.ShortName)) {
                 usertable = "members";
-                if(CheckVersionInRange(IPB.VersionRange))
-                {
+                if(CheckVersionInRange(IPB.VersionRange)) {
                     saltfield = "members_pass_salt";
                     usernamefield = "members_l_username";
                     passwordfield = "members_pass_hash";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         player = player.toLowerCase();
                         eBean eBeanClass = eBean.find(player);
                         String StoredPassword = eBeanClass.getPassword();
@@ -613,38 +539,31 @@ public class Util
                     }
                     
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                     player = player.toLowerCase();
                     IPB.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             }
-          /*  else if(script.equals(Config.Script11_name) || script.equals(Config.Script11_shortname))
-            {
+          /*  else if(script.equals(Config.Script11_name) || script.equals(Config.Script11_shortname)) {
                 usertable = "users";
-                if(CheckVersionInRange(Config.Script11_versionrange))
-                {
+                if(CheckVersionInRange(Config.Script11_versionrange)) {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.HasForumBoard = true;
                     number = 1;
-                    if(type.equals("checkpassword"))
-                    {
+                    if(type.equals("checkpassword")) {
                         String hash = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+passwordfield+"`", ""+usernamefield+"", player);
                         if(XE.check_hash(password,hash)) { return true; }
                     }
                 }
-                if(type.equals("adduser"))
-                {
+                if(type.equals("adduser")) {
                      XE.adduser(number,player, email, password, ipAddress);
                      return true;
                 }
             } */
-            if(!Config.HasForumBoard)
-            {
-                if(!Config.custom_enabled)
-                {
+            if(!Config.HasForumBoard) {
+                if(!Config.custom_enabled) {
                     String TempVers = Config.script_version;
                     Config.script_version = ScriptVersion();
                     Log("warning","\n" +
@@ -660,31 +579,26 @@ public class Util
 
                 }
             }
-            if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled)
-            {
+            if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled) {
                 String check = MySQL.getfromtable(Config.script_tableprefix+usertable, "*", usernamefield, player);
                 if(check != "fail") { return true; }
             }
-            /*else if(Config.HasForumBoard && type.equals("checkban") && !Config.custom_enabled && bantable != null)
-            {
+            /*else if(Config.HasForumBoard && type.equals("checkban") && !Config.custom_enabled && bantable != null) {
                 String check = MySQL.getfromtable(Config.script_tableprefix+bantable, "*", bannamefield, player);
                 if(check != "fail") { return true; }
             }*/
-            else if(Config.HasForumBoard && type.equals("numusers") && !Config.custom_enabled)
-            {
+            else if(Config.HasForumBoard && type.equals("numusers") && !Config.custom_enabled) {
                 if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"` WHERE  `group_id` !=6"); }
                 else { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"`"); }
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) { Util.Log("info", rs.getInt("countit") + " user registrations in database"); }
             }
-            else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled)
-            {
+            else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
                 String hash = MySQL.getfromtable(Config.script_tableprefix+usertable, "`"+passwordfield+"`", usernamefield, player);
                 eBean.CheckPassword(player, hash);
                 return true;
             }
-            else if(Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "")
-            {
+            else if(Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "") {
                 String salt = MySQL.getfromtable(Config.script_tableprefix+usertable, "`"+saltfield+"`", usernamefield, player);
                 eBean.CheckSalt(player, salt);
                 return true;
@@ -693,8 +607,7 @@ public class Util
         return false;
     }
 
-    static String ScriptVersion()
-    {
+    static String ScriptVersion() {
         String script = Config.script_name;
         if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { return split(phpBB.LatestVersionRange,"-")[1]; }
         else if(script.equals(SMF.Name) || script.equals(SMF.ShortName)) { return split(SMF.LatestVersionRange,"-")[1]; }
@@ -711,50 +624,40 @@ public class Util
         return null;
     }
 
-    public static String[] split(String string, String delimiter)
-    {
+    public static String[] split(String string, String delimiter) {
         String[] split = string.split(delimiter);
         return split;
     }
 
-    static void FillChatField(Player player, String text)
-    {
+    static void FillChatField(Player player, String text) {
         for (int i = 0; i < 20; i++) { player.sendMessage(""); }
         player.sendMessage(text);
     }
 
-    static void SpamText(final Player player, final String text, final int delay, final int show)
-    {
-        if(Config.login_delay > 0 && !AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
-        {
+    static void SpamText(final Player player, final String text, final int delay, final int show) {
+        if(Config.login_delay > 0 && !AuthDB.AuthDBSpamMessage.containsKey(player.getName())) {
             Schedule = AuthDB.Server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
             @Override
-            public void run()
-            {
-                if(AuthDB.isAuthorized(player) && AuthDB.AuthDBSpamMessage.containsKey(player.getName()))
-                {
+            public void run() {
+                if(AuthDB.isAuthorized(player) && AuthDB.AuthDBSpamMessage.containsKey(player.getName())) {
                     AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
                     AuthDB.AuthDBSpamMessage.remove(player.getName());
                     AuthDB.AuthDBSpamMessageTime.remove(player.getName());
                 }
-                else
-                {
+                else {
                     if(!AuthDB.AuthDBSpamMessage.containsKey(player.getName())) { AuthDB.AuthDBSpamMessage.put(player.getName(), Schedule); }
                     if(!AuthDB.AuthDBSpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDBSpamMessageTime.put(player.getName(), Util.TimeStamp()); }
-                    if((AuthDB.AuthDBSpamMessageTime.get(player.getName()) + show) <= Util.TimeStamp())
-                    {
+                    if((AuthDB.AuthDBSpamMessageTime.get(player.getName()) + show) <= Util.TimeStamp()) {
                         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
                         AuthDB.AuthDBSpamMessage.remove(player.getName());
                         AuthDB.AuthDBSpamMessageTime.remove(player.getName());
                     }
                     String message = Util.replaceStrings(text,player,null);
-                    if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName())
-                    {
+                    if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName()) {
                         message = message.replaceAll(player.getName(), player.getDisplayName());
                         player.sendMessage(message);
                     }
-                    else
-                    {
+                    else {
                         player.sendMessage(message);
                     }
                     Util.FillChatField(player, message);
@@ -763,38 +666,31 @@ public class Util
         }
     }
 
-    public static long TimeStamp()
-    {
+    public static long TimeStamp() {
         return System.currentTimeMillis()/1000;
     }
 
-    boolean CheckingBan(String usertable,String useridfield,String usernamefield,String username,String bantable,String banipfield,String bannamefield, String ipAddress) throws SQLException
-    {
+    boolean CheckingBan(String usertable,String useridfield,String usernamefield,String username,String bantable,String banipfield,String bannamefield, String ipAddress) throws SQLException {
         String check = "fail";
-        if(ipAddress != null)
-        {
+        if(ipAddress != null) {
             String userid = MySQL.getfromtable(Config.script_tableprefix+""+usertable+"", "`"+useridfield+"`", ""+usernamefield+"", username);
               check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+bannamefield+"", userid);
         }
-        else
-        {
+        else {
             check = MySQL.getfromtable(Config.script_tableprefix+""+bantable+"", "`"+banipfield+"`", ""+banipfield+"", ipAddress);
         }
         if(check != "fail") { return true; }
           else { return false; }
     }
 
-    public static String ForumCache(String cache, String player, int userid, String nummember, String activemembers, String newusername, String newuserid, String extrausername)
-    {
+    public static String ForumCache(String cache, String player, int userid, String nummember, String activemembers, String newusername, String newuserid, String extrausername) {
         StringTokenizer st = new StringTokenizer(cache,":");
         int i = 0;
         List<String> Array = new ArrayList<String>();
         while (st.hasMoreTokens()) { Array.add(st.nextToken()+":"); }
         String newcache = "";
-        while(Array.size() > i)
-        {
-            if(Array.get(i).equals("\""+nummember+"\";s:") && nummember != null)
-            {
+        while(Array.size() > i) {
+            if(Array.get(i).equals("\""+nummember+"\";s:") && nummember != null) {
                 String temp = Array.get(i + 2);
                 temp = Util.removeChar(temp,'"');
                 temp = Util.removeChar(temp,':');
@@ -807,18 +703,15 @@ public class Util
                 Array.set(i + 1,templength.length()+":");
                 Array.set(i + 2,temp+":");
             }
-            else if(Array.get(i).equals("\""+newusername+"\";s:") && newusername != null)
-            {
+            else if(Array.get(i).equals("\""+newusername+"\";s:") && newusername != null) {
                 Array.set(i + 1,player.length()+":");
                 Array.set(i + 2,"\""+player+"\""+";s"+":");
             }
-            else if(Array.get(i).equals("\""+extrausername+"\";s:") && extrausername != null)
-            {
+            else if(Array.get(i).equals("\""+extrausername+"\";s:") && extrausername != null) {
                 Array.set(i + 1,player.length()+":");
                 Array.set(i + 2,"\""+player+"\""+";s"+":");
             }
-            else if(Array.get(i).equals("\""+activemembers+"\";s:") && activemembers != null)
-            {
+            else if(Array.get(i).equals("\""+activemembers+"\";s:") && activemembers != null) {
                 String temp = Array.get(i + 2);
                 temp = Util.removeChar(temp,'"');
                 temp = Util.removeChar(temp,':');
@@ -831,8 +724,7 @@ public class Util
                 Array.set(i + 1,templength.length()+":");
                 Array.set(i + 2,temp+":");
             }
-            else if(Array.get(i).equals("\""+newuserid+"\";s:") && newuserid != null)
-            {
+            else if(Array.get(i).equals("\""+newuserid+"\";s:") && newuserid != null) {
                 String dupe = ""+userid;
                 Array.set(i + 1,dupe.length()+":");
                 Array.set(i + 2,"\""+userid+"\""+";"+"}");
@@ -843,16 +735,13 @@ public class Util
         return newcache;
     }
 
-    public static String ForumCacheValue(String cache,String value)
-    {
+    public static String ForumCacheValue(String cache,String value) {
         StringTokenizer st = new StringTokenizer(cache,":");
         int i = 0;
         List<String> Array = new ArrayList<String>();
         while (st.hasMoreTokens()) { Array.add(st.nextToken()+":"); }
-        while(Array.size() > i)
-        {
-            if(Array.get(i).equals("\""+value+"\";s:") && value != null)
-            {
+        while(Array.size() > i) {
+            if(Array.get(i).equals("\""+value+"\";s:") && value != null) {
                 String temp = Array.get(i + 2);
                 temp = Util.removeChar(temp,'"');
                 temp = Util.removeChar(temp,':');
@@ -866,35 +755,28 @@ public class Util
         return "no";
     }
 
-    public static boolean CheckVersionInRange(String versionrange)
-    {
+    public static boolean CheckVersionInRange(String versionrange) {
         String version = Config.script_version;
         String[] versions= version.split("\\.");
         String[] versionss= versionrange.split("\\-");
         String[] versionrange1= versionss[0].split("\\.");
         String[] versionrange2= versionss[1].split("\\.");
-        if(versionrange1.length == versions.length)
-        {
+        if(versionrange1.length == versions.length) {
             int a = Integer.parseInt(versionrange1[0]);
             int b = Integer.parseInt(versionrange2[0]);
             int c = Integer.parseInt(versions[0]);
-            if(a <= c && b >= c)
-            {
+            if(a <= c && b >= c) {
                 int d = b - c;
-                if(d > 0)
-                {
+                if(d > 0) {
                     return true;
                 }
-                else if(d == 0)
-                {
+                else if(d == 0) {
                     int a2 = Integer.parseInt(versionrange1[1]);
                     int b2 = Integer.parseInt(versionrange2[1]);
                     int c2 = Integer.parseInt(versions[1]);
-                    if(a2 <= c2 && b2 >= c2)
-                    {
+                    if(a2 <= c2 && b2 >= c2) {
                         if(versionrange1.length == 2) { return true; }
-                        else if(versionrange1.length > 2)
-                        {
+                        else if(versionrange1.length > 2) {
                             int d2 = b2 - c2;
                             if(d2 > 0)
                             {
@@ -936,8 +818,7 @@ public class Util
         return false;
     }
 
-    public static void ErrorFile(String info)
-    {
+    public static void ErrorFile(String info) {
        try
        {
         // Create file
@@ -1046,8 +927,7 @@ public class Util
         return 0;
     }
 
-    public static String ToDriver(String dataname)
-    {
+    public static String ToDriver(String dataname) {
         dataname = dataname.toLowerCase();
         if(dataname.equals("mysql"))
             return "com.mysql.jdbc.Driver";
@@ -1055,8 +935,7 @@ public class Util
         return "com.mysql.jdbc.Driver";
     }
 
-    public static String ToLoginMethod(String method)
-    {
+    public static String ToLoginMethod(String method) {
         method = method.toLowerCase();
         if(method.equals("prompt"))
             return method;
@@ -1064,18 +943,15 @@ public class Util
             return "normal";
     }
 
-    public static boolean CheckWhitelist(String whitelist,Player player)
-    {
+    public static boolean CheckWhitelist(String whitelist,Player player) {
         String username = player.getName().toLowerCase();
         if(Config.debug_enable) Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
         StringTokenizer st = null;
         if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,","); }
-        while (st.hasMoreTokens())
-        {
+        while (st.hasMoreTokens()) {
             String whitelistname = st.nextToken().toLowerCase();
             if(Config.debug_enable) Debug("Whitelist: "+whitelistname);
-            if(whitelistname.equals(username))
-            {
+            if(whitelistname.equals(username)) {
                 if(Config.debug_enable) Debug("FOUND USER IN WHITELIST: "+whitelistname);
                 if(whitelist.equals("idle"))
                         Messages.SendMessage(Message.idle_whitelist, player, null);
@@ -1087,17 +963,14 @@ public class Util
         return false;
     }
 
-    public static void CheckIdle(Player player)
-    {
+    public static void CheckIdle(Player player) {
         if(Config.debug_enable) Debug("Launching function: CheckIdle(Player player)");
-        if (!AuthDB.isAuthorized(player))
-        {
+        if (!AuthDB.isAuthorized(player)) {
              Messages.SendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
     }
 
-    public static long IP2Long(String IP)
-    {
+    public static long IP2Long(String IP) {
         if(Config.debug_enable) Debug("Launching function: IP2Long(String IP) ");
         long f1, f2, f3, f4;
         String tokens[] = IP.split("\\.");
@@ -1114,25 +987,20 @@ public class Util
 
     }
     
-    public static boolean CheckFilter(String what, String string)
-    {
-        if(what.equals("username"))
-        {
+    public static boolean CheckFilter(String what, String string) {
+        if(what.equals("username")) {
             if(Config.debug_enable) Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_username);
             int lengtha = string.length();
             int lengthb = Config.filter_username.length();
             int i = 0;
             char thechar1, thechar2;
-            while(i < lengtha)
-            {
+            while(i < lengtha) {
                 thechar1 = string.charAt(i);
                 int a = 0;
-                while(a < lengthb)
-                {
+                while(a < lengthb) {
                     thechar2 = Config.filter_username.charAt(a);
                     //if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
-                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"')
-                    {
+                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') {
                         if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
                         Config.has_badcharacters = true;
                         return false;
@@ -1144,23 +1012,19 @@ public class Util
             Config.has_badcharacters = false;
             return true;
         }
-        else if(what.equals("password"))
-        {
+        else if(what.equals("password")) {
             if(Config.debug_enable) Debug("Launching function: CheckFilter(String what, String string) - "+Config.filter_password);
             int lengtha = string.length();
             int lengthb = Config.filter_password.length();
             int i = 0;
             char thechar1, thechar2;
-            while(i < lengtha)
-            {
+            while(i < lengtha) {
                 thechar1 = string.charAt(i);
                 int a = 0;
-                while(a < lengthb)
-                {
+                while(a < lengthb) {
                     thechar2 = Config.filter_password.charAt(a);
                     //if(Config.debug_enable) Debug(i+"-"+thechar1+":"+a+"-"+thechar2);
-                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"')
-                    {
+                    if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') {
                         if(Config.debug_enable) Debug("FOUND BAD CHARACTER!!: "+thechar2);
                         return false;
                     }
@@ -1173,22 +1037,18 @@ public class Util
         return true;
     }
 
-    public static String fixCharacters(String string)
-    {
+    public static String fixCharacters(String string) {
         int lengtha = string.length();
         int lengthb = "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/".length();
         int i = 0;
         char thechar1, thechar2;
         String tempstring = "";
-        while(i < lengtha)
-        {
+        while(i < lengtha) {
             thechar1 = string.charAt(i);
             int a = 0;
-            while(a < lengthb)
-            {
+            while(a < lengthb) {
                 thechar2 = "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/".charAt(a);
-                if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"')
-                {
+                if(thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') {
                     thechar1 = thechar2;
                 }
                 a++;
@@ -1201,17 +1061,14 @@ public class Util
 
     public static void Debug(String message) { if(Config.debug_enable) { Log("info",message); } }
 
-    public static String replaceStrings(String string, Player player, String additional)
-    {
+    public static String replaceStrings(String string, Player player, String additional) {
         if(Config.debug_enable) Debug("Launching function: replaceStrings(String string, Player player, String additional)");
-        if(!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum))
-        {
+        if(!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
             string = string.replaceAll("\\{IP\\}", GetIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");
             string = string.replaceAll("&", "§");
-            if(Util.CheckOtherName(player.getName()) != player.getName())
-            {
+            if(Util.CheckOtherName(player.getName()) != player.getName()) {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", Util.CheckOtherName(player.getName()));
             }
         }
@@ -1304,8 +1161,7 @@ public class Util
         return string;
     }
     
-    public static String removeColors(String toremove)
-    {
+    public static String removeColors(String toremove) {
         if(Config.debug_enable) Debug("Launching function: CheckWhitelist");
         toremove = toremove.replace("?0", "");
         toremove = toremove.replace("?2", "");
@@ -1325,8 +1181,7 @@ public class Util
         return toremove;
     }
 
-    public static String removeChar(String s, char c)
-    {
+    public static String removeChar(String s, char c) {
         if(Config.debug_enable) Debug("Launching function: removeChar(String s, char c)");
       StringBuffer r = new StringBuffer( s.length() );
       r.setLength( s.length() );
@@ -1363,25 +1218,21 @@ public class Util
         return (int) (Math.random() * (max - min + 1) ) + min;
     }
 
-    public static void Log(String type, String what)
-    {
+    public static void Log(String type, String what) {
         if(type.equals("severe")) AuthDB.log.severe("["+AuthDB.PluginName+"] "+what);
         else if(type.equals("info")) AuthDB.log.info("["+AuthDB.PluginName+"] "+what);
         else if(type.equals("warning")) AuthDB.log.warning("["+AuthDB.PluginName+"] "+what);
     }
 
-    public static Location LandLocation(Location location)
-    {
-        while(location.getBlock().getType().getId() == 0)
-        {
+    public static Location LandLocation(Location location) {
+        while(location.getBlock().getType().getId() == 0) {
             location.setY(location.getY() - 1);
         }
         location.setY(location.getY() + 1);
         return location;
     }
 
-    public static String CheckOtherName(String player)
-    {
+    public static String CheckOtherName(String player) {
          if(AuthDB.AuthOtherNamesDB.containsKey(player))
          {
              return AuthDB.AuthOtherNamesDB.get(player);
@@ -1391,8 +1242,7 @@ public class Util
 
  public static boolean CheckIfLoggedIn(Player player)
  {
-     for(Player p : player.getServer().getOnlinePlayers())
-     {
+     for(Player p : player.getServer().getOnlinePlayers()) {
          if(p.getName().equals(player.getName()) && AuthDB.isAuthorized(p))
          {
              return true;
@@ -1401,16 +1251,13 @@ public class Util
      return false;
  }
 
-    public static void RenamePlayer(Player player, String name)
-    {
+    public static void RenamePlayer(Player player, String name) {
         player.setDisplayName(name);
     }
 
-    public static void AddOtherNamesToDB()
-    {
+    public static void AddOtherNamesToDB() {
         File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
-        if (file.exists())
-        {
+        if (file.exists()) {
             BufferedReader reader = null;
             try {
                 reader = new BufferedReader(new FileReader(file));
@@ -1420,10 +1267,8 @@ public class Util
             }
 
             String currentLine;
-            try
-            {
-            while((currentLine = reader.readLine()) != null)
-            {
+            try {
+            while((currentLine = reader.readLine()) != null) {
               String[] split = currentLine.split(":");
               AuthDB.AuthOtherNamesDB.put(split[0], split[1]);
             }
@@ -1434,8 +1279,7 @@ public class Util
         }
     }
 
-    public static String GetFile(String what, String data)
-      {
+    public static String GetFile(String what, String data) {
           Util.Debug("READING FROM FILE get");
           File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
           if (file.exists())
@@ -1464,12 +1308,10 @@ public class Util
             return "fail";
       }
 
-      public static boolean ToFile(String action, String what, String data)
-        {
+      public static boolean ToFile(String action, String what, String data) {
             Util.Debug("READING FROM FILE "+action);
             File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
-            if(action.equals("write"))
-            {
+            if(action.equals("write")) {
                   try
                   {
                     BufferedWriter out;
@@ -1483,16 +1325,13 @@ public class Util
                     }
                   return true;
             }
-            else if(action.equals("check"))
-            {
-                try
-                {
+            else if(action.equals("check")) {
+                try {
                 FileInputStream fstream = new FileInputStream(file);
                 DataInputStream in = new DataInputStream(fstream);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String strLine;
-                while ((strLine = br.readLine()) != null)
-                {
+                while ((strLine = br.readLine()) != null) {
                   String[] split = strLine.split(":");
                   if(split[0].equals(what)) { return true; }
                 }
@@ -1505,8 +1344,7 @@ public class Util
                 }
 
             }
-            else if(action.equals("remove"))
-            {
+            else if(action.equals("remove")) {
 
                 BufferedReader reader = null;
                 try {
@@ -1530,8 +1368,7 @@ public class Util
                 BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName)));
                 String[] thesplit = thedupe.split("¤XX¤");
                 int counter = 0;
-                while (counter < thesplit.length)
-                {
+                while (counter < thesplit.length) {
                   bw.append(thesplit[counter]);
                   bw.newLine();
                   counter++;
@@ -1546,8 +1383,7 @@ public class Util
 
 
             }
-            else if(action.equals("change"))
-            {
+            else if(action.equals("change")) {
 
                 BufferedReader reader = null;
                 try {
@@ -1571,8 +1407,7 @@ public class Util
                 BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName)));
                 String[] thesplit = thedupe.split("¤XX¤");
                 int counter = 0;
-                while (counter < thesplit.length)
-                {
+                while (counter < thesplit.length) {
                   bw.append(thesplit[counter]);
                   bw.newLine();
                   counter++;
@@ -1591,22 +1426,19 @@ public class Util
         }
 
 
-    public static String GetAction(String action)
-    {
+    public static String GetAction(String action) {
         if(action.toLowerCase().equals("kick")) { return "kick"; }
         else if(action.toLowerCase().equals("ban")) { return "ban"; }
         else if(action.toLowerCase().equals("rename")) { return "rename"; }
         return "kick";
     }
 
-    public static String GetIP(Player player)
-    {
+    public static String GetIP(Player player) {
         return player.getAddress().getAddress().toString().substring(1);
     }
 
 
-    static int hexToInt(char ch)
-    {
+    static int hexToInt(char ch) {
         if (ch >= '0' && ch <= '9')
             return ch - '0';
 
@@ -1629,8 +1461,7 @@ public class Util
           return hex.toString();
       }
 
-    public static String CheckSessionStart (String string)
-    {
+    public static String CheckSessionStart (String string) {
         if(string.equals("login")) return "login";
         else if(string.equals("logoff")) return "logoff";
         else return "login";
@@ -1652,11 +1483,9 @@ public class Util
         return buf.toString();
     }
 
-    static String bytes2hex(byte[] bytes)
-    {
+    static String bytes2hex(byte[] bytes) {
         StringBuffer r = new StringBuffer(32);
-        for (int i = 0; i < bytes.length; i++)
-        {
+        for (int i = 0; i < bytes.length; i++) {
             String x = Integer.toHexString(bytes[i] & 0xff);
             if (x.length() < 2)
                 r.append("0");

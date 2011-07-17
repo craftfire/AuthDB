@@ -22,13 +22,10 @@ import com.authdb.util.databases.MySQL;
 import com.authdb.util.databases.eBean;
 import com.avaje.ebean.Ebean;
 
-  public class Custom
-  {
-      public static void adduser(String player, String email, String password, String ipAddress) throws SQLException
-        {
+  public class Custom {
+      public static void adduser(String player, String email, String password, String ipAddress) throws SQLException {
             PreparedStatement ps;
-            if(Config.custom_encryption != null)
-            {
+            if(Config.custom_encryption != null) {
                 try {
                     password = Encryption.Encrypt(Config.custom_encryption,password);
                 } catch (NoSuchAlgorithmException e) {
@@ -40,15 +37,13 @@ import com.avaje.ebean.Ebean;
                 }
             }
             //
-            if(Config.custom_emailfield == null || Config.custom_emailfield == "")
-            {
+            if(Config.custom_emailfield == null || Config.custom_emailfield == "") {
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.custom_table+"` (`"+Config.custom_userfield+"`,`"+Config.custom_passfield+"`)  VALUES (?,?)", 1);
                 ps.setString(1, player); //username
                 ps.setString(2, password); // password
                 ps.executeUpdate();
             }
-            else if(Config.custom_emailfield != null || Config.custom_emailfield != "")
-            {
+            else if(Config.custom_emailfield != null || Config.custom_emailfield != "") {
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.custom_table+"` (`"+Config.custom_userfield+"`,`"+Config.custom_passfield+"`,`"+Config.custom_emailfield+"`)  VALUES (?,?,?)", 1);
                 ps.setString(1, player); //username
                 ps.setString(2, password); // password
@@ -61,8 +56,7 @@ import com.avaje.ebean.Ebean;
             return password;
           }
 
-    public static boolean check_hash(String passwordhash, String hash)
-    {
+    public static boolean check_hash(String passwordhash, String hash) {
         try {
             if(Encryption.Encrypt(Config.custom_encryption, passwordhash).equals(hash))
                 return true;
@@ -76,8 +70,7 @@ import com.avaje.ebean.Ebean;
         return false;
     }
 
-    public static String SaltIt(String password)
-    {
+    public static String SaltIt(String password) {
         return password;
     }
 }

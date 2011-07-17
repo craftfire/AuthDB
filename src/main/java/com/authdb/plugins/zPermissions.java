@@ -21,8 +21,7 @@ public class zPermissions
     public static boolean HasPlugin = false;
     public static PermissionHandler permissionsHandler;
 
-    public enum Permission
-    {
+    public enum Permission {
         command_login ("command.login"),
         command_logout ("command.logout"),
         command_reload ("command.reload"),
@@ -42,10 +41,8 @@ public class zPermissions
         Permission(String permission) { this.permission = permission; }
     }
 
-    public static boolean IsAllowed(Player player, Permission permission)
-    {
-      if(HasPlugin)
-      {
+    public static boolean IsAllowed(Player player, Permission permission) {
+      if(HasPlugin) {
           if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.permission)) return true;
           else if (player.isOp()) return true;
       }

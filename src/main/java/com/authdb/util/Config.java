@@ -157,8 +157,7 @@ public class Config
       public Config(String config, String directory, String filename) {
           template = new Configuration(new File(directory, filename));
           template.load();
-            if(config.equals("config"))
-            {
+            if(config.equals("config")) {
                 ///////////////////////////////////////////
                 //               Core
                 ///////////////////////////////////////////
@@ -341,8 +340,7 @@ public class Config
                         CraftIRC_messages_idle_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.idle", true);
 
             }
-            else if(config.equals("messages"))
-            {
+            else if(config.equals("messages")) {
             ///////////////////////////////////////////
             //  messages
             ///////////////////////////////////////////
@@ -485,8 +483,7 @@ public class Config
                     Messages.CraftIRC_message_filter_whitelist = Config.GetConfigString("Plugins.CraftIRC.filter.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
 
             }
-            else if(config.equals("commands"))
-            {
+            else if(config.equals("commands")) {
                 commands_register = Config.GetConfigString("Core.commands.register", "/register");
                 commands_link = Config.GetConfigString("Core.commands.link", "/link");
                 commands_unlink = Config.GetConfigString("Core.commands.unlink", "/unlink");
@@ -506,23 +503,19 @@ public class Config
             }
       }
 
-      public static String GetConfigString(String key, String defaultvalue)
-      {
+      public static String GetConfigString(String key, String defaultvalue) {
         return template.getString(key, defaultvalue);
       }
 
-      public static boolean GetConfigBoolean(String key, boolean defaultvalue)
-      {
+      public static boolean GetConfigBoolean(String key, boolean defaultvalue) {
         return template.getBoolean(key, defaultvalue);
       }
 
-      public void DeleteConfigValue(String key)
-      {
+      public void DeleteConfigValue(String key) {
         template.removeProperty(key);
       }
 
-      public String raw(String key, String line)
-      {
+      public String raw(String key, String line) {
         return template.getString(key, line);
       }
 

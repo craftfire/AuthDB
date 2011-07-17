@@ -25,8 +25,7 @@ public class Vanilla {
     public static String VersionRange2 = "2.0.17.9-2.0.17.9";
     public static String LatestVersionRange = VersionRange2;
 
-    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-    {
+    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
       long timestamp = System.currentTimeMillis()/1000;
           String usertable = null,roletable = null;
           if(checkid == 1)
@@ -86,8 +85,7 @@ public class Vanilla {
       String random = "";
       int count = 6;
 
-      if (random.length() < count)
-      {
+      if (random.length() < count) {
           random = "";
 
           for (int i = 0; i < count; i += 16)
@@ -119,8 +117,7 @@ public class Vanilla {
     }
 
       private static String _hash_gensalt_private(String input, String itoa64,
-              int iteration_count_log2)
-      {
+              int iteration_count_log2) {
           if (iteration_count_log2 < 4 || iteration_count_log2 > 31)
           {
               iteration_count_log2 = 8;
@@ -138,8 +135,7 @@ public class Vanilla {
     /**
      * Encode hash
      */
-      private static String _hash_encode64(String input, int count)
-      {
+      private static String _hash_encode64(String input, int count) {
           String output = "";
           int i = 0;
 
@@ -171,8 +167,7 @@ public class Vanilla {
           return output;
       }
 
-      static String _hash_crypt_private(String password, String setting)
-      {
+      static String _hash_crypt_private(String password, String setting) {
           String output = "*";
 
           // Check for correct hash
@@ -202,8 +197,7 @@ public class Vanilla {
           return output;
       }
 
-    public static boolean check_hash(String password, String hash)
-    {
+    public static boolean check_hash(String password, String hash) {
         if (hash.length() == 34)
             return _hash_crypt_private(password, hash).equals(hash);
         else

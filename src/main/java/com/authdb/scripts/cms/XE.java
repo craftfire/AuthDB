@@ -23,11 +23,9 @@ public class XE {
     public static String VersionRange = "1.0.3-1.0.3";
     public static String LatestVersionRange = VersionRange;
 
-  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-  {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     long timestamp = System.currentTimeMillis()/1000;
-    if(checkid == 1)
-    {
+    if(checkid == 1) {
         String hash = Encryption.md5(password);
         //
         PreparedStatement ps;
@@ -45,8 +43,7 @@ public class XE {
         ps.executeUpdate();
     }
     /*
-    else if(check(2))
-    {
+    else if(check(2)) {
         String hash = hash(player,password);
         int userid;
         //
@@ -65,8 +62,7 @@ public class XE {
     } */
   }
 
-    public static boolean check_hash(String passwordhash, String hash)
-    {
+    public static boolean check_hash(String passwordhash, String hash) {
         if(passwordhash.equals(hash)) return true;
         else return false;
     }

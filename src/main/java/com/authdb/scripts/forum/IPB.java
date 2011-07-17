@@ -27,10 +27,8 @@ public class IPB {
     public static String VersionRange = "3.1.3-3.1.4";
     public static String LatestVersionRange = VersionRange;
 
-    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-    {
-        if(checkid == 1)
-        {
+    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
+        if(checkid == 1) {
             long timestamp = System.currentTimeMillis()/1000;
             String salt = Encryption.hash(5,"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",0,0);
             String hash = hash("create",player,password, salt);
@@ -70,8 +68,7 @@ public class IPB {
     }
 
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
-        if(action.equals("find"))
-        {
+        if(action.equals("find")) {
               try {
                   eBean eBeanClass = eBean.CheckPlayer(player);
                   String StoredSalt = eBeanClass.getSalt();
@@ -82,8 +79,7 @@ public class IPB {
                   e.printStackTrace();
               }
         }
-        else if(action.equals("create"))
-        {
+        else if(action.equals("create")) {
             try {
                 return passwordHash(password, thesalt);
             } catch (NoSuchAlgorithmException e) {
@@ -97,14 +93,12 @@ public class IPB {
       return "fail";
     }
 
-      public static boolean check_hash(String passwordhash, String hash)
-      {
+      public static boolean check_hash(String passwordhash, String hash) {
           if(passwordhash.equals(hash)) return true;
           else return false;
       }
 
-      public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
-      {
+      public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
       return Encryption.md5(Encryption.md5(salt) + Encryption.md5(password));
       }
 }

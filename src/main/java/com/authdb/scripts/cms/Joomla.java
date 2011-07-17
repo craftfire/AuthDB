@@ -26,11 +26,9 @@ public class Joomla {
     public static String Name = "joomla";
     public static String ShortName = "joom";
 
-  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-  {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     long timestamp = System.currentTimeMillis()/1000;
-    if(checkid == 1)
-    {
+    if(checkid == 1) {
         String hash = hash(player,password);
         String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
         //
@@ -64,8 +62,7 @@ public class Joomla {
         ps.setInt(2, aroid); //aro_id
         ps.executeUpdate();
     }
-    else if(checkid == 2)
-    {
+    else if(checkid == 2) {
         String hash = hash(player,password);
         String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
         //

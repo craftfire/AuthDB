@@ -34,10 +34,8 @@ public class phpBB {
     public static String Name = "phpbb";
     public static String ShortName = "phpbb";
 
-  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
-  {
-    if(checkid==1)
-    {
+  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
+    if(checkid==1) {
         String hash = phpbb_hash(password);
         long timestamp = System.currentTimeMillis()/1000;
         int userid;
@@ -90,8 +88,7 @@ public class phpBB {
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();
     }
-    else if(checkid == 2)
-    {
+    else if(checkid == 2) {
         String hash = Encryption.md5(password);
         long timestamp = System.currentTimeMillis()/1000;
         //
@@ -142,12 +139,10 @@ public class phpBB {
     String random = "";
     int count = 6;
 
-    if (random.length() < count)
-    {
+    if (random.length() < count) {
         random = "";
 
-        for (int i = 0; i < count; i += 16)
-        {
+        for (int i = 0; i < count; i += 16) {
             random_state = Encryption.md5(unique_id() + random_state);
             random += Encryption.pack(Encryption.md5(random_state));
         }
@@ -175,10 +170,8 @@ public class phpBB {
   }
 
     private static String _hash_gensalt_private(String input, String itoa64,
-            int iteration_count_log2)
-    {
-        if (iteration_count_log2 < 4 || iteration_count_log2 > 31)
-        {
+            int iteration_count_log2) {
+        if (iteration_count_log2 < 4 || iteration_count_log2 > 31) {
             iteration_count_log2 = 8;
         }
         int PHP_VERSION = 5;
@@ -194,13 +187,11 @@ public class phpBB {
   /**
    * Encode hash
    */
-    private static String _hash_encode64(String input, int count)
-    {
+    private static String _hash_encode64(String input, int count) {
         String output = "";
         int i = 0;
 
-        do
-        {
+        do {
             int value = input.charAt(i++);
             output += itoa64.charAt(value & 0x3f);
 
@@ -227,8 +218,7 @@ public class phpBB {
         return output;
     }
 
-    static String _hash_crypt_private(String password, String setting)
-    {
+    static String _hash_crypt_private(String password, String setting) {
         String output = "*";
 
         // Check for correct hash
@@ -246,8 +236,7 @@ public class phpBB {
 
         String m1 = Encryption.md5(salt + password);
         String hash = Encryption.pack(m1);
-        do
-        {
+        do {
             hash = Encryption.pack(Encryption.md5(hash + password));
         }
         while (--count > 0);
@@ -258,8 +247,7 @@ public class phpBB {
         return output;
     }
 
-    public static boolean check_hash(String password, String hash)
-    {
+    public static boolean check_hash(String password, String hash) {
         if (hash.length() == 34)
             return _hash_crypt_private(password, hash).equals(hash);
         else

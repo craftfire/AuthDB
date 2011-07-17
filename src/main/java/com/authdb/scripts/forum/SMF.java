@@ -27,11 +27,9 @@ public class SMF {
     public static String Name = "simple machines";
     public static String ShortName = "smf";
 
-  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-  {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     long timestamp = System.currentTimeMillis()/1000;
-    if(checkid == 1)
-    {
+    if(checkid == 1) {
         Random r = new Random();
         int randint = r.nextInt(1000000);
         String salt = Encryption.md5(""+randint);
@@ -79,8 +77,7 @@ public class SMF {
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
         ps.executeUpdate();
     }
-    else if(checkid == 2)
-    {
+    else if(checkid == 2) {
         Random r = new Random();
         int randint = r.nextInt(1000000);
         String salt = Encryption.md5(""+randint);
@@ -133,8 +130,7 @@ public class SMF {
   }
 
   public static String hash(int checkid, String player, String password) {
-    if(checkid == 1)
-    {
+    if(checkid == 1) {
           try {
               String temp = player+password;
             return Encryption.SHA1(temp);
@@ -144,8 +140,7 @@ public class SMF {
             e.printStackTrace();
         }
     }
-    else if(checkid == 2)
-    {
+    else if(checkid == 2) {
           try {
               String temp = player+password;
             return Encryption.SHA1(temp);
@@ -158,8 +153,7 @@ public class SMF {
     return "fail";
   }
 
-    public static boolean check_hash(String passwordhash, String hash)
-    {
+    public static boolean check_hash(String passwordhash, String hash) {
         if(passwordhash.equals(hash)) return true;
         else return false;
     }

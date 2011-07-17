@@ -26,11 +26,9 @@ public class Drupal {
     public static String Name = "drupal";
     public static String ShortName = "dru";
 
-  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-  {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     long timestamp = System.currentTimeMillis()/1000;
-    if(checkid == 1)
-    {
+    if(checkid == 1) {
         String hash = Encryption.md5(password);
         //
         PreparedStatement ps;
@@ -47,8 +45,7 @@ public class Drupal {
         ps.executeUpdate();
     }
 
-    else if(checkid == 2)
-    {
+    else if(checkid == 2) {
         String hash = user_hash_password(password,0);
         //
         PreparedStatement ps;
@@ -77,12 +74,10 @@ public class Drupal {
         String random = "";
         int count = 6;
 
-        if (random.length() < count)
-        {
+        if (random.length() < count) {
             random = "";
 
-            for (int i = 0; i < count; i += 16)
-            {
+            for (int i = 0; i < count; i += 16) {
                 random_state = Encryption.SHA256(unique_id() + random_state);
                 random += Encryption.pack(Encryption.SHA256(random_state));
             }
@@ -257,10 +252,8 @@ public class Drupal {
       }
 
         private static String _hash_gensalt_private(String input, String itoa64,
-                int iteration_count_log2)
-        {
-            if (iteration_count_log2 < 4 || iteration_count_log2 > 31)
-            {
+                int iteration_count_log2) {
+            if (iteration_count_log2 < 4 || iteration_count_log2 > 31) {
                 iteration_count_log2 = 8;
             }
             int PHP_VERSION = 5;
@@ -276,13 +269,11 @@ public class Drupal {
       /**
        * Encode hash
        */
-        private static String _hash_encode64(String input, int count)
-        {
+        private static String _hash_encode64(String input, int count) {
             String output = "";
             int i = 0;
 
-            do
-            {
+            do {
                 int value = input.charAt(i++);
                 output += itoa64.charAt(value & 0x3f);
 
@@ -309,8 +300,7 @@ public class Drupal {
             return output;
         }
 
-        static String _hash_crypt_private(String password, String setting)
-        {
+        static String _hash_crypt_private(String password, String setting) {
             String output = "*";
 
             // Check for correct hash
@@ -328,8 +318,7 @@ public class Drupal {
 
             String m1 = Encryption.SHA512(salt + password);
             String hash = Encryption.pack(m1);
-            do
-            {
+            do {
                 hash = Encryption.pack(Encryption.SHA512(hash + password));
             }
             while (--count > 0);
@@ -340,8 +329,7 @@ public class Drupal {
             return output;
         }
 
-        public static boolean check_hash(String password, String hash)
-        {
+        public static boolean check_hash(String password, String hash) {
             if (hash.length() == 55)
                 return _hash_crypt_private(password, hash).equals(hash);
             else

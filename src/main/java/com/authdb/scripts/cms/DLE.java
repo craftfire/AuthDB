@@ -25,10 +25,8 @@ public class DLE {
     public static String VersionRange = "9.2-9.2";
     public static String LatestVersionRange = VersionRange;
 
-    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException
-    {
-        if(checkid == 1)
-        {
+    public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
+        if(checkid == 1) {
     long timestamp = System.currentTimeMillis()/1000;
     String hash = hash(password);
     //
@@ -63,14 +61,12 @@ public class DLE {
       return "fail";
     }
 
-      public static boolean check_hash(String passwordhash, String hash)
-      {
+      public static boolean check_hash(String passwordhash, String hash) {
           if(passwordhash.equals(hash)) return true;
           else return false;
       }
 
-      public static String passwordHash(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException
-      {
+      public static String passwordHash(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
       return Encryption.md5(Encryption.md5(password));
       }
 }

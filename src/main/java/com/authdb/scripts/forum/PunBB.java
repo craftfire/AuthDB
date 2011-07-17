@@ -27,10 +27,8 @@ public class PunBB {
     public static String LatestVersionRange = VersionRange;
 
 
-  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
-  {
-    if(checkid == 1)
-    {
+  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
+    if(checkid == 1) {
         long timestamp = System.currentTimeMillis()/1000;
         //
         PreparedStatement ps;
@@ -61,8 +59,7 @@ public class PunBB {
  }
 
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
-        if(action.equals("find"))
-        {
+        if(action.equals("find")) {
       try {
           eBean eBeanClass = eBean.CheckPlayer(player);
           String StoredSalt = eBeanClass.getSalt();
@@ -73,8 +70,7 @@ public class PunBB {
           e.printStackTrace();
       }
         }
-        else if(action.equals("create"))
-        {
+        else if(action.equals("create")) {
             try {
                 return passwordHash(password, thesalt);
             } catch (NoSuchAlgorithmException e) {
@@ -88,14 +84,12 @@ public class PunBB {
       return "fail";
     }
 
-      public static boolean check_hash(String passwordhash, String hash)
-      {
+      public static boolean check_hash(String passwordhash, String hash) {
           if(passwordhash.equals(hash)) return true;
           else return false;
       }
 
-      public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
-      {
+      public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
           return Encryption.SHA1(salt + Encryption.SHA1(password));
       }
 }

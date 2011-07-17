@@ -27,10 +27,8 @@ public class XenForo {
     public static String VersionRange = "1.0.0-1.0.0";
     public static String LatestVersionRange = VersionRange;
 
-  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException
-  {
-    if(checkid == 1)
-    {
+  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
+    if(checkid == 1) {
         Random r = new Random();
         int randint = r.nextInt(1000000);
         String salt = Encryption.md5(""+randint);
@@ -98,8 +96,7 @@ public class XenForo {
  }
 
   public static String hash(int checkid, String salt, String password) {
-        if(checkid == 1)
-        {
+        if(checkid == 1) {
               try {
                 return passwordHash(password,salt);
             } catch (NoSuchAlgorithmException e) {
@@ -108,8 +105,7 @@ public class XenForo {
                 e.printStackTrace();
             }
         }
-        else if(checkid == 2)
-        {
+        else if(checkid == 2) {
               try {
                 return Encryption.SHA1(salt+password);
             } catch (NoSuchAlgorithmException e) {
@@ -121,14 +117,12 @@ public class XenForo {
         return "fail";
       }
 
-      public static boolean check_hash(String passwordhash, String hash)
-      {
+      public static boolean check_hash(String passwordhash, String hash) {
           if(passwordhash.equals(hash)) return true;
           else return false;
       }
 
-      public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException
-      {
+      public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
           return Encryption.SHA256(Encryption.SHA256(password)+salt);
       }
 }
