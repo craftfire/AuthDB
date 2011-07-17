@@ -87,7 +87,7 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, Integer> AuthDB_Timeouts = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_Sessions = new HashMap<String, Long>();
     public static HashMap<String, String> AuthDB_Authed = new HashMap<String, String>();
-    public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
+    public static HashMap<String, Long> AuthDB_AuthTime = new HashMap<String, Long>();
     public static HashMap<String, Long> AuthDB_RemindLogin = new HashMap<String, Long>();
     public static HashMap<String, Integer> AuthDB_SpamMessage = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_SpamMessageTime = new HashMap<String, Long>();
@@ -113,7 +113,7 @@ public class AuthDB extends JavaPlugin {
             zCraftIRC.SendMessage(Message.OnDisable,null);
         disableInventory();
         authorizedNames.clear();
-        AuthTimeDB.clear();
+        AuthDB_AuthTime.clear();
         AuthDB_RemindLogin.clear();
         AuthDB_SpamMessage.clear();
         AuthDB_SpamMessageTime.clear();
@@ -630,15 +630,11 @@ public class AuthDB extends JavaPlugin {
 
       public void storeInventory(Player player, ItemStack[] inventory) throws IOException {
         String inv = "";
-       // ArrayList<String> invt = new ArrayList<String>();
         for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
             if(inventory[i] != null) {
                 inv += inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability()+",";
-            //   invt.add(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability());
             }
-          //  else { invt.add("0:0:0:0"); }
-            else {inv += "0:0:0:0,"; }
-           // bw.newLine();
+            else { inv += "0:0:0:0,"; }
         }
           
           eBean eBeanClass = eBean.find(player);
@@ -659,11 +655,6 @@ public class AuthDB extends JavaPlugin {
         inventories.clear();
     }
 
-    /*public String GetSessionTime(Player player) {
-        return this.db.get(player.getName());
-    }*/
-
-
     public void UpdateLinkedNames() {
         for (Player player : this.getServer().getOnlinePlayers()) {
             if(Util.CheckOtherName(player.getName()) != player.getName()) {
@@ -680,7 +671,6 @@ public class AuthDB extends JavaPlugin {
     }
 
     public static ItemStack[] getInventory(Player player) {
-       // File f = new File(plugin.getDataFolder()+"/inventory/", player + "_inv");
         eBean eBeanClass = eBean.find(player);
         if (eBeanClass != null) {
             String data = eBeanClass.getInventory();
@@ -718,12 +708,6 @@ public class AuthDB extends JavaPlugin {
             }
         }
         return null;
-      }
-
-      public void deleteInventory(String player)  {
-        File f = new File(getDataFolder()+"/inventory/", player + "_inv");
-        if (f.exists())
-          f.delete();
       }
 
      private void DefaultFile(String name, String folder) {

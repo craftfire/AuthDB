@@ -11,8 +11,8 @@ import com.authdb.util.databases.eBean;
 public class Processes {
     public static boolean Logout(Player player) {
         if(AuthDB.isAuthorized(player)) {
-            if(AuthDB.AuthTimeDB.containsKey(player.getName())) {
-                AuthDB.AuthTimeDB.remove(player.getName()); 
+            if(AuthDB.AuthDB_AuthTime.containsKey(player.getName())) {
+                AuthDB.AuthDB_AuthTime.remove(player.getName()); 
             }
             
             AuthDB.authorizedNames.remove(player.getName()); 
@@ -50,8 +50,8 @@ public class Processes {
     public static boolean Login(Player player) {
         if(!AuthDB.isAuthorized(player)) {
             long timestamp = Util.TimeStamp();
-            if(!AuthDB.AuthTimeDB.containsKey(player.getName())) {
-                AuthDB.AuthTimeDB.put(player.getName(), ""+timestamp);
+            if(!AuthDB.AuthDB_AuthTime.containsKey(player.getName())) {
+                AuthDB.AuthDB_AuthTime.put(player.getName(), timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
             eBean eBeanClass = eBean.CheckPlayer(player);

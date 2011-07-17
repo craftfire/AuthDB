@@ -150,7 +150,7 @@ public boolean CheckTimeout(Player player) throws IOException
     if(sessionallow) {
         Messages.SendMessage(Message.session_valid, player,null);
         long thetimestamp = System.currentTimeMillis()/1000;
-        this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+        this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
         Processes.Login(event.getPlayer());
     }
     else if (this.plugin.isRegistered("join",player.getName()) || this.plugin.isRegistered("join",Util.CheckOtherName(player.getName()))) {
@@ -188,7 +188,7 @@ public boolean CheckTimeout(Player player) throws IOException
          }
      else {
             long thetimestamp = System.currentTimeMillis()/1000;
-            this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+            this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
             Processes.Login(player);
       }
     } catch (IOException e) {
@@ -225,7 +225,7 @@ public boolean CheckTimeout(Player player) throws IOException
         long thetimestamp = System.currentTimeMillis()/1000;
         if(Config.session_start.equalsIgnoreCase("logoff"))
             this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName()+Util.GetIP(player)), thetimestamp);
-        this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+        this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
         Processes.Logout(player);
 
      if (CheckGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.CheckOtherName(player.getName())) == false) {
@@ -344,7 +344,7 @@ public boolean CheckTimeout(Player player) throws IOException
                         Util.Logging.Debug("Session started for "+player.getName());
                         Processes.Login(player);
                         long thetimestamp = System.currentTimeMillis()/1000;
-                        this.plugin.AuthTimeDB.put(player.getName(), ""+thetimestamp);
+                        this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
                           Location temploc = event.getPlayer().getLocation();
                           while(temploc.getBlock().getTypeId() == 0) { temploc.setY(temploc.getY() - 1); }
                           temploc.setY(temploc.getY() + 1);
