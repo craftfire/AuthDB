@@ -19,7 +19,6 @@
     <properties>
         <project.version>dev-SNAPSHOT</project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <skipTests>true</skipTests>
     </properties>
 
     <!-- License -->
