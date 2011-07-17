@@ -20,11 +20,13 @@ import com.authdb.util.Config;
 import com.authdb.util.Messages;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Util;
+import com.craftfire.util.managers.LoggingManager;
 
 import com.mysql.jdbc.Blob;
 
 public class MySQL
 {
+    static LoggingManager Logging = new LoggingManager();
     public static Connection mysql = null;
 
     public static boolean check() {
@@ -32,14 +34,14 @@ public class MySQL
             mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
         } catch (SQLException e) {
             if(Config.debug_enable) {
-                Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
+                Logging.Warning("MYSQL CANNOT CONNECT!!!");
                 Messages.SendMessage(Message.database_failure, null, null);
                 e.printStackTrace();
                 return false;
             }
             else {
-                Util.Log("warning", "Cannot connect to MySQL host: "+Config.database_host);
-                Util.Log("warning", "Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                Logging.Warning("Cannot connect to MySQL host: "+Config.database_host);
+                Logging.Warning("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.SendMessage(Message.database_failure, null, null);
                 return false;
             }
@@ -54,26 +56,26 @@ public class MySQL
             Class.forName(Util.ToDriver(Config.database_driver));
         } catch (ClassNotFoundException e) {
             Config.database_ison = false;
-            Util.Log("warning", "CANNOT FIND DATABASE DRIVER!!!");
+            Logging.Warning("CANNOT FIND DATABASE DRIVER!!!");
             Messages.SendMessage(Message.database_failure, null, null);
             if(Config.debug_enable) e.printStackTrace();
         }
 
         if(Config.debug_enable) {
-            Util.Debug("Lauching function: connect()");
-            Util.Debug("MySQL: "+Config.dbDb);
-            Util.Debug("MySQL driver: "+Config.database_driver);
-            Util.Debug("MySQL username: "+Config.database_username);
-            Util.Debug("MySQL password: "+Config.database_password);
-            Util.Debug("MySQL host: "+Config.database_host);
-            Util.Debug("MySQL port: "+Config.database_port);
-            Util.Debug("MySQL database: "+Config.database_database);
+            Logging.Debug("Lauching function: connect()");
+            Logging.Debug("MySQL: "+Config.dbDb);
+            Logging.Debug("MySQL driver: "+Config.database_driver);
+            Logging.Debug("MySQL username: "+Config.database_username);
+            Logging.Debug("MySQL password: "+Config.database_password);
+            Logging.Debug("MySQL host: "+Config.database_host);
+            Logging.Debug("MySQL port: "+Config.database_port);
+            Logging.Debug("MySQL database: "+Config.database_database);
             if(!Config.custom_enabled) {
-                Util.Debug("MySQL prefix: "+Config.script_tableprefix);
+                Logging.Debug("MySQL prefix: "+Config.script_tableprefix);
             }
         }
 
-        if(Config.debug_enable) Util.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+        Logging.Debug("MySQL: "+Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
         try {
             Config.database_ison = true;
 
@@ -81,13 +83,14 @@ public class MySQL
         } catch (SQLException e) {
             Config.database_ison = false;
             if(Config.debug_enable) {
-                Util.Log("warning", "MYSQL CANNOT CONNECT!!!");
+                Logging.Warning("MYSQL CANNOT CONNECT!!!");
                 Messages.SendMessage(Message.database_failure, null, null);
-                e.printStackTrace();
+                Logging.StackTrace(e.getStackTrace());
+                //e.printStackTrace();
             }
             else {
-                Util.Log("warning", "MySQL cannot connect to the specified host: "+Config.database_host);
-                Util.Log("warning", "Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                Logging.Warning("MySQL cannot connect to the specified host: "+Config.database_host);
+                Logging.Warning("Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.SendMessage(Message.database_failure, null, null);
             }
         }

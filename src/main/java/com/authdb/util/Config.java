@@ -43,7 +43,7 @@ public class Config
         //               plugin
         ///////////////////////////////////////////
         public static boolean autoupdate_enable,debug_enable,usagestats_enabled;
-        public static String language;
+        public static String language, logformat;
 
         ///////////////////////////////////////////
         //               script
@@ -169,6 +169,7 @@ public class Config
                     autoupdate_enable = GetConfigBoolean("Core.plugin.autoupdate", true);
                     debug_enable = GetConfigBoolean("Core.plugin.debugmode", false);
                     usagestats_enabled = GetConfigBoolean("Core.plugin.usagestats", true);
+                    logformat = GetConfigString("Core.plugin.logformat", "yyyy-MM-dd");
 
                     ///////////////////////////////////////////
                     //               database

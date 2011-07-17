@@ -3,6 +3,7 @@ Core:
     language: English                                # Language translation file to use for messages.
     debugmode: false                                 # Set to true to enable debugging mode and additional console output.
     usagestats: true                                 # Set to false to disable usage stats reporting to CraftFire devs.
+    logformat: yyyy-MM-dd                            # Change the filename format of the AuthDB debug and error log files.
   database:
     driver: mysql                                    # Database driver to use. Leave this alone as MySQL is currently the only supported driver.
     host: localhost                                  # MySQL server hostname, domain, IP, or localhost for local connections.
@@ -31,11 +32,11 @@ Core:
     timeout: 3 minutes                               # 
   login:
     method: prompt                                   # Set to normal to use /login password method or prompt for password input only.
-    action: kick                                     # 
-    tries: 3                                         # 
     delay: 4 seconds                                 # 
     show: 10 seconds                                 # 
     timeout: 3 minutes                               # 
+    tries: 3                                         # 
+    action: kick                                     # 
   link:
     enabled: true                                    # 
     rename: true                                     # 

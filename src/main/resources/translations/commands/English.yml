@@ -7,7 +7,6 @@ Core:
     logout: "/logout"
     setspawn: "/authdb setspawn"
     reload: "/authdb reload"
-
   aliases:
     register: "/r"
     link: "/li"

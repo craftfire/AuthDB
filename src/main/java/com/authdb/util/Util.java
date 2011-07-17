@@ -54,11 +54,14 @@ import com.authdb.scripts.forum.vBulletin;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.MySQL;
 import com.authdb.util.databases.eBean;
+import com.craftfire.util.managers.LoggingManager;
 
 import com.mysql.jdbc.Blob;
 
 public class Util
 {
+ 
+    static LoggingManager Logging = new LoggingManager();
     
     static int Schedule = 0;
     public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException {
@@ -879,7 +882,7 @@ public class Util
     }
 
     public static int ToSeconds(String time, String length) {
-        if(Config.debug_enable) Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
+        if(Config.debug_enable) Debug("Launching function: ToSeconds(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt( length );
         if(time.equals("days") || time.equals("day") || time.equals("d"))
@@ -1062,7 +1065,7 @@ public class Util
     public static void Debug(String message) { if(Config.debug_enable) { Log("info",message); } }
 
     public static String replaceStrings(String string, Player player, String additional) {
-        if(Config.debug_enable) Debug("Launching function: replaceStrings(String string, Player player, String additional)");
+        Logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
         if(!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
             string = string.replaceAll("\\{IP\\}", GetIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
@@ -1449,12 +1452,12 @@ public class Util
         throw new IllegalArgumentException("Not a hex character: " + ch);
     }
 
-     public static String hexToString(String str){
+     public static String hexToString(String str) {
 
           char[] chars = str.toCharArray();
 
           StringBuffer hex = new StringBuffer();
-          for(int i = 0; i < chars.length; i++){
+          for(int i = 0; i < chars.length; i++) {
             hex.append(Integer.toHexString((int)chars[i]));
           }
 
