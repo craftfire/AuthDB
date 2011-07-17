@@ -84,16 +84,16 @@ public class AuthDB extends JavaPlugin {
     private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
     public static List<String> authorizedNames = new ArrayList<String>();
-    public static HashMap<String, String> db = new HashMap<String, String>();
-    public static HashMap<String, String> db2 = new HashMap<String, String>();
-    public static HashMap<String, String> db3 = new HashMap<String, String>();
-    public static  HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
-    public static HashMap<String, Long> AuthDBRemindLogin = new HashMap<String, Long>();
-    public static HashMap<String, Integer> AuthDBSpamMessage = new HashMap<String, Integer>();
-    public static HashMap<String, Long> AuthDBSpamMessageTime = new HashMap<String, Long>();
-    public static HashMap<String, String> AuthPasswordTriesDB = new HashMap<String, String>();
-    public static HashMap<String, String> AuthOtherNamesDB = new HashMap<String, String>();
-    public static String timeoutFileName = "data/timeout.db";
+    public static HashMap<String, Integer> AuthDB_Timeouts = new HashMap<String, Integer>();
+    public static HashMap<String, Long> AuthDB_Sessions = new HashMap<String, Long>();
+    public static HashMap<String, String> AuthDB_Authed = new HashMap<String, String>();
+    public static HashMap<String, String> AuthTimeDB = new HashMap<String, String>();
+    public static HashMap<String, Long> AuthDB_RemindLogin = new HashMap<String, Long>();
+    public static HashMap<String, Integer> AuthDB_SpamMessage = new HashMap<String, Integer>();
+    public static HashMap<String, Long> AuthDB_SpamMessageTime = new HashMap<String, Long>();
+    public static HashMap<String, String> AuthDB_PasswordTries = new HashMap<String, String>();
+    public static HashMap<String, String> AuthDB_LinkedNames = new HashMap<String, String>();
+    public static HashMap<String, String> AuthDB_LinkedNameCheck = new HashMap<String, String>();
     public static String otherNamesFileName = "data/othernames.db";
     public static Logger log = Logger.getLogger("Minecraft");
     public HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
@@ -114,14 +114,15 @@ public class AuthDB extends JavaPlugin {
         disableInventory();
         authorizedNames.clear();
         AuthTimeDB.clear();
-        AuthDBRemindLogin.clear();
-        AuthDBSpamMessage.clear();
-        AuthDBSpamMessageTime.clear();
-        AuthOtherNamesDB.clear();
-        AuthPasswordTriesDB.clear();
-        db.clear();
-        db2.clear();
-        db3.clear();
+        AuthDB_RemindLogin.clear();
+        AuthDB_SpamMessage.clear();
+        AuthDB_SpamMessageTime.clear();
+        AuthDB_LinkedNames.clear();
+        AuthDB_LinkedNameCheck.clear();
+        AuthDB_PasswordTries.clear();
+        AuthDB_Timeouts.clear();
+        AuthDB_Sessions.clear();
+        AuthDB_Authed.clear();
         MySQL.close();
      }
 
@@ -251,9 +252,7 @@ public class AuthDB extends JavaPlugin {
             }
             
         }
-
-        Util.AddOtherNamesToDB();
-
+        
         Util.Logging.Info( PluginName + " plugin " + PluginVersion + " is enabled");
         if(Config.debug_enable) Util.Logging.Info( "Debug is ENABLED, get ready for some heavy spam");
         if(Config.custom_enabled) if(Config.custom_encryption == null) Util.Logging.Info( "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
@@ -407,13 +406,11 @@ public class AuthDB extends JavaPlugin {
         data = new File(getDataFolder()+"/config/","");
         if (!data.exists()) { data.mkdir(); }
         data = new File(getDataFolder()+"/","othernames.db");
-        if (data.exists()) { 
-            data.renameTo(new File(getDataFolder()+"/data/","othernames.db")); 
-        }
+        if (data.exists()) { data.renameTo(new File(getDataFolder()+"/data/","othernames.db")); }
         data = new File(getDataFolder()+"/","idle.db");
-        if (data.exists()) { 
-            data.renameTo(new File(getDataFolder()+"/data/","timeout.db")); 
-        }
+        if (data.exists()) { data.delete(); }
+        data = new File(getDataFolder()+"/data/","timeout.db");
+        if (data.exists()) { data.delete(); }
     }
 
     public static boolean isAuthorized(Player player)  { 
@@ -546,19 +543,18 @@ public class AuthDB extends JavaPlugin {
             if(!Config.database_keepalive) { MySQL.connect(); }
             Config.HasForumBoard = false;
             try {
-                if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
-                    db3.put(Encryption.md5(player), "yes");
+                if(Util.CheckScript("checkuser",Config.script_name, player, null, null, null)) {
+                    AuthDB_Authed.put(Encryption.md5(player), "yes");
                     dupe = true;
                 }
             } catch (SQLException e) {
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
             }
             //if(!Config.HasForumBoard)
                 //Stop("Can't find a forum board, stopping the plugin.");
             if(!Config.database_keepalive) { MySQL.close(); }
             if(!dupe)
-                db3.put(Encryption.md5(player), "no");
+                AuthDB_Authed.put(Encryption.md5(player), "no");
             return dupe;
         }
         else if(when.equals("command")) {
@@ -566,11 +562,11 @@ public class AuthDB extends JavaPlugin {
             Config.HasForumBoard = false;
             try {
                 if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
-                    db3.put(Encryption.md5(player), "yes");
+                    AuthDB_Authed.put(Encryption.md5(player), "yes");
                     dupe = true;
                 }
                 else if (Util.CheckOtherName(player) != player) {
-                    db3.put(Encryption.md5(player), "yes");
+                    AuthDB_Authed.put(Encryption.md5(player), "yes");
                     dupe = true;
                 }
             } catch (SQLException e) {
@@ -581,13 +577,13 @@ public class AuthDB extends JavaPlugin {
                 //Stop("Can't find a forum board, stopping the plugin.");
             if(!Config.database_keepalive) { MySQL.close(); }
             if(!dupe)
-                db3.put(Encryption.md5(player), "no");
+                AuthDB_Authed.put(Encryption.md5(player), "no");
             return dupe;
         }
         else {
-            if(this.db3.containsKey(Encryption.md5(player))) {
+            if(this.AuthDB_Authed.containsKey(Encryption.md5(player))) {
                 //if(Config.debug_enable) Util.Logging.Debug("Found cache registration for "+player);
-                String check =db3.get(Encryption.md5(player));
+                String check =AuthDB_Authed.get(Encryption.md5(player));
                 if(check.equals("yes")) {
                     //if(Config.debug_enable) Util.Logging.Debug("Cache "+player+" passed with value "+check);
                     checkneeded = false;
@@ -603,14 +599,14 @@ public class AuthDB extends JavaPlugin {
                     if(!Config.database_keepalive) { MySQL.connect(); }
                     Config.HasForumBoard = false;
                     if(Util.CheckScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
-                        db3.put(Encryption.md5(player), "yes");
+                        AuthDB_Authed.put(Encryption.md5(player), "yes");
                         dupe = true;
                     }
                     //if(!Config.HasForumBoard)
                         //Stop("Can't find a forum board, stopping the plugin.");
                     if(!Config.database_keepalive) { MySQL.close(); }
                     if(!dupe)
-                        db3.put(Encryption.md5(player), "no");
+                        AuthDB_Authed.put(Encryption.md5(player), "no");
                     return dupe;
                 } catch (SQLException e) {
                     Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
@@ -663,25 +659,9 @@ public class AuthDB extends JavaPlugin {
         inventories.clear();
     }
 
-    public String TimeoutGetTaskID(Player player) {
-        return (String)db.get(player.getName().toLowerCase());
-    }
-
-    public String GetSessionTime(Player player) {
+    /*public String GetSessionTime(Player player) {
         return this.db.get(player.getName());
-    }
-
-      public void updateDb() throws IOException {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(getDataFolder(), timeoutFileName)));
-            Set<String> keys = this.db.keySet();
-            Iterator<String> i = keys.iterator();
-            while (i.hasNext()) {
-              String key = (String)i.next();
-              bw.append(key + ":" + (String)this.db.get(key));
-              bw.newLine();
-            }
-            bw.close();
-          }
+    }*/
 
 
     public void UpdateLinkedNames() {
@@ -692,34 +672,6 @@ public class AuthDB extends JavaPlugin {
         }
     }
 
-    public boolean TimeoutTask(String type,Player player, String TaskID) throws IOException {
-        if(type.equals("add")) {
-            this.db.put(player.getName().toLowerCase(), TaskID);
-            return true;
-        }
-
-        else if(type.equals("remove")) {
-            this.db.remove(player.getName());
-            return true;
-        }
-        else if(type.equals("check")) {
-            if(this.db.containsKey(player.getName().toLowerCase())) { return true; }
-        }
-        else if(type.equals("add2")) {
-            this.db2.put(player.getName(), TaskID);
-            return true;
-        }
-
-        else if(type.equals("remove2")) {
-            this.db2.remove(player.getName());
-            return true;
-        }
-        else if(type.equals("check2")) {
-            if(this.db2.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) { return true; }
-        }
-        return false;
-    }
-    
     void SetupPluginInformation() {
         PluginName = getDescription().getName();
         PluginVersion = getDescription().getVersion();

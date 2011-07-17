@@ -3,6 +3,7 @@ Core:
     language: English                                # Language translation file to use for messages.
     debugmode: false                                 # Set to true to enable debugging mode and additional console output.
     usagestats: true                                 # Set to false to disable usage stats reporting to CraftFire devs.
+    logging: true                                    # Set to false to disable logging to files.
     logformat: yyyy-MM-dd                            # Change the filename format of the AuthDB debug and error log files.
   database:
     driver: mysql                                    # Database driver to use. Leave this alone as MySQL is currently the only supported driver.

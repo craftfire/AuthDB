@@ -41,6 +41,7 @@ public class eBean {
         authorized ("authorized"),
         timeout ("timeout"),
         reloadtime ("reloadtime"),
+        registred ("registred"),
         ip ("ip");
 
         private String name;
@@ -52,6 +53,7 @@ public class eBean {
         if (eBeanClass == null)  {
             eBeanClass = new eBean();
             eBeanClass.setPlayername(player);
+            eBeanClass.setRegistred("false");
             save(eBeanClass);
         }
         return eBeanClass;
@@ -62,6 +64,7 @@ public class eBean {
         if (eBeanClass == null)  {
             eBeanClass = new eBean();
             eBeanClass.setPlayer(player);
+            eBeanClass.setRegistred("false");
             save(eBeanClass);
         }
         return eBeanClass;
@@ -136,12 +139,27 @@ public class eBean {
         }
         return false;
     }
+
+    public static eBean find(String player, Column column1, String value1) {
+        eBean eBeanClass = CheckPlayer(player);
+        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).ieq(column1.name,value1).findUnique();
+        return eBeanClass;
+    }
+    
+    public static boolean find(String player, Column column1, String value1, Column column2, String value2) {
+        eBean eBeanClass = CheckPlayer(player);
+        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
+        if (eBeanClass != null) {
+           return true;
+        }
+        return false;
+    }
     
     @Id
     private int id;
     @NotNull
     private String playername;
-    private String linkednames;
+    private String linkedname;
     private String password;
     private String salt;
     private String ip;
@@ -235,12 +253,12 @@ public class eBean {
         this.ip = ip;
     }
     
-    public String getLinkednames(){
-        return linkednames;
+    public String getLinkedname(){
+        return linkedname;
     }
 
-    public void setLinkednames(String linkednames){
-        this.linkednames = linkednames;
+    public void setLinkedname(String linkedname){
+        this.linkedname = linkedname;
     }
     
     public String getInventory(){

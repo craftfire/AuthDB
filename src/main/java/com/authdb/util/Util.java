@@ -54,6 +54,7 @@ import com.authdb.scripts.forum.vBulletin;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.MySQL;
 import com.authdb.util.databases.eBean;
+import com.authdb.util.databases.eBean.Column;
 import com.craftfire.util.managers.LoggingManager;
 
 import com.mysql.jdbc.Blob;
@@ -583,6 +584,8 @@ public class Util
                 }
             }
             if(Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled) {
+                eBean eBeanClass = eBean.find(player, Column.registred, "true");
+                if(eBeanClass != null) { return true; }
                 String check = MySQL.getfromtable(Config.script_tableprefix+usertable, "*", usernamefield, player);
                 if(check != "fail") { return true; }
             }
@@ -638,22 +641,22 @@ public class Util
     }
 
     static void SpamText(final Player player, final String text, final int delay, final int show) {
-        if(Config.login_delay > 0 && !AuthDB.AuthDBSpamMessage.containsKey(player.getName())) {
+        if(Config.login_delay > 0 && !AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
             Schedule = AuthDB.Server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
             @Override
             public void run() {
-                if(AuthDB.isAuthorized(player) && AuthDB.AuthDBSpamMessage.containsKey(player.getName())) {
-                    AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
-                    AuthDB.AuthDBSpamMessage.remove(player.getName());
-                    AuthDB.AuthDBSpamMessageTime.remove(player.getName());
+                if(AuthDB.isAuthorized(player) && AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
+                    AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
+                    AuthDB.AuthDB_SpamMessage.remove(player.getName());
+                    AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
                 }
                 else {
-                    if(!AuthDB.AuthDBSpamMessage.containsKey(player.getName())) { AuthDB.AuthDBSpamMessage.put(player.getName(), Schedule); }
-                    if(!AuthDB.AuthDBSpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDBSpamMessageTime.put(player.getName(), Util.TimeStamp()); }
-                    if((AuthDB.AuthDBSpamMessageTime.get(player.getName()) + show) <= Util.TimeStamp()) {
-                        AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDBSpamMessage.get(player.getName()));
-                        AuthDB.AuthDBSpamMessage.remove(player.getName());
-                        AuthDB.AuthDBSpamMessageTime.remove(player.getName());
+                    if(!AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessage.put(player.getName(), Schedule); }
+                    if(!AuthDB.AuthDB_SpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessageTime.put(player.getName(), Util.TimeStamp()); }
+                    if((AuthDB.AuthDB_SpamMessageTime.get(player.getName()) + show) <= Util.TimeStamp()) {
+                        AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
+                        AuthDB.AuthDB_SpamMessage.remove(player.getName());
+                        AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
                     }
                     String message = Util.replaceStrings(text,player,null);
                     if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName()) {
@@ -1228,9 +1231,19 @@ public class Util
     }
 
     public static String CheckOtherName(String player) {
-         if(AuthDB.AuthOtherNamesDB.containsKey(player))
+         if(AuthDB.AuthDB_LinkedNames.containsKey(player))
          {
-             return AuthDB.AuthOtherNamesDB.get(player);
+             return AuthDB.AuthDB_LinkedNames.get(player);
+         }
+         else if(!AuthDB.AuthDB_LinkedNameCheck.containsKey(player))
+         {
+             AuthDB.AuthDB_LinkedNameCheck.put(player, "yes");
+             eBean eBeanClass = eBean.find(player);
+             String LinkedName = eBeanClass.getLinkedname();
+             if(LinkedName != null && LinkedName.equals("") == false) {
+                 AuthDB.AuthDB_LinkedNames.put(player,LinkedName);
+                 return LinkedName;
+             }
          }
          return player;
     }
@@ -1248,30 +1261,6 @@ public class Util
 
     public static void RenamePlayer(Player player, String name) {
         player.setDisplayName(name);
-    }
-
-    public static void AddOtherNamesToDB() {
-        File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
-        if (file.exists()) {
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e2) {
-                // TODO Auto-generated catch block
-                Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-            }
-
-            String currentLine;
-            try {
-            while((currentLine = reader.readLine()) != null) {
-              String[] split = currentLine.split(":");
-              AuthDB.AuthOtherNamesDB.put(split[0], split[1]);
-            }
-            reader.close();
-
-            }
-            catch (Exception e) { System.err.println("Error: " + e.getMessage()); }
-        }
     }
 
     public static String GetFile(String what, String data) {
@@ -1302,124 +1291,6 @@ public class Util
           }
             return "fail";
       }
-
-      public static boolean ToFile(String action, String what, String data) {
-            Util.Logging.Debug("READING FROM FILE "+action);
-            File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
-            if(action.equals("write")) {
-                  try
-                  {
-                    BufferedWriter out;
-                    out = new BufferedWriter(new FileWriter(file,true));
-                    out.write(what+":"+data);
-                    out.newLine();
-                    out.close();
-                    }catch (Exception e){
-                      Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                      return false;
-                    }
-                  return true;
-            }
-            else if(action.equals("check")) {
-                try {
-                FileInputStream fstream = new FileInputStream(file);
-                DataInputStream in = new DataInputStream(fstream);
-                BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                String strLine;
-                while ((strLine = br.readLine()) != null) {
-                  String[] split = strLine.split(":");
-                  if(split[0].equals(what)) { return true; }
-                }
-             //   fstream.close();
-               // br.close();
-                in.close();
-                }catch (Exception e){
-                  //Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                  return false;
-                }
-
-            }
-            else if(action.equals("remove")) {
-
-                BufferedReader reader = null;
-                try {
-                    reader = new BufferedReader(new FileReader(file));
-                } catch (FileNotFoundException e2) {
-                    // TODO Auto-generated catch block
-                    Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                }
-
-                String currentLine;
-                String thedupe = "";
-                try {
-                while((currentLine = reader.readLine()) != null) {
-                  String[] split = currentLine.split(":");
-                  if(split[0].equals(what)) { continue; }
-                  thedupe += currentLine+"¤XX¤";
-                }
-                reader.close();
-
-
-                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName)));
-                String[] thesplit = thedupe.split("¤XX¤");
-                int counter = 0;
-                while (counter < thesplit.length) {
-                  bw.append(thesplit[counter]);
-                  bw.newLine();
-                  counter++;
-                }
-                bw.close();
-
-
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                }
-
-
-            }
-            else if(action.equals("change")) {
-
-                BufferedReader reader = null;
-                try {
-                    reader = new BufferedReader(new FileReader(file));
-                } catch (FileNotFoundException e2) {
-                    // TODO Auto-generated catch block
-                    Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                }
-
-                String currentLine;
-                String thedupe = "";
-                try {
-                while((currentLine = reader.readLine()) != null) {
-                  String[] split = currentLine.split(":");
-                  if(split[0].equals(what)) { thedupe += what+":"+data+"¤XX¤"; }
-                  else { thedupe += currentLine+"¤XX¤"; }
-                }
-                reader.close();
-
-
-                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName)));
-                String[] thesplit = thedupe.split("¤XX¤");
-                int counter = 0;
-                while (counter < thesplit.length) {
-                  bw.append(thesplit[counter]);
-                  bw.newLine();
-                  counter++;
-                }
-                bw.close();
-
-
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                }
-
-
-            }
-            return false;
-        }
-
 
     public static String GetAction(String action) {
         if(action.toLowerCase().equals("kick")) { return "kick"; }

@@ -118,31 +118,31 @@ public void onEntityDamage(EntityDamageEvent event) {
               return true;
      }
      else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false) {
-         if(!this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
+         if(!this.plugin.AuthDB_RemindLogin.containsKey(player.getName()))
          {
-             this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
+             this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
              Messages.SendMessage(Message.guest_notauthorized, player, null);
          }
          else
          {
-             if(this.plugin.AuthDBRemindLogin.get(player.getName()) < Util.TimeStamp())
+             if(this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.TimeStamp())
              {
                  Messages.SendMessage(Message.guest_notauthorized, player, null);
-                 this.plugin.AuthDBRemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
+                 this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
              }
          }
      }
      else if (this.plugin.isRegistered("checkguest",player.getName()) == true && plugin.isAuthorized(player) == true) {
-         if(Config.protection_notify && this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
+         if(Config.protection_notify && this.plugin.AuthDB_RemindLogin.containsKey(player.getName()))
          {  
-             this.plugin.AuthDBRemindLogin.remove(player.getName());
+             this.plugin.AuthDB_RemindLogin.remove(player.getName());
          }
         return true;
      }
      else {
-         if(Config.protection_notify && this.plugin.AuthDBRemindLogin.containsKey(player.getName()))
+         if(Config.protection_notify && this.plugin.AuthDB_RemindLogin.containsKey(player.getName()))
          {  
-             this.plugin.AuthDBRemindLogin.remove(player.getName());
+             this.plugin.AuthDB_RemindLogin.remove(player.getName());
          }
      }
      return false;
