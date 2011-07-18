@@ -107,8 +107,9 @@ public class AuthDB extends JavaPlugin {
         }
         Util.Logging.Info(  PluginName + " plugin " + PluginVersion + " has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
-        if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
+        if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true)) {
             zCraftIRC.SendMessage(Message.OnDisable,null);
+        }
         authorizedNames.clear();
         AuthDB_AuthTime.clear();
         AuthDB_RemindLogin.clear();
@@ -142,8 +143,9 @@ public class AuthDB extends JavaPlugin {
         String Plugins = "";
         while(plugins.length > counter) {
             Plugins += plugins[counter].getDescription().getName()+"&_&"+plugins[counter].getDescription().getVersion();
-            if(plugins.length != (counter + 1))
+            if(plugins.length != (counter + 1)) {
                 Plugins += "*_*";
+            }
             counter++;
         }
         File f = new File("plugins/"+PluginName+"/config/config.yml");
@@ -235,7 +237,9 @@ public class AuthDB extends JavaPlugin {
                     Util.Logging.Info( "Sucessfully created table "+Config.custom_table);
                     PreparedStatement ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
                     ResultSet rs = ps.executeQuery();
-                    if (rs.next()) { Util.Logging.Info( rs.getInt("countit") + " user registrations in database"); }
+                    if (rs.next()) { 
+                        Util.Logging.Info( rs.getInt("countit") + " user registrations in database"); 
+                    }
                 }
                 catch (SQLException e1) {
                     Util.Logging.Info( "Failed creating user table "+Config.custom_table);
@@ -254,7 +258,9 @@ public class AuthDB extends JavaPlugin {
         Util.Logging.Info( PluginName + " is developed by CraftFire <dev@craftfire.com>");
 
         String thescript = "",theversion = "";
-        if(Config.custom_enabled) { thescript = "custom"; }
+        if(Config.custom_enabled) { 
+            thescript = "custom"; 
+        }
         else {
             thescript = Config.script_name;
             theversion = Config.script_version;
@@ -280,7 +286,9 @@ public class AuthDB extends JavaPlugin {
                 command =  temp[0].replaceAll("/", "");
             }
         }
-        else { command = command.replaceAll("/", ""); }
+        else { 
+            command = command.replaceAll("/", ""); 
+        }
         return command;
     }
     
@@ -424,7 +432,9 @@ public class AuthDB extends JavaPlugin {
     }
 
     public static boolean isAuthorized(Player player)  { 
-        if(authorizedNames.contains(player.getName())) { return true; }
+        if(authorizedNames.contains(player.getName())) { 
+            return true; 
+        }
         eBean eBeanClass = eBean.find(player,eBean.Column.authorized,"true");
         if (eBeanClass != null) {
             authorizedNames.add(player.getName()); 
@@ -435,13 +445,17 @@ public class AuthDB extends JavaPlugin {
 
     public boolean checkPassword(String player, String password) {
         try {
-            if(!Config.database_keepalive) { MySQL.connect(); }
+            if(!Config.database_keepalive) { 
+                MySQL.connect(); 
+            }
             password = Matcher.quoteReplacement(password);
             if (Util.CheckOtherName(player) != player) {
                 player = Util.CheckOtherName(player);
             }
             if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password,null,null)) return true;
-            if(!Config.database_keepalive) { MySQL.close(); }
+            if(!Config.database_keepalive) { 
+                MySQL.close(); 
+            }
         }
         catch (SQLException e) {
             Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
@@ -469,7 +483,9 @@ public class AuthDB extends JavaPlugin {
             Messages.SendMessage(Message.password_maximum, theplayer, null);
             return false;
         }
-        if(!Config.database_keepalive) { MySQL.connect(); }
+        if(!Config.database_keepalive) { 
+            MySQL.connect(); 
+        }
         String player = theplayer.getName();
         if (!Util.CheckFilter("password",password)) {
             Messages.SendMessage(Message.filter_password, theplayer, null);
@@ -477,7 +493,9 @@ public class AuthDB extends JavaPlugin {
         else {
             Util.CheckScript("adduser",Config.script_name,player, password, email, ipAddress);
         }
-        if(!Config.database_keepalive) { MySQL.close(); }
+        if(!Config.database_keepalive) { 
+            MySQL.close(); 
+        }
         return true;
     }
     
@@ -783,13 +801,13 @@ public class AuthDB extends JavaPlugin {
                     if (input != null)
                       input.close();
                   } catch (Exception e) {
+                      Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                   }
                   try {
                     if (output != null)
                       output.close();
-                  }
-                  catch (Exception e)
-                  {
+                  } catch (Exception e) {
+                      Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                   }
                 }
               }
