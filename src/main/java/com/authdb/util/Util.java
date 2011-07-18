@@ -1238,7 +1238,7 @@ public class Util
          else if(!AuthDB.AuthDB_LinkedNameCheck.containsKey(player))
          {
              AuthDB.AuthDB_LinkedNameCheck.put(player, "yes");
-             eBean eBeanClass = eBean.find(player);
+             eBean eBeanClass = eBean.CheckPlayer(player);
              String LinkedName = eBeanClass.getLinkedname();
              if(LinkedName != null && LinkedName.equals("") == false) {
                  AuthDB.AuthDB_LinkedNames.put(player,LinkedName);

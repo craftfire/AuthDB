@@ -44,7 +44,7 @@ import com.avaje.ebean.Ebean;
                 ps.setString(2, password); // password
                 ps.executeUpdate();
             }
-            else if(Config.custom_emailfield != null || Config.custom_emailfield != "") {
+            else if(Config.custom_emailfield != null && Config.custom_emailfield != "") {
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.custom_table+"` (`"+Config.custom_userfield+"`,`"+Config.custom_passfield+"`,`"+Config.custom_emailfield+"`)  VALUES (?,?,?)", 1);
                 ps.setString(1, player); //username
                 ps.setString(2, password); // password

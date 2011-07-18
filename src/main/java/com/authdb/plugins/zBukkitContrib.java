@@ -15,7 +15,7 @@ public class zBukkitContrib {
     public static boolean CheckCommand(String command) {
         int counter = 0;
         int counter2 = 0;
-        String[] contrib = command.split(".");
+        String[] contrib = command.split("\\.");
         while(contrib.length > counter) {
            try {
                Integer.parseInt(contrib[counter]);
