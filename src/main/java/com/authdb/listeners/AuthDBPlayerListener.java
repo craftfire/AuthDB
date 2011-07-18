@@ -417,9 +417,9 @@ public boolean CheckTimeout(Player player) throws IOException
               event.setMessage("");
               event.setCancelled(true);
           }
-          else if(!CheckGuest(event.getPlayer(),Config.guests_chat)) {
-              event.setCancelled(true);
-          }
+        }
+        else if(!CheckGuest(event.getPlayer(),Config.guests_chat)) {
+            event.setCancelled(true);
         }
     }
   }

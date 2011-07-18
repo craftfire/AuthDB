@@ -76,6 +76,7 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
     public static AuthDB plugin;
     public static EbeanServer Database;
+    public static boolean HasBukkitPermissions = false;
     public PluginDescriptionFile pluginFile = getDescription();
     public static String PluginName,PluginVersion,PluginWebsite, PluginDescrption;
     public static CraftIRC craftircHandle;
@@ -218,14 +219,12 @@ public class AuthDB extends JavaPlugin {
                     Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
                 try {
-                  while (scanner.hasNextLine()){
+                  while (scanner.hasNextLine()) {
                       String line = scanner.nextLine();
-                      if(line.contains("CREATE TABLE") || line.contains("create table"))
-                      {
+                      if(line.contains("CREATE TABLE") || line.contains("create table")) {
                           query.append("CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` (" + NL);
                       }
-                      else
-                      {
+                      else {
                           query.append(line + NL);
                       }
                   }
@@ -383,14 +382,38 @@ public class AuthDB extends JavaPlugin {
         
     
     void CheckPermissions() {
+        long length = 0 ;
+        File data = new File("permissions.yml","");
+        if(data.exists()) {
+            length = data.length();
+            HasBukkitPermissions = true;
+        }
+        
         Plugin Check = getServer().getPluginManager().getPlugin("Permissions");
         if (Check != null) {
+            if(HasBukkitPermissions) {
+                HasBukkitPermissions = false;
+                Util.Logging.Info("Found Bukkit's Permissions, using supported plugin instead: " + Check.getDescription().getName() + " "+Check.getDescription().getVersion());
+            }
+            else {
+                Util.Logging.Info("Found supported plugin: " + Check.getDescription().getName() + " "+Check.getDescription().getVersion());
+            }
             zPermissions.permissionsHandler = ((Permissions)Check).getHandler();
-            Util.Logging.Info("Found supported plugin: " + Check.getDescription().getName() + " "+Check.getDescription().getVersion());
             zPermissions. HasPlugin = true;
-        }
+            }
         else {
-            Util.Logging.Info("Could not load a permissions plugin, going over to OP!");
+            if(HasBukkitPermissions) {
+                if(length > 0) {
+                    Util.Logging.Info("Using Bukkit's Permissions.");
+                }
+                else {
+                    Util.Logging.Info("Found Bukkit's Permissions but no permissions values in the permissions.yml, going over to OP!");
+                    HasBukkitPermissions = false;
+                }
+            }
+            else {
+                Util.Logging.Info("Could not load a permissions plugin, going over to OP!");
+            }
         }
     }
 

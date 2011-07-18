@@ -12,7 +12,6 @@ package com.authdb.plugins;
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
-import com.authdb.util.Util;
 
 import com.nijiko.permissions.PermissionHandler;
 
@@ -43,10 +42,15 @@ public class zPermissions
 
     public static boolean IsAllowed(Player player, Permission permission) {
       if(HasPlugin) {
-          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.permission)) return true;
-          else if (player.isOp()) return true;
+          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.permission)) 
+              return true;
       }
-      else if (player.isOp()) return true;
+      else if(AuthDB.HasBukkitPermissions) {
+          if(player.hasPermission(AuthDB.PluginName.toLowerCase() + "." + permission.permission)) 
+              return true;
+      }
+      else if (player.isOp()) 
+          return true;
       return false;
     }
 
