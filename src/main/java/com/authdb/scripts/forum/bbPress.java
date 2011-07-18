@@ -43,9 +43,9 @@ public class bbPress {
         ps.executeUpdate();
 
         /*
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+userid+"' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+player+"' WHERE `config_name` = 'newest_username'");
         ps.executeUpdate();
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();*/
@@ -63,16 +63,16 @@ public class bbPress {
         random = "";
 
         for (int i = 0; i < count; i += 16) {
-            random_state = Encryption.md5(unique_id() + random_state);
+            random_state = Encryption.md5(unique_id()+random_state);
             random += Encryption.pack(Encryption.md5(random_state));
         }
         random = random.substring(0, count);
     }
 
-    String hash = _hash_crypt_private(password, _hash_gensalt_private(
-            random, itoa64));
-    if (hash.length() == 34)
+    String hash = _hash_crypt_private(password, _hash_gensalt_private(random, itoa64));
+    if (hash.length() == 34) {
         return hash;
+    }
 
     return Encryption.md5(password);
   }
@@ -96,13 +96,10 @@ public class bbPress {
         }
         int PHP_VERSION = 5;
         String output = "$P$";
-        output += itoa64.charAt(Math.min(iteration_count_log2
-                + ((PHP_VERSION >= 5) ? 5 : 3), 30));
+        output += itoa64.charAt(Math.min(iteration_count_log2+((PHP_VERSION >= 5) ? 5 : 3), 30));
         output += _hash_encode64(input, 6);
-
         return output;
     }
-
 
   /**
    * Encode hash
@@ -115,21 +112,25 @@ public class bbPress {
             int value = input.charAt(i++);
             output += itoa64.charAt(value & 0x3f);
 
-            if (i < count)
+            if (i < count) {
                 value |= input.charAt(i) << 8;
+            }
 
             output += itoa64.charAt((value >> 6) & 0x3f);
 
-            if (i++ >= count)
+            if (i++ >= count) {
                 break;
+            }
 
-            if (i < count)
+            if (i < count) {
                 value |= input.charAt(i) << 16;
+            }
 
             output += itoa64.charAt((value >> 12) & 0x3f);
 
-            if (i++ >= count)
+            if (i++ >= count) {
                 break;
+            }
 
             output += itoa64.charAt((value >> 18) & 0x3f);
         }
@@ -142,22 +143,25 @@ public class bbPress {
         String output = "*";
 
         // Check for correct hash
-        if (!setting.substring(0, 3).equals("$P$"))
+        if (!setting.substring(0, 3).equals("$P$")) {
             return output;
+        }
 
         int count_log2 = itoa64.indexOf(setting.charAt(3));
-        if (count_log2 < 7 || count_log2 > 30)
+        if (count_log2 < 7 || count_log2 > 30) {
             return output;
+        }
 
         int count = 1 << count_log2;
         String salt = setting.substring(4, 8);
-        if (salt.length() != 8)
+        if (salt.length() != 8) {
             return output;
+        }
 
-        String m1 = Encryption.md5(salt + password);
+        String m1 = Encryption.md5(salt+password);
         String hash = Encryption.pack(m1);
         do {
-            hash = Encryption.pack(Encryption.md5(hash + password));
+            hash = Encryption.pack(Encryption.md5(hash+password));
         }
         while (--count > 0);
 
@@ -168,9 +172,10 @@ public class bbPress {
     }
 
     public static boolean check_hash(String password, String hash) {
-        if (hash.length() == 34)
+        if (hash.length() == 34) {
             return _hash_crypt_private(password, hash).equals(hash);
-        else
+        } else {
             return Encryption.md5(password).equals(hash);
+        }
     }
 }

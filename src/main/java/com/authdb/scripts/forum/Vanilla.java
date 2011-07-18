@@ -28,51 +28,46 @@ public class Vanilla {
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
       long timestamp = System.currentTimeMillis()/1000;
           String usertable = null,roletable = null;
-          if(checkid == 1)
-          {
+          if(checkid == 1) {
               usertable = "User";
               roletable = "UserRole";
           }
-          else if(checkid == 2)
-          {
+          else if(checkid == 2) {
               usertable = "user";
               roletable = "userrole";
           }
 
-        if(checkid == 1 || checkid == 2)
-          {
+        if(checkid == 1 || checkid == 2) {
               String passwordhashed = hash(password);
               String randomkey = Util.getRandomString2(12, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
               String realdate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
-            ///
-              PreparedStatement ps;
-              //
-              ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+usertable+"` (`Name`,`Password`,`HashMethod`,`Email`,`Gender`,`Preferences`,`Permissions`,`Attributes`,`DateFirstVisit`,`DateLastActive`,`DateInserted`,`DateUpdated`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", 1);
-            ps.setString(1, player); //Name
-              ps.setString(2, passwordhashed); // Password
-            ps.setString(3, "Vanilla"); //HashMethod
-            ps.setString(4, email); //Email
-              ps.setString(5, "m"); //Gender
-              ps.setString(6, "a:1:{s:13:\"Authenticator\";s:8:\"password\";}"); //Preferences
-              ps.setString(7, "a:9:{i:0;s:19:\"Garden.SignIn.Allow\";i:1;s:20:\"Garden.Activity.View\";i:2;s:20:\"Garden.Profiles.View\";i:3;s:24:\"Vanilla.Discussions.View\";i:4;s:23:\"Vanilla.Discussions.Add\";i:5;s:20:\"Vanilla.Comments.Add\";s:24:\"Vanilla.Discussions.View\";a:1:{i:0;i:-1;}s:23:\"Vanilla.Discussions.Add\";a:1:{i:0;i:-1;}s:20:\"Vanilla.Comments.Add\";a:1:{i:0;i:-1;}}"); //Permissions
-              ps.setString(8, "a:1:{s:12:\"TransientKey\";s:12:\""+randomkey+"\";}"); //Attributes
-              ps.setString(9, realdate); //DateFirstVisit
-            ps.setString(10, realdate); //DateLastActive
-            ps.setString(11, realdate); //DateInserted
-            ps.setString(12, realdate); //DateUpdated
-            ps.executeUpdate();
-
-            int userid = MySQL.countitall(Config.script_tableprefix+usertable);
-
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
-            ps.setInt(1, userid); //UserID
-            ps.setInt(2, 3); //RoleID
-            ps.executeUpdate();
-
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
-            ps.setInt(1, userid); //UserID
-            ps.setInt(2, 8); //RoleID
-            ps.executeUpdate();
+                PreparedStatement ps;
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+usertable+"` (`Name`,`Password`,`HashMethod`,`Email`,`Gender`,`Preferences`,`Permissions`,`Attributes`,`DateFirstVisit`,`DateLastActive`,`DateInserted`,`DateUpdated`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+                ps.setString(1, player); //Name
+                ps.setString(2, passwordhashed); // Password
+                ps.setString(3, "Vanilla"); //HashMethod
+                ps.setString(4, email); //Email
+                ps.setString(5, "m"); //Gender
+                ps.setString(6, "a:1:{s:13:\"Authenticator\";s:8:\"password\";}"); //Preferences
+                ps.setString(7, "a:9:{i:0;s:19:\"Garden.SignIn.Allow\";i:1;s:20:\"Garden.Activity.View\";i:2;s:20:\"Garden.Profiles.View\";i:3;s:24:\"Vanilla.Discussions.View\";i:4;s:23:\"Vanilla.Discussions.Add\";i:5;s:20:\"Vanilla.Comments.Add\";s:24:\"Vanilla.Discussions.View\";a:1:{i:0;i:-1;}s:23:\"Vanilla.Discussions.Add\";a:1:{i:0;i:-1;}s:20:\"Vanilla.Comments.Add\";a:1:{i:0;i:-1;}}"); //Permissions
+                ps.setString(8, "a:1:{s:12:\"TransientKey\";s:12:\""+randomkey+"\";}"); //Attributes
+                ps.setString(9, realdate); //DateFirstVisit
+                ps.setString(10, realdate); //DateLastActive
+                ps.setString(11, realdate); //DateInserted
+                ps.setString(12, realdate); //DateUpdated
+                ps.executeUpdate();
+    
+                int userid = MySQL.countitall(Config.script_tableprefix+usertable);
+    
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
+                ps.setInt(1, userid); //UserID
+                ps.setInt(2, 3); //RoleID
+                ps.executeUpdate();
+    
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
+                ps.setInt(1, userid); //UserID
+                ps.setInt(2, 8); //RoleID
+                ps.executeUpdate();
 
           }
     }
@@ -88,19 +83,17 @@ public class Vanilla {
       if (random.length() < count) {
           random = "";
 
-          for (int i = 0; i < count; i += 16)
-          {
-              random_state = Encryption.md5(unique_id() + random_state);
+          for (int i = 0; i < count; i += 16) {
+              random_state = Encryption.md5(unique_id()+random_state);
               random += Encryption.pack(Encryption.md5(random_state));
           }
           random = random.substring(0, count);
       }
 
-      String hash = _hash_crypt_private(password, _hash_gensalt_private(
-              random, itoa64));
-      if (hash.length() == 34)
+      String hash = _hash_crypt_private(password, _hash_gensalt_private(random, itoa64));
+      if (hash.length() == 34) {
           return hash;
-
+      }
       return Encryption.md5(password);
     }
 
@@ -116,16 +109,14 @@ public class Vanilla {
       return _hash_gensalt_private(input, itoa64, 6);
     }
 
-      private static String _hash_gensalt_private(String input, String itoa64,
-              int iteration_count_log2) {
-          if (iteration_count_log2 < 4 || iteration_count_log2 > 31)
-          {
+      private static String _hash_gensalt_private(String input, String itoa64, int iteration_count_log2) {
+          if (iteration_count_log2 < 4 || iteration_count_log2 > 31) {
               iteration_count_log2 = 8;
           }
           int PHP_VERSION = 5;
           String output = "$P$";
           output += itoa64.charAt(Math.min(iteration_count_log2
-                  + ((PHP_VERSION >= 5) ? 5 : 3), 30));
+                 +((PHP_VERSION >= 5) ? 5 : 3), 30));
           output += _hash_encode64(input, 6);
 
           return output;
@@ -144,21 +135,25 @@ public class Vanilla {
               int value = input.charAt(i++);
               output += itoa64.charAt(value & 0x3f);
 
-              if (i < count)
+              if (i < count) {
                   value |= input.charAt(i) << 8;
+              }
 
               output += itoa64.charAt((value >> 6) & 0x3f);
 
-              if (i++ >= count)
+              if (i++ >= count) {
                   break;
+              }
 
-              if (i < count)
+              if (i < count) {
                   value |= input.charAt(i) << 16;
+              }
 
               output += itoa64.charAt((value >> 12) & 0x3f);
 
-              if (i++ >= count)
+              if (i++ >= count) {
                   break;
+              }
 
               output += itoa64.charAt((value >> 18) & 0x3f);
           }
@@ -171,23 +166,25 @@ public class Vanilla {
           String output = "*";
 
           // Check for correct hash
-          if (!setting.substring(0, 3).equals("$P$"))
+          if (!setting.substring(0, 3).equals("$P$")) {
               return output;
+          }
 
           int count_log2 = itoa64.indexOf(setting.charAt(3));
-          if (count_log2 < 7 || count_log2 > 30)
+          if (count_log2 < 7 || count_log2 > 30) {
               return output;
+          }
 
           int count = 1 << count_log2;
           String salt = setting.substring(4, 12);
-          if (salt.length() != 8)
+          if (salt.length() != 8) {
               return output;
+          }
 
-          String m1 = Encryption.md5(salt + password);
+          String m1 = Encryption.md5(salt+password);
           String hash = Encryption.pack(m1);
-          do
-          {
-              hash = Encryption.pack(Encryption.md5(hash + password));
+          do {
+              hash = Encryption.pack(Encryption.md5(hash+password));
           }
           while (--count > 0);
 
@@ -198,9 +195,10 @@ public class Vanilla {
       }
 
     public static boolean check_hash(String password, String hash) {
-        if (hash.length() == 34)
+        if (hash.length() == 34) {
             return _hash_crypt_private(password, hash).equals(hash);
-        else
+        } else {
             return Encryption.md5(password).equals(hash);
+        }
     }
 }

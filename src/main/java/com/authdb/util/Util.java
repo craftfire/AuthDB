@@ -103,7 +103,7 @@ public class Util
                 else if(type.equals("numusers")) {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
                     ResultSet rs = ps.executeQuery();
-                    if (rs.next()) { Util.Logging.Info( rs.getInt("countit") + " user registrations in database"); }
+                    if (rs.next()) { Util.Logging.Info(rs.getInt("countit") + " user registrations in database"); }
                 }
             }
             else if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) {
@@ -414,7 +414,7 @@ public class Util
                             }
                         } catch (IOException e) {
                             // TODO Auto-generated catch block
-                            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                         }
                         String cache = stringBuffer.toString();
                         String thehash = ForumCacheValue(cache,"hash");
@@ -451,7 +451,7 @@ public class Util
                         }
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
-                        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                        Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                     }
                     String cache = stringBuffer.toString();
                     String thehash = ForumCacheValue(cache,"hash");
@@ -477,7 +477,7 @@ public class Util
                         }
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
-                        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                        Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                     }
                     String cache = stringBuffer.toString();
                     String thesalt = ForumCacheValue(cache,"salt");
@@ -600,7 +600,7 @@ public class Util
                 if(script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"` WHERE  `group_id` !=6"); }
                 else { ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.script_tableprefix+usertable+"`"); }
                 ResultSet rs = ps.executeQuery();
-                if (rs.next()) { Util.Logging.Info( rs.getInt("countit") + " user registrations in database"); }
+                if (rs.next()) { Util.Logging.Info(rs.getInt("countit") + " user registrations in database"); }
             }
             else if(Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
                 String hash = MySQL.getfromtable(Config.script_tableprefix+usertable, "`"+passwordfield+"`", usernamefield, player);
@@ -661,7 +661,7 @@ public class Util
                         AuthDB.AuthDB_SpamMessage.remove(player.getName());
                         AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
                     }
-                    String message = Util.replaceStrings(text,player,null);
+                    String message = Util.replaceStrings(text,player, null);
                     if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName()) {
                         message = message.replaceAll(player.getName(), player.getDisplayName());
                         player.sendMessage(message);
@@ -859,7 +859,7 @@ public class Util
     public static int ToTicks(String time, String length) {
        Util.Logging.Debug("Launching function: ToTicks(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
-        int lengthint = Integer.parseInt( length );
+        int lengthint = Integer.parseInt(length);
         if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 1728000;
         else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
@@ -874,7 +874,7 @@ public class Util
     public static int ToSeconds(String time, String length) {
         Util.Logging.Debug("Launching function: ToSeconds(String time, String length) - "+time+":"+length);
         time = time.toLowerCase();
-        int lengthint = Integer.parseInt( length );
+        int lengthint = Integer.parseInt(length);
         if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 86400;
         else if(time.equals("hours") || time.equals("hour") || time.equals("hr") || time.equals("hrs") || time.equals("h"))
@@ -890,7 +890,7 @@ public class Util
         String[] split = string.split(" ");
         String length = split[0];
         String time = split[1].toLowerCase();
-        int lengthint = Integer.parseInt( length );
+        int lengthint = Integer.parseInt(length);
         Util.Logging.Debug("Launching function: FullStringToSeconds(String time, String length) - "+time+":"+length);
         if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 1728000;
@@ -907,7 +907,7 @@ public class Util
         String[] split = string.split(" ");
         String length = split[0];
         String time = split[1].toLowerCase();
-        int lengthint = Integer.parseInt( length );
+        int lengthint = Integer.parseInt(length);
         Util.Logging.Debug("Launching function: StringToSeconds(String time, String length) - "+time+":"+length);
         if(time.equals("days") || time.equals("day") || time.equals("d"))
             return lengthint * 86400;
@@ -940,7 +940,7 @@ public class Util
         String username = player.getName().toLowerCase();
         Util.Logging.Debug("Launching function: CheckWhitelist(String whitelist,String username) - "+username);
         StringTokenizer st = null;
-        if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,","); }
+        if(whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist,", "); }
         while (st.hasMoreTokens()) {
             String whitelistname = st.nextToken().toLowerCase();
             Util.Logging.Debug("Whitelist: "+whitelistname);
@@ -1174,12 +1174,12 @@ public class Util
 
     public static String removeChar(String s, char c) {
         Util.Logging.Debug("Launching function: removeChar(String s, char c)");
-      StringBuffer r = new StringBuffer( s.length() );
-      r.setLength( s.length() );
+      StringBuffer r = new StringBuffer(s.length());
+      r.setLength(s.length());
       int current = 0;
       for (int i = 0; i < s.length(); i ++) {
          char cur = s.charAt(i);
-         if (cur != c) r.setCharAt( current++, cur );
+         if (cur != c) r.setCharAt(current++, cur);
       }
       return r.toString();
     }

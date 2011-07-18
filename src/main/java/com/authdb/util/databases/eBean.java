@@ -83,7 +83,7 @@ public class eBean {
                 Util.CheckScript("syncsalt", Config.script_name, player.getName(), null, null, null);
             }
         } 
-        catch (SQLException e) { Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName()); }
+        catch (SQLException e) { Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName()); }
     }
     
     public static void CheckPassword(String player, String password) {

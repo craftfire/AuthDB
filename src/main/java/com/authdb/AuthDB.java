@@ -72,7 +72,7 @@ public class AuthDB extends JavaPlugin {
     public static AuthDB plugin;
     public static EbeanServer Database;
     public PluginDescriptionFile pluginFile = getDescription();
-    public static String PluginName,PluginVersion,PluginWebsite, PluginDescrption;
+    public static String PluginName, PluginVersion, PluginWebsite, PluginDescrption;
     public static CraftIRC craftircHandle;
     //
     private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -100,10 +100,10 @@ public class AuthDB extends JavaPlugin {
             }
             Processes.Logout(p);
         }
-        Util.Logging.Info(  PluginName + " plugin " + PluginVersion + " has been disabled");
+        Util.Logging.Info( PluginName+" plugin "+PluginVersion+" has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
         if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true)) {
-            zCraftIRC.SendMessage(Message.OnDisable,null);
+            zCraftIRC.SendMessage(Message.OnDisable, null);
         }
         authorizedNames.clear();
         AuthDB_AuthTime.clear();
@@ -138,22 +138,22 @@ public class AuthDB extends JavaPlugin {
         String Plugins = "";
         while(plugins.length > counter) {
             Plugins += plugins[counter].getDescription().getName()+"&_&"+plugins[counter].getDescription().getVersion();
-            if(plugins.length != (counter + 1)) {
+            if(plugins.length != (counter+1)) {
                 Plugins += "*_*";
             }
             counter++;
         }
         File f = new File("plugins/"+PluginName+"/config/config.yml");
-        if ( !f.exists() ) {
-            Util.Logging.Info( "config.yml could not be found in plugins/AuthDB/config/! Creating config.yml!");
-            DefaultFile("config.yml","config");
+        if (!f.exists() ) {
+            Util.Logging.Info("config.yml could not be found in plugins/AuthDB/config/! Creating config.yml!");
+            DefaultFile("config.yml", "config");
         }
-        new Config("config","plugins/"+PluginName+"/config/", "config.yml");
+        new Config("config", "plugins/"+PluginName+"/config/", "config.yml");
         
         f = new File(getDataFolder()+"/config/customdb.sql");
-        if ( !f.exists() ) {
-            Util.Logging.Info( "customdb.sql could not be found in plugins/AuthDB/config/! Creating customdb.sql!");
-            DefaultFile("customdb.sql","config");
+        if (!f.exists() ) {
+            Util.Logging.Info("customdb.sql could not be found in plugins/AuthDB/config/! Creating customdb.sql!");
+            DefaultFile("customdb.sql", "config");
         }
         
         LoadYml("messages");
@@ -163,7 +163,7 @@ public class AuthDB extends JavaPlugin {
           CheckPermissions();
           if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
               craftircHandle = ((CraftIRC)checkCraftIRC);
-              Util.Logging.Info("Found supported plugin: " + checkCraftIRC.getDescription().getName());
+              Util.Logging.Info("Found supported plugin: "+checkCraftIRC.getDescription().getName());
               this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
               @Override
               public void run() { 
@@ -198,11 +198,11 @@ public class AuthDB extends JavaPlugin {
         setupDatabase();
         
         MySQL.connect();
-        try { Util.CheckScript("numusers",Config.script_name,null,null,null,null); }
+        try { Util.CheckScript("numusers",Config.script_name, null, null, null, null); }
         catch (SQLException e) {
             if(Config.custom_enabled && Config.custom_autocreate) {
                 String enter = "\n";
-                Util.Logging.Info( "Creating default table schema for "+Config.custom_table);
+                Util.Logging.Info("Creating default table schema for "+Config.custom_table);
                 
                 StringBuilder query = new StringBuilder();
                 String NL = System.getProperty("line.separator");
@@ -215,9 +215,9 @@ public class AuthDB extends JavaPlugin {
                   while (scanner.hasNextLine()) {
                       String line = scanner.nextLine();
                       if(line.contains("CREATE TABLE") || line.contains("create table")) {
-                          query.append("CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` (" + NL);
+                          query.append("CREATE TABLE IF NOT EXISTS `"+Config.custom_table+"` ("+NL);
                       } else {
-                          query.append(line + NL);
+                          query.append(line+NL);
                       }
                   }
                 } finally{
@@ -227,30 +227,30 @@ public class AuthDB extends JavaPlugin {
                 Util.Logging.Debug(enter+query);
                 try {
                     MySQL.query(""+query);
-                    Util.Logging.Info( "Sucessfully created table "+Config.custom_table);
+                    Util.Logging.Info("Sucessfully created table "+Config.custom_table);
                     PreparedStatement ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"+Config.custom_table+"`");
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) { 
-                        Util.Logging.Info( rs.getInt("countit") + " user registrations in database"); 
+                        Util.Logging.Info(rs.getInt("countit")+" user registrations in database"); 
                     }
                 } catch (SQLException e1) {
-                    Util.Logging.Info( "Failed creating user table "+Config.custom_table);
+                    Util.Logging.Info("Failed creating user table "+Config.custom_table);
                     Util.Logging.StackTrace(e1.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
             } else {
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
             
         }
         
-        Util.Logging.Info( PluginName + " plugin " + PluginVersion + " is enabled");
+        Util.Logging.Info(PluginName+" plugin "+PluginVersion+" is enabled");
         Util.Logging.Debug("Debug is ENABLED, get ready for some heavy spam");
         if(Config.custom_enabled) {
             if(Config.custom_encryption == null) { 
-                Util.Logging.Info( "**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
+                Util.Logging.Info("**WARNING** SERVER IS RUNNING WITH NO ENCRYPTION: PASSWORDS ARE STORED IN PLAINTEXT");
             }
         }
-        Util.Logging.Info( PluginName + " is developed by CraftFire <dev@craftfire.com>");
+        Util.Logging.Info(PluginName+" is developed by CraftFire <dev@craftfire.com>");
 
         String thescript = "",theversion = "";
         if(Config.custom_enabled) { 
@@ -269,7 +269,7 @@ public class AuthDB extends JavaPlugin {
         }
         for (Player p : getServer().getOnlinePlayers()) {
             eBean eBeanClass = eBean.CheckPlayer(p);
-            if(eBeanClass.getReloadtime() + 30 > Util.TimeStamp()) {
+            if(eBeanClass.getReloadtime()+30 > Util.TimeStamp()) {
                 Processes.Login(p);
             }
         }
@@ -294,13 +294,13 @@ public class AuthDB extends JavaPlugin {
             if (cmd.getName().equalsIgnoreCase("authdb")) {
                 if(args.length == 0) {
                     player.sendMessage("§b Name: §f "+PluginName+" §4 "+PluginVersion);
-                    player.sendMessage("§b "+PluginName + " is developed by §4 CraftFire �e<dev@craftfire.com>");
+                    player.sendMessage("§b "+PluginName+" is developed by §4 CraftFire �e<dev@craftfire.com>");
                     player.sendMessage("§d "+PluginWebsite);
                 }
             } else if (cmd.getName().equalsIgnoreCase(CommandString(Config.commands_reload)) || cmd.getName().equalsIgnoreCase(CommandString(Config.aliases_reload))) {
                 if(args.length == 1) {
                     if(zPermissions.IsAllowed(player, Permission.command_admin_reload)) {
-                        new Config("config","plugins/"+PluginName+"/config/", "config.yml");
+                        new Config("config", "plugins/"+PluginName+"/config/", "config.yml");
                         LoadYml("commands");
                         LoadYml("messages");
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
@@ -362,7 +362,7 @@ public class AuthDB extends JavaPlugin {
         try {
             getDatabase().find(eBean.class).findRowCount();
         } catch (PersistenceException ex) {
-            Util.Logging.Info("Installing persistence database for " + PluginName + " due to first time usage");
+            Util.Logging.Info("Installing persistence database for "+PluginName+" due to first time usage");
             installDDL();
         }
     }
@@ -384,15 +384,15 @@ public class AuthDB extends JavaPlugin {
         Plugin Check2 = getServer().getPluginManager().getPlugin("PermissionsBukkit");
         if (Check2 != null) {
             if(zPermissions.HasPlugin) {
-                Util.Logging.Info("Found 2 supported permissions plugins: " + Check1.getDescription().getName() + " "+Check1.getDescription().getVersion()+" and "+ Check2.getDescription().getName() + " "+Check2.getDescription().getVersion());
-                Util.Logging.Info("Defaulting permissions to: "+ Check2.getDescription().getName() + " "+Check2.getDescription().getVersion());
+                Util.Logging.Info("Found 2 supported permissions plugins: "+Check1.getDescription().getName()+" "+Check1.getDescription().getVersion()+" and "+ Check2.getDescription().getName()+" "+Check2.getDescription().getVersion());
+                Util.Logging.Info("Defaulting permissions to: "+ Check2.getDescription().getName()+" "+Check2.getDescription().getVersion());
             } else {
-                Util.Logging.Info("Found supported plugin: " + Check2.getDescription().getName() + " "+Check2.getDescription().getVersion());
+                Util.Logging.Info("Found supported plugin: "+Check2.getDescription().getName()+" "+Check2.getDescription().getVersion());
             }
             zPermissions.HasPermissionsBukkit = true;
         } else {
             if(zPermissions.HasPlugin) {
-                Util.Logging.Info("Found supported plugin: " + Check1.getDescription().getName() + " "+Check1.getDescription().getVersion());
+                Util.Logging.Info("Found supported plugin: "+Check1.getDescription().getName()+" "+Check1.getDescription().getVersion());
             } else {
                 Util.Logging.Info("Could not load a permissions plugin, going over to OP!");
             }
@@ -400,21 +400,21 @@ public class AuthDB extends JavaPlugin {
     }
 
     void CheckOldFiles() {
-        File data = new File(getDataFolder()+"/data/","");
+        File data = new File(getDataFolder()+"/data/", "");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"/translations/","");
+        data = new File(getDataFolder()+"/translations/", "");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"/translations/commands/","");
+        data = new File(getDataFolder()+"/translations/commands/", "");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"/translations/messages/","");
+        data = new File(getDataFolder()+"/translations/messages/", "");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"/config/","");
+        data = new File(getDataFolder()+"/config/", "");
         if (!data.exists()) { data.mkdir(); }
-        data = new File(getDataFolder()+"/","othernames.db");
-        if (data.exists()) { data.renameTo(new File(getDataFolder()+"/data/","othernames.db")); }
-        data = new File(getDataFolder()+"/","idle.db");
+        data = new File(getDataFolder()+"/", "othernames.db");
+        if (data.exists()) { data.renameTo(new File(getDataFolder()+"/data/", "othernames.db")); }
+        data = new File(getDataFolder()+"/", "idle.db");
         if (data.exists()) { data.delete(); }
-        data = new File(getDataFolder()+"/data/","timeout.db");
+        data = new File(getDataFolder()+"/data/", "timeout.db");
         if (data.exists()) { data.delete(); }
     }
 
@@ -439,14 +439,14 @@ public class AuthDB extends JavaPlugin {
             if (Util.CheckOtherName(player) != player) {
                 player = Util.CheckOtherName(player);
             }
-            if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password,null,null)) {
+            if(Util.CheckScript("checkpassword",Config.script_name, player.toLowerCase(), password, null, null)) {
                 return true;
             }
             if(!Config.database_keepalive) { 
                 MySQL.close(); 
             }
         } catch (SQLException e) {
-            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             Stop("ERRORS in checking password. Plugin will NOT work. Disabling it.");
         }
         return false;
@@ -493,11 +493,11 @@ public class AuthDB extends JavaPlugin {
         try {
             while ((line = rdr.readLine()) != null) {
                 temp.add(line);
-                System.out.println("file: " + line);
+                System.out.println("file: "+line);
             }
             rdr.close();
         } catch (IOException e) {
-            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return temp;
     } 
@@ -508,19 +508,19 @@ public class AuthDB extends JavaPlugin {
         boolean Set = false;
         CodeSource src = getClass().getProtectionDomain().getCodeSource();
 
-        if( src != null ) {
+        if(src != null ) {
             try {
                 URL jar = src.getLocation();
-                ZipInputStream zip = new ZipInputStream( jar.openStream());
+                ZipInputStream zip = new ZipInputStream(jar.openStream());
                 ZipEntry ze = null;
                 
-                while( ( ze = zip.getNextEntry() ) != null ) {
+                while((ze = zip.getNextEntry() ) != null ) {
                     String fileName = ze.getName();
-                    if( fileName.startsWith("files/translations/"+type+"/") && fileName.endsWith(".yml") )  {
+                    if(fileName.startsWith("files/translations/"+type+"/") && fileName.endsWith(".yml") )  {
                         fileName = fileName.replace("files/translations/"+type+"/", "");
                         File f = new File(getDataFolder()+"/translations/"+type+"/"+fileName);
-                        if ( !f.exists() ) {
-                            Util.Logging.Info( fileName+" could not be found in plugins/AuthDB/translations/"+type+"/! Creating "+fileName);
+                        if (!f.exists() ) {
+                            Util.Logging.Info(fileName+" could not be found in plugins/AuthDB/translations/"+type+"/! Creating "+fileName);
                             DefaultFile(fileName,"translations/"+type);
                         }
                         if((Config.language+".yml").equalsIgnoreCase(fileName))  { 
@@ -530,7 +530,7 @@ public class AuthDB extends JavaPlugin {
                     }
                 }
             } catch (IOException e) {
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
 
          }
@@ -542,7 +542,7 @@ public class AuthDB extends JavaPlugin {
                 }
             }
         }
-        if(!Set) { Util.Logging.Info( "Could not find translation files for "+Config.language+"; defaulting to "+Language); }
+        if(!Set) { Util.Logging.Info("Could not find translation files for "+Config.language+"; defaulting to "+Language); }
         else { Util.Logging.Debug(type+" language set to "+Language); }
         new Config(type,getDataFolder()+"/translations/"+type+"/", Language+".yml");
         
@@ -562,7 +562,7 @@ public class AuthDB extends JavaPlugin {
                     dupe = true;
                 }
             } catch (SQLException e) {
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
             if(!Config.database_keepalive) { 
                 MySQL.close(); 
@@ -584,7 +584,7 @@ public class AuthDB extends JavaPlugin {
                     dupe = true;
                 }
             } catch (SQLException e) {
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
             if(!Config.database_keepalive) {
                 MySQL.close(); 
@@ -603,8 +603,7 @@ public class AuthDB extends JavaPlugin {
                 } else if(check.equals("no")) {
                     return false;
                 }
-            }
-            else if(checkneeded) {
+            } else if(checkneeded) {
                 try {
                     if(!Config.database_keepalive) { MySQL.connect(); }
                     Config.HasForumBoard = false;
@@ -620,7 +619,7 @@ public class AuthDB extends JavaPlugin {
                     }
                     return dupe;
                 } catch (SQLException e) {
-                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                    Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                     Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
                 }
             }
@@ -643,15 +642,15 @@ public class AuthDB extends JavaPlugin {
       public void storeInventory(Player player, ItemStack[] inventory, ItemStack[] armorinventory) throws IOException {
         String inv = "";
         String armorinv = "";
-        for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
+        for (short i = 0; i < inventory.length; i = (short)(i+1)) {
             if(inventory[i] != null) {
-                inv += inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability()+",";
+                inv += inventory[i].getTypeId()+":"+inventory[i].getAmount()+":"+(inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData()))+":"+inventory[i].getDurability()+", ";
             } else { inv += "0:0:0:0,"; }
         }
         
-        for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
+        for (short i = 0; i < armorinventory.length; i = (short)(i+1)) {
             if(armorinventory[i] != null) {
-                armorinv += armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability()+",";
+                armorinv += armorinventory[i].getTypeId()+":"+armorinventory[i].getAmount()+":"+(armorinventory[i].getData() == null ? "" : Byte.valueOf(armorinventory[i].getData().getData()))+":"+armorinventory[i].getDurability()+", ";
             } else { armorinv += "0:0:0:0,"; }
         }
 
@@ -681,7 +680,7 @@ public class AuthDB extends JavaPlugin {
         if (eBeanClass != null) {
             String data = eBeanClass.getInventory();
             if(data != "" && data != null) {
-                String[] inv = Util.split(data, ",");
+                String[] inv = Util.split(data, ", ");
                 ItemStack[] inventory = new ItemStack[36];
                 
                 for(int i=0; i<inv.length; i++) {
@@ -716,13 +715,13 @@ public class AuthDB extends JavaPlugin {
         }
         return null;
       }
-    
+
     public static ItemStack[] getArmorInventory(Player player) {
         eBean eBeanClass = eBean.find(player);
         if (eBeanClass != null) {
             String data = eBeanClass.getArmorinventory();
             if(data != "" && data != null) {
-                String[] inv = Util.split(data, ",");
+                String[] inv = Util.split(data, ", ");
                 ItemStack[] inventory = new ItemStack[4];
                 for(int i=0; i<inv.length; i++) {
                     String line = inv[i];
@@ -758,10 +757,10 @@ public class AuthDB extends JavaPlugin {
 
      private void DefaultFile(String name, String folder) {
             File actual = new File(getDataFolder()+"/"+folder+"/", name);
-            File direc = new File(getDataFolder()+"/"+folder+"/","");
+            File direc = new File(getDataFolder()+"/"+folder+"/", "");
             if (!direc.exists()) { direc.mkdir(); }
             if (!actual.exists()) {
-              java.io.InputStream input = getClass().getResourceAsStream("/files/"+folder+"/" + name);
+              java.io.InputStream input = getClass().getResourceAsStream("/files/"+folder+"/"+name);
               if (input != null) {
                   java.io.FileOutputStream output = null;
                 try {
@@ -773,22 +772,23 @@ public class AuthDB extends JavaPlugin {
                     output.write(buf, 0, length);
                   }
 
-                  System.out.println("["+PluginName+"] Written default setup for " + name);
+                  System.out.println("["+PluginName+"] Written default setup for "+name);
                 } catch (Exception e) {
-                  Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                  Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 } finally {
                   try {
                     if (input != null) {
                         input.close();
                     }
                   } catch (Exception e) {
-                      Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                  } try {
+                      Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                  } 
+                  try {
                     if (output != null) {
                       output.close();
                     }
                   } catch (Exception e) {
-                      Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                      Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                   }
                 }
               }

@@ -77,7 +77,7 @@ public class Processes {
         if(!AuthDB.isAuthorized(player) && Config.link_enabled) {
             eBean eBeanClass = eBean.CheckPlayer(player);
             String LinkedNames = eBeanClass.getLinkedname();
-            if(LinkedNames != null && LinkedNames != "") { eBeanClass.setLinkedname(LinkedNames+","+name); }
+            if(LinkedNames != null && LinkedNames != "") { eBeanClass.setLinkedname(LinkedNames+", "+name); }
             else { eBeanClass.setLinkedname(name); }
             AuthDB.Database.save(eBeanClass);
             if(!AuthDB.AuthDB_LinkedNames.containsKey((player.getName()))) {

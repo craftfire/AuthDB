@@ -28,46 +28,47 @@ public class DLE {
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
         if(checkid == 1) {
-    long timestamp = System.currentTimeMillis()/1000;
-    String hash = hash(password);
-    //
-    PreparedStatement ps;
-    //
-    ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`email`,`password`,`name`,`lastdate`,`reg_date`,`logged_ip`,`info`,`signature`,`favorites`,`xfields`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
-    ps.setString(1, email); //email
-    ps.setString(2, hash); // password
-    ps.setString(3, player); //name
-    ps.setLong(4, timestamp); //lastdate
-    ps.setLong(5, timestamp); //reg_date
-    ps.setString(6, ipAddress); //logged_ip
-    //need to add these, it's complaining about not default is set.
-    ps.setString(7, ""); //info
-    ps.setString(8, ""); //signature
-    ps.setString(9, ""); //favorites
-    ps.setString(10, ""); //xfields
-    ps.executeUpdate();
+            long timestamp = System.currentTimeMillis()/1000;
+            String hash = hash(password);
+            //
+            PreparedStatement ps;
+            //
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`email`,`password`,`name`,`lastdate`,`reg_date`,`logged_ip`,`info`,`signature`,`favorites`,`xfields`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
+            ps.setString(1, email); //email
+            ps.setString(2, hash); // password
+            ps.setString(3, player); //name
+            ps.setLong(4, timestamp); //lastdate
+            ps.setLong(5, timestamp); //reg_date
+            ps.setString(6, ipAddress); //logged_ip
+            //need to add these, it's complaining about not default is set.
+            ps.setString(7, ""); //info
+            ps.setString(8, ""); //signature
+            ps.setString(9, ""); //favorites
+            ps.setString(10, ""); //xfields
+            ps.executeUpdate();
         }
     }
 
     public static String hash(String password) throws SQLException {
-    try {
-        return passwordHash(password);
-    } catch (NoSuchAlgorithmException e) {
-        // TODO Auto-generated catch block
-        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-    } catch (UnsupportedEncodingException e) {
-        // TODO Auto-generated catch block
-        Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-    }
-      return "fail";
+        try {
+            return passwordHash(password);
+        } catch (NoSuchAlgorithmException e) {
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+        } catch (UnsupportedEncodingException e) {
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+        }
+        return "fail";
     }
 
       public static boolean check_hash(String passwordhash, String hash) {
-          if(passwordhash.equals(hash)) return true;
-          else return false;
+          if(passwordhash.equals(hash)) {
+              return true;
+          } else {
+              return false;
+          }
       }
 
       public static String passwordHash(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-      return Encryption.md5(Encryption.md5(password));
+          return Encryption.md5(Encryption.md5(password));
       }
 }

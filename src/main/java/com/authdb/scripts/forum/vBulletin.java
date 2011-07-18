@@ -31,24 +31,23 @@ public class vBulletin {
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
       long timestamp = System.currentTimeMillis()/1000;
-          if(checkid == 1)
-          {
+      if(checkid == 1) {
               String salt = Encryption.hash(30,"none",33,126);
               String passwordhashed = hash("create",player,password, salt);
               String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
               ///
               PreparedStatement ps;
               //
-              ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user"+"` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
             ps.setString(1, "2"); //usergroupid
-              ps.setString(2, passwordhashed); // password
+            ps.setString(2, passwordhashed); // password
             ps.setString(3, passworddate); //passworddate
             ps.setString(4, email); //email
-              ps.setString(5, "1"); //showvbcode
-              ps.setLong(6, timestamp); //joindate
-              ps.setLong(7, timestamp); //lastvisit
-              ps.setLong(8, timestamp); //lastactivity
-              ps.setString(9, "5"); //reputationlevelid
+            ps.setString(5, "1"); //showvbcode
+            ps.setLong(6, timestamp); //joindate
+            ps.setLong(7, timestamp); //lastvisit
+            ps.setLong(8, timestamp); //lastactivity
+            ps.setString(9, "5"); //reputationlevelid
             ps.setString(10, "45108311"); //options
             ps.setLong(11, Util.IP2Long(ipAddress)); //ipaddress
             ps.setString(12, salt); //salt
@@ -59,12 +58,11 @@ public class vBulletin {
             int userid = MySQL.countitall(Config.script_tableprefix+"user");
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"datastore", "`data`", "title", "userstats");
             String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
-            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"datastore"+"` SET `data` = '"+newcache+"' WHERE `title` = 'userstats'");
             ps.executeUpdate();
 
-              }
-          else if(checkid == 2)
-          {
+          }
+          else if(checkid == 2) {
               String salt = Encryption.hash(30,"none",33,126);
               String passwordhashed = hash("create",player,password, salt);
               String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
@@ -92,7 +90,7 @@ public class vBulletin {
             int userid = MySQL.countitall(Config.script_tableprefix+"user");
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"datastore", "`data`", "title", "userstats");
             String newcache = Util.ForumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
-            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"datastore"+"` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"datastore"+"` SET `data` = '"+newcache+"' WHERE `title` = 'userstats'");
             ps.executeUpdate();
           }
     }
@@ -104,31 +102,32 @@ public class vBulletin {
           String StoredSalt = eBeanClass.getSalt();
           return passwordHash(password, StoredSalt);
       } catch (NoSuchAlgorithmException e) {
-          Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+          Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
       } catch (UnsupportedEncodingException e) {
-          Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+          Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
       }
         }
         else if(action.equals("create")) {
             try {
                 return passwordHash(password, thesalt);
             } catch (NoSuchAlgorithmException e) {
-                // TODO Auto-generated catch block
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }
       return "fail";
     }
 
       public static boolean check_hash(String passwordhash, String hash) {
-          if(passwordhash.equals(hash)) return true;
-          else return false;
+          if(passwordhash.equals(hash)) {
+              return true;
+          } else { 
+              return false;
+          }
       }
 
       public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-      return Encryption.md5(Encryption.md5(password)+salt);
+          return Encryption.md5(Encryption.md5(password)+salt);
       }
 }

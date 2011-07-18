@@ -63,7 +63,10 @@ public class XE {
   }
 
     public static boolean check_hash(String passwordhash, String hash) {
-        if(passwordhash.equals(hash)) return true;
-        else return false;
+        if(passwordhash.equals(hash)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

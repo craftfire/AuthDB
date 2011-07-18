@@ -62,7 +62,7 @@ public class IPB {
             ps.executeUpdate();
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"cache_store", "`cs_value`", "cs_key", "stats");
             String newcache = Util.ForumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
-            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"cache_store"+"` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
+            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"cache_store"+"` SET `cs_value` = '"+newcache+"' WHERE `cs_key` = 'stats'");
             ps.executeUpdate();
         }
     }
@@ -74,31 +74,32 @@ public class IPB {
                   String StoredSalt = eBeanClass.getSalt();
                   return passwordHash(password, StoredSalt);
               } catch (NoSuchAlgorithmException e) {
-                  Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                  Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
               } catch (UnsupportedEncodingException e) {
-                  Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                  Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
               }
         }
         else if(action.equals("create")) {
             try {
                 return passwordHash(password, thesalt);
             } catch (NoSuchAlgorithmException e) {
-                // TODO Auto-generated catch block
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }
       return "fail";
     }
 
       public static boolean check_hash(String passwordhash, String hash) {
-          if(passwordhash.equals(hash)) return true;
-          else return false;
+          if(passwordhash.equals(hash)) {
+              return true;
+          } else { 
+              return false;
+          }
       }
 
       public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-      return Encryption.md5(Encryption.md5(salt) + Encryption.md5(password));
+          return Encryption.md5(Encryption.md5(salt)+Encryption.md5(password));
       }
 }

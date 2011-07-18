@@ -502,7 +502,7 @@ public class Config
                 aliases_logout = Config.GetConfigString("Core.aliases.logout", "/lo");
                 aliases_setspawn = Config.GetConfigString("Core.aliases.setspawn", "/s");
                 aliases_reload = Config.GetConfigString("Core.aliases.reload", "/ar");
-                save("Core.aliases.reload","HELLO");
+                save("Core.aliases.reload", "HELLO");
             }
       }
 

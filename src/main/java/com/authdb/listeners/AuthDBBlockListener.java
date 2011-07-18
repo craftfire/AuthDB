@@ -29,20 +29,19 @@ public class AuthDBBlockListener extends BlockListener
   }
 
   public void onBlockPlace(BlockPlaceEvent event) {
-    if (!plugin.isAuthorized(event.getPlayer())) {
+  if (!AuthDB.isAuthorized(event.getPlayer())) {
       if (!CheckGuest(event.getPlayer(),Config.guests_build)) {
-            event.setCancelled(true);
-        }
+          event.setCancelled(true);
+      }
     }
   }
 
   public void onBlockDamage(BlockDamageEvent event) {
-   if (!plugin.isAuthorized(event.getPlayer()))
-   {
-        if (!CheckGuest(event.getPlayer(),Config.guests_destroy)) {
-            event.setCancelled(true);
-        }
-   }
+  if (!AuthDB.isAuthorized(event.getPlayer())) {
+      if (!CheckGuest(event.getPlayer(),Config.guests_destroy)) {
+          event.setCancelled(true);
+      }
+    }
   }
 
   /*
@@ -63,13 +62,13 @@ public class AuthDBBlockListener extends BlockListener
         }
         else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false) {
             if(!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
-                this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
+                this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp()+Config.protection_delay);
                 Messages.SendMessage(Message.guest_notauthorized, player, null);
             }
             else {
                 if(this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.TimeStamp()) {
                     Messages.SendMessage(Message.guest_notauthorized, player, null);
-                    this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp() + Config.protection_delay);
+                    this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp()+Config.protection_delay);
                 }
             }
         }

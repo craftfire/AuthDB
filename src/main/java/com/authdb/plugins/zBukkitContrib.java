@@ -9,7 +9,7 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.plugins;
 
-import com.authdb.util.Util;
+
 
 public class zBukkitContrib {
     public static boolean CheckCommand(String command) {

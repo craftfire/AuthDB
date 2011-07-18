@@ -71,19 +71,19 @@ public class LoggingManager {
     
     private void ToFile(Type type, String line) {
         if(PluginManager.Config.logging) {
-            File data = new File(PluginManager.Plugin.getDataFolder()+"/logs/","");
+            File data = new File(PluginManager.Plugin.getDataFolder()+"/logs/", "");
             if (!data.exists()) { data.mkdir(); }
-            data = new File(PluginManager.Plugin.getDataFolder()+"/logs/"+type.toString()+"/","");
+            data = new File(PluginManager.Plugin.getDataFolder()+"/logs/"+type.toString()+"/", "");
             if (!data.exists()) { data.mkdir(); }
             DateFormat LogFormat = new SimpleDateFormat(PluginManager.Config.logformat);
             Date date = new Date();
             data = new File(PluginManager.Plugin.getDataFolder()+"/logs/"+type.toString()+"/"+LogFormat.format(date)+"-"+type.toString()+".log");
-            if ( !data.exists() ) {
+            if (!data.exists() ) {
                 try {
                     data.createNewFile();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                    Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 }
             }
             FileWriter Writer;
@@ -96,7 +96,7 @@ public class LoggingManager {
                 Out.close();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }
     }

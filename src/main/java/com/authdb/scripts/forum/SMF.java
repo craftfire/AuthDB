@@ -69,11 +69,11 @@ public class SMF {
         ps.executeUpdate();
 
         userid = MySQL.countitall(Config.script_tableprefix+"members");
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '"+player+"' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '"+userid+"' WHERE `variable` = 'latestMember'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '"+timestamp+"' WHERE `variable` = 'memberlist_updated'");
         ps.executeUpdate();
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
         ps.executeUpdate();
@@ -119,11 +119,11 @@ public class SMF {
         ps.executeUpdate();
 
         userid = MySQL.countitall(Config.script_tableprefix+"members");
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '"+player+"' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '"+userid+"' WHERE `variable` = 'latestMember'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = '"+timestamp+"' WHERE `variable` = 'memberlist_updated'");
         ps.executeUpdate();
         ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"settings"+"` SET `value` = value+1 WHERE `variable` = 'totalMembers'");
         ps.executeUpdate();
@@ -136,9 +136,9 @@ public class SMF {
               String temp = player+password;
             return Encryption.SHA1(temp);
         } catch (NoSuchAlgorithmException e) {
-            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         } catch (UnsupportedEncodingException e) {
-            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
     }
     else if(checkid == 2) {
@@ -146,16 +146,19 @@ public class SMF {
               String temp = player+password;
             return Encryption.SHA1(temp);
         } catch (NoSuchAlgorithmException e) {
-            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         } catch (UnsupportedEncodingException e) {
-            Util.Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
     }
     return "fail";
   }
 
     public static boolean check_hash(String passwordhash, String hash) {
-        if(passwordhash.equals(hash)) return true;
-        else return false;
+        if(passwordhash.equals(hash)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

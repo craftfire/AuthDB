@@ -43,12 +43,12 @@ public class zPermissions
 
     public static boolean IsAllowed(Player player, Permission permission) {
       if(HasPermissionsBukkit) {
-            if(player.hasPermission(AuthDB.PluginName.toLowerCase() + "." + permission.permission)) {
+            if(player.hasPermission(AuthDB.PluginName.toLowerCase()+"."+permission.permission)) {
                 return true;
             }
       }
       else if(HasPlugin) {
-          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.permission)) {
+          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase()+"."+permission.permission)) {
               return true;
           }
       }
