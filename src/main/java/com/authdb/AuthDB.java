@@ -76,7 +76,6 @@ public class AuthDB extends JavaPlugin {
     public static org.bukkit.Server Server;
     public static AuthDB plugin;
     public static EbeanServer Database;
-    public static boolean HasBukkitPermissions = false;
     public PluginDescriptionFile pluginFile = getDescription();
     public static String PluginName,PluginVersion,PluginWebsite, PluginDescrption;
     public static CraftIRC craftircHandle;
@@ -382,34 +381,25 @@ public class AuthDB extends JavaPlugin {
         
     
     void CheckPermissions() {
-        long length = 0 ;
-        File data = new File("permissions.yml","");
-        if(data.exists()) {
-            length = data.length();
-            HasBukkitPermissions = true;
+        Plugin Check1 = getServer().getPluginManager().getPlugin("Permissions");
+        if (Check1 != null) {
+            zPermissions.HasPlugin = true;
         }
         
-        Plugin Check = getServer().getPluginManager().getPlugin("Permissions");
-        if (Check != null) {
-            if(HasBukkitPermissions) {
-                HasBukkitPermissions = false;
-                Util.Logging.Info("Found Bukkit's Permissions, using supported plugin instead: " + Check.getDescription().getName() + " "+Check.getDescription().getVersion());
+        Plugin Check2 = getServer().getPluginManager().getPlugin("PermissionsBukkit");
+        if (Check2 != null) {
+            if(zPermissions.HasPlugin) {
+                Util.Logging.Info("Found 2 supported permissions plugins: " + Check1.getDescription().getName() + " "+Check1.getDescription().getVersion()+" and "+ Check2.getDescription().getName() + " "+Check2.getDescription().getVersion());
+                Util.Logging.Info("Defaulting permissions to: "+ Check2.getDescription().getName() + " "+Check2.getDescription().getVersion());
             }
             else {
-                Util.Logging.Info("Found supported plugin: " + Check.getDescription().getName() + " "+Check.getDescription().getVersion());
+                Util.Logging.Info("Found supported plugin: " + Check2.getDescription().getName() + " "+Check2.getDescription().getVersion());
             }
-            zPermissions.permissionsHandler = ((Permissions)Check).getHandler();
-            zPermissions. HasPlugin = true;
-            }
+            zPermissions.HasPermissionsBukkit = true;
+        }
         else {
-            if(HasBukkitPermissions) {
-                if(length > 0) {
-                    Util.Logging.Info("Using Bukkit's Permissions.");
-                }
-                else {
-                    Util.Logging.Info("Found Bukkit's Permissions but no permissions values in the permissions.yml, going over to OP!");
-                    HasBukkitPermissions = false;
-                }
+            if(zPermissions.HasPlugin) {
+                Util.Logging.Info("Found supported plugin: " + Check1.getDescription().getName() + " "+Check1.getDescription().getVersion());
             }
             else {
                 Util.Logging.Info("Could not load a permissions plugin, going over to OP!");
