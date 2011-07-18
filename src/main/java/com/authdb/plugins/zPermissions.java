@@ -24,7 +24,6 @@ public class zPermissions
     public enum Permission {
         command_login ("command.login"),
         command_logout ("command.logout"),
-        command_reload ("command.reload"),
         command_users ("command.users"),
         command_register ("command.register"),
         command_unregister ("command.unregister"),
@@ -35,7 +34,8 @@ public class zPermissions
         command_admin_logout ("command.admin.logout"),
         command_admin_login ("command.admin.login"),
         command_admin_unregister ("command.admin.unregister"),
-        command_admin_password ("command.admin.password");
+        command_admin_password ("command.admin.password"),
+        command_admin_reload ("command.admin.reload"),;
 
         private String permission;
         Permission(String permission) { this.permission = permission; }
@@ -52,8 +52,19 @@ public class zPermissions
               return true;
           }
       }
-      else if (player.isOp()) {
-          return true;
+      else {
+          Permission[] Permissions = Permission.values();
+          for(int i=0; i<Permissions.length; i++) {
+              if(Permissions[i].toString().equals(permission.toString())) {
+                  if(Permissions[i].toString().startsWith(AuthDB.PluginName.toLowerCase()+"."+"admin.")) {
+                      if(player.isOp()) {
+                          return true;
+                      }
+                      return false;
+                  }
+                  return true;
+              }
+          }
       }
       return false;
     }

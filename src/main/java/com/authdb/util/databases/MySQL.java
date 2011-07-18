@@ -18,8 +18,8 @@ import java.sql.Statement;
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
 import com.authdb.util.Messages;
-import com.authdb.util.Messages.Message;
 import com.authdb.util.Util;
+import com.authdb.util.Messages.Message;
 import com.craftfire.util.managers.LoggingManager;
 
 import com.mysql.jdbc.Blob;

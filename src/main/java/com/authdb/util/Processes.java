@@ -23,8 +23,8 @@ public class Processes {
             if(AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.remove(Encryption.md5(player.getName())); 
             }
-            if(AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) {
-                AuthDB.AuthDB_Sessions.remove(Encryption.md5(player.getName()+Util.GetIP(player))); 
+            if(AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName()+Util.CraftFirePlayer.GetIP(player)))) {
+                AuthDB.AuthDB_Sessions.remove(Encryption.md5(player.getName()+Util.CraftFirePlayer.GetIP(player))); 
             }
             if(AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
                 AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
@@ -61,11 +61,13 @@ public class Processes {
             if(!AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
             }
-            if(AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName()+Util.GetIP(player)))) {
-                AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName()+Util.GetIP(player)), timestamp);
+            if(AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName()+Util.CraftFirePlayer.GetIP(player)))) {
+                AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName()+Util.CraftFirePlayer.GetIP(player)), timestamp);
             }
             ItemStack[] inv = AuthDB.getInventory(player);
             if (inv != null) { player.getInventory().setContents(inv); }
+            inv = AuthDB.getArmorInventory(player);
+            if (inv != null) { player.getInventory().setArmorContents(inv); }
             return true;
         }
         return false;

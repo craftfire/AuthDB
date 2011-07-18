@@ -61,9 +61,9 @@ import com.authdb.plugins.zPermissions.Permission;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
+import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
-import com.authdb.util.Util;
 import com.authdb.util.databases.eBean;
 import com.authdb.util.databases.MySQL;
 import com.avaje.ebean.EbeanServer;
@@ -94,9 +94,7 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, String> AuthDB_PasswordTries = new HashMap<String, String>();
     public static HashMap<String, String> AuthDB_LinkedNames = new HashMap<String, String>();
     public static HashMap<String, String> AuthDB_LinkedNameCheck = new HashMap<String, String>();
-    public static String otherNamesFileName = "data/othernames.db";
     public static Logger log = Logger.getLogger("Minecraft");
-    public HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
 
     public void onDisable() {
         for (Player p : getServer().getOnlinePlayers()) {
@@ -111,7 +109,6 @@ public class AuthDB extends JavaPlugin {
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
         if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true))
             zCraftIRC.SendMessage(Message.OnDisable,null);
-        disableInventory();
         authorizedNames.clear();
         AuthDB_AuthTime.clear();
         AuthDB_RemindLogin.clear();
@@ -300,7 +297,7 @@ public class AuthDB extends JavaPlugin {
             }
             else if (cmd.getName().equalsIgnoreCase(CommandString(Config.commands_reload)) || cmd.getName().equalsIgnoreCase(CommandString(Config.aliases_reload))) {
                 if(args.length == 1) {
-                    if(zPermissions.IsAllowed(player, Permission.command_reload)) {
+                    if(zPermissions.IsAllowed(player, Permission.command_admin_reload)) {
                         new Config("config","plugins/"+PluginName+"/config/", "config.yml");
                         LoadYml("commands");
                         LoadYml("messages");
@@ -641,32 +638,28 @@ public class AuthDB extends JavaPlugin {
             return false;
     }
 
-      public void storeInventory(Player player, ItemStack[] inventory) throws IOException {
+      public void storeInventory(Player player, ItemStack[] inventory, ItemStack[] armorinventory) throws IOException {
         String inv = "";
+        String armorinv = "";
         for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
             if(inventory[i] != null) {
                 inv += inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability()+",";
             }
             else { inv += "0:0:0:0,"; }
         }
-          
+        
+        for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
+            if(armorinventory[i] != null) {
+                armorinv += armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability()+",";
+            }
+            else { armorinv += "0:0:0:0,"; }
+        }
+
           eBean eBeanClass = eBean.find(player);
           eBeanClass.setInventory(inv);
+          eBeanClass.setArmorinventory(armorinv);
           AuthDB.Database.save(eBeanClass);
       }
-
-    public void disableInventory() {
-        Set pl = inventories.keySet();
-        Iterator i = pl.iterator();
-       while (i.hasNext())
-       {
-            String player = (String)i.next();
-            Player pla = getServer().getPlayer(player);
-            if (pl != null)
-            pla.getInventory().setContents((ItemStack[])this.inventories.get(player));
-       }
-        inventories.clear();
-    }
 
     public void UpdateLinkedNames() {
         for (Player player : this.getServer().getOnlinePlayers()) {
@@ -691,7 +684,7 @@ public class AuthDB extends JavaPlugin {
                 String[] inv = Util.split(data, ",");
                 ItemStack[] inventory = new ItemStack[36];
                 
-                for(int i=0; i<inv.length - 1; i++) {
+                for(int i=0; i<inv.length; i++) {
                     String line = inv[i];
                     String[] split = line.split(":");
                     if (split.length == 4) {
@@ -711,11 +704,53 @@ public class AuthDB extends JavaPlugin {
                           inventory[i].setData(new MaterialData(type, dd));
                       else
                           inventory[i].setData(mat.getNewData(dd));
-                      i = (short)(i + 1);
                     }
                   }
                 
                 eBeanClass.setInventory(null);
+                AuthDB.Database.save(eBeanClass);
+                return inventory;
+            }
+        }
+        return null;
+      }
+    
+    public static ItemStack[] getArmorInventory(Player player) {
+        eBean eBeanClass = eBean.find(player);
+        if (eBeanClass != null) {
+            String data = eBeanClass.getArmorinventory();
+            if(data != "" && data != null) {
+                String[] inv = Util.split(data, ",");
+                ItemStack[] inventory = new ItemStack[4];
+                for(int i=0; i<inv.length; i++) {
+                    String line = inv[i];
+                    String[] split = line.split(":");
+                    if (split.length == 4) {
+                      int type = Integer.valueOf(split[0]).intValue();
+                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
+    
+                      short dur = Short.valueOf(split[3]).shortValue();
+                      if (dur > 0) {
+                          inventory[i].setDurability(dur);
+                      }
+                      byte dd;
+                      if (split[2].length() == 0) {
+                        dd = 0;
+                      }
+                      else {
+                        dd = Byte.valueOf(split[2]).byteValue();
+                      }
+                      Material mat = Material.getMaterial(type);
+                      if (mat == null) {
+                          inventory[i].setData(new MaterialData(type, dd));
+                      }
+                      else {
+                          inventory[i].setData(mat.getNewData(dd));
+                      }
+                    }
+                  }
+                
+                eBeanClass.setArmorinventory(null);
                 AuthDB.Database.save(eBeanClass);
                 return inventory;
             }

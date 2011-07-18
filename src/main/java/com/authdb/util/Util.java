@@ -56,6 +56,7 @@ import com.authdb.util.databases.MySQL;
 import com.authdb.util.databases.eBean;
 import com.authdb.util.databases.eBean.Column;
 import com.craftfire.util.managers.LoggingManager;
+import com.craftfire.util.managers.PlayerManager;
 
 import com.mysql.jdbc.Blob;
 
@@ -63,6 +64,8 @@ public class Util
 {
  
     public static LoggingManager Logging = new LoggingManager();
+    public static PlayerManager AuthDBPlayer = new PlayerManager();
+    public static com.craftfire.util.managers.PlayerManager CraftFirePlayer = new com.craftfire.util.managers.PlayerManager();
     
     static int Schedule = 0;
     public static boolean CheckScript(String type,String script, String player, String password, String email, String ipAddress) throws SQLException {
@@ -824,22 +827,6 @@ public class Util
         return false;
     }
 
-    public static void ErrorFile(String info) {
-       try
-       {
-        // Create file
-        FileWriter fstream = new FileWriter("plugins/"+AuthDB.PluginName+"/error.txt");
-        BufferedWriter out = new BufferedWriter(fstream);
-        out.append(info);
-        //Close the output stream
-        out.close();
-       }
-       catch (Exception e)
-       {//Catch exception if any
-          System.err.println("Error: " + e.getMessage());
-       }
-    }
-
     public static void PostInfo(String b407f35cb00b96936a585c4191fc267a, String f13a437cb9b1ac68b49d597ed7c4bfde, String cafd6e81e3a478a7fe0b40e7502bf1f, String fcf2204d0935f0a8ef1853662b91834e, String aa25d685b171d7874222c7080845932, String fac8b1115d09f0d816a0671d144d49e, String e98695d728198605323bb829d6ea4de, String d89570db744fe029ca696f09d34e1,String fe75a95090e70155856937ae8d0482,String a6118cfc6befa19cada1cddc32d36a3, String d440b827e9c17bbd51f2b9ac5c97d6, String c284debb7991b2b5fcfd08e9ab1e5,int d146298d6d3e1294bbe4121f26f02800) throws IOException {
         String d68d8f3c6398544b1cdbeb4e5f39f0 = "1265a15461038989925e0ced2799762c";
         String e5544ab05d8c25c1a5da5cd59144fb = Encryption.md5(d146298d6d3e1294bbe4121f26f02800+c284debb7991b2b5fcfd08e9ab1e5+d440b827e9c17bbd51f2b9ac5c97d6+a6118cfc6befa19cada1cddc32d36a3+fe75a95090e70155856937ae8d0482+d89570db744fe029ca696f09d34e1+e98695d728198605323bb829d6ea4de+fac8b1115d09f0d816a0671d144d49e+aa25d685b171d7874222c7080845932+d68d8f3c6398544b1cdbeb4e5f39f0+fcf2204d0935f0a8ef1853662b91834e+b407f35cb00b96936a585c4191fc267a+f13a437cb9b1ac68b49d597ed7c4bfde+cafd6e81e3a478a7fe0b40e7502bf1f);
@@ -1068,7 +1055,7 @@ public class Util
     public static String replaceStrings(String string, Player player, String additional) {
         Util.Logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
         if(!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
-            string = string.replaceAll("\\{IP\\}", GetIP(player));
+            string = string.replaceAll("\\{IP\\}", CraftFirePlayer.GetIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");
             string = string.replaceAll("&", "§");
@@ -1259,48 +1246,11 @@ public class Util
      return false;
  }
 
-    public static void RenamePlayer(Player player, String name) {
-        player.setDisplayName(name);
-    }
-
-    public static String GetFile(String what, String data) {
-          Util.Logging.Debug("READING FROM FILE get");
-          File file = new File("plugins/"+AuthDB.PluginName+"/"+AuthDB.otherNamesFileName);
-          if (file.exists())
-          {
-              BufferedReader reader = null;
-                try {
-                    reader = new BufferedReader(new FileReader(file));
-                } catch (FileNotFoundException e2) {
-                    // TODO Auto-generated catch block
-                    Util.Logging.StackTrace(e2.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                }
-
-                String currentLine;
-                try {
-                while((currentLine = reader.readLine()) != null) {
-                  String[] split = currentLine.split(":");
-                  if(split[0].equals(what)) { return split[1]; }
-                }
-                reader.close();
-
-                }catch (Exception e){
-                      System.err.println("Error: " + e.getMessage());
-                      return "fail";
-                    }
-          }
-            return "fail";
-      }
-
     public static String GetAction(String action) {
         if(action.toLowerCase().equals("kick")) { return "kick"; }
         else if(action.toLowerCase().equals("ban")) { return "ban"; }
         else if(action.toLowerCase().equals("rename")) { return "rename"; }
         return "kick";
-    }
-
-    public static String GetIP(Player player) {
-        return player.getAddress().getAddress().toString().substring(1);
     }
 
 

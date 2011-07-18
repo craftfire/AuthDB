@@ -14,8 +14,8 @@ import org.bukkit.entity.Player;
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
 import com.authdb.util.Messages;
-import com.authdb.util.Messages.Message;
 import com.authdb.util.Util;
+import com.authdb.util.Messages.Message;
 
 public class zCraftIRC {
 public static void SendMessage(Message type,Player player) {

@@ -36,9 +36,9 @@ import com.authdb.plugins.zPermissions.Permission;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
+import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
-import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 import com.authdb.util.databases.eBean;
 
@@ -81,7 +81,7 @@ public void onPlayerLogin(PlayerLoginEvent event)
         Messages.SendMessage(Message.username_maximum, player, event);
     }
     if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName()) {
-        Util.RenamePlayer(player,Util.CheckOtherName(player.getName()));
+        Util.CraftFirePlayer.RenamePlayer(player,Util.CheckOtherName(player.getName()));
     }
 }
 
@@ -97,7 +97,8 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerJoin(PlayerJoinEvent event) {
     final Player player = event.getPlayer();
-    eBean.CheckIP(player.getName(), Util.GetIP(player));
+    
+    eBean.CheckIP(player.getName(), Util.CraftFirePlayer.GetIP(player));
     player.teleport(Util.LandLocation(player.getLocation()));
     if(Config.link_rename && Util.CheckOtherName(player.getName()) != player.getName()) {
         String message = event.getJoinMessage();
@@ -108,7 +109,7 @@ public boolean CheckTimeout(Player player) throws IOException
     if(Config.session_length != 0) {
         long timestamp = System.currentTimeMillis()/1000;
         if(AuthDB.AuthDB_Sessions.containsKey(player)) {
-            long storedtime = AuthDB.AuthDB_Sessions.get(Encryption.md5(player.getName()+Util.GetIP(player)));
+            long storedtime = AuthDB.AuthDB_Sessions.get(Encryption.md5(player.getName()+Util.CraftFirePlayer.GetIP(player)));
             Util.Logging.Debug("Found session for "+player.getName()+", timestamp: "+storedtime);
             long timedifference = timestamp - storedtime;
             Util.Logging.Debug("Difference: "+timedifference);
@@ -142,7 +143,7 @@ public boolean CheckTimeout(Player player) throws IOException
          player.teleport(player.getWorld().getSpawnLocation());
      }
      eBean eBeanClass = eBean.CheckPlayer(player);
-     if(eBeanClass.getReloadtime() + 30 > Util.TimeStamp())
+     if(eBeanClass.getReloadtime() + 30 >= Util.TimeStamp())
      {
          sessionallow = true;
      }
@@ -157,13 +158,22 @@ public boolean CheckTimeout(Player player) throws IOException
         if(Config.HasBackpack) {
             BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
             BackpackPlayer.createBackpack();
-            this.plugin.storeInventory(player, BackpackPlayer.getContents());
+            this.plugin.storeInventory(player, BackpackPlayer.getContents(), player.getInventory().getArmorContents());
         }
         else {
-            this.plugin.storeInventory(player, player.getInventory().getContents());
+            this.plugin.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
         }
-        player.getInventory().clear();
-         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  @Override public void run() { if(!plugin.isAuthorized(player)) { if(player.getInventory() != null) {  player.getInventory().clear(); } } } } , 20);
+         player.getInventory().clear();
+         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {  
+			 @Override public void run() { 
+				 if(!plugin.isAuthorized(player)) { 
+					 if(player.getInventory() != null) {  
+					 player.getInventory().clear(); 
+					 }
+					 Util.CraftFirePlayer.ClearArmorinventory(player);
+				 } 
+			 } 
+		 } , 20);
          if(Util.ToLoginMethod(Config.login_method).equalsIgnoreCase("prompt"))
          {
              Messages.SendMessage(Message.login_prompt, player,null);
@@ -177,19 +187,20 @@ public boolean CheckTimeout(Player player) throws IOException
         if(Config.HasBackpack) {
             BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
             BackpackPlayer.createBackpack();
-            this.plugin.storeInventory(player, BackpackPlayer.getInventory().getContents());
+            this.plugin.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
         }
-        else { this.plugin.storeInventory(player, player.getInventory().getContents()); }
-           player.getInventory().clear();
+        else { this.plugin.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents()); }
+          player.getInventory().clear();
+          Util.CraftFirePlayer.ClearArmorinventory(player);
           Messages.SendMessage(Message.welcome_guest, player,null);
       }
      else if (!Config.register_force) {
-                  Messages.SendMessage(Message.welcome_guest, player,null);
-         }
+		  Messages.SendMessage(Message.welcome_guest, player,null);
+	 }
      else {
-            long thetimestamp = System.currentTimeMillis()/1000;
-            this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
-            Processes.Login(player);
+		long thetimestamp = System.currentTimeMillis()/1000;
+		this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
+		Processes.Login(player);
       }
     } catch (IOException e) {
       Util.Logging.Severe("["+AuthDB.PluginName+"] Inventory file error:");
@@ -224,7 +235,7 @@ public boolean CheckTimeout(Player player) throws IOException
     else { Util.Logging.Debug("Could not find "+player.getName()+" in the timeout list, no need to remove."); }
         long thetimestamp = System.currentTimeMillis()/1000;
         if(Config.session_start.equalsIgnoreCase("logoff"))
-            this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName()+Util.GetIP(player)), thetimestamp);
+            this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName()+Util.CraftFirePlayer.GetIP(player)), thetimestamp);
         this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
         Processes.Logout(player);
 
@@ -335,12 +346,14 @@ public boolean CheckTimeout(Player player) throws IOException
                        String themail = null;
                        if(!email) { themail = null; }
                        else { themail = split[2]; }
-                    if(this.plugin.register(player, split[1], themail,Util.GetIP(player))) {
+                    if(this.plugin.register(player, split[1], themail,Util.CraftFirePlayer.GetIP(player))) {
                         ItemStack[] inv = this.plugin.getInventory(player);
                         if (inv != null) { player.getInventory().setContents(inv); }
+                        inv = AuthDB.getArmorInventory(player);
+                        if (inv != null) { player.getInventory().setArmorContents(inv); }
                         long timestamp = System.currentTimeMillis()/1000;
                         this.plugin.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
-                        this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName()+Util.GetIP(player)), timestamp);
+                        this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName()+Util.CraftFirePlayer.GetIP(player)), timestamp);
                         Util.Logging.Debug("Session started for "+player.getName());
                         Processes.Login(player);
                         long thetimestamp = System.currentTimeMillis()/1000;
