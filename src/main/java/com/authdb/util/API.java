@@ -36,9 +36,7 @@ public class API {
         String IsBanned = "";
         String BanReason = "";
         String BannedToDate = "";
-        if (Config.custom_enabled) {
-        }
-        else if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) {
+        if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) {
             if (Util.checkVersionInRange(PhpBB.VersionRange)) {
                 //phpbb3
                 if (what.equals("getgroup")) {
@@ -151,6 +149,7 @@ public class API {
                     //next version, need to check if between 0 and 255.
                 } else if (what.equals("banreason")) {
                     if (player == null) {
+                        return "";
                         //
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "members", "`ID_MEMBER`", "memberName",player.getName());
@@ -164,6 +163,7 @@ public class API {
                     }
                 } else if (what.equals("bannedtodate")) {
                     if (player == null) {
+                        return "";
                         //
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "members", "`ID_MEMBER`", "memberName",player.getName());
@@ -197,6 +197,7 @@ public class API {
 
                 } else if (what.equals("banreason")) {
                     if (player == null) {
+                        return "";
                         //
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "members", "`id_member`", "member_name",player.getName());
@@ -207,6 +208,7 @@ public class API {
                     }
                 } else if (what.equals("bannedtodate")) {
                     if (player == null) {
+                        return "";
                         //
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "members", "`id_member`", "member_name",player.getName());
@@ -461,6 +463,7 @@ public class API {
                     GroupName = MySQL.getfromtable(Config.script_tableprefix + "role", "`Name`", "RoleID", GroupID);
                 } else if (what.equals("checkifbanned")) {
                     if (player == null) {
+                        return "";
                         //find addon
                     } else {
                         String BanID = MySQL.getfromtable(Config.script_tableprefix + "role", "`RoleID`", "Name", "Banned");
@@ -484,6 +487,7 @@ public class API {
                     GroupName = MySQL.getfromtable(Config.script_tableprefix + "role", "`Name`", "RoleID", GroupID);
                 } else if (what.equals("checkifbanned")) {
                     if (player == null) {
+                        return "";
                         //find addon
                     } else {
                         String BanID = MySQL.getfromtable(Config.script_tableprefix + "role", "`RoleID`", "Name", "Banned");
@@ -595,6 +599,7 @@ public class API {
         } else if (script.equals(BBPress.Name) || script.equals(BBPress.ShortName)) {
             if (Util.checkVersionInRange(BBPress.VersionRange)) {
                 if (what.equals("getgroup")) {
+                    return "";
                     //next version: http://buddypress.org/
                 } else if (what.equals("checkifbanned")) {
                     if (player == null) {
@@ -688,34 +693,32 @@ public class API {
                     }
                 }
             }
-        } else if (script.equals(IPB.Name) || script.equals(IPB.ShortName)) {
-            if (Util.checkVersionInRange(IPB.VersionRange)) {
-                if (what.equals("getgroup")) {
+        } else if ((script.equals(IPB.Name) || script.equals(IPB.ShortName)) && Util.checkVersionInRange(IPB.VersionRange)) {
+            if (what.equals("getgroup")) {
+                //next version
+                return "";
+            } else if (what.equals("checkifbanned")) {
+                if (player == null) {
                     //next version
                     return "";
-                } else if (what.equals("checkifbanned")) {
-                    if (player == null) {
-                        //next version
-                        return "";
-                    } else {
-                        //next version
-                        return "";
-                    }
-                } else if (what.equals("banreason")) {
-                    if (player == null) {
-                        //
-                        return "";
-                    }
-                    //nothing yet
-                    return "noreason";
-                } else if (what.equals("bannedtodate")) {
-                    if (player == null) {
-                        //
-                        return "";
-                    }
-                    //install IPB on local
-                    return "nodate";
+                } else {
+                    //next version
+                    return "";
                 }
+            } else if (what.equals("banreason")) {
+                if (player == null) {
+                    //
+                    return "";
+                }
+                //nothing yet
+                return "noreason";
+            } else if (what.equals("bannedtodate")) {
+                if (player == null) {
+                    //
+                    return "";
+                }
+                //install IPB on local
+                return "nodate";
             }
         }
         if (what.equals("getgroup")) {

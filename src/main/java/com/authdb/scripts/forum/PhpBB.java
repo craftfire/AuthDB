@@ -108,9 +108,11 @@ public class PhpBB {
         ResultSet rs = stmt.executeQuery(query);
         if (rs.next()) { userid = rs.getInt(1); }
         else {
-        Util.logging.Warning("Could not get the latest user ID from users table, ERROR!");
+            Util.logging.Warning("Could not get the latest user ID from users table, ERROR!");
         }
-        userid = userid + 1;
+        rs.close();
+        stmt.close();
+        userid += 1;
 
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_active`,`username`,`user_password`,`user_lastvisit`,`user_regdate`,`user_email`,`user_id`)  VALUES (?,?,?,?,?,?,?)", 1);
         ps.setInt(1, 1); //user_active

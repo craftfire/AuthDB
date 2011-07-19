@@ -59,10 +59,8 @@ public void onEntityDamage(EntityDamageEvent event) {
            if (event instanceof EntityDamageByEntityEvent) {
                EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
                if ((e.getDamager() instanceof Animals) || (e.getDamager() instanceof Monster)) {
-                   if (event.getEntity() instanceof Player) {
-                      if (!checkGuest(p,Config.guests_health)) {
-                            event.setCancelled(true);
-                        }
+                   if (event.getEntity() instanceof Player && !checkGuest(p,Config.guests_health)) {
+                        event.setCancelled(true);
                    }
                } else if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
                   Player t = (Player)e.getDamager();

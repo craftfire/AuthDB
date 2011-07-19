@@ -11,7 +11,6 @@ package com.authdb.scripts.cms;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Random;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
