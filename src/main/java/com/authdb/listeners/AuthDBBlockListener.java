@@ -29,18 +29,14 @@ public class AuthDBBlockListener extends BlockListener
   }
 
   public void onBlockPlace(BlockPlaceEvent event) {
-  if (!AuthDB.isAuthorized(event.getPlayer())) {
-      if (!CheckGuest(event.getPlayer(),Config.guests_build)) {
-          event.setCancelled(true);
-      }
+  if (!AuthDB.isAuthorized(event.getPlayer()) && !CheckGuest(event.getPlayer(),Config.guests_build)) {
+      event.setCancelled(true);
     }
   }
 
   public void onBlockDamage(BlockDamageEvent event) {
-  if (!AuthDB.isAuthorized(event.getPlayer())) {
-      if (!CheckGuest(event.getPlayer(),Config.guests_destroy)) {
-          event.setCancelled(true);
-      }
+  if (!AuthDB.isAuthorized(event.getPlayer()) && !CheckGuest(event.getPlayer(),Config.guests_destroy)) {
+      event.setCancelled(true);
     }
   }
 
@@ -55,25 +51,20 @@ public class AuthDBBlockListener extends BlockListener
       }*/
 
     public boolean CheckGuest(Player player,boolean what) {
-        if(what) {
-            if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false) {
-                return true;
-            }
-        }
-        else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.CheckOtherName(player.getName())) == false) {
-            if(!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
-                this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp()+Config.protection_delay);
+        if (what && (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false)) {
+            return true;
+        } else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
+            if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
+                this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
                 Messages.SendMessage(Message.guest_notauthorized, player, null);
-            }
-            else {
-                if(this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.TimeStamp()) {
+            } else {
+                if (this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.timeStamp()) {
                     Messages.SendMessage(Message.guest_notauthorized, player, null);
-                    this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.TimeStamp()+Config.protection_delay);
+                    this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
                 }
             }
-        }
-        else {
-            if(Config.protection_notify && this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {  
+        } else {
+            if (Config.protection_notify && this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {  
                 this.plugin.AuthDB_RemindLogin.remove(player.getName());
             }
         }

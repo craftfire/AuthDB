@@ -20,23 +20,22 @@ public class Encryption
 {
 
     public static String Encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        if(encryption.equals("md5")) return md5(toencrypt);
-        else if(encryption.equals("sha1")) return SHA1(toencrypt);
-        else if(encryption.equals("sha512")) return SHA512(toencrypt);
-        if(Config.debug_enable) Util.Logging.Info("Could not find encryption method: "+Config.custom_encryption+", using default: md5");
+        if (encryption.equals("md5")) return md5(toencrypt);
+        else if (encryption.equals("sha1")) return SHA1(toencrypt);
+        else if (encryption.equals("sha512")) return SHA512(toencrypt);
+        if (Config.debug_enable) Util.logging.Info("Could not find encryption method: " + Config.custom_encryption + ", using default: md5");
         Config.custom_encryption = "md5";
         return md5(toencrypt);
     }
 
     public static String hash(int length, String charset,int RangeFrom, int RangeTo) {
-        if(charset.equals("none")) {
+        if (charset.equals("none")) {
             String salt = "";
             for (int i = 0; i < length; i++) {
                 salt += (char)(Util.randomNumber(RangeFrom, RangeTo));
             }
             return salt;
-        }
-        else {
+        } else {
             Random rand = new Random(System.currentTimeMillis());
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < length; i++) {
@@ -77,7 +76,7 @@ public class Encryption
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         md.update(text.getBytes());
 
@@ -89,7 +88,7 @@ public class Encryption
         StringBuffer hexString = new StringBuffer();
         for (int i=0;i<byteData.length;i++) {
             String hex=Integer.toHexString(0xff & byteData[i]);
-                if(hex.length()==1) hexString.append('0');
+                if (hex.length()==1) hexString.append('0');
                 hexString.append(hex);
         }
         return hexString.toString();

@@ -42,22 +42,22 @@ public class zPermissions
     }
 
     public static boolean IsAllowed(Player player, Permission permission) {
-      if(HasPermissionsBukkit) {
-            if(player.hasPermission(AuthDB.PluginName.toLowerCase()+"."+permission.permission)) {
+      if (HasPermissionsBukkit) {
+            if (player.hasPermission(AuthDB.PluginName.toLowerCase() + "." + permission.permission)) {
                 return true;
             }
       }
-      else if(HasPlugin) {
-          if(permissionsHandler.has(player, AuthDB.PluginName.toLowerCase()+"."+permission.permission)) {
+      else if (HasPlugin) {
+          if (permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.permission)) {
               return true;
           }
       }
       else {
           Permission[] Permissions = Permission.values();
-          for(int i=0; i<Permissions.length; i++) {
-              if(Permissions[i].toString().equals(permission.toString())) {
-                  if(Permissions[i].toString().startsWith(AuthDB.PluginName.toLowerCase()+"."+"admin.")) {
-                      if(player.isOp()) {
+          for (int i=0; i<Permissions.length; i++) {
+              if (Permissions[i].toString().equals(permission.toString())) {
+                  if (Permissions[i].toString().startsWith(AuthDB.PluginName.toLowerCase() + "." + "admin.")) {
+                      if (player.isOp()) {
                           return true;
                       }
                       return false;

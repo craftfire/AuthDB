@@ -28,14 +28,14 @@ public class IPB {
     public static String LatestVersionRange = VersionRange;
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
-        if(checkid == 1) {
+        if (checkid == 1) {
             long timestamp = System.currentTimeMillis()/1000;
             String salt = Encryption.hash(5,"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",0,0);
             String hash = hash("create",player,password, salt);
             //
             PreparedStatement ps;
             //
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"members"+"` (`name`,`member_group_id`,`email`,`joined`,`ip_address`,`allow_admin_mails`,`last_visit`,`last_activity`,`ignored_users`,`members_display_name`,`members_seo_name`,`members_l_display_name`,`members_l_username`,`members_pass_hash`,`members_pass_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "members" + "` (`name`,`member_group_id`,`email`,`joined`,`ip_address`,`allow_admin_mails`,`last_visit`,`last_activity`,`ignored_users`,`members_display_name`,`members_seo_name`,`members_l_display_name`,`members_l_username`,`members_pass_hash`,`members_pass_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
             ps.setString(1, player); //name
             ps.setInt(2, 3); // member_group_id
             ps.setString(3, email); //email
@@ -53,46 +53,45 @@ public class IPB {
             ps.setString(15, salt); //members_pass_salt
             ps.executeUpdate();
 
-            int userid = MySQL.countitall(Config.script_tableprefix+"members");
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"pfields_content"+"` (`member_id`)  VALUES (?)", 1);
+            int userid = MySQL.countitall(Config.script_tableprefix + "members");
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "pfields_content" + "` (`member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //member_id
             ps.executeUpdate();
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"profile_portal"+"` (`pp_member_id`)  VALUES (?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "profile_portal" + "` (`pp_member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //pp_member_id
             ps.executeUpdate();
-            String oldcache =  MySQL.getfromtable(Config.script_tableprefix+"cache_store", "`cs_value`", "cs_key", "stats");
+            String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "cache_store", "`cs_value`", "cs_key", "stats");
             String newcache = Util.ForumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
-            ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"cache_store"+"` SET `cs_value` = '"+newcache+"' WHERE `cs_key` = 'stats'");
+            ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "cache_store" + "` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
             ps.executeUpdate();
         }
     }
 
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
-        if(action.equals("find")) {
+        if (action.equals("find")) {
               try {
                   eBean eBeanClass = eBean.CheckPlayer(player);
                   String StoredSalt = eBeanClass.getSalt();
                   return passwordHash(password, StoredSalt);
               } catch (NoSuchAlgorithmException e) {
-                  Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                  Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
               } catch (UnsupportedEncodingException e) {
-                  Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                  Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
               }
-        }
-        else if(action.equals("create")) {
+        } else if (action.equals("create")) {
             try {
                 return passwordHash(password, thesalt);
             } catch (NoSuchAlgorithmException e) {
-                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } catch (UnsupportedEncodingException e) {
-                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }
       return "fail";
     }
 
       public static boolean check_hash(String passwordhash, String hash) {
-          if(passwordhash.equals(hash)) {
+          if (passwordhash.equals(hash)) {
               return true;
           } else { 
               return false;
@@ -100,6 +99,6 @@ public class IPB {
       }
 
       public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-          return Encryption.md5(Encryption.md5(salt)+Encryption.md5(password));
+          return Encryption.md5(Encryption.md5(salt) + Encryption.md5(password));
       }
 }

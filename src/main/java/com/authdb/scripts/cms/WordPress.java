@@ -24,7 +24,7 @@ public class WordPress {
     public static String LatestVersionRange = VersionRange;
 
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
-    if(checkid == 1) {
+    if (checkid == 1) {
         long timestamp = System.currentTimeMillis()/1000;
         //
         PreparedStatement ps;
@@ -32,7 +32,7 @@ public class WordPress {
         String passwordhashed = hash(password);
         String realdate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`user_login`,`user_pass`,`user_nicename`,`user_email`,`user_registered`,`display_name`)  VALUES (?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_login`,`user_pass`,`user_nicename`,`user_email`,`user_registered`,`display_name`)  VALUES (?,?,?,?,?,?)", 1);
         ps.setString(1, player); //user_login
         ps.setString(2, passwordhashed); //user_pass
         ps.setString(3, player); //user_nicename
@@ -43,11 +43,11 @@ public class WordPress {
         ps.executeUpdate();
 
         /*
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+userid+"' WHERE `config_name` = 'newest_user_id'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+player+"' WHERE `config_name` = 'newest_username'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = config_value + 1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();*/
     }
  }
@@ -63,7 +63,7 @@ public class WordPress {
         random = "";
 
         for (int i = 0; i < count; i += 16) {
-            random_state = Encryption.md5(unique_id()+random_state);
+            random_state = Encryption.md5(unique_id() + random_state);
             random += Encryption.pack(Encryption.md5(random_state));
         }
         random = random.substring(0, count);
@@ -82,10 +82,6 @@ public class WordPress {
     return unique_id("c");
   }
 
-  private static String unique_id(String extra) {
-    return "1234567890abcdef";
-  }
-
   private static String _hash_gensalt_private(String input, String itoa64) {
     return _hash_gensalt_private(input, itoa64, 6);
   }
@@ -97,7 +93,7 @@ public class WordPress {
         int PHP_VERSION = 5;
         String output = "$P$";
         output += itoa64.charAt(Math.min(iteration_count_log2
-               +((PHP_VERSION >= 5) ? 5 : 3), 30));
+               + ((PHP_VERSION >= 5) ? 5 : 3), 30));
         output += _hash_encode64(input, 6);
 
         return output;
@@ -161,10 +157,10 @@ public class WordPress {
             return output;
         }
 
-        String m1 = Encryption.md5(salt+password);
+        String m1 = Encryption.md5(salt + password);
         String hash = Encryption.pack(m1);
         do {
-            hash = Encryption.pack(Encryption.md5(hash+password));
+            hash = Encryption.pack(Encryption.md5(hash + password));
         } while (--count > 0);
 
         output = setting.substring(0, 12);
@@ -176,8 +172,7 @@ public class WordPress {
     public static boolean check_hash(String password, String hash) {
         if (hash.length() == 34) {
             return _hash_crypt_private(password, hash).equals(hash);
-        }
-        else {
+        } else {
             return Encryption.md5(password).equals(hash);
         }
     }

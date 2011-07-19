@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.authdb.AuthDB;
 import com.authdb.util.Config;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
@@ -26,21 +25,21 @@ import com.mysql.jdbc.Blob;
 
 public class MySQL
 {
-    static LoggingManager Logging = new LoggingManager();
+    static LoggingManager logging = new LoggingManager();
     public static Connection mysql = null;
 
     public static boolean check() {
         try {
             mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
         } catch (SQLException e) {
-            if(Config.debug_enable) {
-                Logging.Warning("MYSQL CANNOT CONNECT!!!");
+            if (Config.debug_enable) {
+                logging.Warning("MYSQL CANNOT CONNECT!!!");
                 Messages.SendMessage(Message.database_failure, null, null);
-                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 return false;
             } else {
-                Logging.Warning("Cannot connect to MySQL host: "+Config.database_host);
-                Logging.Warning("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                logging.Warning("Cannot connect to MySQL host: " + Config.database_host);
+                logging.Warning("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.SendMessage(Message.database_failure, null, null);
                 return false;
             }
@@ -48,54 +47,65 @@ public class MySQL
         return true;
     }
 
-    public static void close() { if (mysql != null) try { mysql.close(); } catch (SQLException localSQLException) { } }
+    public static void close() { 
+    if (mysql != null) {
+        try { 
+             mysql.close(); } catch (SQLException localSQLException) { 
+                 Util.logging.StackTrace(localSQLException.getStackTrace(), 
+                 Thread.currentThread().getStackTrace()[1].getMethodName(), 
+                 Thread.currentThread().getStackTrace()[1].getLineNumber(), 
+                 Thread.currentThread().getStackTrace()[1].getClassName(), 
+                 Thread.currentThread().getStackTrace()[1].getFileName()); 
+             }    
+        }
+    }
 
     public static void connect() {
         try {
-            Class.forName(Util.ToDriver(Config.database_driver));
+            Class.forName(Util.toDriver(Config.database_driver));
         } catch (ClassNotFoundException e) {
             Config.database_ison = false;
-            Logging.Warning("CANNOT FIND DATABASE DRIVER!!!");
+            logging.Warning("CANNOT FIND DATABASE DRIVER!!!");
             Messages.SendMessage(Message.database_failure, null, null);
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
 
-        if(Config.debug_enable) {
-            Util.Logging.Debug("Lauching function: connect()");
-            Util.Logging.Debug("MySQL: "+Config.dbDb);
-            Util.Logging.Debug("MySQL driver: "+Config.database_driver);
-            Util.Logging.Debug("MySQL username: "+Config.database_username);
-            Util.Logging.Debug("MySQL password: "+Config.database_password);
-            Util.Logging.Debug("MySQL host: "+Config.database_host);
-            Util.Logging.Debug("MySQL port: "+Config.database_port);
-            Util.Logging.Debug("MySQL database: "+Config.database_database);
-            if(!Config.custom_enabled) {
-                Util.Logging.Debug("MySQL prefix: "+Config.script_tableprefix);
+        if (Config.debug_enable) {
+            Util.logging.Debug("Lauching function: connect()");
+            Util.logging.Debug("MySQL: " + Config.dbDb);
+            Util.logging.Debug("MySQL driver: " + Config.database_driver);
+            Util.logging.Debug("MySQL username: " + Config.database_username);
+            Util.logging.Debug("MySQL password: " + Config.database_password);
+            Util.logging.Debug("MySQL host: " + Config.database_host);
+            Util.logging.Debug("MySQL port: " + Config.database_port);
+            Util.logging.Debug("MySQL database: " + Config.database_database);
+            if (!Config.custom_enabled) {
+                Util.logging.Debug("MySQL prefix: " + Config.script_tableprefix);
             }
         }
 
-        Util.Logging.Debug("MySQL: "+Config.dbDb+"?user="+Config.database_username+"&password="+Config.database_password);
+        Util.logging.Debug("MySQL: " + Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
         try {
             Config.database_ison = true;
 
             mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
         } catch (SQLException e) {
             Config.database_ison = false;
-            if(Config.debug_enable) {
-                Logging.Warning("MYSQL CANNOT CONNECT!!!");
+            if (Config.debug_enable) {
+                logging.Warning("MYSQL CANNOT CONNECT!!!");
                 Messages.SendMessage(Message.database_failure, null, null);
-                Logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                //Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                //Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } else {
-                Logging.Warning("MySQL cannot connect to the specified host: "+Config.database_host);
-                Logging.Warning("Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                logging.Warning("MySQL cannot connect to the specified host: " + Config.database_host);
+                logging.Warning("Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.SendMessage(Message.database_failure, null, null);
             }
         }
     }
 
     public static int countitall(String table) throws SQLException {
-        String query = "SELECT LAST_INSERT_ID() FROM `"+table+"` LIMIT 1";
+        String query = "SELECT LAST_INSERT_ID() FROM `" + table + "` LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         int dupe = 0;
@@ -111,7 +121,7 @@ public class MySQL
     }
 
     public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'% LIMIT 1";
+        String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` LIKE '%" + value2 + "'% LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -122,7 +132,7 @@ public class MySQL
     }
 
     public static String getfromtable2(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` = '"+value2+"' LIMIT 1";
+        String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` = '" + value2 + "' LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -133,7 +143,7 @@ public class MySQL
     }
 
     public static String getfromtablelike(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' AND `"+column3+"` LIKE '%"+value2+"'% LIMIT 1";
+        String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` LIKE '%" + value2 + "'% LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -144,7 +154,7 @@ public class MySQL
     }
 
     public static String getfromtable(String table,String column1,String column2,String value) throws SQLException {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' LIMIT 1";
+        String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -166,7 +176,7 @@ public class MySQL
     }
 
     public static Blob getfromtableBlob(String table,String column1,String column2,String value) throws SQLException {
-        String query = "SELECT "+column1+" FROM `"+table+"` WHERE `"+column2+"` = '"+value+"' LIMIT 1";
+        String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' LIMIT 1";
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         Blob dupe = null;

@@ -158,7 +158,7 @@ public class Config
       public Config(String config, String directory, String filename) {
           template = new Configuration(new File(directory, filename));
           template.load();
-            if(config.equals("config")) {
+            if (config.equals("config")) {
                 ///////////////////////////////////////////
                 //               Core
                 ///////////////////////////////////////////
@@ -183,7 +183,7 @@ public class Config
                     database_host =  GetConfigString("Core.database.host", "localhost");
                     database_database = GetConfigString("Core.database.name", "forum");
                     database_keepalive = GetConfigBoolean("Core.database.keepalive", false);
-                    dbDb = "jdbc:mysql://"+database_host+":"+database_port+"/"+database_database;
+                    dbDb = "jdbc:mysql://" + database_host + ":" + database_port + "/" + database_database;
 
                     ///////////////////////////////////////////
                     //               script
@@ -212,8 +212,8 @@ public class Config
                     welcome_time = GetConfigString("Core.welcome.time", "seconds");
                     welcome_delay = GetConfigString("Core.welcome.delay", "2");
                     welcome_length = GetConfigString("Core.welcome.length", "10");
-                    welcome_delay_ticks = Util.ToTicks(welcome_time,welcome_delay);
-                    welcome_length_ticks = Util.ToTicks(welcome_time,welcome_length);
+                    welcome_delay_ticks = Util.toTicks(welcome_time,welcome_delay);
+                    welcome_length_ticks = Util.toTicks(welcome_time,welcome_length);
 
                     ///////////////////////////////////////////
                     //               register
@@ -222,29 +222,29 @@ public class Config
                     register_force = GetConfigBoolean("Core.register.force", true);
                     register_delay_length = Util.split(GetConfigString("Core.register.delay", "4 seconds"), " ")[0];
                     register_delay_time = Util.split(GetConfigString("Core.register.delay", "4 seconds"), " ")[1];
-                    register_delay = Util.ToTicks(register_delay_time,register_delay_length);
+                    register_delay = Util.toTicks(register_delay_time,register_delay_length);
                     register_show_length = Util.split(GetConfigString("Core.register.show", "10 seconds"), " ")[0];
                     register_show_time = Util.split(GetConfigString("Core.register.show", "10 seconds"), " ")[1];
-                    register_show = Util.ToSeconds(register_show_time,register_show_length);
+                    register_show = Util.toSeconds(register_show_time,register_show_length);
                     register_timeout_length = Util.split(GetConfigString("Core.register.timeout", "3 minutes"), " ")[0];
                     register_timeout_time = Util.split(GetConfigString("Core.register.timeout", "3 minutes"), " ")[1];
-                    register_timeout = Util.ToTicks(register_timeout_time,register_timeout_length);
+                    register_timeout = Util.toTicks(register_timeout_time,register_timeout_length);
 
                     ///////////////////////////////////////////
                     //               login
                     ///////////////////////////////////////////
                     login_method = GetConfigString("Core.login.method", "prompt");
                     login_tries = GetConfigString("Core.login.tries", "3");
-                    login_action = Util.GetAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
+                    login_action = Util.getAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
                     login_delay_length = Util.split(GetConfigString("Core.login.delay", "4 seconds"), " ")[0];
                     login_delay_time = Util.split(GetConfigString("Core.login.delay", "4 seconds"), " ")[1];
-                    login_delay = Util.ToTicks(login_delay_time,login_delay_length);
+                    login_delay = Util.toTicks(login_delay_time,login_delay_length);
                     login_show_length = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[0];
                     login_show_time = Util.split(GetConfigString("Core.login.show", "10 seconds"), " ")[1];
-                    login_show = Util.ToSeconds(login_show_time,login_show_length);
+                    login_show = Util.toSeconds(login_show_time,login_show_length);
                     login_timeout_length = Util.split(GetConfigString("Core.login.timeout", "3 minutes"), " ")[0];
                     login_timeout_time = Util.split(GetConfigString("Core.login.timeout", "3 minutes"), " ")[1];
-                    login_timeout = Util.ToTicks(login_timeout_time,login_timeout_length);
+                    login_timeout = Util.toTicks(login_timeout_time,login_timeout_length);
 
                     ///////////////////////////////////////////
                     //               link
@@ -277,8 +277,8 @@ public class Config
                     session_protect = GetConfigBoolean("Core.session.protect", true);
                     session_thelength = Util.split(GetConfigString("Core.session.length", "1 hour"), " ")[0];
                     session_time = Util.split(GetConfigString("Core.session.length", "1 hour"), " ")[1];
-                    session_length = Util.ToSeconds(session_time,session_thelength);
-                    session_start = Util.CheckSessionStart(GetConfigString("Core.session.start", "login"));
+                    session_length = Util.toSeconds(session_time,session_thelength);
+                    session_start = Util.checkSessionStart(GetConfigString("Core.session.start", "login"));
 
                     ///////////////////////////////////////////
                     //               guests
@@ -303,13 +303,13 @@ public class Config
                     protection_notify = GetConfigBoolean("Core.protection.notify", true);
                     protection_delay_length = Util.split(GetConfigString("Core.protection.delay", "3 seconds"), " ")[0];
                     protection_delay_time = Util.split(GetConfigString("Core.protection.delay", "3 seconds"), " ")[1];
-                    protection_delay = Util.ToSeconds(protection_delay_time,protection_delay_length);
+                    protection_delay = Util.toSeconds(protection_delay_time,protection_delay_length);
 
                     ///////////////////////////////////////////
                     //               filter
                     ///////////////////////////////////////////
-                    filter_action = Util.GetAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
-                    filter_username = GetConfigString("Core.filter.username", "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/");
+                    filter_action = Util.getAction(GetConfigString("Core.filter.action", "kick").toLowerCase());
+                    filter_username = GetConfigString("Core.filter.username", "`~!@#$%^&*()-= + {[]}|\\:;\"<,>.?/");
                     filter_password = GetConfigString("Core.filter.password", "&");
                     filter_whitelist= GetConfigString("Core.filter.whitelist", "");
 
@@ -342,8 +342,7 @@ public class Config
                         CraftIRC_messages_password_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.password", true);
                         CraftIRC_messages_idle_enabled = GetConfigBoolean("Plugins.CraftIRC.messages.idle", true);
 
-            }
-            else if(config.equals("messages")) {
+            } else if (config.equals("messages")) {
             ///////////////////////////////////////////
             //  messages
             ///////////////////////////////////////////
@@ -390,7 +389,7 @@ public class Config
                     Messages.AuthDB_message_login_prompt = Config.GetConfigString("Core.login.prompt", "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:");
                     Messages.AuthDB_message_login_success = Config.GetConfigString("Core.login.success", "{BRIGHTGREEN}Password accepted. Welcome!");
                     Messages.AuthDB_message_login_failure = Config.GetConfigString("Core.login.failure", "{RED}Password incorrect, please try again.");
-                    Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.login.authorized", "{BRIGHTGREEN}You are already logged in!");;
+                    Messages.AuthDB_message_login_authorized = Config.GetConfigString("Core.login.authorized", "{BRIGHTGREEN}You are already logged in!");
                     Messages.AuthDB_message_login_notregistered = Config.GetConfigString("Core.login.notregistered", "{RED}You are not registred yet!");
                     Messages.AuthDB_message_login_usage = Config.GetConfigString("Core.login.usage", "{RED}Correct usage is: /login password");
 
@@ -485,8 +484,7 @@ public class Config
                     Messages.CraftIRC_message_filter_kicked = Config.GetConfigString("Plugins.CraftIRC.filter.kicked", "{PLAYER} was kicked due to bad characters in username!");
                     Messages.CraftIRC_message_filter_whitelist = Config.GetConfigString("Plugins.CraftIRC.filter.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
 
-            }
-            else if(config.equals("commands")) {
+            } else if (config.equals("commands")) {
                 commands_register = Config.GetConfigString("Core.commands.register", "/register");
                 commands_link = Config.GetConfigString("Core.commands.link", "/link");
                 commands_unlink = Config.GetConfigString("Core.commands.unlink", "/unlink");

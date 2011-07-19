@@ -35,7 +35,7 @@ public class phpBB {
     public static String ShortName = "phpbb";
 
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
-    if(checkid==1) {
+    if (checkid==1) {
         String hash = phpbb_hash(password);
         long timestamp = System.currentTimeMillis()/1000;
         int userid;
@@ -43,7 +43,7 @@ public class phpBB {
         PreparedStatement ps;
         //
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
         ps.setString(1, player);
         ps.setString(2, player.toLowerCase());
         ps.setString(3, hash);
@@ -65,30 +65,29 @@ public class phpBB {
         ps.setString(17, ipAddress); //user_ip
         ps.executeUpdate();
 
-        userid = MySQL.countitall(Config.script_tableprefix+"users");
+        userid = MySQL.countitall(Config.script_tableprefix + "users");
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
         ps.setInt(1, 2);
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.setInt(4, 0);
         ps.executeUpdate();
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user_group"+"` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
         ps.setInt(1, 7);
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.setInt(4, 0);
         ps.executeUpdate();
 
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+userid+"' WHERE `config_name` = 'newest_user_id'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+player+"' WHERE `config_name` = 'newest_username'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = config_value + 1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();
-    }
-    else if(checkid == 2) {
+    } else if (checkid == 2) {
         String hash = Encryption.md5(password);
         long timestamp = System.currentTimeMillis()/1000;
         //
@@ -97,13 +96,16 @@ public class phpBB {
         int userid = 0;
 
 
-        String query = "SELECT user_id FROM `"+Config.script_tableprefix+"users"+"` ORDER BY `user_id` DESC LIMIT 0 , 1";
+        String query = "SELECT user_id FROM `" + Config.script_tableprefix + "users" + "` ORDER BY `user_id` DESC LIMIT 0 , 1";
         Statement stmt = MySQL.mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         if (rs.next()) { userid = rs.getInt(1); }
-        userid = userid+1;
+        else {
+        Util.logging.Warning("Could not get the latest user ID from users table, ERROR!");
+        }
+        userid = userid + 1;
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`user_active`,`username`,`user_password`,`user_lastvisit`,`user_regdate`,`user_email`,`user_id`)  VALUES (?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_active`,`username`,`user_password`,`user_lastvisit`,`user_regdate`,`user_email`,`user_id`)  VALUES (?,?,?,?,?,?,?)", 1);
         ps.setInt(1, 1); //user_active
         ps.setString(2, player.toLowerCase()); //username
         ps.setString(3, hash); //user_password
@@ -114,19 +116,19 @@ public class phpBB {
         ///
         ps.executeUpdate();
 
-        userid = MySQL.countitall(Config.script_tableprefix+"users");
+        userid = MySQL.countitall(Config.script_tableprefix + "users");
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"user_group"+"` (`group_id`,`user_id`,`user_pending`)  VALUES (?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`,`user_id`,`user_pending`)  VALUES (?,?,?)", 1);
         ps.setInt(1, 3);
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.executeUpdate();
         /*
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+userid+"' WHERE `config_name` = 'newest_user_id'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+player+"' WHERE `config_name` = 'newest_username'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = config_value + 1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();*/
     }
  }
@@ -143,7 +145,7 @@ public class phpBB {
         random = "";
 
         for (int i = 0; i < count; i += 16) {
-            random_state = Encryption.md5(unique_id()+random_state);
+            random_state = Encryption.md5(unique_id() + random_state);
             random += Encryption.pack(Encryption.md5(random_state));
         }
         random = random.substring(0, count);
@@ -161,10 +163,6 @@ public class phpBB {
     return unique_id("c");
   }
 
-  private static String unique_id(String extra) {
-    return "1234567890abcdef";
-  }
-
   private static String _hash_gensalt_private(String input, String itoa64) {
     return _hash_gensalt_private(input, itoa64, 6);
   }
@@ -176,7 +174,7 @@ public class phpBB {
         }
         int PHP_VERSION = 5;
         String output = "$H$";
-        output += itoa64.charAt(Math.min(iteration_count_log2+((PHP_VERSION >= 5) ? 5 : 3), 30));
+        output += itoa64.charAt(Math.min(iteration_count_log2 + ((PHP_VERSION >= 5) ? 5 : 3), 30));
         output += _hash_encode64(input, 6);
 
         return output;
@@ -240,10 +238,10 @@ public class phpBB {
             return output;
         }
 
-        String m1 = Encryption.md5(salt+password);
+        String m1 = Encryption.md5(salt + password);
         String hash = Encryption.pack(m1);
         do {
-            hash = Encryption.pack(Encryption.md5(hash+password));
+            hash = Encryption.pack(Encryption.md5(hash + password));
         }
         while (--count > 0);
 

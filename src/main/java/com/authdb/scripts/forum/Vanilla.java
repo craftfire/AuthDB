@@ -28,21 +28,21 @@ public class Vanilla {
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
       long timestamp = System.currentTimeMillis()/1000;
           String usertable = null,roletable = null;
-          if(checkid == 1) {
+          if (checkid == 1) {
               usertable = "User";
               roletable = "UserRole";
           }
-          else if(checkid == 2) {
+          else if (checkid == 2) {
               usertable = "user";
               roletable = "userrole";
           }
 
-        if(checkid == 1 || checkid == 2) {
+        if (checkid == 1 || checkid == 2) {
               String passwordhashed = hash(password);
               String randomkey = Util.getRandomString2(12, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
               String realdate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
                 PreparedStatement ps;
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+usertable+"` (`Name`,`Password`,`HashMethod`,`Email`,`Gender`,`Preferences`,`Permissions`,`Attributes`,`DateFirstVisit`,`DateLastActive`,`DateInserted`,`DateUpdated`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + usertable + "` (`Name`,`Password`,`HashMethod`,`Email`,`Gender`,`Preferences`,`Permissions`,`Attributes`,`DateFirstVisit`,`DateLastActive`,`DateInserted`,`DateUpdated`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", 1);
                 ps.setString(1, player); //Name
                 ps.setString(2, passwordhashed); // Password
                 ps.setString(3, "Vanilla"); //HashMethod
@@ -50,21 +50,21 @@ public class Vanilla {
                 ps.setString(5, "m"); //Gender
                 ps.setString(6, "a:1:{s:13:\"Authenticator\";s:8:\"password\";}"); //Preferences
                 ps.setString(7, "a:9:{i:0;s:19:\"Garden.SignIn.Allow\";i:1;s:20:\"Garden.Activity.View\";i:2;s:20:\"Garden.Profiles.View\";i:3;s:24:\"Vanilla.Discussions.View\";i:4;s:23:\"Vanilla.Discussions.Add\";i:5;s:20:\"Vanilla.Comments.Add\";s:24:\"Vanilla.Discussions.View\";a:1:{i:0;i:-1;}s:23:\"Vanilla.Discussions.Add\";a:1:{i:0;i:-1;}s:20:\"Vanilla.Comments.Add\";a:1:{i:0;i:-1;}}"); //Permissions
-                ps.setString(8, "a:1:{s:12:\"TransientKey\";s:12:\""+randomkey+"\";}"); //Attributes
+                ps.setString(8, "a:1:{s:12:\"TransientKey\";s:12:\"" + randomkey + "\";}"); //Attributes
                 ps.setString(9, realdate); //DateFirstVisit
                 ps.setString(10, realdate); //DateLastActive
                 ps.setString(11, realdate); //DateInserted
                 ps.setString(12, realdate); //DateUpdated
                 ps.executeUpdate();
     
-                int userid = MySQL.countitall(Config.script_tableprefix+usertable);
+                int userid = MySQL.countitall(Config.script_tableprefix + usertable);
     
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
                 ps.setInt(1, userid); //UserID
                 ps.setInt(2, 3); //RoleID
                 ps.executeUpdate();
     
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+roletable+"` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
                 ps.setInt(1, userid); //UserID
                 ps.setInt(2, 8); //RoleID
                 ps.executeUpdate();
@@ -84,7 +84,7 @@ public class Vanilla {
           random = "";
 
           for (int i = 0; i < count; i += 16) {
-              random_state = Encryption.md5(unique_id()+random_state);
+              random_state = Encryption.md5(unique_id() + random_state);
               random += Encryption.pack(Encryption.md5(random_state));
           }
           random = random.substring(0, count);
@@ -101,10 +101,6 @@ public class Vanilla {
       return unique_id("c");
     }
 
-    private static String unique_id(String extra) {
-      return "1234567890abcdef";
-    }
-
     private static String _hash_gensalt_private(String input, String itoa64) {
       return _hash_gensalt_private(input, itoa64, 6);
     }
@@ -116,7 +112,7 @@ public class Vanilla {
           int PHP_VERSION = 5;
           String output = "$P$";
           output += itoa64.charAt(Math.min(iteration_count_log2
-                 +((PHP_VERSION >= 5) ? 5 : 3), 30));
+                 + ((PHP_VERSION >= 5) ? 5 : 3), 30));
           output += _hash_encode64(input, 6);
 
           return output;
@@ -130,8 +126,7 @@ public class Vanilla {
           String output = "";
           int i = 0;
 
-          do
-          {
+          do {
               int value = input.charAt(i++);
               output += itoa64.charAt(value & 0x3f);
 
@@ -181,10 +176,10 @@ public class Vanilla {
               return output;
           }
 
-          String m1 = Encryption.md5(salt+password);
+          String m1 = Encryption.md5(salt + password);
           String hash = Encryption.pack(m1);
           do {
-              hash = Encryption.pack(Encryption.md5(hash+password));
+              hash = Encryption.pack(Encryption.md5(hash + password));
           }
           while (--count > 0);
 

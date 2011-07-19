@@ -27,13 +27,13 @@ public class DLE {
     public static String LatestVersionRange = VersionRange;
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
-        if(checkid == 1) {
+        if (checkid == 1) {
             long timestamp = System.currentTimeMillis()/1000;
             String hash = hash(password);
             //
             PreparedStatement ps;
             //
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`email`,`password`,`name`,`lastdate`,`reg_date`,`logged_ip`,`info`,`signature`,`favorites`,`xfields`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`email`,`password`,`name`,`lastdate`,`reg_date`,`logged_ip`,`info`,`signature`,`favorites`,`xfields`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
             ps.setString(1, email); //email
             ps.setString(2, hash); // password
             ps.setString(3, player); //name
@@ -53,15 +53,15 @@ public class DLE {
         try {
             return passwordHash(password);
         } catch (NoSuchAlgorithmException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         } catch (UnsupportedEncodingException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "fail";
     }
 
       public static boolean check_hash(String passwordhash, String hash) {
-          if(passwordhash.equals(hash)) {
+          if (passwordhash.equals(hash)) {
               return true;
           } else {
               return false;

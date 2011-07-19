@@ -21,20 +21,20 @@ public class AuthDB_API {
 
     public static boolean CheckBan(Player player) {
         try {
-            if(API.GetScript("checkifbanned", player, null).equals("true")) { return true; }
+            if (API.GetScript("checkifbanned", player, null).equals("true")) { return true; }
         }
         catch (SQLException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return false;
     }
 
     public static boolean CheckBan(String IP) {
         try {
-            if(API.GetScript("checkifbanned", null, IP).equals("true")) { return true; }
+            if (API.GetScript("checkifbanned", null, IP).equals("true")) { return true; }
         }
         catch (SQLException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return false;
     }
@@ -44,7 +44,7 @@ public class AuthDB_API {
             return API.GetScript("banreason", player, null);
         }
         catch (SQLException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "noreason";
     }
@@ -54,7 +54,7 @@ public class AuthDB_API {
             return API.GetScript("banreason", null, IP);
         }
         catch (SQLException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "noreason";
     }
@@ -62,14 +62,13 @@ public class AuthDB_API {
     public static String BanUnixTimestamp(Player player) {
         try {
             String BanDate = API.GetScript("bannedtodate", player, null);
-            if(BanDate.equals("nodate")) { return "nodate"; }
-            else if(BanDate.equals("perma")) { return "perma"; }
+            if (BanDate.equals("nodate")) { return "nodate"; } else if (BanDate.equals("perma")) { return "perma"; }
             String delimiter = "\\,";
             String[] Split = BanDate.split(delimiter);
-            if(Split[1].equals("unix")) { return Split[0]; }
+            if (Split[1].equals("unix")) { return Split[0]; }
         }
         catch (SQLException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "nodate";
     }
@@ -79,7 +78,7 @@ public class AuthDB_API {
             return API.GetScript("getgroup", player, null);
         }
         catch (SQLException e) {
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "fail";
     }
@@ -89,7 +88,7 @@ public class AuthDB_API {
             return MySQL.Unix_Timestamp();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "fail";
     }

@@ -25,12 +25,12 @@ public class XE {
 
   public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     long timestamp = System.currentTimeMillis()/1000;
-    if(checkid == 1) {
+    if (checkid == 1) {
         String hash = Encryption.md5(password);
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`name`,`pass`,`mail`,`created`,`access`,`login`,`status`,`init`)  VALUES (?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`,`pass`,`mail`,`created`,`access`,`login`,`status`,`init`)  VALUES (?,?,?,?,?,?,?,?)", 1);
         ps.setString(1, player); //name
         ps.setString(2, hash); //pass
         ps.setString(3, email); //mail
@@ -42,14 +42,13 @@ public class XE {
         ///need to add these, it's complaining about not default is set.
         ps.executeUpdate();
     }
-    /*
-    else if(check(2)) {
+    /* else if (check(2)) {
         String hash = hash(player,password);
         int userid;
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`name`,`pass`,`mail`,`created`,`login`,`status`,`init`)  VALUES (?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`,`pass`,`mail`,`created`,`login`,`status`,`init`)  VALUES (?,?,?,?,?,?,?)", 1);
         ps.setString(1, player); //name
         ps.setString(2, hash); //pass
         ps.setString(3, email); //mail
@@ -63,7 +62,7 @@ public class XE {
   }
 
     public static boolean check_hash(String passwordhash, String hash) {
-        if(passwordhash.equals(hash)) {
+        if (passwordhash.equals(hash)) {
             return true;
         } else {
             return false;

@@ -29,7 +29,7 @@ public class PunBB {
 
 
   public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
-    if(checkid == 1) {
+    if (checkid == 1) {
         long timestamp = System.currentTimeMillis()/1000;
         //
         PreparedStatement ps;
@@ -37,7 +37,7 @@ public class PunBB {
         String salt = Encryption.hash(12,"none",33, 126);
         String hash = hash("create",player,password,salt);
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `"+Config.script_tableprefix+"users"+"` (`group_id`,`username`,`password`,`salt`,`email`,`registered`,`registration_ip`,`last_visit`)  VALUES (?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`group_id`,`username`,`password`,`salt`,`email`,`registered`,`registration_ip`,`last_visit`)  VALUES (?,?,?,?,?,?,?,?)", 1);
         ps.setInt(1, 3); //group_id
         ps.setString(2, player); //username
         ps.setString(3, hash); //password
@@ -50,41 +50,40 @@ public class PunBB {
         ps.executeUpdate();
 
         /*
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+userid+"' WHERE `config_name` = 'newest_user_id'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = '"+player+"' WHERE `config_name` = 'newest_username'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
         ps.executeUpdate();
-        ps = MySQL.mysql.prepareStatement("UPDATE `"+Config.script_tableprefix+"config"+"` SET `config_value` = config_value+1 WHERE `config_name` = 'num_users'");
+        ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = config_value + 1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();*/
     }
  }
 
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
-        if(action.equals("find")) {
+        if (action.equals("find")) {
       try {
           eBean eBeanClass = eBean.CheckPlayer(player);
           String StoredSalt = eBeanClass.getSalt();
           return passwordHash(password, StoredSalt);
       } catch (NoSuchAlgorithmException e) {
-          Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+          Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
       } catch (UnsupportedEncodingException e) {
-          Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+          Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
       }
-        }
-        else if(action.equals("create")) {
+        } else if (action.equals("create")) {
             try {
                 return passwordHash(password, thesalt);
             } catch (NoSuchAlgorithmException e) {
-                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } catch (UnsupportedEncodingException e) {
-                Util.Logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }
       return "fail";
     }
 
       public static boolean check_hash(String passwordhash, String hash) {
-          if(passwordhash.equals(hash)) { 
+          if (passwordhash.equals(hash)) { 
               return true;
           } else {
               return false;
@@ -92,6 +91,6 @@ public class PunBB {
       }
 
       public static String passwordHash(String password, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-          return Encryption.SHA1(salt+Encryption.SHA1(password));
+          return Encryption.SHA1(salt + Encryption.SHA1(password));
       }
 }

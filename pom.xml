@@ -99,6 +99,7 @@
         </repository>
     </repositories>
 
+    <!-- Dependencies -->
     <dependencies>
         <!-- Required component -->
         <!-- <dependency>
@@ -149,9 +150,9 @@
         </dependency>
     </dependencies>
 
+    <!-- Build -->
     <build>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-
         <!-- Resources -->
         <resources>
             <resource>
@@ -190,7 +191,7 @@
             </resource>
         </resources>
 
-        <!-- Plugins -->
+        <!-- Build plugins -->
         <plugins>
             <!-- Compile plugin -->
             <plugin>
@@ -219,7 +220,6 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
 </project>
