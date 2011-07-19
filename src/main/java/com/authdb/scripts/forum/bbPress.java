@@ -78,7 +78,7 @@ public class bbPress {
   }
 
   private static String unique_id() {
-    return unique_id("c");
+    return "1234567890abcdef";
   }
 
   private static String _hash_gensalt_private(String input, String itoa64) {

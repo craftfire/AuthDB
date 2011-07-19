@@ -16,6 +16,7 @@ import java.sql.Statement;
 
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
+import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 /**
@@ -160,7 +161,7 @@ public class phpBB {
   }
 
   private static String unique_id() {
-    return unique_id("c");
+    return "1234567890abcdef";
   }
 
   private static String _hash_gensalt_private(String input, String itoa64) {

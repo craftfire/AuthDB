@@ -131,7 +131,7 @@ public class Drupal {
        }
 
       private static String unique_id() {
-        return unique_id("c");
+        return "1234567890abcdef";
       }
 
       private static String password_generate_salt(int count_log2) {

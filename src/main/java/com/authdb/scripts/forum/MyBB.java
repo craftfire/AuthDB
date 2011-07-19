@@ -44,7 +44,7 @@ public class MyBB {
         ps.setLong(6, timestamp); //lastactive
         ps.setLong(7, timestamp); //lastvisit
         ps.setString(8, ipAddress); //regip
-        ps.setLong(9, Util.IP2Long(ipAddress));
+        ps.setLong(9, Util.ip2Long(ipAddress));
         //need to add these, it's complaining about not default is set.
         ps.setString(10, ""); //signature
         ps.setString(11, ""); //buddylist
@@ -57,7 +57,7 @@ public class MyBB {
 
         int userid = MySQL.countitall(Config.script_tableprefix + "users");
         String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
-        String newcache = Util.ForumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null);
+        String newcache = Util.forumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null);
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datacache" + "` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
         ps.executeUpdate();
         }
