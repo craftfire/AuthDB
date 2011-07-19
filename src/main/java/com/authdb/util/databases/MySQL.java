@@ -34,13 +34,13 @@ public class MySQL
         } catch (SQLException e) {
             if (Config.debug_enable) {
                 logging.Warning("MYSQL CANNOT CONNECT!!!");
-                Messages.SendMessage(Message.database_failure, null, null);
+                Messages.sendMessage(Message.database_failure, null, null);
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 return false;
             } else {
                 logging.Warning("Cannot connect to MySQL host: " + Config.database_host);
                 logging.Warning("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
-                Messages.SendMessage(Message.database_failure, null, null);
+                Messages.sendMessage(Message.database_failure, null, null);
                 return false;
             }
         }
@@ -66,7 +66,7 @@ public class MySQL
         } catch (ClassNotFoundException e) {
             Config.database_ison = false;
             logging.Warning("CANNOT FIND DATABASE DRIVER!!!");
-            Messages.SendMessage(Message.database_failure, null, null);
+            Messages.sendMessage(Message.database_failure, null, null);
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
 
@@ -93,13 +93,13 @@ public class MySQL
             Config.database_ison = false;
             if (Config.debug_enable) {
                 logging.Warning("MYSQL CANNOT CONNECT!!!");
-                Messages.SendMessage(Message.database_failure, null, null);
+                Messages.sendMessage(Message.database_failure, null, null);
                 logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 //Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } else {
                 logging.Warning("MySQL cannot connect to the specified host: " + Config.database_host);
                 logging.Warning("Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
-                Messages.SendMessage(Message.database_failure, null, null);
+                Messages.sendMessage(Message.database_failure, null, null);
             }
         }
     }
@@ -112,12 +112,14 @@ public class MySQL
         if (rs.next()) { 
             dupe = rs.getInt(1); 
         }
+        stmt.close();
         return dupe;
     }
 
     public static void query(String query) throws SQLException {
         Statement stmt = mysql.createStatement();
         stmt.executeUpdate(query);
+        stmt.close();
     }
 
     public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
@@ -128,6 +130,7 @@ public class MySQL
         if (rs.next()) { 
             dupe = rs.getString(1); 
         }
+        stmt.close();
         return dupe;
     }
 
@@ -139,6 +142,7 @@ public class MySQL
         if (rs.next()) { 
             dupe = rs.getString(1); 
         }
+        stmt.close();
         return dupe;
     }
 
@@ -150,6 +154,7 @@ public class MySQL
         if (rs.next()) { 
             dupe = rs.getString(1);
         }
+        stmt.close();
         return dupe;
     }
 
@@ -161,6 +166,7 @@ public class MySQL
         if (rs.next()) { 
             dupe = rs.getString(1); 
         }
+        stmt.close();
         return dupe;
     }
 
@@ -172,6 +178,7 @@ public class MySQL
         if (rs.next()) { 
             dupe = rs.getString(1); 
         }
+        stmt.close();
         return dupe;
     }
 
@@ -183,6 +190,7 @@ public class MySQL
         if (rs.next()) { 
             dupe = (Blob) rs.getBlob(1); 
         }
+        stmt.close();
         return dupe;
     }
 }

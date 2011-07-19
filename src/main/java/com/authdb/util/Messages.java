@@ -9,14 +9,12 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.util;
 
-import java.io.IOException;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import com.authdb.AuthDB;
-import com.authdb.plugins.zCraftIRC;
+import com.authdb.plugins.ZCraftIRC;
 
 public class Messages
 {
@@ -183,10 +181,10 @@ static AuthDB plugin = new AuthDB();
         }
     }
 
-    public static void SendMessage(final Message type,final Player player,PlayerLoginEvent event) {
-        zCraftIRC.SendMessage(type,player);
+    public static void sendMessage(final Message type,final Player player,PlayerLoginEvent event) {
+        ZCraftIRC.sendMessage(type,player);
         if (type.equals(Message.database_failure)) {
-            AuthDB.Server.broadcastMessage(Util.replaceStrings(AuthDB_message_database_failure, null, null));
+            AuthDB.server.broadcastMessage(Util.replaceStrings(AuthDB_message_database_failure, null, null));
         } else if (Config.database_ison) {
             if (type.equals(Message.welcome_guest)) {
                 if (Config.register_force) {
@@ -224,7 +222,7 @@ static AuthDB plugin = new AuthDB();
                 final AppearanceManager Manager = BukkitContrib.getAppearanceManager();
                 final String URLBefore = Manager.getSkinUrl(cplayer, player);
                 Util.logging.Info("URL Before: " + URLBefore);
-                 AuthDB.Server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+                 AuthDB.server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
                      @Override public void run()
                  {
                      Util.logging.Info("RUNNING!");
@@ -244,7 +242,7 @@ static AuthDB plugin = new AuthDB();
                     //plugin.UpdateSkin();
                     final String URL = Manager.getSkinUrl(cplayer, players);
                     Util.logging.Info("URL1: " + URL);
-                     AuthDB.Server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+                     AuthDB.server.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
                          @Override public void run()
                      {
                          Util.logging.Info("RUNNING!");
@@ -336,6 +334,6 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.idle_whitelist)) {
                 //player.sendMessage(Util.replaceStrings(AuthDB_message_idle_whitelist,player, null));
             }
-        } else { Messages.SendMessage(Message.database_failure, null, null); }
+        } else { Messages.sendMessage(Message.database_failure, null, null); }
     }
 }

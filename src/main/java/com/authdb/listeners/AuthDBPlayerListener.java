@@ -29,16 +29,16 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
-import com.authdb.plugins.zBukkitContrib;
-import com.authdb.plugins.zPermissions;
-import com.authdb.plugins.zPermissions.Permission;
+import com.authdb.plugins.ZBukkitContrib;
+import com.authdb.plugins.ZPermissions;
+import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
-import com.authdb.util.databases.eBean;
+import com.authdb.util.databases.EBean;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -46,7 +46,6 @@ import com.afforess.backpack.BackpackPlayer;
 public class AuthDBPlayerListener extends PlayerListener
 {
   private final AuthDB plugin;
-  String NoPermission = "You do not have permission to use this command.";
   boolean sessionallow;
   int Schedule;
 
@@ -60,33 +59,33 @@ public void onPlayerLogin(PlayerLoginEvent event)
     /*if (!MySQL.check()) {
         event.disallow(Result.KICK_OTHER, "You can't join the server when the server has no connection to MySQL.");
     }*/
-    eBean.sync(player);
+    EBean.sync(player);
     
     if (Config.session_protect && Util.checkIfLoggedIn(player)) {
-        Messages.SendMessage(Message.session_protected, player, event);
+        Messages.sendMessage(Message.session_protected, player, event);
     }
     if (Config.filter_action.equalsIgnoreCase("kick") || Config.filter_action.equalsIgnoreCase("rename")) {
         String name = player.getName();
         if (Util.checkFilter("username",name) == false && Util.checkWhitelist("username",player) == false) {
           Util.logging.Debug("The player is not in the whitelist and has bad characters in his/her name");
-          if (Config.filter_action.equalsIgnoreCase("kick")) Messages.SendMessage(Message.filter_username, player, event);
+          if (Config.filter_action.equalsIgnoreCase("kick")) Messages.sendMessage(Message.filter_username, player, event);
         }
     }
     if (player.getName().length() < Integer.parseInt(Config.username_minimum)) {
-        Messages.SendMessage(Message.username_minimum, player, event);
+        Messages.sendMessage(Message.username_minimum, player, event);
     } else if (player.getName().length() > Integer.parseInt(Config.username_maximum)) {
-        Messages.SendMessage(Message.username_maximum, player, event);
+        Messages.sendMessage(Message.username_maximum, player, event);
     }
-    if (Config.link_rename && Util.checkOtherName(player.getName()) != player.getName()) {
-        Util.craftFirePlayer.RenamePlayer(player,Util.checkOtherName(player.getName()));
+    if (Config.link_rename && !Util.checkOtherName(player.getName()).equals(player.getName())) {
+        Util.craftFirePlayer.renamePlayer(player,Util.checkOtherName(player.getName()));
     }
 }
 
-public boolean CheckTimeout(Player player) throws IOException
+public boolean checkTimeout(Player player) throws IOException
 {
-    Util.logging.Debug("Launching function: CheckTimeout(Player player))");
+    Util.logging.Debug("Launching function: checkTimeout(Player player))");
     if (plugin.isAuthorized(player) == false && AuthDB.AuthDB_Timeouts.containsKey(player.getName())) {
-        Messages.SendMessage(Message.idle_kick, player, null);
+        Messages.sendMessage(Message.idle_kick, player, null);
         return true;
     }
     return false;
@@ -95,9 +94,9 @@ public boolean CheckTimeout(Player player) throws IOException
   public void onPlayerJoin(PlayerJoinEvent event) {
     final Player player = event.getPlayer();
     
-    eBean.CheckIP(player.getName(), Util.craftFirePlayer.GetIP(player));
+    EBean.checkIP(player.getName(), Util.craftFirePlayer.getIP(player));
     player.teleport(Util.landLocation(player.getLocation()));
-    if (Config.link_rename && Util.checkOtherName(player.getName()) != player.getName()) {
+    if (Config.link_rename && !Util.checkOtherName(player.getName()).equals(player.getName())) {
         String message = event.getJoinMessage();
         message = message.replaceAll(player.getName(), player.getDisplayName());
         event.setJoinMessage(message);
@@ -105,8 +104,8 @@ public boolean CheckTimeout(Player player) throws IOException
     this.plugin.AuthDB_PasswordTries.put(player.getName(),"0");
     if (Config.session_length != 0) {
         long timestamp = System.currentTimeMillis()/1000;
-        if (AuthDB.AuthDB_Sessions.containsKey(player)) {
-            long storedtime = AuthDB.AuthDB_Sessions.get(Encryption.md5(player.getName() + Util.craftFirePlayer.GetIP(player)));
+        if (AuthDB.AuthDB_Sessions.containsKey(player.getName())) {
+            long storedtime = AuthDB.AuthDB_Sessions.get(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)));
             Util.logging.Debug("Found session for " + player.getName() + ", timestamp: " + storedtime);
             long timedifference = timestamp - storedtime;
             Util.logging.Debug("Difference: " + timedifference);
@@ -122,7 +121,7 @@ public boolean CheckTimeout(Player player) throws IOException
                 @Override
                 public void run() {
                     try {
-                        CheckTimeout(player);
+                        checkTimeout(player);
                     } catch (IOException e) {
                         Util.logging.Warning("Error checking if player was in the timeout list");
                         Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -138,18 +137,18 @@ public boolean CheckTimeout(Player player) throws IOException
          player.setHealth(20);
          player.teleport(player.getWorld().getSpawnLocation());
      }
-     eBean eBeanClass = eBean.CheckPlayer(player);
+     EBean eBeanClass = EBean.checkPlayer(player);
      if (eBeanClass.getReloadtime() + 30 >= Util.timeStamp()) {
          sessionallow = true;
      }
 
     if (sessionallow) {
-        Messages.SendMessage(Message.session_valid, player, null);
+        Messages.sendMessage(Message.session_valid, player, null);
         long thetimestamp = System.currentTimeMillis()/1000;
         this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
         Processes.Login(event.getPlayer());
     } else if (this.plugin.isRegistered("join",player.getName()) || this.plugin.isRegistered("join",Util.checkOtherName(player.getName()))) {
-        if (Config.HasBackpack) {
+        if (Config.hasBackpack) {
             BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
             BackpackPlayer.createBackpack();
             this.plugin.storeInventory(player, BackpackPlayer.getContents(), player.getInventory().getArmorContents());
@@ -163,33 +162,33 @@ public boolean CheckTimeout(Player player) throws IOException
                      if (player.getInventory() != null) {  
                      player.getInventory().clear(); 
                      }
-                     Util.craftFirePlayer.ClearArmorinventory(player);
+                     Util.craftFirePlayer.clearArmorinventory(player);
                  } 
              } 
          } , 20);
          if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-             Messages.SendMessage(Message.login_prompt, player, null);
+             Messages.sendMessage(Message.login_prompt, player, null);
          } else {
-             Messages.SendMessage(Message.login_normal, player, null);
+             Messages.sendMessage(Message.login_normal, player, null);
          }
      } else if (Config.register_force) {
-        if (Config.HasBackpack) {
+        if (Config.hasBackpack) {
             BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
             BackpackPlayer.createBackpack();
             this.plugin.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
         } else { this.plugin.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents()); }
           player.getInventory().clear();
-          Util.craftFirePlayer.ClearArmorinventory(player);
-          Messages.SendMessage(Message.welcome_guest, player, null);
+          Util.craftFirePlayer.clearArmorinventory(player);
+          Messages.sendMessage(Message.welcome_guest, player, null);
       } else if (!Config.register_force) {
-          Messages.SendMessage(Message.welcome_guest, player, null);
+          Messages.sendMessage(Message.welcome_guest, player, null);
      } else {
         long thetimestamp = System.currentTimeMillis()/1000;
         this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
         Processes.Login(player);
       }
     } catch (IOException e) {
-      Util.logging.Severe("[" + AuthDB.PluginName + "] Inventory file error:");
+      Util.logging.Severe("[" + AuthDB.pluginName + "] Inventory file error:");
       player.kickPlayer("inventory protection kicked");
        Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
     player.sendMessage(Color.red + "Error happend, report to admins!");
@@ -198,9 +197,9 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerQuit(PlayerQuitEvent event) {
      Player player = event.getPlayer();
-     Messages.SendMessage(Message.left_server, player, null);
+     Messages.sendMessage(Message.left_server, player, null);
      if (AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
-         AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
+         AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
          AuthDB.AuthDB_SpamMessage.remove(player.getName());
          AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
      }
@@ -218,111 +217,112 @@ public boolean CheckTimeout(Player player) throws IOException
      } else { Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove."); }
         long thetimestamp = System.currentTimeMillis()/1000;
         if (Config.session_start.equalsIgnoreCase("logoff"))
-            this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.GetIP(player)), thetimestamp);
+            this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), thetimestamp);
         this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
         Processes.Logout(player);
 
-     if (CheckGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.checkOtherName(player.getName())) == false) {
+     if (checkGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.checkOtherName(player.getName())) == false) {
          ItemStack[] theinv = new ItemStack[36];
          player.getInventory().setContents(theinv);
       }
   }
 
   public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+      String noPermission = "You do not have permission to use this command";
       String Contrib = event.getMessage();
       Contrib = Contrib.replaceAll("/", "");
-      if (!zBukkitContrib.CheckCommand(Contrib)) {
+      if (!ZBukkitContrib.checkCommand(Contrib)) {
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
 
         if (split[0].equalsIgnoreCase(Config.commands_login) || split[0].equalsIgnoreCase(Config.aliases_login)) {
-            if (zPermissions.IsAllowed(player, Permission.command_login)) {
+            if (ZPermissions.isAllowed(player, Permission.command_login)) {
                 if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.checkOtherName(player.getName())) == false) {
-                    Messages.SendMessage(Message.login_notregistered, player, null);
+                    Messages.sendMessage(Message.login_notregistered, player, null);
                 } else if (plugin.isAuthorized(player)) {
-                    Messages.SendMessage(Message.login_authorized, player, null);
+                    Messages.sendMessage(Message.login_authorized, player, null);
                 } else if (split.length < 2) {
-                    Messages.SendMessage(Message.login_usage, player, null);
+                    Messages.sendMessage(Message.login_usage, player, null);
                 } else if (this.plugin.checkPassword(player.getName(), split[1])) {
                     Processes.Login(player);
-                    Messages.SendMessage(Message.login_success, player, null);
+                    Messages.sendMessage(Message.login_success, player, null);
                 } else {
-                  Messages.SendMessage(Message.login_failure, player, null);
+                  Messages.sendMessage(Message.login_failure, player, null);
                 }
                 Util.logging.Debug(player.getName() + " login ********");
                 event.setMessage(Config.commands_login + " ******");
                 event.setCancelled(true);
-            } else { player.sendMessage(NoPermission); }
+            } else { player.sendMessage(noPermission); }
          } else if (split[0].equalsIgnoreCase(Config.commands_link) || split[0].equalsIgnoreCase(Config.aliases_link)) {
             if (Config.link_enabled) {
-                if (zPermissions.IsAllowed(player, Permission.command_link)) {
+                if (ZPermissions.isAllowed(player, Permission.command_link)) {
                     if (split.length == 3) {
                         if (!player.getName().equalsIgnoreCase(split[1])) {
                             if (Util.checkOtherName(player.getName()).equals(player.getName())) {
                                   if (this.plugin.checkPassword(split[1], split[2]))
                                   {
                                       Processes.Link(player,split[1]);
-                                      Messages.SendMessage(Message.link_success, player, null);
+                                      Messages.sendMessage(Message.link_success, player, null);
                                   }
-                                  else { Messages.SendMessage(Message.link_failure, player, null); }
+                                  else { Messages.sendMessage(Message.link_failure, player, null); }
                             }
-                            else { Messages.SendMessage(Message.link_exists, player, null); }
+                            else { Messages.sendMessage(Message.link_exists, player, null); }
                         }
                         player.sendMessage("You cannot link with yourself, use /login instead.");
-                    } else { Messages.SendMessage(Message.link_usage, player, null); }
+                    } else { Messages.sendMessage(Message.link_usage, player, null); }
                     Util.logging.Debug(player.getName() + " link ******** ********");
                     event.setMessage(Config.commands_unlink + " ****** ********");
                     event.setCancelled(true);
-                } else { player.sendMessage(NoPermission); }
+                } else { player.sendMessage(noPermission); }
             }
          } else if (split[0].equalsIgnoreCase(Config.commands_unlink) || split[0].equalsIgnoreCase(Config.aliases_unlink)) {
             if (Config.unlink_enabled) {
-                if (zPermissions.IsAllowed(player, Permission.command_unlink)) {
+                if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
                     if (split.length == 3) {
                         if (Util.checkOtherName(player.getName()).equals(player.getDisplayName())) {
                               if (this.plugin.checkPassword(split[1], split[2]))
                               {
                                   Processes.Unlink(player,split[1]);
-                                  Messages.SendMessage(Message.unlink_success, player, null);
+                                  Messages.sendMessage(Message.unlink_success, player, null);
                               }
-                              else { Messages.SendMessage(Message.unlink_failure, player, null); }
+                              else { Messages.sendMessage(Message.unlink_failure, player, null); }
                         }
-                        else { Messages.SendMessage(Message.unlink_nonexist, player, null); }
-                    } else { Messages.SendMessage(Message.unlink_usage, player, null); }
+                        else { Messages.sendMessage(Message.unlink_nonexist, player, null); }
+                    } else { Messages.sendMessage(Message.unlink_usage, player, null); }
                     Util.logging.Debug(player.getName() + " unlink ******** ********");
                     event.setMessage(Config.commands_unlink + " ****** ********");
                     event.setCancelled(true);
-                } else { player.sendMessage(NoPermission); }
+                } else { player.sendMessage(noPermission); }
             }
          } else if (split[0].equalsIgnoreCase(Config.commands_register) || split[0].equalsIgnoreCase(Config.aliases_register)) {
-            if (zPermissions.IsAllowed(player, Permission.command_register)) {
+            if (ZPermissions.isAllowed(player, Permission.command_register)) {
                 Boolean email = true;
                 if (Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
               if (!Config.register_enabled)
-                  Messages.SendMessage(Message.register_disabled, player, null);
+                  Messages.sendMessage(Message.register_disabled, player, null);
               else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.checkOtherName(player.getName())))
-                  Messages.SendMessage(Message.register_registered, player, null);
+                  Messages.sendMessage(Message.register_registered, player, null);
               else if (split.length < 2) {
-                          Messages.SendMessage(Message.register_usage, player, null);
+                          Messages.sendMessage(Message.register_usage, player, null);
               }
               else if (split.length < 3 && email) {
-                          Messages.SendMessage(Message.email_required, player, null);
+                          Messages.sendMessage(Message.email_required, player, null);
               } else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2])))
-                          Messages.SendMessage(Message.email_invalid, player, null);
+                          Messages.sendMessage(Message.email_invalid, player, null);
               else {
                 try {
                    if (split.length >= 3 || (!email && split.length >= 2)) {
                        String themail = null;
                        if (!email) { themail = null; }
                        else { themail = split[2]; }
-                    if (this.plugin.register(player, split[1], themail,Util.craftFirePlayer.GetIP(player))) {
+                    if (this.plugin.register(player, split[1], themail,Util.craftFirePlayer.getIP(player))) {
                         ItemStack[] inv = this.plugin.getInventory(player);
                         if (inv != null) { player.getInventory().setContents(inv); }
                         inv = AuthDB.getArmorInventory(player);
                         if (inv != null) { player.getInventory().setArmorContents(inv); }
                         long timestamp = System.currentTimeMillis()/1000;
                         this.plugin.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
-                        this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.GetIP(player)), timestamp);
+                        this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
                         Util.logging.Debug("Session started for " + player.getName());
                         Processes.Login(player);
                         long thetimestamp = System.currentTimeMillis()/1000;
@@ -332,27 +332,27 @@ public boolean CheckTimeout(Player player) throws IOException
                           temploc.setY(temploc.getY() + 1);
                           event.getPlayer().teleport(temploc);
     
-                        Messages.SendMessage(Message.register_success, player, null);
+                        Messages.sendMessage(Message.register_success, player, null);
                     }
                 }
                 }catch (IOException e) {
-                            Messages.SendMessage(Message.register_failure, player, null);
+                            Messages.sendMessage(Message.register_failure, player, null);
                   Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 } catch (SQLException e) {
-                            Messages.SendMessage(Message.register_failure, player, null);
+                            Messages.sendMessage(Message.register_failure, player, null);
                   Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 }
               }
               Util.logging.Debug(player.getName() + " register ********");
               event.setMessage(Config.commands_register + " *****");
               event.setCancelled(true);
-            } else { player.sendMessage(NoPermission); }
+            } else { player.sendMessage(noPermission); }
          } else if (!plugin.isAuthorized(player)) {
-          if (!CheckGuest(player,Config.guests_commands)) {
+          if (!checkGuest(player,Config.guests_commands)) {
               event.setMessage("/iamnotloggedin");
               event.setCancelled(true);
           }
-        } else { player.sendMessage(NoPermission); }
+        } else { player.sendMessage(noPermission); }
      } else {
          Util.logging.Debug("BukkitContrib is trying to check for SP client with command: " + event.getMessage());
      }
@@ -360,7 +360,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerMove(PlayerMoveEvent event) {
     if (!plugin.isAuthorized(event.getPlayer())) {
-      if (!CheckGuest(event.getPlayer(),Config.guests_movement)) {
+      if (!checkGuest(event.getPlayer(),Config.guests_movement)) {
           event.setCancelled(true);
           event.getPlayer().teleport(event.getFrom());
         }
@@ -370,19 +370,19 @@ public boolean CheckTimeout(Player player) throws IOException
   public void onPlayerChat(PlayerChatEvent event) {
     if (!plugin.isAuthorized(event.getPlayer())) {
         Player player = event.getPlayer();
-        if (zPermissions.IsAllowed(player, Permission.command_login)) {
+        if (ZPermissions.isAllowed(player, Permission.command_login)) {
           if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt") && (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.checkOtherName(event.getPlayer().getName())))) {
               String[] split = event.getMessage().split(" ");
               if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.checkOtherName(player.getName()))) {
                   if (plugin.isAuthorized(player)) {
-                              Messages.SendMessage(Message.login_authorized, player, null);
+                              Messages.sendMessage(Message.login_authorized, player, null);
                   } else if (split.length > 1) {
                               player.sendMessage("§bPlease type in the password for " + Util.checkOtherName(player.getName()));
                   } else if (this.plugin.checkPassword(player.getName(), split[0]) || this.plugin.checkPassword(Util.checkOtherName(player.getName()), split[0])) {
                     Processes.Login(player);
-                    Messages.SendMessage(Message.login_success, player, null);
+                    Messages.sendMessage(Message.login_success, player, null);
                 } else {
-                      Messages.SendMessage(Message.login_failure, player, null);
+                      Messages.sendMessage(Message.login_failure, player, null);
                   }
                   Util.logging.Debug(player.getName() + " login ********");
                   event.setMessage(" has logged in!");
@@ -391,7 +391,7 @@ public boolean CheckTimeout(Player player) throws IOException
               event.setMessage("");
               event.setCancelled(true);
           }
-        } else if (!CheckGuest(event.getPlayer(),Config.guests_chat)) {
+        } else if (!checkGuest(event.getPlayer(),Config.guests_chat)) {
             event.setCancelled(true);
         }
     }
@@ -399,7 +399,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
-             if (!CheckGuest(event.getPlayer(),Config.guests_pickup)) {
+             if (!checkGuest(event.getPlayer(),Config.guests_pickup)) {
                  event.setCancelled(true);
               }
         }
@@ -407,7 +407,7 @@ public boolean CheckTimeout(Player player) throws IOException
 
   public void onPlayerInteract(PlayerInteractEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
-             if (!CheckGuest(event.getPlayer(),Config.guests_interact)) {
+             if (!checkGuest(event.getPlayer(),Config.guests_interact)) {
                  event.setCancelled(true);
               }
         }
@@ -418,7 +418,7 @@ public boolean CheckTimeout(Player player) throws IOException
              if (this.plugin.isRegistered("dropitem",event.getPlayer().getName()) || this.plugin.isRegistered("dropitem",Util.checkOtherName(event.getPlayer().getName()))) {
                  event.setCancelled(true);
              }
-             else if (!CheckGuest(event.getPlayer(),Config.guests_drop)) {
+             else if (!checkGuest(event.getPlayer(),Config.guests_drop)) {
                  event.setCancelled(true);
               }
         }
@@ -431,7 +431,7 @@ public boolean CheckTimeout(Player player) throws IOException
          }
   }
 
-    boolean CheckGuest(Player player,boolean what) {
+    boolean checkGuest(Player player,boolean what) {
      if (what) {
          if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
              return true;
@@ -439,10 +439,10 @@ public boolean CheckTimeout(Player player) throws IOException
      } else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
          if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
              this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
-             Messages.SendMessage(Message.guest_notauthorized, player, null);
+             Messages.sendMessage(Message.guest_notauthorized, player, null);
          } else {
              if (this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.timeStamp()) {
-                 Messages.SendMessage(Message.guest_notauthorized, player, null);
+                 Messages.sendMessage(Message.guest_notauthorized, player, null);
                  this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
              }
          }

@@ -41,6 +41,7 @@ public class WordPress {
         ps.setString(6, player); //display_name
         ///
         ps.executeUpdate();
+        ps.close();
 
         /*
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
@@ -56,21 +57,21 @@ public class WordPress {
 
   public static String hash(String password) {
     String random_state = unique_id();
-    String random = "";
+    StringBuffer random = new StringBuffer();
+    String temp = "";
     int count = 6;
 
     if (random.length() < count) {
-        random = "";
 
         for (int i = 0; i < count; i += 16) {
             random_state = Encryption.md5(unique_id() + random_state);
-            random += Encryption.pack(Encryption.md5(random_state));
+            random.append(Encryption.pack(Encryption.md5(random_state)));
         }
-        random = random.substring(0, count);
+        temp = random.toString().substring(0, count);
     }
 
     String hash = _hash_crypt_private(password, _hash_gensalt_private(
-            random, itoa64));
+            temp, itoa64));
     if (hash.length() == 34) {
         return hash;
     }
@@ -91,12 +92,12 @@ public class WordPress {
             iteration_count_log2 = 8;
         }
         int PHP_VERSION = 5;
-        String output = "$P$";
-        output += itoa64.charAt(Math.min(iteration_count_log2
-               + ((PHP_VERSION >= 5) ? 5 : 3), 30));
-        output += _hash_encode64(input, 6);
+        StringBuffer output = new StringBuffer("$P$");
+        output.append(itoa64.charAt(Math.min(iteration_count_log2
+               + ((PHP_VERSION >= 5) ? 5 : 3), 30)));
+        output.append(_hash_encode64(input, 6));
 
-        return output;
+        return output.toString();
     }
 
 
@@ -104,18 +105,18 @@ public class WordPress {
    * Encode hash
    */
     private static String _hash_encode64(String input, int count) {
-        String output = "";
+        StringBuffer output = new StringBuffer();
         int i = 0;
 
         do {
             int value = input.charAt(i++);
-            output += itoa64.charAt(value & 0x3f);
+            output.append(itoa64.charAt(value & 0x3f));
 
             if (i < count) {
                 value |= input.charAt(i) << 8;
             }
 
-            output += itoa64.charAt((value >> 6) & 0x3f);
+            output.append(itoa64.charAt((value >> 6) & 0x3f));
 
             if (i++ >= count) {
                 break;
@@ -125,17 +126,17 @@ public class WordPress {
                 value |= input.charAt(i) << 16;
             }
 
-            output += itoa64.charAt((value >> 12) & 0x3f);
+            output.append(itoa64.charAt((value >> 12) & 0x3f));
 
             if (i++ >= count) {
                 break;
             }
 
-            output += itoa64.charAt((value >> 18) & 0x3f);
+            output.append(itoa64.charAt((value >> 18) & 0x3f));
         }
         while (i < count);
 
-        return output;
+        return output.toString();
     }
 
     static String _hash_crypt_private(String password, String setting) {
@@ -163,8 +164,7 @@ public class WordPress {
             hash = Encryption.pack(Encryption.md5(hash + password));
         } while (--count > 0);
 
-        output = setting.substring(0, 12);
-        output += _hash_encode64(hash, 16);
+        output = setting.substring(0, 12) + _hash_encode64(hash, 16);
 
         return output;
     }

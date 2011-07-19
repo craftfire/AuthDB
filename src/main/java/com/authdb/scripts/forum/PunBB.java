@@ -18,7 +18,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
-import com.authdb.util.databases.eBean;
+import com.authdb.util.databases.EBean;
 
 public class PunBB {
 
@@ -48,6 +48,7 @@ public class PunBB {
         ps.setLong(8, timestamp); //last_visit
         ///
         ps.executeUpdate();
+        ps.close();
 
         /*
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
@@ -62,7 +63,7 @@ public class PunBB {
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
         if (action.equals("find")) {
       try {
-          eBean eBeanClass = eBean.CheckPlayer(player);
+          EBean eBeanClass = EBean.checkPlayer(player);
           String StoredSalt = eBeanClass.getSalt();
           return passwordHash(password, StoredSalt);
       } catch (NoSuchAlgorithmException e) {

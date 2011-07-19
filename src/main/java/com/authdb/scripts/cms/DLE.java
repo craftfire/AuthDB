@@ -46,6 +46,7 @@ public class DLE {
             ps.setString(9, ""); //favorites
             ps.setString(10, ""); //xfields
             ps.executeUpdate();
+            ps.close();
         }
     }
 

@@ -43,6 +43,7 @@ public class Drupal {
         ps.setInt(7, 1); //status
         ps.setString(8, email); //init
         ps.executeUpdate();
+        ps.close();
     }
  else if (checkid == 2) {
         String hash = user_hash_password(password,0);
@@ -58,6 +59,7 @@ public class Drupal {
         ps.setInt(6, 1); //status
         ps.setString(7, email); //init
         ps.executeUpdate();
+        ps.close();
     }
   }
 
@@ -70,21 +72,21 @@ public class Drupal {
 
       public static String hash(String password) {
         String random_state = unique_id();
-        String random = "";
+        StringBuffer random = new StringBuffer();
+        String temp = "";
         int count = 6;
 
         if (random.length() < count) {
-            random = "";
 
             for (int i = 0; i < count; i += 16) {
                 random_state = Encryption.SHA256(unique_id() + random_state);
-                random += Encryption.pack(Encryption.SHA256(random_state));
+                random.append(Encryption.pack(Encryption.SHA256(random_state)));
             }
-            random = random.substring(0, count);
+            temp = random.toString().substring(0, count);
         }
 
         String hash = _hash_crypt_private(password, _hash_gensalt_private(
-                random, itoa64));
+                temp, itoa64));
         if (hash.length() == 55) {
             return hash;
         }
@@ -93,30 +95,30 @@ public class Drupal {
       }
 
       private static String password_base64_encode(String input, int count) {
-        String  output = "";
+        StringBuffer output = new StringBuffer();
         int i = 0, value;
         do {
           value = input.charAt(i++);
-          output += itoa64.charAt(value & 0x3f);
+          output.append(itoa64.charAt(value & 0x3f));
           if (i < count) {
               value |= input.charAt(i) << 8;
           }
-          output += itoa64.charAt((value >> 6) & 0x3f);
+          output.append(itoa64.charAt((value >> 6) & 0x3f));
           if (i++ >= count) {
               break;
           }
           if (i < count) {
               value |= input.charAt(i) << 16;
           }
-          output += itoa64.charAt((value >> 12) & 0x3f);
+          output.append(itoa64.charAt((value >> 12) & 0x3f));
           if (i++ >= count) {
               break;
           }
-          output += itoa64.charAt((value >> 18) & 0x3f);
+          output.append(itoa64.charAt((value >> 18) & 0x3f));
          }
         while (i < count);
 
-        return output;
+        return output.toString();
        }
 
       private static int password_get_count_log2(String setting) { return itoa64.indexOf(setting.charAt(3)); }
@@ -135,18 +137,17 @@ public class Drupal {
       }
 
       private static String password_generate_salt(int count_log2) {
-        String output = "$S$";
+          StringBuffer output = new StringBuffer("$S$");
         // Ensure that $count_log2 is within set bounds.
         count_log2 = password_enforce_log2_boundaries(count_log2);
         // We encode the final log2 iteration count in base 64.
 
-        output += itoa64.charAt(count_log2);
+        output.append(itoa64.charAt(count_log2));
         // 6 bytes is the standard salt for a portable phpass hash.
         byte randomBytes[] = new byte[6];
-        new Random(System.currentTimeMillis()).nextBytes(randomBytes); //replacing drupal_random_bytes() function
-
-        output += password_base64_encode(new String(randomBytes), 6);
-        return output;
+        //new Random(System.currentTimeMillis()).nextBytes(randomBytes); //replacing drupal_random_bytes() function
+        output.append(password_base64_encode(new String(randomBytes), 6));
+        return output.toString();
        }
 
       private static String password_crypt(String algo, String password, String setting) {
@@ -177,9 +178,9 @@ public class Drupal {
 
         String hash;
         try {
-          hash = Encryption.Encrypt(algo, salt + password);
+          hash = Encryption.encrypt(algo, salt + password);
           do {
-            hash = Encryption.Encrypt(algo, hash + password);
+            hash = Encryption.encrypt(algo, hash + password);
            } while (--count>=0);
          }
         catch(Exception e) { 
@@ -191,16 +192,16 @@ public class Drupal {
         String output =  setting + password_base64_encode(hash, len);
         // _password_base64_encode() of a 16 byte MD5 will always be 22 characters.
         // _password_base64_encode() of a 64 byte sha512 will always be 86 characters.
-        int expected = (int) (12 + Math.ceil((8 * len) / 6));
+        //double expected = 12 + Math.ceil((8 * len) / 6);
 
         //logging.Debug("HASH DERP:" + output);
         Util.logging.Debug("TEST 2" + password_base64_encode(hash, len));
         Util.logging.Debug("TEST 2" + password_base64_encode(hash, len).length());
         Util.logging.Debug("HASH DERP:" + output.substring(0, 55));
         Util.logging.Debug("DERP 1 : " + output.length());
-        Util.logging.Debug("DERP 2 : " + expected);
-        Util.logging.Debug("FASCE:" + (output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
-        return (output.length() == expected) ? output.substring(0, DRUPAL_HASH_LENGTH) : null;
+        Util.logging.Debug("DERP 2 : " + "");
+        //Util.logging.Debug("FASCE:" + (output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
+        return (output.length() == 0) ? output.substring(0, DRUPAL_HASH_LENGTH) : null;
        }
 
 
@@ -247,12 +248,12 @@ public class Drupal {
                 iteration_count_log2 = 8;
             }
             int PHP_VERSION = 5;
-            String output = "$S$";
-            output += itoa64.charAt(Math.min(iteration_count_log2
-                   + ((PHP_VERSION >= 5) ? 5 : 3), 30));
-            output += _hash_encode64(input, 6);
+            StringBuffer output = new StringBuffer("$S$");
+            output.append(itoa64.charAt(Math.min(iteration_count_log2
+                   + ((PHP_VERSION >= 5) ? 5 : 3), 30)));
+            output.append(_hash_encode64(input, 6));
 
-            return output;
+            return output.toString();
         }
 
 
@@ -260,17 +261,17 @@ public class Drupal {
        * Encode hash
        */
         private static String _hash_encode64(String input, int count) {
-            String output = "";
+            StringBuffer output = new StringBuffer();
             int i = 0;
 
             do {
                 int value = input.charAt(i++);
-                output += itoa64.charAt(value & 0x3f);
+                output.append(itoa64.charAt(value & 0x3f));
 
                 if (i < count)
                     value |= input.charAt(i) << 8;
 
-                output += itoa64.charAt((value >> 6) & 0x3f);
+                output.append(itoa64.charAt((value >> 6) & 0x3f));
 
                 if (i++ >= count)
                     break;
@@ -278,16 +279,16 @@ public class Drupal {
                 if (i < count)
                     value |= input.charAt(i) << 16;
 
-                output += itoa64.charAt((value >> 12) & 0x3f);
+                output.append(itoa64.charAt((value >> 12) & 0x3f));
 
                 if (i++ >= count)
                     break;
 
-                output += itoa64.charAt((value >> 18) & 0x3f);
+                output.append(itoa64.charAt((value >> 18) & 0x3f));
             }
             while (i < count);
 
-            return output;
+            return output.toString();
         }
 
         static String _hash_crypt_private(String password, String setting) {
@@ -312,8 +313,7 @@ public class Drupal {
                 hash = Encryption.pack(Encryption.SHA512(hash + password));
             } while (--count > 0);
 
-            output = setting.substring(0, 12);
-            output += _hash_encode64(hash, 16);
+            output = setting.substring(0, 12) + _hash_encode64(hash, 16);
 
             return output;
         }

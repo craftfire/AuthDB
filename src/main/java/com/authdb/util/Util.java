@@ -42,19 +42,19 @@ import com.authdb.scripts.Custom;
 import com.authdb.scripts.cms.DLE;
 import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
-import com.authdb.scripts.forum.bbPress;
+import com.authdb.scripts.forum.BBPress;
 import com.authdb.scripts.forum.IPB;
 import com.authdb.scripts.forum.MyBB;
-import com.authdb.scripts.forum.phpBB;
+import com.authdb.scripts.forum.PhpBB;
 import com.authdb.scripts.forum.PunBB;
 import com.authdb.scripts.forum.SMF;
 import com.authdb.scripts.forum.XenForo;
 import com.authdb.scripts.forum.Vanilla;
-import com.authdb.scripts.forum.vBulletin;
+import com.authdb.scripts.forum.VBulletin;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.MySQL;
-import com.authdb.util.databases.eBean;
-import com.authdb.util.databases.eBean.Column;
+import com.authdb.util.databases.EBean;
+import com.authdb.util.databases.EBean.Column;
 import com.craftfire.util.managers.LoggingManager;
 import com.craftfire.util.managers.PlayerManager;
 
@@ -76,21 +76,21 @@ public class Util {
                 if (type.equals("checkuser")) {
                     String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
                     if (check != "fail") {
-                        Config.HasForumBoard = true;
+                        Config.hasForumBoard = true;
                         return true;
                     }
                     return false;
                 } else if (type.equals("checkpassword")) {
-                    eBean eBeanClass = eBean.find(player);
+                    EBean eBeanClass = EBean.find(player);
                     String storedPassword = eBeanClass.getPassword();
                     if (Custom.check_hash(password, storedPassword)) { return true; }
                     String hash = MySQL.getfromtable(Config.custom_table, "`" + Config.custom_passfield + "`", "" + Config.custom_userfield + "", player);
-                    eBean.CheckPassword(player, hash);
+                    EBean.checkPassword(player, hash);
                     if (Custom.check_hash(password, hash)) { return true; }
                     return false;
                 } else if (type.equals("syncpassword")) {
                     String hash = MySQL.getfromtable(Config.custom_table, "`" + Config.custom_passfield + "`", "" + Config.custom_userfield + "", player);
-                    eBean.CheckPassword(player, hash);
+                    EBean.checkPassword(player, hash);
                     return true;
                 } else if (type.equals("adduser")) {
                     Custom.adduser(player, email, password, ipAddress);
@@ -99,26 +99,26 @@ public class Util {
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) { logging.Info(rs.getInt("countit") + " user registrations in database"); }
                 }
-            } else if (script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) {
+            } else if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) {
                 usertable = "users";
                 //bantable = "banlist";
-                if (checkVersionInRange(phpBB.VersionRange)) {
+                if (checkVersionInRange(PhpBB.VersionRange)) {
                     usernamefield = "username_clean";
                     passwordfield = "user_password";
                     /*useridfield = "user_id";
                     banipfield = "ban_ip";
                     bannamefield = "ban_userid";
                     banreasonfield = "";*/
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && phpBB.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && PhpBB.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
-                        if (phpBB.check_hash(password, hash)) { return true; }
+                        EBean.checkPassword(player, hash);
+                        if (PhpBB.check_hash(password, hash)) { return true; }
                     }
                     /*else if (type.equals("checkban")) {
                         String check = "fail";
@@ -132,24 +132,24 @@ public class Util {
                         if (check != "fail") { return true; }
                           else { return false; }
                     } */
-                } else if (checkVersionInRange(phpBB.VersionRange2)) {
+                } else if (checkVersionInRange(PhpBB.VersionRange2)) {
                     usernamefield = "username";
                     passwordfield = "user_password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     bans = true;
                     number = 2;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && phpBB.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && PhpBB.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
-                        if (phpBB.check_hash(password, hash)) { return true; }
+                        EBean.checkPassword(player, hash);
+                        if (PhpBB.check_hash(password, hash)) { return true; }
                     }
                 }
                 if (type.equals("adduser")) {
-                     phpBB.adduser(number, player, email, password, ipAddress);
+                     PhpBB.adduser(number, player, email, password, ipAddress);
                      return true;
                 }
             } else if (script.equals(SMF.Name) || script.equals(SMF.ShortName)) {
@@ -158,30 +158,30 @@ public class Util {
                     usernamefield = "memberName";
                     passwordfield = "passwd";
                     saltfield = "passwordSalt";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     bans = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && SMF.check_hash(SMF.hash(1, player, password), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (SMF.check_hash(SMF.hash(1, player, password), hash)) { return true; }
                     }
                 } else if (checkVersionInRange(SMF.VersionRange2) || checkVersionInRange("2.0") 
                 || checkVersionInRange("2.0.0") || checkVersionInRange("2.0.0.0")) {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     bans = true;
                     number = 2;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && SMF.check_hash(SMF.hash(2, player, password), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (SMF.check_hash(SMF.hash(2, player, password), hash)) { return true; }
                     }
                 }
@@ -195,15 +195,15 @@ public class Util {
                     saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     bans = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && MyBB.check_hash(MyBB.hash("find", player, password, ""), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (MyBB.check_hash(MyBB.hash("find", player, password, ""), hash)) { return true; }
                     }
                 }
@@ -211,40 +211,40 @@ public class Util {
                      MyBB.adduser(number, player, email, password, ipAddress);
                      return true;
                 }
-            } else if (script.equals(vBulletin.Name) || script.equals(vBulletin.ShortName)) {
+            } else if (script.equals(VBulletin.Name) || script.equals(VBulletin.ShortName)) {
                 usertable = "user";
-                if (checkVersionInRange(vBulletin.VersionRange)) {
+                if (checkVersionInRange(VBulletin.VersionRange)) {
                     saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     bans = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && vBulletin.check_hash(vBulletin.hash("find", player, password, ""), storedPassword)) { return true; }
+                        if (storedPassword != null && VBulletin.check_hash(VBulletin.hash("find", player, password, ""), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
-                        if (vBulletin.check_hash(vBulletin.hash("find", player, password, ""), hash)) { return true; }
+                        EBean.checkPassword(player, hash);
+                        if (VBulletin.check_hash(VBulletin.hash("find", player, password, ""), hash)) { return true; }
                     }
-                } else if (checkVersionInRange(vBulletin.VersionRange2)) {
+                } else if (checkVersionInRange(VBulletin.VersionRange2)) {
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     bans = true;
                     number = 2;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && vBulletin.check_hash(vBulletin.hash("find", player, password, ""), storedPassword)) { return true; }
+                        if (storedPassword != null && VBulletin.check_hash(VBulletin.hash("find", player, password, ""), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
-                        if (vBulletin.check_hash(vBulletin.hash("find", player, password, ""), hash)) { return true; }
+                        EBean.checkPassword(player, hash);
+                        if (VBulletin.check_hash(VBulletin.hash("find", player, password, ""), hash)) { return true; }
                     }
                 }
                 if (type.equals("adduser")) {
-                     vBulletin.adduser(number, player, email, password, ipAddress);
+                     VBulletin.adduser(number, player, email, password, ipAddress);
                      return true;
                 }
             } else if (script.equals(Drupal.Name) || script.equals(Drupal.ShortName)) {
@@ -252,27 +252,27 @@ public class Util {
                 if (checkVersionInRange(Drupal.VersionRange)) {
                     usernamefield = "name";
                     passwordfield = "pass";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Encryption.md5(password).equals(storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (Encryption.md5(password).equals(hash)) { return true; }
                     }
                 } else if (checkVersionInRange(Drupal.VersionRange2)) {
                     usernamefield = "name";
                     passwordfield = "pass";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 2;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && storedPassword.equals(Drupal.user_check_password(password, storedPassword))) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (hash.equals(Drupal.user_check_password(password, hash))) { return true; }
                     }
                 }
@@ -285,27 +285,27 @@ public class Util {
                 if (checkVersionInRange(Joomla.VersionRange)) {
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (Joomla.check_hash(password, hash)) { return true; }
                     }
                 } else if (checkVersionInRange(Joomla.VersionRange2)) {
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 2;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (Joomla.check_hash(password, hash)) { return true; }
                     }
                 }
@@ -318,21 +318,21 @@ public class Util {
                     usertable = "User";
                     usernamefield = "Name";
                     passwordfield = "Password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Vanilla.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (Vanilla.check_hash(password, hash)) { return true; }
                     }
                 } else if (checkVersionInRange(Vanilla.VersionRange2)) {
                     usertable = "user";
                     usernamefield = "Name";
                     passwordfield = "Password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
@@ -355,14 +355,14 @@ public class Util {
                     saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && PunBB.check_hash(PunBB.hash("find", player, password, ""), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (PunBB.check_hash(PunBB.hash("find", player, password, ""), hash)) { return true; }
                     }
                 }
@@ -376,7 +376,7 @@ public class Util {
                     String userid = MySQL.getfromtable(Config.script_tableprefix + usertable, "`user_id`", "username", player);
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
                         Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix + "user_authenticate", "`data`", "user_id", userid);
@@ -401,19 +401,19 @@ public class Util {
                         String cache = stringBuffer.toString();
                         String thehash = forumCacheValue(cache, "hash");
                         String thesalt = forumCacheValue(cache, "salt");
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         String storedSalt = eBeanClass.getSalt();
                         if (storedPassword != null && storedSalt != null && XenForo.check_hash(XenForo.hash(1, storedSalt, password), storedPassword)) { return true; }
-                        eBean.CheckSalt(player, thesalt);
-                        eBean.CheckPassword(player, thehash);
+                        EBean.checkSalt(player, thesalt);
+                        EBean.checkPassword(player, thehash);
                         if (XenForo.check_hash(XenForo.hash(1, thesalt, password), thehash)) { return true; }
                     }
                 }
                 if (type.equals("adduser")) {
                     XenForo.adduser(number, player, email, password, ipAddress);
                     return true;
-                } else if (Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
+                } else if (Config.hasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
                     String userid = MySQL.getfromtable(Config.script_tableprefix + usertable, "`user_id`", "username", player);
                     Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix + "user_authenticate", "`data`", "user_id", userid);
                     int offset = -1;
@@ -435,9 +435,9 @@ public class Util {
                     }
                     String cache = stringBuffer.toString();
                     String thehash = forumCacheValue(cache, "hash");
-                    eBean.CheckPassword(player, thehash);
+                    EBean.checkPassword(player, thehash);
                     return true;
-                } else if (Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "") {
+                } else if (Config.hasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "") {
                     String userid = MySQL.getfromtable(Config.script_tableprefix + usertable, "`user_id`", "username", player);
                     Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix + "user_authenticate", "`data`", "user_id", userid);
                     int offset = -1;
@@ -464,28 +464,28 @@ public class Util {
                     }
                     String cache = stringBuffer.toString();
                     String thesalt = forumCacheValue(cache, "salt");
-                    eBean.CheckSalt(player, thesalt);
+                    EBean.checkSalt(player, thesalt);
                     return true;
                 }
-            } else if (script.equals(bbPress.Name) || script.equals(bbPress.ShortName)) {
+            } else if (script.equals(BBPress.Name) || script.equals(BBPress.ShortName)) {
                 usertable = "users";
-                if (checkVersionInRange(bbPress.VersionRange)) {
+                if (checkVersionInRange(BBPress.VersionRange)) {
                     usernamefield = "user_login";
                     passwordfield = "user_pass";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && bbPress.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && BBPress.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
-                        if (bbPress.check_hash(password, hash)) { return true; }
+                        EBean.checkPassword(player, hash);
+                        if (BBPress.check_hash(password, hash)) { return true; }
                     }
                 }
                 if (type.equals("adduser")) {
-                    bbPress.adduser(number, player, email, password, ipAddress);
+                    BBPress.adduser(number, player, email, password, ipAddress);
                     return true;
                 }
             } else if (script.equals(DLE.Name) || script.equals(DLE.ShortName)) {
@@ -493,15 +493,15 @@ public class Util {
                 if (checkVersionInRange(DLE.VersionRange)) {
                     usernamefield = "name";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && DLE.check_hash(DLE.hash(password), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (DLE.check_hash(DLE.hash(password), hash)) { return true; }
                     }
                 }
@@ -515,16 +515,16 @@ public class Util {
                     saltfield = "members_pass_salt";
                     usernamefield = "members_l_username";
                     passwordfield = "members_pass_hash";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
                         player = player.toLowerCase();
-                        eBean eBeanClass = eBean.find(player);
+                        EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password, null), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
                         passwordfield + "`", "" + usernamefield + "", player);
-                        eBean.CheckPassword(player, hash);
+                        EBean.checkPassword(player, hash);
                         if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
                     }
                     
@@ -540,7 +540,7 @@ public class Util {
                 if (checkVersionInRange(Config.Script11_versionrange)) {
                     usernamefield = "username";
                     passwordfield = "password";
-                    Config.HasForumBoard = true;
+                    Config.hasForumBoard = true;
                     number = 1;
                     if (type.equals("checkpassword")) {
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
@@ -552,7 +552,7 @@ public class Util {
                      return true;
                 }
             } */
-            if (!Config.HasForumBoard) {
+            if (!Config.hasForumBoard) {
                 if (!Config.custom_enabled) {
                     String tempVers = Config.script_version;
                     Config.script_version = scriptVersion();
@@ -569,17 +569,17 @@ public class Util {
 
                 }
             }
-            if (Config.HasForumBoard && type.equals("checkuser") && !Config.custom_enabled) {
-                eBean eBeanClass = eBean.find(player, Column.registred, "true");
+            if (Config.hasForumBoard && type.equals("checkuser") && !Config.custom_enabled) {
+                EBean eBeanClass = EBean.find(player, Column.registred, "true");
                 if (eBeanClass != null) { return true; }
                 String check = MySQL.getfromtable(Config.script_tableprefix + usertable, "*", usernamefield, player);
                 if (check != "fail") { return true; }
             }
-            /*else if (Config.HasForumBoard && type.equals("checkban") && !Config.custom_enabled && bantable != null) {
+            /*else if (Config.hasForumBoard && type.equals("checkban") && !Config.custom_enabled && bantable != null) {
                 String check = MySQL.getfromtable(Config.script_tableprefix + bantable, "*", bannamefield, player);
                 if (check != "fail") { return true; }
-            }*/ else if (Config.HasForumBoard && type.equals("numusers") && !Config.custom_enabled) {
-                if (script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { 
+            }*/ else if (Config.hasForumBoard && type.equals("numusers") && !Config.custom_enabled) {
+                if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) { 
                 ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
                  + Config.script_tableprefix + usertable + "` WHERE  `group_id` !=6"); 
                 } else { 
@@ -588,13 +588,13 @@ public class Util {
                 }
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) { logging.Info(rs.getInt("countit") + " user registrations in database"); }
-            } else if (Config.HasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
+            } else if (Config.hasForumBoard && type.equals("syncpassword") && !Config.custom_enabled) {
                 String hash = MySQL.getfromtable(Config.script_tableprefix + usertable, "`" + passwordfield + "`", usernamefield, player);
-                eBean.CheckPassword(player, hash);
+                EBean.checkPassword(player, hash);
                 return true;
-            } else if (Config.HasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "") {
+            } else if (Config.hasForumBoard && type.equals("syncsalt") && !Config.custom_enabled && saltfield != null && saltfield != "") {
                 String salt = MySQL.getfromtable(Config.script_tableprefix + usertable, "`" + saltfield + "`", usernamefield, player);
-                eBean.CheckSalt(player, salt);
+                EBean.checkSalt(player, salt);
                 return true;
             }
         }
@@ -603,16 +603,16 @@ public class Util {
 
     static String scriptVersion() {
         String script = Config.script_name;
-        if (script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) { return split(phpBB.LatestVersionRange, "-")[1]; }
+        if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) { return split(PhpBB.LatestVersionRange, "-")[1]; }
         else if (script.equals(SMF.Name) || script.equals(SMF.ShortName)) { return split(SMF.LatestVersionRange, "-")[1]; }
         else if (script.equals(MyBB.Name) || script.equals(MyBB.ShortName)) { return split(MyBB.LatestVersionRange, "-")[1]; }
-        else if (script.equals(vBulletin.Name) || script.equals(vBulletin.ShortName)) { return split(vBulletin.LatestVersionRange, "-")[1]; }
+        else if (script.equals(VBulletin.Name) || script.equals(VBulletin.ShortName)) { return split(VBulletin.LatestVersionRange, "-")[1]; }
         else if (script.equals(Drupal.Name) || script.equals(Drupal.ShortName)) { return split(Drupal.LatestVersionRange, "-")[1]; }
         else if (script.equals(Joomla.Name) || script.equals(Joomla.ShortName)) { return split(Joomla.LatestVersionRange, "-")[1]; }
         else if (script.equals(Vanilla.Name) || script.equals(Vanilla.ShortName)) { return split(Vanilla.LatestVersionRange, "-")[1]; }
         else if (script.equals(PunBB.Name) || script.equals(PunBB.ShortName)) { return split(PunBB.LatestVersionRange, "-")[1]; }
         else if (script.equals(XenForo.Name) || script.equals(XenForo.ShortName)) { return split(XenForo.LatestVersionRange, "-")[1]; }
-        else if (script.equals(bbPress.Name) || script.equals(bbPress.ShortName)) { return split(bbPress.LatestVersionRange, "-")[1]; }
+        else if (script.equals(BBPress.Name) || script.equals(BBPress.ShortName)) { return split(BBPress.LatestVersionRange, "-")[1]; }
         else if (script.equals(DLE.Name) || script.equals(DLE.ShortName)) { return split(DLE.LatestVersionRange, "-")[1]; }
         else if (script.equals(IPB.Name) || script.equals(IPB.ShortName)) { return split(IPB.LatestVersionRange, "-")[1]; }
         return null;
@@ -630,23 +630,23 @@ public class Util {
 
     static void spamText(final Player player, final String text, final int delay, final int show) {
         if (Config.login_delay > 0 && !AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
-            schedule = AuthDB.Server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
+            schedule = AuthDB.server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
             @Override
             public void run() {
                 if (AuthDB.isAuthorized(player) && AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
-                    AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
+                    AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
                     AuthDB.AuthDB_SpamMessage.remove(player.getName());
                     AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
                 } else {
                     if (!AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessage.put(player.getName(), schedule); }
                     if (!AuthDB.AuthDB_SpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessageTime.put(player.getName(), timeStamp()); }
                     if ((AuthDB.AuthDB_SpamMessageTime.get(player.getName()) + show) <= timeStamp()) {
-                        AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
+                        AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
                         AuthDB.AuthDB_SpamMessage.remove(player.getName());
                         AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
                     }
                     String message = replaceStrings(text, player, null);
-                    if (Config.link_rename && checkOtherName(player.getName()) != player.getName()) {
+                    if (Config.link_rename && !checkOtherName(player.getName()).equals(player.getName())) {
                         message = message.replaceAll(player.getName(), player.getDisplayName());
                         player.sendMessage(message);
                     }
@@ -665,12 +665,12 @@ public class Util {
 
     boolean checkingBan(String usertable, String useridfield, String usernamefield, String username, String bantable, String banipfield, String bannamefield, String ipAddress) throws SQLException {
         String check = "fail";
-        if (ipAddress != null) {
+        if (ipAddress == null) {
             String userid = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + useridfield + "`", "" + usernamefield + "", username);
               check = MySQL.getfromtable(Config.script_tableprefix + "" + bantable + "", "`" + banipfield + "`", "" + bannamefield + "", userid);
         }
         else {
-            check = MySQL.getfromtable(Config.script_tableprefix + "" + bantable + "", "`" + banipfield + "`", "" + banipfield + "", ipAddress);
+            check = MySQL.getfromtable(Config.script_tableprefix + "" + bantable + "", "`" + banipfield + "`", "" + bannamefield + "", ipAddress);
         }
         if (check != "fail") { 
             return true; 
@@ -684,7 +684,7 @@ public class Util {
         int i = 0;
         List<String> array = new ArrayList<String>();
         while (st.hasMoreTokens()) { array.add(st.nextToken() + ":"); }
-        String newcache = "";
+        StringBuffer newcache = new StringBuffer();
         while (array.size() > i) {
             if (array.get(i).equals("\"" + nummember + "\";s:") && nummember != null) {
                 String temp = array.get(i + 2);
@@ -721,10 +721,10 @@ public class Util {
                 array.set(i + 1, dupe.length() + ":");
                 array.set(i + 2, "\"" + userid + "\"" + ";" + "}");
             }
-            newcache += array.get(i);
+            newcache.append(array.get(i));
             i++;
         }
-        return newcache;
+        return newcache.toString();
     }
 
     public static String forumCacheValue(String cache, String value) {
@@ -826,7 +826,9 @@ public class Util {
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
         wr.write(data);
         wr.flush();
+        wr.close();
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        rd.close();
     }
 
     public static int toTicks(String time, String length) {
@@ -914,13 +916,13 @@ public class Util {
         logging.Debug("Launching function: checkWhitelist(String whitelist, String username) - " + username);
         StringTokenizer st = null;
         if (whitelist.equals("username")) { st = new StringTokenizer(Config.filter_whitelist, ", "); }
-        while (st.hasMoreTokens()) {
+        while (st != null && st.hasMoreTokens()) {
             String whitelistname = st.nextToken().toLowerCase();
             logging.Debug("Whitelist: " + whitelistname);
             if (whitelistname.equals(username)) {
                 logging.Debug("FOUND USER IN WHITELIST: " + whitelistname);
-                if (whitelist.equals("idle")) { Messages.SendMessage(Message.idle_whitelist, player, null); }
-                else if (whitelist.equals("username")) { Messages.SendMessage(Message.filter_whitelist, player, null); }
+                if (whitelist.equals("idle")) { Messages.sendMessage(Message.idle_whitelist, player, null); }
+                else if (whitelist.equals("username")) { Messages.sendMessage(Message.filter_whitelist, player, null); }
                 return true;
             }
         }
@@ -930,7 +932,7 @@ public class Util {
     public static void checkIdle(Player player) {
         logging.Debug("Launching function: CheckIdle(Player player)");
         if (!AuthDB.isAuthorized(player)) {
-             Messages.SendMessage(Message.kickPlayerIdleLoginMessage, player, null);
+             Messages.sendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
     }
 
@@ -1006,7 +1008,7 @@ public class Util {
         int lengthb = "`~!@#$%^&*()-= + {[]}|\\:;\"<, >.?/".length();
         int i = 0;
         char thechar1, thechar2;
-        String tempstring = "";
+        StringBuffer tempstring = new StringBuffer();;
         while (i < lengtha) {
             thechar1 = string.charAt(i);
             int a = 0;
@@ -1017,10 +1019,10 @@ public class Util {
                 }
                 a++;
             }
-            tempstring += thechar1;
+            tempstring.append(thechar1);
             i++;
         }
-        return tempstring;
+        return tempstring.toString();
     }
 
     public static String replaceStrings(String string, Player player, String additional) {
@@ -1028,11 +1030,11 @@ public class Util {
         if (!Config.has_badcharacters && Config.database_ison && player != null 
         && player.getName().length() > Integer.parseInt(Config.username_minimum)
         && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
-            string = string.replaceAll("\\{IP\\}", craftFirePlayer.GetIP(player));
+            string = string.replaceAll("\\{IP\\}", craftFirePlayer.getIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");
             string = string.replaceAll("&", "§");
-            if (Util.checkOtherName(player.getName()) != player.getName()) {
+            if (!Util.checkOtherName(player.getName()).equals(player.getName())) {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", checkOtherName(player.getName()));
             }
         }
@@ -1041,8 +1043,8 @@ public class Util {
         string = string.replaceAll("\\{USERMAX\\}", Config.username_maximum);
         string = string.replaceAll("\\{PASSMIN\\}", Config.password_minimum);
         string = string.replaceAll("\\{PASSMAX\\}", Config.password_maximum);
-        string = string.replaceAll("\\{PLUGIN\\}", AuthDB.PluginName);
-        string = string.replaceAll("\\{VERSION\\}", AuthDB.PluginVersion);
+        string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginName);
+        string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginVersion);
         string = string.replaceAll("\\{LOGINTIMEOUT\\}", Config.login_timeout_length + " " + Config.login_timeout_time);
         string = string.replaceAll("\\{REGISTERTIMEOUT\\}", "" + Config.register_timeout_length + " " + Config.register_timeout_time);
         string = string.replaceAll("\\{USERBADCHARACTERS\\}", Matcher.quoteReplacement(Config.filter_username));
@@ -1195,7 +1197,7 @@ public class Util {
              return AuthDB.AuthDB_LinkedNames.get(player);
          } else if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player)) {
              AuthDB.AuthDB_LinkedNameCheck.put(player, "yes");
-             eBean eBeanClass = eBean.CheckPlayer(player);
+             EBean eBeanClass = EBean.checkPlayer(player);
              String linkedName = eBeanClass.getLinkedname();
              if (linkedName != null && linkedName.equals("") == false) {
                  AuthDB.AuthDB_LinkedNames.put(player, linkedName);

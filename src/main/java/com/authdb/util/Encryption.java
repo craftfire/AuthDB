@@ -19,7 +19,7 @@ import java.util.Random;
 public class Encryption
 {
 
-    public static String Encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (encryption.equals("md5")) return md5(toencrypt);
         else if (encryption.equals("sha1")) return SHA1(toencrypt);
         else if (encryption.equals("sha512")) return SHA512(toencrypt);
@@ -30,11 +30,11 @@ public class Encryption
 
     public static String hash(int length, String charset,int RangeFrom, int RangeTo) {
         if (charset.equals("none")) {
-            String salt = "";
+            StringBuffer salt = new StringBuffer();
             for (int i = 0; i < length; i++) {
-                salt += (char)(Util.randomNumber(RangeFrom, RangeTo));
+                salt.append((char)(Util.randomNumber(RangeFrom, RangeTo)));
             }
-            return salt;
+            return salt.toString();
         } else {
             Random rand = new Random(System.currentTimeMillis());
             StringBuffer sb = new StringBuffer();
@@ -64,34 +64,34 @@ public class Encryption
     public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md;
         md = MessageDigest.getInstance("SHA-1");
-        byte[] sha1hash = new byte[40];
+        byte[] sha1hash;
         md.update(text.getBytes("iso-8859-1"), 0, text.length());
         sha1hash = md.digest();
         return Util.convertToHex(sha1hash);
     }
 
     public static String SHA256(String text) {
-        MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(text.getBytes());
+            byte byteData[] = md.digest();
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+             sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0;i<byteData.length;i++) {
+                String hex=Integer.toHexString(0xff & byteData[i]);
+                    if (hex.length()==1) hexString.append('0');
+                    hexString.append(hex);
+            }
+            return hexString.toString();
+        }
+        catch (NoSuchAlgorithmException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
-        md.update(text.getBytes());
+        return text;
 
-        byte byteData[] = md.digest();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < byteData.length; i++) {
-         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-        }
-        StringBuffer hexString = new StringBuffer();
-        for (int i=0;i<byteData.length;i++) {
-            String hex=Integer.toHexString(0xff & byteData[i]);
-                if (hex.length()==1) hexString.append('0');
-                hexString.append(hex);
-        }
-        return hexString.toString();
     }
 
     public static String SHA512(String text) {

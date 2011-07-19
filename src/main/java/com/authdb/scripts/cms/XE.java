@@ -41,6 +41,7 @@ public class XE {
         ps.setString(8, email); //init
         ///need to add these, it's complaining about not default is set.
         ps.executeUpdate();
+        ps.close();
     }
     /* else if (check(2)) {
         String hash = hash(player,password);

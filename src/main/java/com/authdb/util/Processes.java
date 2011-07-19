@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
-import com.authdb.util.databases.eBean;
+import com.authdb.util.databases.EBean;
 
 public class Processes {
     public static boolean Logout(Player player) {
@@ -14,18 +14,18 @@ public class Processes {
             }
             
             AuthDB.authorizedNames.remove(player.getName()); 
-            eBean eBeanClass = eBean.CheckPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player);
             eBeanClass.setAuthorized("false");
-            AuthDB.Database.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
                 
             if (AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.remove(Encryption.md5(player.getName())); 
             }
-            if (AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.GetIP(player)))) {
-                AuthDB.AuthDB_Sessions.remove(Encryption.md5(player.getName() + Util.craftFirePlayer.GetIP(player))); 
+            if (AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
+                AuthDB.AuthDB_Sessions.remove(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player))); 
             }
             if (AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
-                AuthDB.Server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
+                AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
                 AuthDB.AuthDB_SpamMessage.remove(player.getName());
                 AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
             }
@@ -34,7 +34,7 @@ public class Processes {
                 Util.logging.Debug(player.getName() + " is in the TimeoutTaskList with ID: " + TaskID);
                 if (AuthDB.AuthDB_Timeouts.remove(player.getName()) != null) {
                     Util.logging.Debug(player.getName() + " was removed from the TimeoutTaskList");
-                    AuthDB.Server.getScheduler().cancelTask(TaskID);
+                    AuthDB.server.getScheduler().cancelTask(TaskID);
                 }
                 else { Util.logging.Debug("Could not remove " + player.getName() + " from the timeout list."); }
              }
@@ -51,15 +51,15 @@ public class Processes {
                 AuthDB.AuthDB_AuthTime.put(player.getName(), timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
-            eBean eBeanClass = eBean.CheckPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player);
             eBeanClass.setAuthorized("true");
             eBeanClass.setRegistred("true");
-            AuthDB.Database.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
             if (!AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
             }
-            if (AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.GetIP(player)))) {
-                AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.GetIP(player)), timestamp);
+            if (AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
+                AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
             }
             ItemStack[] inv = AuthDB.getInventory(player);
             if (inv != null) { player.getInventory().setContents(inv); }
@@ -72,11 +72,11 @@ public class Processes {
     
     public static boolean Link(Player player, String name) {
         if (!AuthDB.isAuthorized(player) && Config.link_enabled) {
-            eBean eBeanClass = eBean.CheckPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player);
             String LinkedNames = eBeanClass.getLinkedname();
             if (LinkedNames != null && LinkedNames != "") { eBeanClass.setLinkedname(LinkedNames + ", " + name); }
             else { eBeanClass.setLinkedname(name); }
-            AuthDB.Database.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
             if (!AuthDB.AuthDB_LinkedNames.containsKey((player.getName()))) {
                 AuthDB.AuthDB_LinkedNames.put(player.getName(),name);
             }

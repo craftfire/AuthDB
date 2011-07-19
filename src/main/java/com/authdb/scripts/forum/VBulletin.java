@@ -18,9 +18,9 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
-import com.authdb.util.databases.eBean;
+import com.authdb.util.databases.EBean;
 
-public class vBulletin {
+public class VBulletin {
 
         public static String VersionRange = "3.0.0-3.8.7";
         public static String VersionRange2 = "4.0.0-4.1.2";
@@ -53,6 +53,7 @@ public class vBulletin {
             ps.setString(12, salt); //salt
             ps.setString(13, player); //username
             ps.executeUpdate();
+            ps.close();
 
 
             int userid = MySQL.countitall(Config.script_tableprefix + "user");
@@ -60,7 +61,7 @@ public class vBulletin {
             String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
             ps.executeUpdate();
-
+            ps.close();
           }
           else if (checkid == 2) {
               String salt = Encryption.hash(30,"none",33,126);
@@ -86,19 +87,21 @@ public class vBulletin {
             ps.setString(13, player); //username
             ps.setString(14, "Junior Member"); //usertitle
             ps.executeUpdate();
+            ps.close();
 
             int userid = MySQL.countitall(Config.script_tableprefix + "user");
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
             String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
             ps.executeUpdate();
+            ps.close();
           }
     }
 
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
         if (action.equals("find")) {
       try {
-          eBean eBeanClass = eBean.CheckPlayer(player);
+          EBean eBeanClass = EBean.checkPlayer(player);
           String StoredSalt = eBeanClass.getSalt();
           return passwordHash(password, StoredSalt);
       } catch (NoSuchAlgorithmException e) {

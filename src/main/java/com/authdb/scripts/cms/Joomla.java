@@ -47,6 +47,7 @@ public class Joomla {
         //fake:
         ps.setString(10, ""); //params
         ps.executeUpdate();
+        ps.close();
 
         int userid = MySQL.countitall(Config.script_tableprefix + "users");
 
@@ -55,12 +56,14 @@ public class Joomla {
         ps.setInt(2, userid); //value
         ps.setString(3, player); //name
         ps.executeUpdate();
+        ps.close();
 
         int aroid = MySQL.countitall(Config.script_tableprefix + "core_acl_aro");
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "core_acl_groups_aro_map" + "` (`group_id`,`aro_id`)  VALUES (?,?)", 1);
         ps.setInt(1, 18); //group_id
         ps.setInt(2, aroid); //aro_id
         ps.executeUpdate();
+        ps.close();
     } else if (checkid == 2) {
         String hash = hash(player,password);
         String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
@@ -79,6 +82,7 @@ public class Joomla {
         //fake:
         ps.setString(9, ""); //params
         ps.executeUpdate();
+        ps.close();
 
         int userid = MySQL.countitall(Config.script_tableprefix + "users");
 
@@ -86,6 +90,7 @@ public class Joomla {
         ps.setInt(1, userid); //user_id
         ps.setInt(2, 2); //group_id
         ps.executeUpdate();
+        ps.close();
     }
   }
 

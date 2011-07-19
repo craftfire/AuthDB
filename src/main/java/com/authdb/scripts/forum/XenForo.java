@@ -55,6 +55,7 @@ public class XenForo {
         ps.setLong(11, timestamp); //last_activity
         ///
         ps.executeUpdate();
+        ps.close();
 
         int userid = MySQL.countitall(Config.script_tableprefix + "user");
 
@@ -63,12 +64,14 @@ public class XenForo {
         ps.setString(2, "members"); //allow_post_profile
         ps.setString(3, "members"); //allow_send_personal_conversation
         ps.executeUpdate();
+        ps.close();
 
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_option" + "` (`user_id`,`default_watch_state`,`alert_optout`)  VALUES (?,?,?)", 1);
         ps.setInt(1, userid); //user_id
         ps.setString(2, "watch_email"); //default_watch_state
         ps.setString(3, ""); //alert_optout
         ps.executeUpdate();
+        ps.close();
 
         String stringdata1 = "a:0:{}";
         byte[] bArr1 = stringdata1.getBytes();
@@ -83,6 +86,7 @@ public class XenForo {
         ps.setString(7, ""); //csrf_token - dupe
         ps.setString(8, ""); //about - dupe
         ps.executeUpdate();
+        ps.close();
 
         String stringdata = "a:3:{s:4:\"hash\";s:64:\"" + hash + "\";s:4:\"salt\";s:64:\"" + salt + "\";s:8:\"hashFunc\";s:6:\"sha256\";}";
         byte[] bArr = stringdata.getBytes();
@@ -93,6 +97,7 @@ public class XenForo {
         ps.setBlob(3, bIn, bArr.length);
         ps.setString(4, ""); //remember_key
         ps.executeUpdate();
+        ps.close();
     }
  }
 

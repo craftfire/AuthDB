@@ -21,14 +21,14 @@ import com.authdb.scripts.forum.PunBB;
 import com.authdb.scripts.forum.SMF;
 import com.authdb.scripts.forum.Vanilla;
 import com.authdb.scripts.forum.XenForo;
-import com.authdb.scripts.forum.bbPress;
+import com.authdb.scripts.forum.BBPress;
 import com.authdb.scripts.forum.MyBB;
-import com.authdb.scripts.forum.phpBB;
-import com.authdb.scripts.forum.vBulletin;
+import com.authdb.scripts.forum.PhpBB;
+import com.authdb.scripts.forum.VBulletin;
 import com.authdb.util.databases.MySQL;
 
 public class API {
-    public static String GetScript(String what, Player player, String extra) throws SQLException {
+    public static String getScript(String what, Player player, String extra) throws SQLException {
         String script = Config.script_name;
         String GroupName = "fail";
         String GroupID = "0";
@@ -38,8 +38,8 @@ public class API {
         String BannedToDate = "";
         if (Config.custom_enabled) {
         }
-        else if (script.equals(phpBB.Name) || script.equals(phpBB.ShortName)) {
-            if (Util.checkVersionInRange(phpBB.VersionRange)) {
+        else if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) {
+            if (Util.checkVersionInRange(PhpBB.VersionRange)) {
                 //phpbb3
                 if (what.equals("getgroup")) {
                     GroupID = MySQL.getfromtable(Config.script_tableprefix + "users", "`group_id`", "username",player.getName());
@@ -104,7 +104,7 @@ public class API {
                         }
                     }
                 }
-            } else if (Util.checkVersionInRange(phpBB.VersionRange2)) {
+            } else if (Util.checkVersionInRange(PhpBB.VersionRange2)) {
                 //phpbb2
                 if (what.equals("getgroup")) {
                     UserID = MySQL.getfromtable(Config.script_tableprefix + "users", "`users_id`", "username",player.getName());
@@ -229,16 +229,16 @@ public class API {
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banfliters", "`fid`", "filter",extra);
                         if (IsBanned.equals("fail")) {
                              String delimiter = "\\.";
-                             String tempIP = "";
+                             StringBuffer tempIP = new StringBuffer();
                              String[] temp = extra.split(delimiter);
                              int counter = 0;
                              while (counter > (temp.length - 1))
                              {
-                                 tempIP += temp[counter] + ".";
+                                 tempIP.append(temp[counter] + ".");
                                  counter++;
                              }
-                             tempIP += "*";
-                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banfliters", "`fid`", "filter",tempIP);
+                             tempIP.append("*");
+                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banfliters", "`fid`", "filter",tempIP.toString());
                              if (IsBanned.equals("fail")) { return "false"; }
                         }
                         return "true";
@@ -273,8 +273,8 @@ public class API {
                     }
                 }
             }
-        } else if (script.equals(vBulletin.Name) || script.equals(vBulletin.ShortName)) {
-            if (Util.checkVersionInRange(vBulletin.VersionRange)) {
+        } else if (script.equals(VBulletin.Name) || script.equals(VBulletin.ShortName)) {
+            if (Util.checkVersionInRange(VBulletin.VersionRange)) {
                 //VB3
                 if (what.equals("getgroup")) {
                     GroupID = MySQL.getfromtable(Config.script_tableprefix + "user", "`usergroupid`", "username",player.getName());
@@ -312,7 +312,7 @@ public class API {
                         else { return "nodate"; }
                     }
                 }
-            } else if (Util.checkVersionInRange(vBulletin.VersionRange2)) {
+            } else if (Util.checkVersionInRange(VBulletin.VersionRange2)) {
                 //VB4
                 if (what.equals("getgroup")) {
                     GroupID = MySQL.getfromtable(Config.script_tableprefix + "user", "`usergroupid`", "username",player.getName());
@@ -363,16 +363,16 @@ public class API {
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "access", "`type`", "mask",extra);
                         if (IsBanned.equals("fail")) {
                              String delimiter = "\\.";
-                             String tempIP = "";
+                             StringBuffer tempIP = new StringBuffer();
                              String[] temp = extra.split(delimiter);
                              int counter = 0;
                              while (counter > (temp.length - 1))
                              {
-                                 tempIP += temp[counter] + ".";
+                                 tempIP.append(temp[counter] + ".");
                                  counter++;
                              }
-                             tempIP += "%";
-                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "access", "`type`", "mask",tempIP);
+                             tempIP.append("%");
+                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "access", "`type`", "mask",tempIP.toString());
                              if (IsBanned.equals("fail")) { return "false"; }
                         }
                         return "true";
@@ -552,15 +552,15 @@ public class API {
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "ip_match", "`match_type`", "ip",extra);
                         if (IsBanned.equals("fail")) {
                              String delimiter = "\\.";
-                             String tempIP = "";
+                             StringBuffer tempIP = new StringBuffer();
                              String[] temp = extra.split(delimiter);
                              int counter = 0;
                              while (counter > (temp.length - 1)) {
-                                 tempIP += temp[counter] + ".";
+                                 tempIP.append(temp[counter] + ".");
                                  counter++;
                              }
-                             tempIP += "*";
-                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "ip_match", "`match_type`", "ip",tempIP);
+                             tempIP.append("*");
+                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "ip_match", "`match_type`", "ip",tempIP.toString());
                              if (IsBanned.equals("fail")) { return "false"; }
                         }
                         return "true";
@@ -592,8 +592,8 @@ public class API {
                     }
                 }
             }
-        } else if (script.equals(bbPress.Name) || script.equals(bbPress.ShortName)) {
-            if (Util.checkVersionInRange(bbPress.VersionRange)) {
+        } else if (script.equals(BBPress.Name) || script.equals(BBPress.ShortName)) {
+            if (Util.checkVersionInRange(BBPress.VersionRange)) {
                 if (what.equals("getgroup")) {
                     //next version: http://buddypress.org/
                 } else if (what.equals("checkifbanned")) {
@@ -622,15 +622,15 @@ public class API {
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banned", "`date`", "ip",extra);
                         if (IsBanned.equals("fail")) {
                              String delimiter = "\\.";
-                             String tempIP = "";
+                             StringBuffer tempIP = new StringBuffer();
                              String[] temp = extra.split(delimiter);
                              int counter = 0;
                              while (counter > (temp.length - 1)) {
-                                 tempIP += temp[counter] + ".";
+                                 tempIP.append(temp[counter] + ".");
                                  counter++;
                              }
-                             tempIP += "*";
-                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banned", "`date`", "ip",tempIP);
+                             tempIP.append("*");
+                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banned", "`date`", "ip",tempIP.toString());
                              if (IsBanned.equals("fail")) { return "false"; }
                         } else { return "true"; }
                     } else {
@@ -645,15 +645,15 @@ public class API {
                         if (BanReason != "fail" && BanReason != "" && BanReason != null) { return BanReason; }
                         else {
                              String delimiter = "\\.";
-                             String tempIP = "";
+                             StringBuffer tempIP = new StringBuffer();
                              String[] temp = extra.split(delimiter);
                              int counter = 0;
                              while (counter > (temp.length - 1)) {
-                                 tempIP += temp[counter] + ".";
+                                 tempIP.append(temp[counter] + ".");
                                  counter++;
                              }
-                             tempIP += "*";
-                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banned", "`date`", "ip",tempIP);
+                             tempIP.append("*");
+                             IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banned", "`date`", "ip",tempIP.toString());
                              if (BanReason != "fail" && BanReason != "" && BanReason != null) { return BanReason; }
                         }
                         return "noreason";

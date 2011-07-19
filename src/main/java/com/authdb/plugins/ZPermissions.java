@@ -15,10 +15,10 @@ import com.authdb.AuthDB;
 
 import com.nijiko.permissions.PermissionHandler;
 
-public class zPermissions 
+public class ZPermissions 
 {
-    public static boolean HasPlugin = false;
-    public static boolean HasPermissionsBukkit = false;
+    public static boolean hasPlugin = false;
+    public static boolean hasPermissionsBukkit = false;
     public static PermissionHandler permissionsHandler;
 
     public enum Permission {
@@ -41,14 +41,14 @@ public class zPermissions
         Permission(String permission) { this.permission = permission; }
     }
 
-    public static boolean IsAllowed(Player player, Permission permission) {
-      if (HasPermissionsBukkit) {
-            if (player.hasPermission(AuthDB.PluginName.toLowerCase() + "." + permission.permission)) {
+    public static boolean isAllowed(Player player, Permission permission) {
+      if (hasPermissionsBukkit) {
+            if (player.hasPermission(AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
                 return true;
             }
       }
-      else if (HasPlugin) {
-          if (permissionsHandler.has(player, AuthDB.PluginName.toLowerCase() + "." + permission.permission)) {
+      else if (hasPlugin) {
+          if (permissionsHandler.has(player, AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
               return true;
           }
       }
@@ -56,7 +56,7 @@ public class zPermissions
           Permission[] Permissions = Permission.values();
           for (int i=0; i<Permissions.length; i++) {
               if (Permissions[i].toString().equals(permission.toString())) {
-                  if (Permissions[i].toString().startsWith(AuthDB.PluginName.toLowerCase() + "." + "admin.")) {
+                  if (Permissions[i].toString().startsWith(AuthDB.pluginName.toLowerCase() + "." + "admin.")) {
                       if (player.isOp()) {
                           return true;
                       }

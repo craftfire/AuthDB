@@ -5,7 +5,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class PlayerManager {
 
-    public void ClearArmorinventory(Player player) {
+    public void clearArmorinventory(Player player) {
         final PlayerInventory i = player.getInventory();
         i.setHelmet(null);
         i.setChestplate(null);
@@ -14,11 +14,11 @@ public class PlayerManager {
         
     }
     
-    public void RenamePlayer(Player player, String name) {
+    public void renamePlayer(Player player, String name) {
         player.setDisplayName(name);
     }
     
-    public String GetIP(Player player) {
+    public String getIP(Player player) {
         return player.getAddress().getAddress().toString().substring(1);
     }
 }

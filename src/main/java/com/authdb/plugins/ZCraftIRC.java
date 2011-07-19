@@ -17,8 +17,8 @@ import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 
-public class zCraftIRC {
-public static void SendMessage(Message type,Player player) {
+public class ZCraftIRC {
+public static void sendMessage(Message type,Player player) {
         if (AuthDB.craftircHandle != null && Config.CraftIRC_enabled == true) {
             if (type.equals(Message.database_failure)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.AuthDB_message_database_failure,player,""), Config.CraftIRC_tag);
@@ -48,9 +48,9 @@ public static void SendMessage(Message type,Player player) {
             } else if (type.equals(Message.filter_whitelist)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_whitelist,player,""),Config.CraftIRC_tag);
             } else if (type.equals(Message.OnEnable)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + "%b%" + AuthDB.PluginName + " " + AuthDB.PluginVersion + "%b% has started successfully.", Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + "%b%" + AuthDB.pluginName + " " + AuthDB.pluginVersion + "%b% has started successfully.", Config.CraftIRC_tag);
             } else if (type.equals(Message.OnDisable)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + "%b%" + AuthDB.PluginName + " " + AuthDB.PluginVersion + "%b% has stopped successfully.", Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + "%b%" + AuthDB.pluginName + " " + AuthDB.pluginVersion + "%b% has stopped successfully.", Config.CraftIRC_tag);
             }
         }
     }

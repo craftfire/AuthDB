@@ -67,16 +67,21 @@ public class SMF {
         ps.setString(23, ""); //additionalGroups
         ps.setString(24, salt); //passwordSalt
         ps.executeUpdate();
+        ps.close();
 
         userid = MySQL.countitall(Config.script_tableprefix + "members");
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = value + 1 WHERE `variable` = 'totalMembers'");
         ps.executeUpdate();
+        ps.close();
     } else if (checkid == 2) {
         Random r = new Random();
         int randint = r.nextInt(1000000);
@@ -116,16 +121,21 @@ public class SMF {
         ps.setString(25, ""); //ignore_boards
         ps.setString(26, salt); //password_salt
         ps.executeUpdate();
-
+        ps.close();
+        
         userid = MySQL.countitall(Config.script_tableprefix + "members");
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = value + 1 WHERE `variable` = 'totalMembers'");
         ps.executeUpdate();
+        ps.close();
     }
   }
 

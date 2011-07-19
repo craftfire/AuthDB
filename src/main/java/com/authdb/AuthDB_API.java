@@ -21,7 +21,7 @@ public class AuthDB_API {
 
     public static boolean CheckBan(Player player) {
         try {
-            if (API.GetScript("checkifbanned", player, null).equals("true")) { return true; }
+            if (API.getScript("checkifbanned", player, null).equals("true")) { return true; }
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -31,7 +31,7 @@ public class AuthDB_API {
 
     public static boolean CheckBan(String IP) {
         try {
-            if (API.GetScript("checkifbanned", null, IP).equals("true")) { return true; }
+            if (API.getScript("checkifbanned", null, IP).equals("true")) { return true; }
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -41,7 +41,7 @@ public class AuthDB_API {
 
     public static String BanReason(Player player) {
         try {
-            return API.GetScript("banreason", player, null);
+            return API.getScript("banreason", player, null);
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -51,7 +51,7 @@ public class AuthDB_API {
 
     public static String BanReason(String IP) {
         try {
-            return API.GetScript("banreason", null, IP);
+            return API.getScript("banreason", null, IP);
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -61,7 +61,7 @@ public class AuthDB_API {
 
     public static String BanUnixTimestamp(Player player) {
         try {
-            String BanDate = API.GetScript("bannedtodate", player, null);
+            String BanDate = API.getScript("bannedtodate", player, null);
             if (BanDate.equals("nodate")) { return "nodate"; } else if (BanDate.equals("perma")) { return "perma"; }
             String delimiter = "\\,";
             String[] Split = BanDate.split(delimiter);
@@ -75,7 +75,7 @@ public class AuthDB_API {
 
     public static String GetGroup(Player player) {
         try {
-            return API.GetScript("getgroup", player, null);
+            return API.getScript("getgroup", player, null);
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());

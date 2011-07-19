@@ -21,22 +21,22 @@ public class LoggingManager {
     }
     
     public void Debug(String line) { 
-        if (PluginManager.Config.debug_enable) { 
-            PluginManager.Plugin.log.info("[" + PluginManager.Plugin.PluginName + "] " + line);
+        if (PluginManager.config.debug_enable) { 
+            PluginManager.plugin.log.info("[" + PluginManager.plugin.pluginName + "] " + line);
             ToFile(Type.debug, line);
         } 
     }
     
     public void Info(String line) { 
-            PluginManager.Plugin.log.info("[" + PluginManager.Plugin.PluginName + "] " + line);
+            PluginManager.plugin.log.info("[" + PluginManager.plugin.pluginName + "] " + line);
     }
     
     public void Severe(String line) { 
-            PluginManager.Plugin.log.severe("[" + PluginManager.Plugin.PluginName + "] " + line);
+            PluginManager.plugin.log.severe("[" + PluginManager.plugin.pluginName + "] " + line);
     }
     
     public void Warning(String line) { 
-        PluginManager.Plugin.log.warning("[" + PluginManager.Plugin.PluginName + "] " + line);
+        PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
     }
     
     public void StackTrace(StackTraceElement[] stack, String function, int linenumber, String classname, String file) { 
@@ -46,10 +46,10 @@ public class LoggingManager {
        Warning("File name: " + file);
        Warning("Function name: " + function);
        Warning("Error line: " + linenumber);
-       if (PluginManager.Config.logging) {
-           DateFormat LogFormat = new SimpleDateFormat(PluginManager.Config.logformat);
+       if (PluginManager.config.logging) {
+           DateFormat LogFormat = new SimpleDateFormat(PluginManager.config.logformat);
            Date date = new Date();
-           Warning("Check log file: " + PluginManager.Plugin.getDataFolder() + "\\logs\\error\\" + LogFormat.format(date) + "-error.log"); 
+           Warning("Check log file: " + PluginManager.plugin.getDataFolder() + "\\logs\\error\\" + LogFormat.format(date) + "-error.log"); 
        }
        else { Warning("Enable logging in the config to get more information about the error."); }
        
@@ -70,14 +70,22 @@ public class LoggingManager {
     }
     
     private void ToFile(Type type, String line) {
-        if (PluginManager.Config.logging) {
-            File data = new File(PluginManager.Plugin.getDataFolder() + "/logs/", "");
-            if (!data.exists()) { data.mkdir(); }
-            data = new File(PluginManager.Plugin.getDataFolder() + "/logs/" + type.toString() + "/", "");
-            if (!data.exists()) { data.mkdir(); }
-            DateFormat LogFormat = new SimpleDateFormat(PluginManager.Config.logformat);
+        if (PluginManager.config.logging) {
+            File data = new File(PluginManager.plugin.getDataFolder() + "/logs/", "");
+            if (!data.exists()) { 
+                if (data.mkdir()) {
+                    Util.logging.Debug("Created missing directory: " + PluginManager.plugin.getDataFolder() + "/logs/");
+                }
+            }
+            data = new File(PluginManager.plugin.getDataFolder() + "/logs/" + type.toString() + "/", "");
+            if (!data.exists()) { 
+                if (data.mkdir()) {
+                    Util.logging.Debug("Created missing directory: " + PluginManager.plugin.getDataFolder() + "/logs/" + type.toString());
+                }
+            }
+            DateFormat LogFormat = new SimpleDateFormat(PluginManager.config.logformat);
             Date date = new Date();
-            data = new File(PluginManager.Plugin.getDataFolder() + "/logs/" + type.toString() + "/" + LogFormat.format(date) + "-" + type.toString() + ".log");
+            data = new File(PluginManager.plugin.getDataFolder() + "/logs/" + type.toString() + "/" + LogFormat.format(date) + "-" + type.toString() + ".log");
             if (!data.exists()) {
                 try {
                     data.createNewFile();
@@ -90,7 +98,7 @@ public class LoggingManager {
             try {
                 DateFormat StringFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 Date TheDate = new Date();
-                Writer = new FileWriter(PluginManager.Plugin.getDataFolder() + "/logs/" + type.toString() + "/" + LogFormat.format(date) + "-" + type.toString() + ".log",true);
+                Writer = new FileWriter(PluginManager.plugin.getDataFolder() + "/logs/" + type.toString() + "/" + LogFormat.format(date) + "-" + type.toString() + ".log",true);
                 BufferedWriter Out = new BufferedWriter(Writer);
                 Out.write(StringFormat.format(TheDate) + " - " + line + "\n");
                 Out.close();

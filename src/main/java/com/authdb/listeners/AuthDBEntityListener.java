@@ -38,7 +38,7 @@ public void onEntityTarget(EntityTargetEvent event)
       Player player = (Player)event.getTarget();
       if (((event.getEntity() instanceof Monster)) && (event.getTarget() instanceof Player) && plugin.isAuthorized(player) == false) {
           Player p = (Player)event.getTarget();
-            if (!CheckGuest(p,Config.guests_mobtargeting)) {
+            if (!checkGuest(p,Config.guests_mobtargeting)) {
                 event.setCancelled(true);
             }
       }
@@ -60,17 +60,17 @@ public void onEntityDamage(EntityDamageEvent event) {
                EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
                if ((e.getDamager() instanceof Animals) || (e.getDamager() instanceof Monster)) {
                    if (event.getEntity() instanceof Player) {
-                      if (!CheckGuest(p,Config.guests_health)) {
+                      if (!checkGuest(p,Config.guests_health)) {
                             event.setCancelled(true);
                         }
                    }
                } else if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
                   Player t = (Player)e.getDamager();
-                  if (!CheckGuest(t,Config.guests_pvp) && !CheckGuest(p,Config.guests_health)) {
+                  if (!checkGuest(t,Config.guests_pvp) && !checkGuest(p,Config.guests_health)) {
                         event.setCancelled(true);
                   }
                } else {
-                   if (!CheckGuest(p,Config.guests_health)) {
+                   if (!checkGuest(p,Config.guests_health)) {
                        event.setCancelled(true);
                      }
                    else if (this.plugin.isRegistered("health",p.getName()) == true && plugin.isAuthorized(p) == false) {
@@ -88,21 +88,21 @@ public void onEntityDamage(EntityDamageEvent event) {
             EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
                 if ((e.getDamager() instanceof Player)) {
                 Player t = (Player)e.getDamager();
-                  if (!CheckGuest(t,Config.guests_mobdamage)) { event.setCancelled(true); }
+                  if (!checkGuest(t,Config.guests_mobdamage)) { event.setCancelled(true); }
                 }
         }
     }
 
-    public boolean CheckGuest(Player player,boolean what) {
+    public boolean checkGuest(Player player,boolean what) {
      if (what == true && this.plugin.isRegistered("checkguest",player.getName()) == false) {
               return true;
      } else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
          if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
              this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
-             Messages.SendMessage(Message.guest_notauthorized, player, null);
+             Messages.sendMessage(Message.guest_notauthorized, player, null);
          } else {
              if (this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.timeStamp()) {
-                 Messages.SendMessage(Message.guest_notauthorized, player, null);
+                 Messages.sendMessage(Message.guest_notauthorized, player, null);
                  this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
              }
          }

@@ -18,7 +18,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
-import com.authdb.util.databases.eBean;
+import com.authdb.util.databases.EBean;
 
 public class MyBB {
 
@@ -54,19 +54,21 @@ public class MyBB {
         ps.setString(15, ""); //usernotes
         ps.setString(16, "5");//usergroup
         ps.executeUpdate();
+        ps.close();
 
         int userid = MySQL.countitall(Config.script_tableprefix + "users");
         String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
         String newcache = Util.forumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null);
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datacache" + "` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
         ps.executeUpdate();
+        ps.close();
         }
     }
 
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
     if (action.equals("find")) {
       try {
-          eBean eBeanClass = eBean.CheckPlayer(player);
+          EBean eBeanClass = EBean.checkPlayer(player);
           String StoredSalt = eBeanClass.getSalt();
           return passwordHash(password, StoredSalt);
       } catch (NoSuchAlgorithmException e) {

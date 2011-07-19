@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 
 @Entity()
 @Table(name = "authdb_users")
-public class eBean {
+public class EBean {
 
     public static enum Column {
         playername ("playername"),
@@ -48,10 +48,10 @@ public class eBean {
         Column(String name) { this.name = name; }
     }
     
-    public static eBean CheckPlayer(String player) {
-        eBean eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).findUnique();
+    public static EBean checkPlayer(String player) {
+        EBean eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).findUnique();
         if (eBeanClass == null)  {
-            eBeanClass = new eBean();
+            eBeanClass = new EBean();
             eBeanClass.setPlayername(player);
             eBeanClass.setRegistred("false");
             save(eBeanClass);
@@ -59,10 +59,10 @@ public class eBean {
         return eBeanClass;
     }
     
-    public static eBean CheckPlayer(Player player) {
-        eBean eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).findUnique();
+    public static EBean checkPlayer(Player player) {
+        EBean eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).findUnique();
         if (eBeanClass == null)  {
-            eBeanClass = new eBean();
+            eBeanClass = new EBean();
             eBeanClass.setPlayer(player);
             eBeanClass.setRegistred("false");
             save(eBeanClass);
@@ -70,13 +70,13 @@ public class eBean {
         return eBeanClass;
     }
     
-    public static void save(eBean eBeanClass) {
-        AuthDB.Database.save(eBeanClass);
+    public static void save(EBean eBeanClass) {
+        AuthDB.database.save(eBeanClass);
     }
     
     public static void sync(Player player) {
         try  {
-            eBean eBeanClass = CheckPlayer(player.getName());
+            EBean eBeanClass = checkPlayer(player.getName());
             String registred = eBeanClass.getRegistred();
             if (registred != null && registred.equalsIgnoreCase("true")) {
                 Util.checkScript("syncpassword", Config.script_name, player.getName(), null, null, null); 
@@ -86,69 +86,69 @@ public class eBean {
         catch (SQLException e) { Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName()); }
     }
     
-    public static void CheckPassword(String player, String password) {
-        eBean eBeanClass = CheckPlayer(player);
+    public static void checkPassword(String player, String password) {
+        EBean eBeanClass = checkPlayer(player);
         if (eBeanClass.getPassword() == null || eBeanClass.getPassword().equals(password) == false) {
             Util.logging.Debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
             eBeanClass.setPassword(password);
-            AuthDB.Database.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
         }
     }
     
-    public static void CheckSalt(String player, String salt) {
-        eBean eBeanClass = CheckPlayer(player);
+    public static void checkSalt(String player, String salt) {
+        EBean eBeanClass = checkPlayer(player);
         if (eBeanClass.getSalt() == null || eBeanClass.getSalt().equals(salt) == false) {
             Util.logging.Debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
             eBeanClass.setSalt(salt);
-            AuthDB.Database.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
         }
     }
     
-    public static void CheckIP(String player, String IP) {
-        eBean eBeanClass = CheckPlayer(player);
+    public static void checkIP(String player, String IP) {
+        EBean eBeanClass = checkPlayer(player);
         if (eBeanClass.getIp() == null || eBeanClass.getIp().equals(IP) == false) {
             Util.logging.Debug("IP in persistence is different than the player's IP, syncing IP's.");
             eBeanClass.setIp(IP);
-            AuthDB.Database.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
         }
     }
     
-    public static eBean find(String player) {
-        eBean eBeanClass = CheckPlayer(player);
-        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).findUnique();
+    public static EBean find(String player) {
+        EBean eBeanClass = checkPlayer(player);
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).findUnique();
         return eBeanClass;
     }
     
-    public static eBean find(Player player) {
-        eBean eBeanClass = CheckPlayer(player);
-        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).findUnique();
+    public static EBean find(Player player) {
+        EBean eBeanClass = checkPlayer(player);
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).findUnique();
         return eBeanClass;
     }
     
-    public static eBean find(Player player, Column column1, String value1) {
-        eBean eBeanClass = CheckPlayer(player);
-        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).findUnique();
+    public static EBean find(Player player, Column column1, String value1) {
+        EBean eBeanClass = checkPlayer(player);
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).findUnique();
         return eBeanClass;
     }
     
     public static boolean find(Player player, Column column1, String value1, Column column2, String value2) {
-        eBean eBeanClass = CheckPlayer(player);
-        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
+        EBean eBeanClass = checkPlayer(player);
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
         if (eBeanClass != null) {
            return true;
         }
         return false;
     }
 
-    public static eBean find(String player, Column column1, String value1) {
-        eBean eBeanClass = CheckPlayer(player);
-        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).ieq(column1.name,value1).findUnique();
+    public static EBean find(String player, Column column1, String value1) {
+        EBean eBeanClass = checkPlayer(player);
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).ieq(column1.name,value1).findUnique();
         return eBeanClass;
     }
     
     public static boolean find(String player, Column column1, String value1, Column column2, String value2) {
-        eBean eBeanClass = CheckPlayer(player);
-        eBeanClass = AuthDB.Database.find(eBean.class).where().ieq("playername", player).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
+        EBean eBeanClass = checkPlayer(player);
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
         if (eBeanClass != null) {
            return true;
         }
@@ -265,8 +265,8 @@ public class eBean {
         return inventory;
     }
 
-    public void setInventory(String inventory){
-        this.inventory = inventory;
+    public void setInventory(String inv){
+        this.inventory = inv;
     }
     
     public String getRegistred(){
@@ -289,7 +289,7 @@ public class eBean {
         return armorinventory;
     }
 
-    public void setArmorinventory(String armorinventory){
-        this.armorinventory = armorinventory;
+    public void setArmorinventory(String armorinv){
+        this.armorinventory = armorinv;
     }
 }

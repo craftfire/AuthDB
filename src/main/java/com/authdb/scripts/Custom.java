@@ -24,7 +24,7 @@ import com.authdb.util.databases.MySQL;
             PreparedStatement ps;
             if (Config.custom_encryption != null) {
                 try {
-                    password = Encryption.Encrypt(Config.custom_encryption,password);
+                    password = Encryption.encrypt(Config.custom_encryption,password);
                 } catch (NoSuchAlgorithmException e) {
                     Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 } catch (UnsupportedEncodingException e) {
@@ -37,12 +37,14 @@ import com.authdb.util.databases.MySQL;
                 ps.setString(1, player); //username
                 ps.setString(2, password); // password
                 ps.executeUpdate();
+                ps.close();
             } else if (Config.custom_emailfield != null && Config.custom_emailfield != "") {
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (?,?,?)", 1);
                 ps.setString(1, player); //username
                 ps.setString(2, password); // password
                 ps.setString(3, email); // email
                 ps.executeUpdate();
+                ps.close();
             }
         }
 
@@ -52,7 +54,7 @@ import com.authdb.util.databases.MySQL;
 
     public static boolean check_hash(String passwordhash, String hash) {
         try {
-            if (Encryption.Encrypt(Config.custom_encryption, passwordhash).equals(hash)) {
+            if (Encryption.encrypt(Config.custom_encryption, passwordhash).equals(hash)) {
                 return true;
             }
         } catch (NoSuchAlgorithmException e) {
@@ -63,7 +65,7 @@ import com.authdb.util.databases.MySQL;
         return false;
     }
 
-    public static String SaltIt(String password) {
+    public static String saltIt(String password) {
         return password;
     }
 }

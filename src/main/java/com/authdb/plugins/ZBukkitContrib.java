@@ -11,8 +11,8 @@ package com.authdb.plugins;
 
 
 
-public class zBukkitContrib {
-    public static boolean CheckCommand(String command) {
+public class ZBukkitContrib {
+    public static boolean checkCommand(String command) {
         int counter = 0;
         int counter2 = 0;
         String[] contrib = command.split("\\.");

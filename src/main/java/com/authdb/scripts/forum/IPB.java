@@ -18,7 +18,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
-import com.authdb.util.databases.eBean;
+import com.authdb.util.databases.EBean;
 
 public class IPB {
 
@@ -52,25 +52,29 @@ public class IPB {
             ps.setString(14, hash); //members_pass_hash
             ps.setString(15, salt); //members_pass_salt
             ps.executeUpdate();
+            ps.close();
 
             int userid = MySQL.countitall(Config.script_tableprefix + "members");
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "pfields_content" + "` (`member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //member_id
             ps.executeUpdate();
+            ps.close();
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "profile_portal" + "` (`pp_member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //pp_member_id
             ps.executeUpdate();
+            ps.close();
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "cache_store", "`cs_value`", "cs_key", "stats");
             String newcache = Util.forumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "cache_store" + "` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
             ps.executeUpdate();
+            ps.close();
         }
     }
 
     public static String hash(String action,String player,String password, String thesalt) throws SQLException {
         if (action.equals("find")) {
               try {
-                  eBean eBeanClass = eBean.CheckPlayer(player);
+                  EBean eBeanClass = EBean.checkPlayer(player);
                   String StoredSalt = eBeanClass.getSalt();
                   return passwordHash(password, StoredSalt);
               } catch (NoSuchAlgorithmException e) {

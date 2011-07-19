@@ -27,7 +27,7 @@ import com.authdb.util.databases.MySQL;
  * @author lars
  * @author Contex
  */
-public class phpBB {
+public class PhpBB {
 
     public static String VersionRange = "3.0.0-3.0.8";
     public static String VersionRange2 = "2.0.0-2.0.23";
@@ -65,6 +65,7 @@ public class phpBB {
         ///
         ps.setString(17, ipAddress); //user_ip
         ps.executeUpdate();
+        ps.close();
 
         userid = MySQL.countitall(Config.script_tableprefix + "users");
 
@@ -74,6 +75,7 @@ public class phpBB {
         ps.setInt(3, 0);
         ps.setInt(4, 0);
         ps.executeUpdate();
+        ps.close();
 
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
         ps.setInt(1, 7);
@@ -81,13 +83,17 @@ public class phpBB {
         ps.setInt(3, 0);
         ps.setInt(4, 0);
         ps.executeUpdate();
+        ps.close();
 
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
         ps.executeUpdate();
+        ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = config_value + 1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();
+        ps.close();
     } else if (checkid == 2) {
         String hash = Encryption.md5(password);
         long timestamp = System.currentTimeMillis()/1000;
@@ -116,6 +122,7 @@ public class phpBB {
         ps.setInt(7, userid); //user_id
         ///
         ps.executeUpdate();
+        ps.close();
 
         userid = MySQL.countitall(Config.script_tableprefix + "users");
 
@@ -124,6 +131,8 @@ public class phpBB {
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.executeUpdate();
+        ps.close();
+        stmt.close();
         /*
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
         ps.executeUpdate();
@@ -139,20 +148,20 @@ public class phpBB {
 
   public static String phpbb_hash(String password) {
     String random_state = unique_id();
-    String random = "";
+    StringBuffer random = new StringBuffer();
     int count = 6;
+    String temp = "";
 
     if (random.length() < count) {
-        random = "";
 
         for (int i = 0; i < count; i += 16) {
             random_state = Encryption.md5(unique_id() + random_state);
-            random += Encryption.pack(Encryption.md5(random_state));
+            random.append(Encryption.pack(Encryption.md5(random_state)));
         }
-        random = random.substring(0, count);
+        temp = random.toString().substring(0, count);
     }
 
-    String hash = _hash_crypt_private(password, _hash_gensalt_private(random, itoa64));
+    String hash = _hash_crypt_private(password, _hash_gensalt_private(temp, itoa64));
     if (hash.length() == 34) {
         return hash;
     }
@@ -174,11 +183,11 @@ public class phpBB {
             iteration_count_log2 = 8;
         }
         int PHP_VERSION = 5;
-        String output = "$H$";
-        output += itoa64.charAt(Math.min(iteration_count_log2 + ((PHP_VERSION >= 5) ? 5 : 3), 30));
-        output += _hash_encode64(input, 6);
+        StringBuffer output = new StringBuffer("$H$");
+        output.append(itoa64.charAt(Math.min(iteration_count_log2 + ((PHP_VERSION >= 5) ? 5 : 3), 30)));
+        output.append(_hash_encode64(input, 6));
 
-        return output;
+        return output.toString();
     }
 
 
@@ -186,18 +195,18 @@ public class phpBB {
    * Encode hash
    */
     private static String _hash_encode64(String input, int count) {
-        String output = "";
+        StringBuffer output = new StringBuffer();
         int i = 0;
 
         do {
             int value = input.charAt(i++);
-            output += itoa64.charAt(value & 0x3f);
+            output.append(itoa64.charAt(value & 0x3f));
 
             if (i < count) {
                 value |= input.charAt(i) << 8;
             }
 
-            output += itoa64.charAt((value >> 6) & 0x3f);
+            output.append(itoa64.charAt((value >> 6) & 0x3f));
 
             if (i++ >= count) {
                 break;
@@ -207,17 +216,17 @@ public class phpBB {
                 value |= input.charAt(i) << 16;
             }
 
-            output += itoa64.charAt((value >> 12) & 0x3f);
+            output.append(itoa64.charAt((value >> 12) & 0x3f));
 
             if (i++ >= count) {
                 break;
             }
 
-            output += itoa64.charAt((value >> 18) & 0x3f);
+            output.append(itoa64.charAt((value >> 18) & 0x3f));
         }
         while (i < count);
 
-        return output;
+        return output.toString();
     }
 
     static String _hash_crypt_private(String password, String setting) {
@@ -246,8 +255,7 @@ public class phpBB {
         }
         while (--count > 0);
 
-        output = setting.substring(0, 12);
-        output += _hash_encode64(hash, 16);
+        output = setting.substring(0, 12) + _hash_encode64(hash, 16);
 
         return output;
     }
