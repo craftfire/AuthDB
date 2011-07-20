@@ -390,7 +390,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             } else {
                 Util.logging.Debug("BukkitContrib is trying to check for SP client with command: " + event.getMessage());
             }
-		}
+        }
     }
 
     public void onPlayerMove(PlayerMoveEvent event) {
