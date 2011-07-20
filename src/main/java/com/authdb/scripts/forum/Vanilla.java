@@ -27,7 +27,7 @@ public class Vanilla {
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
       long timestamp = System.currentTimeMillis()/1000;
-          String usertable = null,roletable = null;
+          String usertable = null, roletable = null;
           if (checkid == 1) {
               usertable = "User";
               roletable = "UserRole";
@@ -42,7 +42,7 @@ public class Vanilla {
               String randomkey = Util.getRandomString2(12, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
               String realdate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
                 PreparedStatement ps;
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + usertable + "` (`Name`,`Password`,`HashMethod`,`Email`,`Gender`,`Preferences`,`Permissions`,`Attributes`,`DateFirstVisit`,`DateLastActive`,`DateInserted`,`DateUpdated`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + usertable + "` (`Name`, `Password`, `HashMethod`, `Email`, `Gender`, `Preferences`, `Permissions`, `Attributes`, `DateFirstVisit`, `DateLastActive`, `DateInserted`, `DateUpdated`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
                 ps.setString(1, player); //Name
                 ps.setString(2, passwordhashed); // Password
                 ps.setString(3, "Vanilla"); //HashMethod
@@ -57,16 +57,16 @@ public class Vanilla {
                 ps.setString(12, realdate); //DateUpdated
                 ps.executeUpdate();
                 ps.close();
-    
+
                 int userid = MySQL.countitall(Config.script_tableprefix + usertable);
-    
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
+
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`, `RoleID`)  VALUES (?, ?)", 1);
                 ps.setInt(1, userid); //UserID
                 ps.setInt(2, 3); //RoleID
                 ps.executeUpdate();
                 ps.close();
-    
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`,`RoleID`)  VALUES (?,?)", 1);
+
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`, `RoleID`)  VALUES (?, ?)", 1);
                 ps.setInt(1, userid); //UserID
                 ps.setInt(2, 8); //RoleID
                 ps.executeUpdate();

@@ -18,7 +18,7 @@ import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 
 public class ZCraftIRC {
-public static void sendMessage(Message type,Player player) {
+    public static void sendMessage(Message type,Player player) {
         if (AuthDB.craftircHandle != null && Config.CraftIRC_enabled == true) {
             if (type.equals(Message.database_failure)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.AuthDB_message_database_failure,player,""), Config.CraftIRC_tag);
@@ -54,5 +54,4 @@ public static void sendMessage(Message type,Player player) {
             }
         }
     }
-
 }

@@ -30,12 +30,12 @@ public class MyBB {
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     if (checkid == 1) {
         long timestamp = System.currentTimeMillis()/1000;
-        String salt = Encryption.hash(8,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",0,0);
-        String hash = hash("create",player,password, salt);
+        String salt = Encryption.hash(8, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 0, 0);
+        String hash = hash("create", player, password, salt);
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`,`password`,`salt`,`email`,`regdate`,`lastactive`,`lastvisit`,`regip`,`longregip`,`signature`,`buddylist`,`ignorelist`,`pmfolders`,`notepad`,`usernotes`,`usergroup`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`, `password`, `salt`, `email`, `regdate`, `lastactive`, `lastvisit`, `regip`, `longregip`, `signature`, `buddylist`, `ignorelist`, `pmfolders`, `notepad`, `usernotes`, `usergroup`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //username
         ps.setString(2, hash); // password
         ps.setString(3, salt); //salt
@@ -65,7 +65,7 @@ public class MyBB {
         }
     }
 
-    public static String hash(String action,String player,String password, String thesalt) throws SQLException {
+    public static String hash(String action, String player, String password, String thesalt) throws SQLException {
     if (action.equals("find")) {
       try {
           EBean eBeanClass = EBean.checkPlayer(player);

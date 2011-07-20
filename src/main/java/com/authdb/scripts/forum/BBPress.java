@@ -23,7 +23,7 @@ public class BBPress {
     public static String VersionRange = "1.0.3-1.0.3";
     public static String LatestVersionRange = VersionRange;
 
-  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     if (checkid == 1) {
         long timestamp = System.currentTimeMillis()/1000;
         //
@@ -32,7 +32,7 @@ public class BBPress {
         String passwordhashed = hash(password);
         String realdate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (timestamp*1000));
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_login`,`user_pass`,`user_nicename`,`user_email`,`user_registered`,`display_name`)  VALUES (?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_login`, `user_pass`, `user_nicename`, `user_email`, `user_registered`, `display_name`)  VALUES (?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //user_login
         ps.setString(2, passwordhashed); //user_pass
         ps.setString(3, player); //user_nicename

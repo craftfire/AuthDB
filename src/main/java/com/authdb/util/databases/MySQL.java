@@ -15,16 +15,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.mysql.jdbc.Blob;
+
 import com.authdb.util.Config;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.craftfire.util.managers.LoggingManager;
 
-import com.mysql.jdbc.Blob;
-
-public class MySQL
-{
+public class MySQL {
     static LoggingManager logging = new LoggingManager();
     public static Connection mysql = null;
 
@@ -47,16 +46,17 @@ public class MySQL
         return true;
     }
 
-    public static void close() { 
-    if (mysql != null) {
-        try { 
-             mysql.close(); } catch (SQLException localSQLException) { 
-                 Util.logging.StackTrace(localSQLException.getStackTrace(), 
-                 Thread.currentThread().getStackTrace()[1].getMethodName(), 
-                 Thread.currentThread().getStackTrace()[1].getLineNumber(), 
-                 Thread.currentThread().getStackTrace()[1].getClassName(), 
-                 Thread.currentThread().getStackTrace()[1].getFileName()); 
-             }    
+    public static void close() {
+        if (mysql != null) {
+            try {
+                mysql.close();
+            } catch (SQLException localSQLException) {
+                Util.logging.StackTrace(localSQLException.getStackTrace(),
+                Thread.currentThread().getStackTrace()[1].getMethodName(),
+                Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                Thread.currentThread().getStackTrace()[1].getClassName(),
+                Thread.currentThread().getStackTrace()[1].getFileName());
+            }
         }
     }
 
@@ -87,7 +87,6 @@ public class MySQL
         Util.logging.Debug("MySQL: " + Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
         try {
             Config.database_ison = true;
-
             mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
         } catch (SQLException e) {
             Config.database_ison = false;
@@ -109,8 +108,8 @@ public class MySQL
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         int dupe = 0;
-        if (rs.next()) { 
-            dupe = rs.getInt(1); 
+        if (rs.next()) {
+            dupe = rs.getInt(1);
         }
         stmt.close();
         return dupe;
@@ -127,8 +126,8 @@ public class MySQL
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
-        if (rs.next()) { 
-            dupe = rs.getString(1); 
+        if (rs.next()) {
+            dupe = rs.getString(1);
         }
         stmt.close();
         return dupe;
@@ -139,8 +138,8 @@ public class MySQL
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
-        if (rs.next()) { 
-            dupe = rs.getString(1); 
+        if (rs.next()) {
+            dupe = rs.getString(1);
         }
         stmt.close();
         return dupe;
@@ -151,7 +150,7 @@ public class MySQL
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
-        if (rs.next()) { 
+        if (rs.next()) {
             dupe = rs.getString(1);
         }
         stmt.close();
@@ -163,8 +162,8 @@ public class MySQL
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
-        if (rs.next()) { 
-            dupe = rs.getString(1); 
+        if (rs.next()) {
+            dupe = rs.getString(1);
         }
         stmt.close();
         return dupe;
@@ -175,8 +174,8 @@ public class MySQL
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
-        if (rs.next()) { 
-            dupe = rs.getString(1); 
+        if (rs.next()) {
+            dupe = rs.getString(1);
         }
         stmt.close();
         return dupe;
@@ -187,8 +186,8 @@ public class MySQL
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         Blob dupe = null;
-        if (rs.next()) { 
-            dupe = (Blob) rs.getBlob(1); 
+        if (rs.next()) {
+            dupe = (Blob) rs.getBlob(1);
         }
         stmt.close();
         return dupe;

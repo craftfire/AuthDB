@@ -32,13 +32,13 @@ public class VBulletin {
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
       long timestamp = System.currentTimeMillis()/1000;
       if (checkid == 1) {
-              String salt = Encryption.hash(30,"none",33,126);
-              String passwordhashed = hash("create",player,password, salt);
+              String salt = Encryption.hash(30, "none", 33, 126);
+              String passwordhashed = hash("create", player, password, salt);
               String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
               ///
               PreparedStatement ps;
               //
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user" + "` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user" + "` (`usergroupid`, `password`, `passworddate`, `email`, `showvbcode`, `joindate`, `lastvisit`, `lastactivity`, `reputationlevelid`, `options`, `ipaddress`, `salt`, `username`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
             ps.setString(1, "2"); //usergroupid
             ps.setString(2, passwordhashed); // password
             ps.setString(3, passworddate); //passworddate
@@ -64,14 +64,14 @@ public class VBulletin {
             ps.close();
           }
           else if (checkid == 2) {
-              String salt = Encryption.hash(30,"none",33,126);
-              String passwordhashed = hash("create",player,password, salt);
+              String salt = Encryption.hash(30, "none", 33, 126);
+              String passwordhashed = hash("create", player, password, salt);
               String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
           //    int userid;
               ///
               PreparedStatement ps;
               //
-              ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user" + "` (`usergroupid`,`password`,`passworddate`,`email`,`showvbcode`,`joindate`,`lastvisit`,`lastactivity`,`reputationlevelid`,`options`,`ipaddress`,`salt`,`username`,`usertitle`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+              ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user" + "` (`usergroupid`, `password`, `passworddate`, `email`, `showvbcode`, `joindate`, `lastvisit`, `lastactivity`, `reputationlevelid`, `options`, `ipaddress`, `salt`, `username`, `usertitle`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
             ps.setString(1, "2"); //usergroupid
               ps.setString(2, passwordhashed); // password
             ps.setString(3, passworddate); //passworddate
@@ -98,7 +98,7 @@ public class VBulletin {
           }
     }
 
-    public static String hash(String action,String player,String password, String thesalt) throws SQLException {
+    public static String hash(String action, String player, String password, String thesalt) throws SQLException {
         if (action.equals("find")) {
       try {
           EBean eBeanClass = EBean.checkPlayer(player);
@@ -124,7 +124,7 @@ public class VBulletin {
       public static boolean check_hash(String passwordhash, String hash) {
           if (passwordhash.equals(hash)) {
               return true;
-          } else { 
+          } else {
               return false;
           }
       }

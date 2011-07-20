@@ -28,7 +28,7 @@ public class XenForo {
     public static String VersionRange = "1.0.0-1.0.0";
     public static String LatestVersionRange = VersionRange;
 
-  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     if (checkid == 1) {
         Random r = new Random();
         int randint = r.nextInt(1000000);
@@ -39,9 +39,9 @@ public class XenForo {
         //
         PreparedStatement ps;
         //
-        String hash = hash(1,salt,password);
+        String hash = hash(1, salt, password);
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user" + "` (`username`,`email`,`language_id`,`style_id`,`timezone`,`user_group_id`,`secondary_group_ids`,`display_style_group_id`,`permission_combination_id`,`register_date`,`last_activity`)  VALUES (?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user" + "` (`username`, `email`, `language_id`, `style_id`, `timezone`, `user_group_id`, `secondary_group_ids`, `display_style_group_id`, `permission_combination_id`, `register_date`, `last_activity`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //username
         ps.setString(2, email); //email
         ps.setInt(3, 1); //language_id
@@ -59,14 +59,14 @@ public class XenForo {
 
         int userid = MySQL.countitall(Config.script_tableprefix + "user");
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_privacy" + "` (`user_id`,`allow_post_profile`,`allow_send_personal_conversation`)  VALUES (?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_privacy" + "` (`user_id`, `allow_post_profile`, `allow_send_personal_conversation`)  VALUES (?, ?, ?)", 1);
         ps.setInt(1, userid); //user_id
         ps.setString(2, "members"); //allow_post_profile
         ps.setString(3, "members"); //allow_send_personal_conversation
         ps.executeUpdate();
         ps.close();
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_option" + "` (`user_id`,`default_watch_state`,`alert_optout`)  VALUES (?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_option" + "` (`user_id`, `default_watch_state`, `alert_optout`)  VALUES (?, ?, ?)", 1);
         ps.setInt(1, userid); //user_id
         ps.setString(2, "watch_email"); //default_watch_state
         ps.setString(3, ""); //alert_optout
@@ -76,7 +76,7 @@ public class XenForo {
         String stringdata1 = "a:0:{}";
         byte[] bArr1 = stringdata1.getBytes();
         ByteArrayInputStream bIn1 = new ByteArrayInputStream(bArr1);
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_profile" + "` (`user_id`,`status`,`signature`,`homepage`,`following`,`identities`,`csrf_token`,`about`)  VALUES (?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_profile" + "` (`user_id`, `status`, `signature`, `homepage`, `following`, `identities`, `csrf_token`, `about`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setInt(1, userid); //user_id
         ps.setString(2, ""); //status - dupe
         ps.setString(3, ""); //signature - dupe
@@ -91,7 +91,7 @@ public class XenForo {
         String stringdata = "a:3:{s:4:\"hash\";s:64:\"" + hash + "\";s:4:\"salt\";s:64:\"" + salt + "\";s:8:\"hashFunc\";s:6:\"sha256\";}";
         byte[] bArr = stringdata.getBytes();
         ByteArrayInputStream bIn = new ByteArrayInputStream(bArr);
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_authenticate" + "` (`user_id`,`scheme_class`,`data`,`remember_key`)  VALUES (?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_authenticate" + "` (`user_id`, `scheme_class`, `data`, `remember_key`)  VALUES (?, ?, ?, ?)", 1);
         ps.setInt(1, userid); //user_id
         ps.setString(2, "XenForo_Authentication_Core"); //scheme_class
         ps.setBlob(3, bIn, bArr.length);
@@ -104,7 +104,7 @@ public class XenForo {
   public static String hash(int checkid, String salt, String password) {
         if (checkid == 1) {
               try {
-                return passwordHash(password,salt);
+                return passwordHash(password, salt);
             } catch (NoSuchAlgorithmException e) {
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } catch (UnsupportedEncodingException e) {
