@@ -21,7 +21,7 @@ public class AuthDB_API {
 
     public static boolean CheckBan(Player player) {
         try {
-            if (API.getScript("checkifbanned", player, null).equals("true")) { return true; }
+            if (API.getScript("checkifbanned", player, null).equalsIgnoreCase("true")) { return true; }
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -31,7 +31,7 @@ public class AuthDB_API {
 
     public static boolean CheckBan(String IP) {
         try {
-            if (API.getScript("checkifbanned", null, IP).equals("true")) { return true; }
+            if (API.getScript("checkifbanned", null, IP).equalsIgnoreCase("true")) { return true; }
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -62,10 +62,10 @@ public class AuthDB_API {
     public static String BanUnixTimestamp(Player player) {
         try {
             String BanDate = API.getScript("bannedtodate", player, null);
-            if (BanDate.equals("nodate")) { return "nodate"; } else if (BanDate.equals("perma")) { return "perma"; }
+            if (BanDate.equalsIgnoreCase("nodate")) { return "nodate"; } else if (BanDate.equalsIgnoreCase("perma")) { return "perma"; }
             String delimiter = "\\,";
             String[] Split = BanDate.split(delimiter);
-            if (Split[1].equals("unix")) { return Split[0]; }
+            if (Split[1].equalsIgnoreCase("unix")) { return Split[0]; }
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());

@@ -11,6 +11,7 @@ package com.authdb;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -399,37 +400,25 @@ public class AuthDB extends JavaPlugin {
         File data = new File(getDataFolder() + "/data/", "");
         if (!data.exists()) { 
             if (data.mkdir()) {
-                Util.logging.Debug("Created missing directory: " + getDataFolder() + "/data/");
+                Util.logging.Debug("Created missing directory: " + getDataFolder() + "\\data\\");
             }
         }
         data = new File(getDataFolder() + "/translations/", "");
         if (!data.exists()) { 
             if (data.mkdir()) {
-                Util.logging.Debug("Created missing directory: " + getDataFolder() + "/translations/");
-            }
-        }
-        data = new File(getDataFolder() + "/translations/commands/", "");
-        if (!data.exists()) { 
-            if (data.mkdir()) {
-                Util.logging.Debug("Created missing directory: " + getDataFolder() + "/translations/commands/");
-            }
-        }
-        data = new File(getDataFolder() + "/translations/messages/", "");
-        if (!data.exists()) { 
-            if (data.mkdir()) {
-                Util.logging.Debug("Created missing directory: " + getDataFolder() + "/translations/messages/");
+                Util.logging.Debug("Created missing directory: " + getDataFolder() + "\\translations\\");
             }
         }
         data = new File(getDataFolder() + "/config/", "");
         if (!data.exists()) { 
             if (data.mkdir()) {
-                Util.logging.Debug("Created missing folder: " + getDataFolder() + "/config/");
+                Util.logging.Debug("Created missing folder: " + getDataFolder() + "\\config\\");
             }
         }
         data = new File(getDataFolder() + "/", "othernames.db");
         if (data.exists()) { 
             if (data.renameTo(new File(getDataFolder() + "/data/", "othernames.db"))) {
-                Util.logging.Debug("Moved file othernames.db from " + getDataFolder() + " to " + getDataFolder() + "/data/othernames.db");
+                Util.logging.Debug("Moved file othernames.db from " + getDataFolder() + " to " + getDataFolder() + "\\data\\othernames.db");
             }
         }
         data = new File(getDataFolder() + "/", "idle.db");
@@ -467,7 +456,7 @@ public class AuthDB extends JavaPlugin {
             if (!Util.checkOtherName(player).equals(player)) {
                 player = Util.checkOtherName(player);
             }
-            if (Util.checkScript("checkpassword",Config.script_name, player.toLowerCase(), password, null, null)) {
+            if (Util.checkScript("checkpassword",Config.script_name, player, password, null, null)) {
                 return true;
             }
             if (!Config.database_keepalive) { 
@@ -475,7 +464,7 @@ public class AuthDB extends JavaPlugin {
             }
         } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-            Stop("ERRORS in checking password. Plugin will NOT work. Disabling it.");
+            Stop("ERROR in checking password. Plugin will NOT work. Disabling it.");
         }
         return false;
     }
@@ -532,9 +521,72 @@ public class AuthDB extends JavaPlugin {
     
     void LoadYml(String type) {
         String Language = "English";
-        String[] LanguagesAll = new File(getDataFolder() + "/translations/" + type + "/").list();
+        //String[] LanguagesAll = new File(getDataFolder() + "/translations/" + type + "/").list();
+        File LanguagesAll = new File(getDataFolder() + "/translations");
         boolean Set = false;
+        File[] directories;
+        FileFilter fileFilter = new FileFilter() {
+            public boolean accept(File file) {
+                return file.isDirectory();
+            }
+        };
+        
         CodeSource src = getClass().getProtectionDomain().getCodeSource();
+/*
+        if(directories.length > 0) { Util.logging.Debug("Found " + directories.length + " directories for " + type); }
+        else { Util.logging.error("Error! Could not find any directories for " + type); }
+        for (int i=0; i<directories.length; i++) {
+        	Util.logging.Debug("Found translation directory '" + directories[i].getName() + "' for " + type); */
+        if (src != null) {
+            try {
+                URL jar = src.getLocation();
+                ZipInputStream zip = new ZipInputStream(jar.openStream());
+                ZipEntry ze = null;
+                
+                while ((ze = zip.getNextEntry()) != null) {
+                    String directory = ze.getName();
+                    if (directory.startsWith("files/translations/") && directory.endsWith(".yml") == false)  {
+                    	directory = directory.replace("files/translations/", "");
+                    	directory = directory.replace("/", "");
+                    	if(directory.equals("") == false) {
+                    		Util.logging.Debug("Directory: "+directory);
+	                        File f = new File(getDataFolder() + "/translations/" + directory + "/" + type + ".yml");
+	                        if (!f.exists()) {
+	                            Util.logging.Info(type + ".yml" + " could not be found in plugins/AuthDB/translations/" + directory + "/! Creating " + type + ".yml");
+	                            DefaultFile(type + ".yml","translations/" + directory + "");
+	                        }
+	                        if ((Config.language).equalsIgnoreCase(directory))  { 
+	                            Set = true;
+	                            Language = directory; 
+	                        } 
+                    	}
+                    }
+                }
+                zip.close();
+            } catch (IOException e) {
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            }
+        }
+        
+        directories = LanguagesAll.listFiles(fileFilter);
+        if(directories.length > 0) { Util.logging.Debug("Found " + directories.length + " directories for " + type); }
+        else { Util.logging.error("Error! Could not find any directories for " + type); }
+       /* for (int i=0; i<directories.length; i++) {
+        	Util.logging.Debug("Found translation directory '" + directories[i].getName() + "' for " + type);
+        */
+        if (!Set) {
+            for (int z=0; z<directories.length; z++) {
+                if (Config.language.equalsIgnoreCase(directories[z].getName()))  { 
+                    Set = true;
+                    Language = directories[z].getName(); 
+                }
+            }
+        }
+        if (!Set) { Util.logging.Info("Could not find translation files for " + Config.language + ", defaulting to " + Language); } 
+        else { Util.logging.Debug(type + " language set to " + Language); }
+        new Config(type, getDataFolder() + "/translations/" + Language + "/" + type + "/", type + ".yml");
+        
+        /*CodeSource src = getClass().getProtectionDomain().getCodeSource();
 
         if (src != null) {
             try {
@@ -561,18 +613,7 @@ public class AuthDB extends JavaPlugin {
             } catch (IOException e) {
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
-
-         }
-        if (!Set) {
-            for (int i=0; i<LanguagesAll.length; i++) {
-                if (Config.language.equalsIgnoreCase(LanguagesAll[i]))  { 
-                    Set = true;
-                    Language = LanguagesAll[i]; 
-                }
-            }
-        }
-        if (!Set) { Util.logging.Info("Could not find translation files for " + Config.language + "; defaulting to " + Language); } else { Util.logging.Debug(type + " language set to " + Language); }
-        new Config(type,getDataFolder() + "/translations/" + type + "/", Language + ".yml");
+            */
         
     }    
     
@@ -581,7 +622,7 @@ public class AuthDB extends JavaPlugin {
         boolean checkneeded = true;
         //if (Config.debug_enable)
             //logging.Debug("Running function: isRegistered(String player)");
-        if (when.equals("join")) {
+        if (when.equalsIgnoreCase("join")) {
             if (!Config.database_keepalive) { MySQL.connect(); }
             Config.hasForumBoard = false;
             try {
@@ -599,7 +640,7 @@ public class AuthDB extends JavaPlugin {
                 AuthDB_Authed.put(Encryption.md5(player), "no");
             }
             return dupe;
-        } else if (when.equals("command")) {
+        } else if (when.equalsIgnoreCase("command")) {
             if (!Config.database_keepalive) { MySQL.connect(); }
             Config.hasForumBoard = false;
             try {
@@ -623,10 +664,10 @@ public class AuthDB extends JavaPlugin {
         } else {
             if (this.AuthDB_Authed.containsKey(Encryption.md5(player))) {
                 String check = AuthDB_Authed.get(Encryption.md5(player));
-                if (check.equals("yes")) {
+                if (check.equalsIgnoreCase("yes")) {
                     checkneeded = false;
                     return true;
-                } else if (check.equals("no")) {
+                } else if (check.equalsIgnoreCase("no")) {
                     return false;
                 }
             } else if (checkneeded) {

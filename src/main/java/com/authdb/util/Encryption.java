@@ -17,16 +17,16 @@ import java.util.Random;
 
 public class Encryption {
     public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        if (encryption.equals("md5")) return md5(toencrypt);
-        else if (encryption.equals("sha1")) return SHA1(toencrypt);
-        else if (encryption.equals("sha512")) return SHA512(toencrypt);
+        if (encryption.equalsIgnoreCase("md5")) return md5(toencrypt);
+        else if (encryption.equalsIgnoreCase("sha1")) return SHA1(toencrypt);
+        else if (encryption.equalsIgnoreCase("sha512")) return SHA512(toencrypt);
         if (Config.debug_enable) Util.logging.Info("Could not find encryption method: " + Config.custom_encryption + ", using default: md5");
         Config.custom_encryption = "md5";
         return md5(toencrypt);
     }
 
     public static String hash(int length, String charset,int RangeFrom, int RangeTo) {
-        if (charset.equals("none")) {
+        if (charset.equalsIgnoreCase("none")) {
             StringBuffer salt = new StringBuffer();
             for (int i = 0; i < length; i++) {
                 salt.append((char)(Util.randomNumber(RangeFrom, RangeTo)));

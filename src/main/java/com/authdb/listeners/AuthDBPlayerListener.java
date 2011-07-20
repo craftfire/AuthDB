@@ -39,6 +39,7 @@ import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
+import com.avaje.ebean.Ebean;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -155,7 +156,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 if (Config.hasBackpack) {
                     BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                     BackpackPlayer.createBackpack();
-                    this.plugin.storeInventory(player, BackpackPlayer.getContents(), player.getInventory().getArmorContents());
+                    this.plugin.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
                 } else {
                     this.plugin.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
                 }
@@ -319,7 +320,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             } else if (split[0].equalsIgnoreCase(Config.commands_register) || split[0].equalsIgnoreCase(Config.aliases_register)) {
                 if (ZPermissions.isAllowed(player, Permission.command_register)) {
                     Boolean email = true;
-                    if (Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; } {
+                    if (Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
                         if (!Config.register_enabled) {
                             Messages.sendMessage(Message.register_disabled, player, null);
                         } else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.checkOtherName(player.getName()))) {
@@ -391,7 +392,6 @@ public class AuthDBPlayerListener extends PlayerListener {
                 Util.logging.Debug("BukkitContrib is trying to check for SP client with command: " + event.getMessage());
             }
         }
-    }
 
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {

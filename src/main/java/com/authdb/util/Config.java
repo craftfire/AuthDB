@@ -154,9 +154,9 @@ public class Config {
       public static Configuration template = null;
 
       public Config(String config, String directory, String filename) {
-          Configuration template = new Configuration(new File(directory, filename));
+          template = new Configuration(new File(directory, filename));
           template.load();
-            if (config.equals("config")) {
+            if (config.equalsIgnoreCase("config")) {
                 ///////////////////////////////////////////
                 //               Core
                 ///////////////////////////////////////////
@@ -176,7 +176,7 @@ public class Config {
                     ///////////////////////////////////////////
                     database_driver =  getConfigString("Core.database.driver", "mysql");
                     database_username =  getConfigString("Core.database.username", "root");
-                    database_password =  getConfigString("Core.database.password", "root");
+                    database_password =  getConfigString("Core.database.password", "");
                     database_port =  getConfigString("Core.database.port", "3306");
                     database_host =  getConfigString("Core.database.host", "localhost");
                     database_database = getConfigString("Core.database.name", "forum");
@@ -340,7 +340,7 @@ public class Config {
                         CraftIRC_messages_password_enabled = getConfigBoolean("Plugins.CraftIRC.messages.password", true);
                         CraftIRC_messages_idle_enabled = getConfigBoolean("Plugins.CraftIRC.messages.idle", true);
 
-            } else if (config.equals("messages")) {
+            } else if (config.equalsIgnoreCase("messages")) {
             ///////////////////////////////////////////
             //  messages
             ///////////////////////////////////////////
@@ -482,7 +482,7 @@ public class Config {
                     Messages.CraftIRC_message_filter_kicked = Config.getConfigString("Plugins.CraftIRC.filter.kicked", "{PLAYER} was kicked due to bad characters in username!");
                     Messages.CraftIRC_message_filter_whitelist = Config.getConfigString("Plugins.CraftIRC.filter.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
 
-            } else if (config.equals("commands")) {
+            } else if (config.equalsIgnoreCase("commands")) {
                 commands_register = Config.getConfigString("Core.commands.register", "/register");
                 commands_link = Config.getConfigString("Core.commands.link", "/link");
                 commands_unlink = Config.getConfigString("Core.commands.unlink", "/unlink");

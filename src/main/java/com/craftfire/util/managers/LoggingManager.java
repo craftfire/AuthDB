@@ -60,19 +60,24 @@ public class LoggingManager {
             Warning("Enable logging in the config to get more information about the error.");
         }
 
-        Error("--------------------------- STACKTRACE ERROR ---------------------------");
-        Error("Class name: " + classname);
-        Error("File name: " + file);
-        Error("Function name: " + function);
-        Error("Error line: " + linenumber);
-        Error("--------------------------- STACKTRACE START ---------------------------");
+        logError("--------------------------- STACKTRACE ERROR ---------------------------");
+        logError("Class name: " + classname);
+        logError("File name: " + file);
+        logError("Function name: " + function);
+        logError("Error line: " + linenumber);
+        logError("--------------------------- STACKTRACE START ---------------------------");
         for (int i = 0; i < stack.length; i++) {
-            Error(stack[i].toString());
+        	logError(stack[i].toString());
         }
-        Error("---------------------------- STACKTRACE END ----------------------------");
+        logError("---------------------------- STACKTRACE END ----------------------------");
+    }
+    
+    public void error(String error) {
+    	Warning(error);
+    	logError(error);
     }
 
-    private void Error(String error) {
+    public void logError(String error) {
         ToFile(Type.error, error);
     }
 

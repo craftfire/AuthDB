@@ -66,7 +66,7 @@ public class MyBB {
     }
 
     public static String hash(String action, String player, String password, String thesalt) throws SQLException {
-    if (action.equals("find")) {
+    if (action.equalsIgnoreCase("find")) {
       try {
           EBean eBeanClass = EBean.checkPlayer(player);
           String StoredSalt = eBeanClass.getSalt();
@@ -76,7 +76,7 @@ public class MyBB {
       } catch (UnsupportedEncodingException e) {
           Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
       }
-        } else if (action.equals("create")) {
+        } else if (action.equalsIgnoreCase("create")) {
             try {
                 return passwordHash(password, thesalt);
             } catch (NoSuchAlgorithmException e) {
