@@ -15,8 +15,7 @@ import com.authdb.AuthDB;
 
 import com.nijiko.permissions.PermissionHandler;
 
-public class ZPermissions 
-{
+public class ZPermissions {
     public static boolean hasPlugin = false;
     public static boolean hasPermissionsBukkit = false;
     public static PermissionHandler permissionsHandler;
@@ -42,32 +41,28 @@ public class ZPermissions
     }
 
     public static boolean isAllowed(Player player, Permission permission) {
-      if (hasPermissionsBukkit) {
+        if (hasPermissionsBukkit) {
             if (player.hasPermission(AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
                 return true;
             }
-      }
-      else if (hasPlugin) {
-          if (permissionsHandler.has(player, AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
-              return true;
-          }
-      }
-      else {
-          Permission[] Permissions = Permission.values();
-          for (int i=0; i<Permissions.length; i++) {
-              if (Permissions[i].toString().equals(permission.toString())) {
-                  if (Permissions[i].toString().startsWith(AuthDB.pluginName.toLowerCase() + "." + "admin.")) {
-                      if (player.isOp()) {
-                          return true;
-                      }
-                      return false;
-                  }
-                  return true;
-              }
-          }
-      }
-      return false;
+        } else if (hasPlugin) {
+            if (permissionsHandler.has(player, AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
+                return true;
+            }
+        } else {
+            Permission[] Permissions = Permission.values();
+            for (int i=0; i<Permissions.length; i++) {
+                if (Permissions[i].toString().equals(permission.toString())) {
+                    if (Permissions[i].toString().startsWith(AuthDB.pluginName.toLowerCase() + "." + "admin.")) {
+                        if (player.isOp()) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-
-
 }

@@ -28,16 +28,16 @@ public class PunBB {
     public static String LatestVersionRange = VersionRange;
 
 
-  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     if (checkid == 1) {
         long timestamp = System.currentTimeMillis()/1000;
         //
         PreparedStatement ps;
         //
-        String salt = Encryption.hash(12,"none",33, 126);
-        String hash = hash("create",player,password,salt);
+        String salt = Encryption.hash(12, "none", 33, 126);
+        String hash = hash("create", player, password, salt);
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`group_id`,`username`,`password`,`salt`,`email`,`registered`,`registration_ip`,`last_visit`)  VALUES (?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`group_id`, `username`, `password`, `salt`, `email`, `registered`, `registration_ip`, `last_visit`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setInt(1, 3); //group_id
         ps.setString(2, player); //username
         ps.setString(3, hash); //password
@@ -60,7 +60,7 @@ public class PunBB {
     }
  }
 
-    public static String hash(String action,String player,String password, String thesalt) throws SQLException {
+    public static String hash(String action, String player,String password, String thesalt) throws SQLException {
         if (action.equals("find")) {
       try {
           EBean eBeanClass = EBean.checkPlayer(player);
@@ -84,7 +84,7 @@ public class PunBB {
     }
 
       public static boolean check_hash(String passwordhash, String hash) {
-          if (passwordhash.equals(hash)) { 
+          if (passwordhash.equals(hash)) {
               return true;
           } else {
               return false;

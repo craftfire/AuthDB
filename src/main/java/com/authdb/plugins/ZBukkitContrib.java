@@ -9,8 +9,6 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.plugins;
 
-
-
 public class ZBukkitContrib {
     public static boolean checkCommand(String command) {
         int counter = 0;

@@ -20,40 +20,38 @@ import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 
-public class AuthDBBlockListener extends BlockListener
-{
-  private final AuthDB plugin;
+public class AuthDBBlockListener extends BlockListener {
+    private final AuthDB plugin;
 
-  public AuthDBBlockListener(AuthDB instance) {
-      plugin = instance;
-  }
-
-  public void onBlockPlace(BlockPlaceEvent event) {
-  if (!AuthDB.isAuthorized(event.getPlayer()) && !checkGuest(event.getPlayer(),Config.guests_build)) {
-      event.setCancelled(true);
+    public AuthDBBlockListener(AuthDB instance) {
+        plugin = instance;
     }
-  }
 
-  public void onBlockDamage(BlockDamageEvent event) {
-  if (!AuthDB.isAuthorized(event.getPlayer()) && !checkGuest(event.getPlayer(),Config.guests_destroy)) {
-      event.setCancelled(true);
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (!AuthDB.isAuthorized(event.getPlayer()) && !checkGuest(event.getPlayer(), Config.guests_build)) {
+            event.setCancelled(true);
+        }
     }
-  }
 
-  /*
-  public void onBlockDamage(BlockBreakEvent event) {
-       if (!AuthDB.isAuthorized(event.getPlayer().getEntityId()))
-       {
-            if (!checkGuest(event.getPlayer(),Config.guests_destroy)) {
+    public void onBlockDamage(BlockDamageEvent event) {
+        if (!AuthDB.isAuthorized(event.getPlayer()) && !checkGuest(event.getPlayer(), Config.guests_destroy)) {
+            event.setCancelled(true);
+        }
+    }
+
+    /*
+    public void onBlockDamage(BlockBreakEvent event) {
+        if (!AuthDB.isAuthorized(event.getPlayer().getEntityId())) {
+            if (!checkGuest(event.getPlayer(), Config.guests_destroy)) {
                 event.setCancelled(true);
             }
-       }
-      }*/
+        }
+    }*/
 
-    public boolean checkGuest(Player player,boolean what) {
-        if (what && (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false)) {
+    public boolean checkGuest(Player player, boolean what) {
+        if (what && (this.plugin.isRegistered("checkguest", player.getName()) == false || this.plugin.isRegistered("checkguest", Util.checkOtherName(player.getName())) == false)) {
             return true;
-        } else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
+        } else if (Config.protection_notify && this.plugin.isRegistered("checkguest", player.getName()) == false || this.plugin.isRegistered("checkguest", Util.checkOtherName(player.getName())) == false) {
             if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
                 this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
                 Messages.sendMessage(Message.guest_notauthorized, player, null);
@@ -68,6 +66,6 @@ public class AuthDBBlockListener extends BlockListener
                 this.plugin.AuthDB_RemindLogin.remove(player.getName());
             }
         }
-     return false;
+        return false;
     }
 }

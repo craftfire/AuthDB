@@ -65,7 +65,7 @@ public class Util {
     public static PlayerManager authDBPlayer = new PlayerManager();
     public static com.craftfire.util.managers.PlayerManager craftFirePlayer = new com.craftfire.util.managers.PlayerManager();
     static int schedule = 1;
-    public static boolean checkScript(String type, String script, String player, String password, 
+    public static boolean checkScript(String type, String script, String player, String password,
     String email, String ipAddress) throws SQLException {
         if (Config.database_ison) {
             String usertable = null, usernamefield = null, passwordfield = null, saltfield = "";
@@ -115,7 +115,7 @@ public class Util {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && PhpBB.check_hash(password, storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (PhpBB.check_hash(password, hash)) { return true; }
@@ -142,7 +142,7 @@ public class Util {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && PhpBB.check_hash(password, storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (PhpBB.check_hash(password, hash)) { return true; }
@@ -169,7 +169,7 @@ public class Util {
                         EBean.checkPassword(player, hash);
                         if (SMF.check_hash(SMF.hash(1, player, password), hash)) { return true; }
                     }
-                } else if (checkVersionInRange(SMF.VersionRange2) || checkVersionInRange("2.0") 
+                } else if (checkVersionInRange(SMF.VersionRange2) || checkVersionInRange("2.0")
                 || checkVersionInRange("2.0.0") || checkVersionInRange("2.0.0.0")) {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
@@ -456,10 +456,10 @@ public class Util {
                         }
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
-                        logging.StackTrace(e.getStackTrace(), 
-                        Thread.currentThread().getStackTrace()[1].getMethodName(), 
-                        Thread.currentThread().getStackTrace()[1].getLineNumber(), 
-                        Thread.currentThread().getStackTrace()[1].getClassName(), 
+                        logging.StackTrace(e.getStackTrace(),
+                        Thread.currentThread().getStackTrace()[1].getMethodName(),
+                        Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                        Thread.currentThread().getStackTrace()[1].getClassName(),
                         Thread.currentThread().getStackTrace()[1].getFileName());
                     }
                     String cache = stringBuffer.toString();
@@ -478,7 +478,7 @@ public class Util {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && BBPress.check_hash(password, storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (BBPress.check_hash(password, hash)) { return true; }
@@ -499,7 +499,7 @@ public class Util {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && DLE.check_hash(DLE.hash(password), storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (DLE.check_hash(DLE.hash(password), hash)) { return true; }
@@ -522,12 +522,12 @@ public class Util {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password, null), storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", 
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
                         passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
                     }
-                    
+
                 }
                 if (type.equals("adduser")) {
                     player = player.toLowerCase();
@@ -556,15 +556,15 @@ public class Util {
                 if (!Config.custom_enabled) {
                     String tempVers = Config.script_version;
                     Config.script_version = scriptVersion();
-                    logging.Info("\n" + 
-                            "|-----------------------------------------------------------------------------|\n" + 
-                            "|--------------------------------AUTHDB WARNING-------------------------------|\n" + 
-                            "|-----------------------------------------------------------------------------|\n" + 
-                            "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION,                                 |\n" + 
-                            "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN.PLUGIN MAY OR MAY NOT WORK.  |\n" + 
-                            "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAVE BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |\n" + 
-                            "| FOR A LIST OF SCRIPT VERSIONS,                                              |\n" + 
-                            "| CHECK: http://wiki.bukkit.org/AuthDB_(Plugin)#Scripts_Supported             |\n" + 
+                    logging.Info("\n" +
+                            "|-----------------------------------------------------------------------------|\n" +
+                            "|--------------------------------AUTHDB WARNING-------------------------------|\n" +
+                            "|-----------------------------------------------------------------------------|\n" +
+                            "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION,                                 |\n" +
+                            "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN.PLUGIN MAY OR MAY NOT WORK.  |\n" +
+                            "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAVE BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |\n" +
+                            "| FOR A LIST OF SCRIPT VERSIONS,                                              |\n" +
+                            "| CHECK: http://wiki.bukkit.org/AuthDB_(Plugin)#Scripts_Supported             |\n" +
                             "|-----------------------------------------------------------------------------|");
 
                 }
@@ -579,12 +579,12 @@ public class Util {
                 String check = MySQL.getfromtable(Config.script_tableprefix + bantable, "*", bannamefield, player);
                 if (check != "fail") { return true; }
             }*/ else if (Config.hasForumBoard && type.equals("numusers") && !Config.custom_enabled) {
-                if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) { 
+                if (script.equals(PhpBB.Name) || script.equals(PhpBB.ShortName)) {
                 ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
-                 + Config.script_tableprefix + usertable + "` WHERE  `group_id` !=6"); 
-                } else { 
+                 + Config.script_tableprefix + usertable + "` WHERE  `group_id` !=6");
+                } else {
                 ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
-                 + Config.script_tableprefix + usertable + "`"); 
+                 + Config.script_tableprefix + usertable + "`");
                 }
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) { logging.Info(rs.getInt("countit") + " user registrations in database"); }
@@ -672,9 +672,9 @@ public class Util {
         else {
             check = MySQL.getfromtable(Config.script_tableprefix + "" + bantable + "", "`" + banipfield + "`", "" + bannamefield + "", ipAddress);
         }
-        if (check != "fail") { 
-            return true; 
-        } else { 
+        if (check != "fail") {
+            return true;
+        } else {
             return false;
         }
     }
@@ -952,7 +952,7 @@ public class Util {
         }
 
     }
-    
+
     public static boolean checkFilter(String what, String string) {
         if (what.equals("username")) {
             logging.Debug("Launching function: checkFilter(String what, String string) - " + Config.filter_username);
@@ -1027,7 +1027,7 @@ public class Util {
 
     public static String replaceStrings(String string, Player player, String additional) {
         logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
-        if (!Config.has_badcharacters && Config.database_ison && player != null 
+        if (!Config.has_badcharacters && Config.database_ison && player != null
         && player.getName().length() > Integer.parseInt(Config.username_minimum)
         && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
             string = string.replaceAll("\\{IP\\}", craftFirePlayer.getIP(player));
@@ -1106,7 +1106,7 @@ public class Util {
         string = string.replaceAll("\\{lightpurple\\}", "§d");
         string = string.replaceAll("\\{yellow\\}", "§e");
         string = string.replaceAll("\\{white\\}", "§f");
-        
+
         string = string.replaceAll("\\{black\\}", "§0");
         string = string.replaceAll("\\{darkblue\\}", "§1");
         string = string.replaceAll("\\{darkgreen\\}", "§2");
@@ -1123,10 +1123,10 @@ public class Util {
         string = string.replaceAll("\\{pink\\}", "§d");
         string = string.replaceAll("\\{yellow\\}", "§e");
         string = string.replaceAll("\\{white\\}", "§f");
-        
+
         return string;
     }
-    
+
     public static String removeColors(String toremove) {
         logging.Debug("Launching function: checkWhitelist");
         toremove = toremove.replace("?0", "");
@@ -1193,9 +1193,12 @@ public class Util {
     }
 
     public static String checkOtherName(String player) {
-         if (AuthDB.AuthDB_LinkedNames.containsKey(player)) {
+         if (AuthDB.AuthDB_LinkedNames.containsKey(player))
+ {
              return AuthDB.AuthDB_LinkedNames.get(player);
-         } else if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player)) {
+         }
+ else if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player))
+ {
              AuthDB.AuthDB_LinkedNameCheck.put(player, "yes");
              EBean eBeanClass = EBean.checkPlayer(player);
              String linkedName = eBeanClass.getLinkedname();
@@ -1250,7 +1253,7 @@ public class Util {
             int halfbyte = (data[i] >>> 4) & 0x0F;
             int twoHalfs = 0;
             do {
-                if ((0 <= halfbyte) && (halfbyte <= 9)) { buf.append((char) ('0' + halfbyte)); } 
+                if ((0 <= halfbyte) && (halfbyte <= 9)) { buf.append((char) ('0' + halfbyte)); }
                 else { buf.append((char) ('a' + (halfbyte - 10))); }
                 halfbyte = data[i] & 0x0F;
             } while (twoHalfs++< 1);

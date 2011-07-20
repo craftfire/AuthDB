@@ -18,7 +18,6 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class Drupal {
-
     public static String VersionRange = "6.20-6.20";
     public static String VersionRange2 = "7.0-7.0";
     public static String LatestVersionRange = VersionRange2;
@@ -32,7 +31,7 @@ public class Drupal {
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`,`pass`,`mail`,`created`,`access`,`login`,`status`,`init`)  VALUES (?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`, `pass`, `mail`, `created`, `access`, `login`, `status`, `init`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //name
         ps.setString(2, hash); //pass
         ps.setString(3, email); //mail
@@ -45,11 +44,11 @@ public class Drupal {
         ps.close();
     }
  else if (checkid == 2) {
-        String hash = user_hash_password(password,0);
+        String hash = user_hash_password(password, 0);
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`,`pass`,`mail`,`created`,`login`,`status`,`init`)  VALUES (?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`, `pass`, `mail`, `created`, `login`, `status`, `init`)  VALUES (?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //name
         ps.setString(2, hash); //pass
         ps.setString(3, email); //mail
@@ -182,9 +181,9 @@ public class Drupal {
             hash = Encryption.encrypt(algo, hash + password);
            } while (--count>=0);
          }
-        catch(Exception e) { 
-            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName()); 
-            return null; 
+        catch(Exception e) {
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            return null;
         }
 
         int len  = hash.length();

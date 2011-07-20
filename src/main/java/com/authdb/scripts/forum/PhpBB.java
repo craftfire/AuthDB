@@ -35,7 +35,7 @@ public class PhpBB {
     public static String Name = "phpbb";
     public static String ShortName = "phpbb";
 
-  public static void adduser(int checkid,String player, String email, String password, String ipAddress) throws SQLException {
+  public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
     if (checkid==1) {
         String hash = phpbb_hash(password);
         long timestamp = System.currentTimeMillis()/1000;
@@ -44,7 +44,7 @@ public class PhpBB {
         PreparedStatement ps;
         //
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`,`username_clean`,`user_password`,`user_email`,`group_id`,`user_timezone`,`user_dst`,`user_lang`,`user_type`,`user_regdate`,`user_new`,`user_lastvisit`,`user_permissions`,`user_sig`,`user_occ`,`user_interests`,`user_ip`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`, `username_clean`, `user_password`, `user_email`, `group_id`, `user_timezone`, `user_dst`, `user_lang`, `user_type`, `user_regdate`, `user_new`, `user_lastvisit`, `user_permissions`, `user_sig`, `user_occ`, `user_interests`, `user_ip`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player);
         ps.setString(2, player.toLowerCase());
         ps.setString(3, hash);
@@ -69,7 +69,7 @@ public class PhpBB {
 
         userid = MySQL.countitall(Config.script_tableprefix + "users");
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`, `user_id`, `group_leader`, `user_pending`)  VALUES (?, ?, ?, ?)", 1);
         ps.setInt(1, 2);
         ps.setInt(2, userid);
         ps.setInt(3, 0);
@@ -77,7 +77,7 @@ public class PhpBB {
         ps.executeUpdate();
         ps.close();
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`,`user_id`,`group_leader`,`user_pending`)  VALUES (?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`, `user_id`, `group_leader`, `user_pending`)  VALUES (?, ?, ?, ?)", 1);
         ps.setInt(1, 7);
         ps.setInt(2, userid);
         ps.setInt(3, 0);
@@ -103,7 +103,7 @@ public class PhpBB {
         int userid = 0;
 
 
-        String query = "SELECT user_id FROM `" + Config.script_tableprefix + "users" + "` ORDER BY `user_id` DESC LIMIT 0 , 1";
+        String query = "SELECT user_id FROM `" + Config.script_tableprefix + "users" + "` ORDER BY `user_id` DESC LIMIT 0, 1";
         Statement stmt = MySQL.mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         if (rs.next()) { userid = rs.getInt(1); }
@@ -114,7 +114,7 @@ public class PhpBB {
         stmt.close();
         userid += 1;
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_active`,`username`,`user_password`,`user_lastvisit`,`user_regdate`,`user_email`,`user_id`)  VALUES (?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_active`, `username`, `user_password`, `user_lastvisit`, `user_regdate`, `user_email`, `user_id`)  VALUES (?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setInt(1, 1); //user_active
         ps.setString(2, player.toLowerCase()); //username
         ps.setString(3, hash); //user_password
@@ -128,7 +128,7 @@ public class PhpBB {
 
         userid = MySQL.countitall(Config.script_tableprefix + "users");
 
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`,`user_id`,`user_pending`)  VALUES (?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_group" + "` (`group_id`, `user_id`, `user_pending`)  VALUES (?, ?, ?)", 1);
         ps.setInt(1, 3);
         ps.setInt(2, userid);
         ps.setInt(3, 0);

@@ -15,10 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-
-public class Encryption
-{
-
+public class Encryption {
     public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (encryption.equals("md5")) return md5(toencrypt);
         else if (encryption.equals("sha1")) return SHA1(toencrypt);
@@ -82,21 +79,19 @@ public class Encryption
             StringBuffer hexString = new StringBuffer();
             for (int i=0;i<byteData.length;i++) {
                 String hex=Integer.toHexString(0xff & byteData[i]);
-                    if (hex.length()==1) hexString.append('0');
+                if (hex.length()==1) hexString.append('0'); {
                     hexString.append(hex);
+                }
             }
             return hexString.toString();
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return text;
-
     }
 
     public static String SHA512(String text) {
         StringBuffer sb = new StringBuffer();
-
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
             messageDigest.update(text.getBytes("UTF-8"));
@@ -106,15 +101,14 @@ public class Encryption
 
             for (int i = 0; i < digestBytes.length; i++) {
                 hex = Integer.toHexString(0xFF & digestBytes[i]);
-                if (hex.length() < 2)
+                if (hex.length() < 2) {
                     sb.append("0");
+                }
                 sb.append(hex);
                 }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
-        catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            }
-
         return new String(sb);
     }
 

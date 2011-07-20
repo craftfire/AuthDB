@@ -30,12 +30,12 @@ public class IPB {
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
         if (checkid == 1) {
             long timestamp = System.currentTimeMillis()/1000;
-            String salt = Encryption.hash(5,"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",0,0);
-            String hash = hash("create",player,password, salt);
+            String salt = Encryption.hash(5, "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 0, 0);
+            String hash = hash("create", player, password, salt);
             //
             PreparedStatement ps;
             //
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "members" + "` (`name`,`member_group_id`,`email`,`joined`,`ip_address`,`allow_admin_mails`,`last_visit`,`last_activity`,`ignored_users`,`members_display_name`,`members_seo_name`,`members_l_display_name`,`members_l_username`,`members_pass_hash`,`members_pass_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "members" + "` (`name`, `member_group_id`, `email`, `joined`, `ip_address`, `allow_admin_mails`, `last_visit`, `last_activity`, `ignored_users`, `members_display_name`, `members_seo_name`, `members_l_display_name`, `members_l_username`, `members_pass_hash`, `members_pass_salt`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
             ps.setString(1, player); //name
             ps.setInt(2, 3); // member_group_id
             ps.setString(3, email); //email
@@ -71,7 +71,7 @@ public class IPB {
         }
     }
 
-    public static String hash(String action,String player,String password, String thesalt) throws SQLException {
+    public static String hash(String action, String player, String password, String thesalt) throws SQLException {
         if (action.equals("find")) {
               try {
                   EBean eBeanClass = EBean.checkPlayer(player);
@@ -97,7 +97,7 @@ public class IPB {
       public static boolean check_hash(String passwordhash, String hash) {
           if (passwordhash.equals(hash)) {
               return true;
-          } else { 
+          } else {
               return false;
           }
       }

@@ -35,12 +35,12 @@ public class SMF {
         int randint = r.nextInt(1000000);
         String salt = Encryption.md5("" + randint);
         salt = salt.substring(0, 4);
-        String hash = hash(1,player,password);
+        String hash = hash(1, player, password);
         int userid;
         //
         PreparedStatement ps;
         //
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "members" + "` (`memberName`,`dateRegistered`,`lastLogin`,`realName`,`passwd`,`emailAddress`,`memberIP`,`memberIP2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`messageLabels`,`personalText`,`websiteTitle`,`websiteUrl`,`location`,`ICQ`,`MSN`,`signature`,`avatar`,`usertitle`,`secretQuestion`,`additionalGroups`,`passwordSalt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "members" + "` (`memberName`, `dateRegistered`, `lastLogin`, `realName`, `passwd`, `emailAddress`, `memberIP`, `memberIP2`, `lngfile`, `buddy_list`, `pm_ignore_list`, `messageLabels`, `personalText`, `websiteTitle`, `websiteUrl`, `location`, `ICQ`, `MSN`, `signature`, `avatar`, `usertitle`, `secretQuestion`, `additionalGroups`, `passwordSalt`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //memberName
         ps.setLong(2, timestamp); //dateRegistered
         ps.setLong(3, timestamp); //lastLogin
@@ -87,12 +87,12 @@ public class SMF {
         int randint = r.nextInt(1000000);
         String salt = Encryption.md5("" + randint);
         salt = salt.substring(0, 4);
-        String hash = hash(2,player,password);
+        String hash = hash(2, player, password);
         int userid;
         //
         PreparedStatement ps;
         ///
-        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "members" + "` (`member_name`,`date_registered`,`last_login`,`real_name`,`passwd`,`email_address`,`member_ip`,`member_ip2`,`lngfile`,`buddy_list`,`pm_ignore_list`,`message_labels`,`personal_text`,`website_title`,`website_url`,`location`,`icq`,`msn`,`signature`,`avatar`,`usertitle`,`secret_question`,`additional_groups`,`openid_uri`,`ignore_boards`,`password_salt`)  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 1);
+        ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "members" + "` (`member_name`, `date_registered`, `last_login`, `real_name`, `passwd`, `email_address`, `member_ip`, `member_ip2`, `lngfile`, `buddy_list`, `pm_ignore_list`, `message_labels`, `personal_text`, `website_title`, `website_url`, `location`, `icq`, `msn`, `signature`, `avatar`, `usertitle`, `secret_question`, `additional_groups`, `openid_uri`, `ignore_boards`, `password_salt`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //member_name
         ps.setLong(2, timestamp); //date_registered
         ps.setLong(3, timestamp); //last_login
@@ -122,7 +122,7 @@ public class SMF {
         ps.setString(26, salt); //password_salt
         ps.executeUpdate();
         ps.close();
-        
+
         userid = MySQL.countitall(Config.script_tableprefix + "members");
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
         ps.executeUpdate();

@@ -13,11 +13,9 @@ import java.io.File;
 
 import org.bukkit.util.config.Configuration;
 
-
 //import com.ensifera.animosity.craftirc.CraftIRC;
 
-public class Config
-{
+public class Config {
 
     ///
 
@@ -150,9 +148,9 @@ public class Config
             public static String commands_register,commands_link,commands_unlink,commands_login,commands_logout,commands_setspawn,commands_reload;
             public static String aliases_register,aliases_link,aliases_unlink,aliases_login,aliases_logout,aliases_setspawn,aliases_reload;
 
-            
-            
-            
+
+
+
       public static Configuration template = null;
 
       public Config(String config, String directory, String filename) {
@@ -492,7 +490,7 @@ public class Config
                 commands_logout = Config.getConfigString("Core.commands.logout", "/logout");
                 commands_setspawn = Config.getConfigString("Core.commands.setspawn", "/authdb setspawn");
                 commands_reload = Config.getConfigString("Core.commands.reload", "/authdb reload");
-                
+
                 aliases_register = Config.getConfigString("Core.aliases.register", "/r");
                 aliases_link = Config.getConfigString("Core.aliases.link", "/li");
                 aliases_unlink = Config.getConfigString("Core.aliases.unlink", "/ul");

@@ -45,60 +45,60 @@ public class API {
                 } else if (what.equals("checkifbanned")) {
                     if (player == null) {
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_id`", "ban_ip",extra);
-                        if (IsBanned.equals("fail")) { 
-                            return "false"; 
-                        } else { 
-                            return "true"; 
+                        if (IsBanned.equals("fail")) {
+                            return "false";
+                        } else {
+                            return "true";
                         }
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "users", "`user_id`", "username_clean",player.getName().toLowerCase());
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_id`", "ban_userid",UserID);
-                        if (IsBanned.equals("fail")) { 
-                            return "false"; 
-                        } else { 
-                            return "true"; 
+                        if (IsBanned.equals("fail")) {
+                            return "false";
+                        } else {
+                            return "true";
                         }
                     }
                 } else if (what.equals("banreason")) {
                     if (player == null) {
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_reason`", "ban_ip",extra);
-                        if (IsBanned.equals("fail")) { 
-                            return "false"; 
-                        } else { 
-                            return "true"; 
+                        if (IsBanned.equals("fail")) {
+                            return "false";
+                        } else {
+                            return "true";
                         }
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "users", "`users_id`", "username_clean",player.getName().toLowerCase());
                         BanReason = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_reason`", "ban_userid",UserID);
-                        if (BanReason != "fail" && BanReason != "" && BanReason != null) { 
-                            return BanReason; 
-                        } else { 
-                            return "noreason"; 
+                        if (BanReason != "fail" && BanReason != "" && BanReason != null) {
+                            return BanReason;
+                        } else {
+                            return "noreason";
                         }
                     }
                 } else if (what.equals("bannedtodate")) {
                     if (player == null) {
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_end`", "ban_ip",extra);
                         if (BannedToDate != "fail") {
-                            if (BannedToDate == null || BannedToDate.equals("NULL") || BannedToDate.equals("0")) { 
-                                return "perma"; 
-                            } else { 
-                                return BanReason + ",unix"; 
+                            if (BannedToDate == null || BannedToDate.equals("NULL") || BannedToDate.equals("0")) {
+                                return "perma";
+                            } else {
+                                return BanReason + ",unix";
                             }
-                        } else { 
-                            return "nodate"; 
+                        } else {
+                            return "nodate";
                         }
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "users", "`user_id`", "username_clean",player.getName().toLowerCase());
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_end`", "ban_userid",UserID);
                         if (BannedToDate != "fail") {
-                            if (BannedToDate == null || BannedToDate.equals("NULL") || BannedToDate.equals("0")) { 
-                                return "perma"; 
-                            } else { 
-                                return BanReason + ",unix"; 
+                            if (BannedToDate == null || BannedToDate.equals("NULL") || BannedToDate.equals("0")) {
+                                return "perma";
+                            } else {
+                                return BanReason + ",unix";
                             }
-                        } else { 
-                            return "nodate"; 
+                        } else {
+                            return "nodate";
                         }
                     }
                 }
@@ -112,18 +112,18 @@ public class API {
                     if (player == null) {
                         extra = Util.hexToString(extra);
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_id`", "ban_ip", extra);
-                        if (IsBanned.equals("fail")) { 
-                            return "false"; 
-                        } else { 
-                            return "true"; 
+                        if (IsBanned.equals("fail")) {
+                            return "false";
+                        } else {
+                            return "true";
                         }
                     } else {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "users", "`user_id`", "username",player.getName());
                         IsBanned = MySQL.getfromtable(Config.script_tableprefix + "banlist", "`ban_id`", "ban_userid",UserID);
-                        if (IsBanned.equals("fail")) { 
-                            return "false"; 
-                        } else { 
-                            return "true"; 
+                        if (IsBanned.equals("fail")) {
+                            return "false";
+                        } else {
+                            return "true";
                         }
                     }
 
@@ -155,10 +155,10 @@ public class API {
                         UserID = MySQL.getfromtable(Config.script_tableprefix + "members", "`ID_MEMBER`", "memberName",player.getName());
                         String BanGroup = MySQL.getfromtable(Config.script_tableprefix + "ban_items", "`ID_BAN_GROUP`", "ID_MEMBER",UserID);
                         BanReason = MySQL.getfromtable(Config.script_tableprefix + "ban_groups", "`reason`", "ID_BAN_GROUP",BanGroup);
-                        if (BanReason != "fail" && BanReason != "" && BanReason != null) { 
-                            return BanReason; 
-                        } else { 
-                            return "noreason"; 
+                        if (BanReason != "fail" && BanReason != "" && BanReason != null) {
+                            return BanReason;
+                        } else {
+                            return "noreason";
                         }
                     }
                 } else if (what.equals("bannedtodate")) {
@@ -726,4 +726,5 @@ public class API {
         }
         return "fail";
     }
+
 }
