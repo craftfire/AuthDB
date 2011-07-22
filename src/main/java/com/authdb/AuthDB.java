@@ -700,13 +700,16 @@ public class AuthDB extends JavaPlugin {
     }
 
 
-    public boolean checkEmail(String email) {
-          Pattern p = Pattern.compile(". + @. + \\.[a-z] + ");
+    public static boolean checkEmail(String email) {
+        Util.logging.Debug("Validating email: " + email);
+          Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
           Matcher m = p.matcher(email);
           boolean Matches = m.matches();
           if (Matches) {
+            Util.logging.Debug("Email validation: passed!");
             return true;
           } else {
+            Util.logging.Debug("Email validation: failed!");
             return false;
           }
     }

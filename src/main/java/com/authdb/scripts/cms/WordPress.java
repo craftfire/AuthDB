@@ -39,9 +39,20 @@ public class WordPress {
             ps.setString(4, email); //user_email
             ps.setString(5, realdate); //user_registered
             ps.setString(6, player); //display_name
-            ///
             ps.executeUpdate();
             ps.close();
+            int userid = MySQL.countitall(Config.script_tableprefix + "users");
+            
+            String[] fields = {"first_name", "last_name", "nickname", "description", "rich_editing", "comment_shortcuts", "admin_color", "use_ssl", "show_admin_bar_front", "show_admin_bar_admin", "aim", "yim", "jabber", "wp__321__capabilities", "wp__321__user_level"};
+            String[] values = {"", "", player, "", "true", "false", "fresh", "0", "true", "false", "", "", "", "a:1:{s:10:\"subscriber\";s:1:\"1\";}", "0"};
+            for (int i = 0; i < fields.length; i++) {
+                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "usermeta" + "` (`user_id`, `meta_key`, `meta_value`)  VALUES (?, ?, ?)", 1);
+                ps.setInt(1, userid); //user_id
+                ps.setString(2, fields[i]); //meta_key
+                ps.setString(3, values[i]); //meta_value
+                ps.executeUpdate();
+                ps.close();
+            }
 
             /*
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
@@ -163,7 +174,7 @@ public class WordPress {
             hash = Encryption.pack(Encryption.md5(hash + password));
         } while (--count > 0);
 
-        Util.logging.Info("Packed " + counter + " times.");
+        Util.logging.Info("String packed " + counter + " times.");
         output = setting.substring(0, 12) + _hash_encode64(hash, 16);
 
         return output;

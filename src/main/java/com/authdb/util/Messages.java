@@ -284,16 +284,22 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.link_usage)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_usage, player, null));
             } else if (type.equals(Message.unlink_success)) {
+                Util.logging.Debug("Player " + player.getName() + " unlinked sucessfully");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_success, player, null));
             } else if (type.equals(Message.unlink_failure)) {
+                Util.logging.Debug("Player " + player.getName() + " failed to unlink.");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_failure, player, null));
             } else if (type.equals(Message.unlink_nonexist)) {
+                Util.logging.Debug("Player " + player.getName() + " failed to unlink because there was no linked player for the player.");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_nonexist, player, null));
             } else if (type.equals(Message.unlink_usage)) {
+                Util.logging.Debug("Player " + player.getName() + " tried to unlink with a player, wrong usage.");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_usage, player, null));
             } else if (type.equals(Message.email_required)) {
+                Util.logging.Debug("Player " + player.getName() + " tried to register without an email.");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_email_required, player, null));
             } else if (type.equals(Message.email_invalid)) {
+                Util.logging.Debug("Player " + player.getName() + " tried to register with an invalid email.");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_email_invalid, player, null));
             } else if (type.equals(Message.filter_renamed)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_filter_renamed, player, null));

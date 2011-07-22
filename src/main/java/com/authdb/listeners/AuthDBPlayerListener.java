@@ -331,6 +331,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                         } else if (split.length < 3 && email) {
                             Messages.sendMessage(Message.email_required, player, null);
                         } else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2]))) {
+                            Util.logging.Debug("LOG: "+split[2]);
                             Messages.sendMessage(Message.email_invalid, player, null);
                         } else {
                             try {
