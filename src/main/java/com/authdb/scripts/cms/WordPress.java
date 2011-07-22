@@ -141,43 +141,44 @@ public class WordPress {
 
         // Check for correct hash
         if (!setting.substring(0, 3).equals("$P$")) {
-            Util.logging.Info("HERE 1");
             return output;
         }
 
         int count_log2 = itoa64.indexOf(setting.charAt(3));
         if (count_log2 < 7 || count_log2 > 30) {
-            Util.logging.Info("HERE 2");
             return output;
         }
 
         int count = 1 << count_log2;
         String salt = setting.substring(4, 12);
         if (salt.length() != 8) {
-            Util.logging.Info("HERE 3");
             return output;
         }
 
         String m1 = Encryption.md5(salt + password);
         String hash = Encryption.pack(m1);
+        int counter = 0;
         do {
-            Util.logging.Info("HERE 4");
+            counter++;
             hash = Encryption.pack(Encryption.md5(hash + password));
         } while (--count > 0);
 
-        Util.logging.Info("HERE 5");
+        Util.logging.Info("Packed " + counter + " times.");
         output = setting.substring(0, 12) + _hash_encode64(hash, 16);
 
         return output;
     }
 
     public static boolean check_hash(String password, String hash) {
+        long start = Util.timeMS();
+        boolean check;
         if (hash.length() == 34) {
-            Util.logging.Info("DERP HASH : "+_hash_crypt_private(password, hash));
-            return _hash_crypt_private(password, hash).equals(hash);
+            check = _hash_crypt_private(password, hash).equals(hash);
         } else {
-            Util.logging.Info("DERP HASH : "+Encryption.md5(password));
-            return Encryption.md5(password).equals(hash);
+            check = Encryption.md5(password).equals(hash);
         }
+        long stop = Util.timeMS();
+        Util.logging.timeUsage(stop - start, "encrypt a string");
+        return check;
     }
 }

@@ -448,6 +448,7 @@ public class AuthDB extends JavaPlugin {
     }
 
     public boolean checkPassword(String player, String password) {
+        long start = Util.timeMS();
         try {
             if (!Config.database_keepalive) { 
                 MySQL.connect(); 
@@ -457,6 +458,8 @@ public class AuthDB extends JavaPlugin {
                 player = Util.checkOtherName(player);
             }
             if (Util.checkScript("checkpassword",Config.script_name, player, password, null, null)) {
+                long stop = Util.timeMS();
+                Util.logging.timeUsage(stop - start, "check the password");
                 return true;
             }
             if (!Config.database_keepalive) { 
@@ -466,6 +469,8 @@ public class AuthDB extends JavaPlugin {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             Stop("ERROR in checking password. Plugin will NOT work. Disabling it.");
         }
+        long stop = Util.timeMS();
+        Util.logging.timeUsage(stop - start, "check the password");
         return false;
     }
 

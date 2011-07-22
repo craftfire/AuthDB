@@ -80,6 +80,10 @@ public class LoggingManager {
     public void logError(String error) {
         ToFile(Type.error, error);
     }
+    
+    public void timeUsage(long time, String string) {
+        Util.logging.Debug("Took " + (time / 1000) + " seconds (" + time + "ms) to " + string + ".");
+    }
 
     private void ToFile(Type type, String line) {
         if (PluginManager.config.logging) {

@@ -181,6 +181,7 @@ static AuthDB plugin = new AuthDB();
     }
 
     public static void sendMessage(final Message type, final Player player, PlayerLoginEvent event) {
+        long start = Util.timeMS();
         ZCraftIRC.sendMessage(type, player);
         if (type.equals(Message.database_failure)) {
             AuthDB.server.broadcastMessage(Util.replaceStrings(AuthDB_message_database_failure, null, null));
@@ -334,5 +335,8 @@ static AuthDB plugin = new AuthDB();
         } else {
             Messages.sendMessage(Message.database_failure, null, null);
         }
+        
+        long stop = Util.timeMS();
+        Util.logging.timeUsage(stop - start, "send a message");
     }
 }

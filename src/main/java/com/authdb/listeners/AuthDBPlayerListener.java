@@ -240,6 +240,7 @@ public class AuthDBPlayerListener extends PlayerListener {
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        long start = Util.timeMS();
         String noPermission = "You do not have permission to use this command.";
         String Contrib = event.getMessage();
         Contrib = Contrib.replaceAll("/", "");
@@ -391,18 +392,21 @@ public class AuthDBPlayerListener extends PlayerListener {
             } else {
                 Util.logging.Debug("BukkitContrib is trying to check for SP client with command: " + event.getMessage());
             }
+            long stop = Util.timeMS();
+            Util.logging.timeUsage(stop - start, "process a command");
         }
 
     public void onPlayerMove(PlayerMoveEvent event) {
+        if (event.isCancelled()) { return; }
         if (!plugin.isAuthorized(event.getPlayer())) {
             if (!checkGuest(event.getPlayer(),Config.guests_movement)) {
-                event.setCancelled(true);
                 event.getPlayer().teleport(event.getFrom());
             }
         }
     }
 
     public void onPlayerChat(PlayerChatEvent event) {
+        if (event.isCancelled()) { return; }
         if (!plugin.isAuthorized(event.getPlayer())) {
             Player player = event.getPlayer();
             if (ZPermissions.isAllowed(player, Permission.command_login)) {

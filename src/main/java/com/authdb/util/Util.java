@@ -679,6 +679,10 @@ public class Util {
     public static long timeStamp() {
         return System.currentTimeMillis()/1000;
     }
+    
+    public static long timeMS() {
+        return System.currentTimeMillis();
+    }
 
     boolean checkingBan(String usertable, String useridfield, String usernamefield, String username, String bantable, String banipfield, String bannamefield, String ipAddress) throws SQLException {
         String check = "fail";
@@ -1043,6 +1047,7 @@ public class Util {
     }
 
     public static String replaceStrings(String string, Player player, String additional) {
+        long start = Util.timeMS();
         logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
         if (!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
             string = string.replaceAll("\\{IP\\}", craftFirePlayer.getIP(player));
@@ -1138,11 +1143,15 @@ public class Util {
         string = string.replaceAll("\\{yellow\\}", "§e");
         string = string.replaceAll("\\{white\\}", "§f");
 
+        long stop = Util.timeMS();
+        Util.logging.Debug("Took " + ((stop - start) / 1000) + " seconds (" + (stop - start) + "ms) to replace tags.");
+        
         return string;
     }
 
     public static String removeColors(String toremove) {
-        logging.Debug("Launching function: checkWhitelist");
+        long start = Util.timeMS();
+        logging.Debug("Launching function: removeColors");
         toremove = toremove.replace("?0", "");
         toremove = toremove.replace("?2", "");
         toremove = toremove.replace("?3", "");
@@ -1158,6 +1167,10 @@ public class Util {
         toremove = toremove.replace("?d", "");
         toremove = toremove.replace("?e", "");
         toremove = toremove.replace("?f", "");
+        
+        long stop = Util.timeMS();
+        Util.logging.Debug("Took " + ((stop - start) / 1000) + " seconds (" + (stop - start) + "ms) to replace colors.");
+        
         return toremove;
     }
 
@@ -1207,12 +1220,9 @@ public class Util {
     }
 
     public static String checkOtherName(String player) {
-         if (AuthDB.AuthDB_LinkedNames.containsKey(player))
- {
+         if (AuthDB.AuthDB_LinkedNames.containsKey(player)) {
              return AuthDB.AuthDB_LinkedNames.get(player);
-         }
- else if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player))
- {
+         } else if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player)) {
              AuthDB.AuthDB_LinkedNameCheck.put(player, "yes");
              EBean eBeanClass = EBean.checkPlayer(player);
              String linkedName = eBeanClass.getLinkedname();
