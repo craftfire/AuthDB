@@ -298,6 +298,7 @@ public class AuthDB extends JavaPlugin {
                     player.sendMessage("§b Name: §f " + pluginName + " §4 " + pluginVersion);
                     player.sendMessage("§b " + pluginName + " is developed by §4 CraftFire �e<dev@craftfire.com>");
                     player.sendMessage("§d " + pluginWebsite);
+                    return true;
                 }
             } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_reload)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_reload))) {
                 if (args.length == 1) {
@@ -306,6 +307,7 @@ public class AuthDB extends JavaPlugin {
                         LoadYml("commands");
                         LoadYml("messages");
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
+                        Messages.sendMessage(Message.reload_success, player, null);
                         return true;
                     }
                     else { Messages.sendMessage(Message.protection_denied, player, null); }
@@ -321,10 +323,10 @@ public class AuthDB extends JavaPlugin {
                             if (AuthDB.AuthDB_Sessions.containsKey(check)) {
                                 AuthDB_Sessions.remove(check);
                             }
-                            player.sendMessage("§aSucessfully logged out!");
+                            Messages.sendMessage(Message.logout_success, player, null);
                             return true;
                         } else {
-                            player.sendMessage("§aYou are not logged in!");
+                            Messages.sendMessage(Message.logout_failure, player, null);
                             return true;
                         }
                     }
@@ -335,15 +337,15 @@ public class AuthDB extends JavaPlugin {
                         List<Player> players = sender.getServer().matchPlayer(PlayerName);
                         if (!players.isEmpty()) {
                             if (Processes.Logout(players.get(0))) {
-                                player.sendMessage("Successfully logged out player '" + players.get(0).getName() + "'.");
-                                players.get(0).sendMessage("You have been logged out by an admin.");
+                                Messages.sendMessage(Message.logout_admin_success, player, null, players.get(0).getName());
+                                Messages.sendMessage(Message.logout_admin, players.get(0), null);
                                 return true;
                             } else {
-                                player.sendMessage("You cannot logout player '" + players.get(0).getName() + "' because the player is not logged in.");
+                                Messages.sendMessage(Message.logout_admin_failure, player, null, players.get(0).getName());
                                 return true;
                             }
                         }
-                        player.sendMessage("§aCould not find player '" + PlayerName + "', please try again.");
+                        Messages.sendMessage(Message.logout_admin_notfound, player, null, PlayerName);
                         return true;
                     }
                     else { Messages.sendMessage(Message.protection_denied, player, null); }
@@ -355,15 +357,15 @@ public class AuthDB extends JavaPlugin {
                     List<Player> players = sender.getServer().matchPlayer(PlayerName);
                     if (!players.isEmpty()) {
                         if (Processes.Logout(players.get(0))) {
-                            player.sendMessage("Successfully logged in player '" + players.get(0).getName() + "'.");
-                            players.get(0).sendMessage("You have been logged in by an admin.");
+                            Messages.sendMessage(Message.login_admin_success, player, null, players.get(0).getName());
+                            Messages.sendMessage(Message.login_admin, players.get(0), null);
                             return true;
                         } else {
-                            player.sendMessage("You cannot login player '" + players.get(0).getName() + "' because the player is already logged in.");
+                            Messages.sendMessage(Message.login_admin_failure, player, null, players.get(0).getName());
                             return true;
                         }
                     }
-                    player.sendMessage("§aCould not find player '" + PlayerName + "', please try again.");
+                    Messages.sendMessage(Message.login_admin_notfound, player, null, PlayerName);
                     return true;
                     }
                 }

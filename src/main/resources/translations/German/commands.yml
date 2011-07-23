@@ -1,0 +1,17 @@
+Core:
+  commands:
+    register: "/registrieren"
+    link: "/koppeln"
+    unlink: "/abkoppeln"
+    login: "/anmelden"
+    logout: "/abmelden"
+    setspawn: "/authdb setspawn"
+    reload: "/authdb neuladen"
+  aliases:
+    register: "/r"
+    link: "/k"
+    unlink: "/ak"
+    login: "/an"
+    logout: "/ab"
+    setspawn: "/ss"
+    reload: "/nl"

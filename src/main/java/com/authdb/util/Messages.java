@@ -210,6 +210,38 @@ static AuthDB plugin = new AuthDB();
             this.text = text;
         }
     }
+    
+    public static void sendMessage(final Message type, final Player player, PlayerLoginEvent event, String extra) {
+        long start = Util.timeMS();
+        ZCraftIRC.sendMessage(type, player);
+        if (type.equals(Message.login_admin_success)) {
+            String message = AuthDB_message_login_admin_success;
+            message = message.replaceAll("\\{PLAYER\\}", extra);
+            player.sendMessage(Util.replaceStrings(message, player, null));
+        } else if (type.equals(Message.login_admin_failure)) {
+            String message = AuthDB_message_login_admin_failure;
+            message = message.replaceAll("\\{PLAYER\\}", extra);
+            player.sendMessage(Util.replaceStrings(message, player, null));
+        } else if (type.equals(Message.login_admin_notfound)) {
+            String message = AuthDB_message_login_admin_success;
+            message = message.replaceAll("\\{PLAYER\\}", extra);
+            player.sendMessage(Util.replaceStrings(message, player, null));
+        } else if (type.equals(Message.logout_admin_success)) {
+            String message = AuthDB_message_logout_admin_success;
+            message = message.replaceAll("\\{PLAYER\\}", extra);
+            player.sendMessage(Util.replaceStrings(message, player, null));
+        } else if (type.equals(Message.logout_admin_failure)) {
+            String message = AuthDB_message_logout_admin_failure;
+            message = message.replaceAll("\\{PLAYER\\}", extra);
+            player.sendMessage(Util.replaceStrings(message, player, null));
+        } else if (type.equals(Message.logout_admin_notfound)) {
+            String message = AuthDB_message_logout_admin_notfound;
+            message = message.replaceAll("\\{PLAYER\\}", extra);
+            player.sendMessage(Util.replaceStrings(message, player, null));
+        }
+        long stop = Util.timeMS();
+        Util.logging.timeUsage(stop - start, "send a message");
+    }
 
     public static void sendMessage(final Message type, final Player player, PlayerLoginEvent event) {
         long start = Util.timeMS();
@@ -270,12 +302,6 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_timeout, player, null));
             } else if (type.equals(Message.login_admin)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_admin, player, null));
-            } else if (type.equals(Message.login_admin_success)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_login_admin_success, player, null));
-            } else if (type.equals(Message.login_admin_failure)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_login_admin_failure, player, null));
-            } else if (type.equals(Message.login_admin_notfound)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_login_admin_notfound, player, null));
             } else if (type.equals(Message.login_usage)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_usage, player, null));
             } else if (type.equals(Message.logout_success)) {
@@ -284,12 +310,6 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_logout_failure, player, null));
             } else if (type.equals(Message.logout_admin)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_logout_admin, player, null));
-            } else if (type.equals(Message.logout_admin_success)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_logout_admin_success, player, null));
-            } else if (type.equals(Message.logout_admin_failure)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_logout_admin_failure, player, null));
-            } else if (type.equals(Message.logout_admin_notfound)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_logout_admin_notfound, player, null));
             } else if (type.equals(Message.link_success)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_success, player, null));
             } else if (type.equals(Message.link_failure)) {
