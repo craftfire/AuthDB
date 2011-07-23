@@ -56,7 +56,7 @@ import com.mysql.jdbc.Blob;
 
 public class Util {
     public static LoggingManager logging = new LoggingManager();
-    public static PlayerManager authDBPlayer = new PlayerManager();
+    public static com.authdb.util.managers.PlayerManager authDBplayer = new com.authdb.util.managers.PlayerManager();
     public static com.craftfire.util.managers.PlayerManager craftFirePlayer = new com.craftfire.util.managers.PlayerManager();
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
@@ -646,10 +646,12 @@ public class Util {
     }
 
     static void spamText(final Player player, final String text, final int delay, final int show) {
-        if (Config.login_delay > 0 && !AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
-            schedule = AuthDB.server.getScheduler().scheduleAsyncRepeatingTask(AuthDB.plugin, new Runnable() {
+        //if (Config.login_delay > 0 && !AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
+        if (Config.login_delay > 0) {
+            schedule = AuthDB.server.getScheduler().scheduleSyncDelayedTask(AuthDB.plugin, new Runnable() {
             @Override
             public void run() {
+                /*
                 if (AuthDB.isAuthorized(player) && AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
                     AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
                     AuthDB.AuthDB_SpamMessage.remove(player.getName());
@@ -672,7 +674,16 @@ public class Util {
                     }
                     fillChatField(player, message);
                 }
-            } }, delay, toTicks("seconds", "1"));
+                */
+                String message = replaceStrings(text, player, null);
+                if (Config.link_rename && !checkOtherName(player.getName()).equals(player.getName())) {
+                    message = message.replaceAll(player.getName(), player.getDisplayName());
+                    player.sendMessage(message);
+                }
+                else {
+                    player.sendMessage(message);
+                }
+            } }, delay);
         }
     }
 
@@ -849,6 +860,7 @@ public class Util {
         wr.flush();
         wr.close();
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        Util.logging.Debug("Sent usage stats to CraftFire.");
         rd.close();
     }
 
@@ -1053,7 +1065,7 @@ public class Util {
             string = string.replaceAll("\\{IP\\}", craftFirePlayer.getIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");
-            string = string.replaceAll("&", "ง");
+            string = string.replaceAll("&", "ยง");
             if (!Util.checkOtherName(player.getName()).equals(player.getName())) {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", checkOtherName(player.getName()));
             }
@@ -1073,75 +1085,81 @@ public class Util {
         string = string.replaceAll("\\{N\\}", "\n");
         string = string.replaceAll("\\{n\\}", "\n");
 
+        //COMMANDS
+        string = string.replaceAll("\\{REGISTERCMD\\}", Config.commands_register + " (" + Config.aliases_register + ")");
+        string = string.replaceAll("\\{LINKCMD\\}", Config.commands_link + " (" + Config.aliases_link + ")");
+        string = string.replaceAll("\\{UNLINKCMD\\}", Config.commands_unlink + " (" + Config.aliases_unlink + ")");
+        string = string.replaceAll("\\{LOGINCMD\\}", Config.commands_login + " (" + Config.aliases_login + ")");
+       
         ///COLORS
-        string = string.replaceAll("\\{BLACK\\}", "ง0");
-        string = string.replaceAll("\\{NAVY\\}", "ง1");
-        string = string.replaceAll("\\{GREEN\\}", "ง2");
-        string = string.replaceAll("\\{BLUE\\}", "ง3");
-        string = string.replaceAll("\\{RED\\}", "ง4");
-        string = string.replaceAll("\\{PURPLE\\}", "ง5");
-        string = string.replaceAll("\\{GOLD\\}", "ง6");
-        string = string.replaceAll("\\{LIGHTGRAY\\}", "ง7");
-        string = string.replaceAll("\\{GRAY\\}", "ง8");
-        string = string.replaceAll("\\{DARKPURPLE\\}", "ง9");
-        string = string.replaceAll("\\{LIGHTGREEN\\}", "งa");
-        string = string.replaceAll("\\{LIGHTBLUE\\}", "งb");
-        string = string.replaceAll("\\{ROSE\\}", "งc");
-        string = string.replaceAll("\\{LIGHTPURPLE\\}", "งd");
-        string = string.replaceAll("\\{YELLOW\\}", "งe");
-        string = string.replaceAll("\\{WHITE\\}", "งf");
+        string = string.replaceAll("\\{BLACK\\}", "ยง0");
+        string = string.replaceAll("\\{NAVY\\}", "ยง1");
+        string = string.replaceAll("\\{GREEN\\}", "ยง2");
+        string = string.replaceAll("\\{BLUE\\}", "ยง3");
+        string = string.replaceAll("\\{RED\\}", "ยง4");
+        string = string.replaceAll("\\{PURPLE\\}", "ยง5");
+        string = string.replaceAll("\\{GOLD\\}", "ยง6");
+        string = string.replaceAll("\\{LIGHTGRAY\\}", "ยง7");
+        string = string.replaceAll("\\{GRAY\\}", "ยง8");
+        string = string.replaceAll("\\{DARKPURPLE\\}", "ยง9");
+        string = string.replaceAll("\\{LIGHTGREEN\\}", "ยงa");
+        string = string.replaceAll("\\{LIGHTBLUE\\}", "ยงb");
+        string = string.replaceAll("\\{ROSE\\}", "ยงc");
+        string = string.replaceAll("\\{LIGHTPURPLE\\}", "ยงd");
+        string = string.replaceAll("\\{YELLOW\\}", "ยงe");
+        string = string.replaceAll("\\{WHITE\\}", "ยงf");
 
-        string = string.replaceAll("\\{BLACK\\}", "ง0");
-        string = string.replaceAll("\\{DARKBLUE\\}", "ง1");
-        string = string.replaceAll("\\{DARKGREEN\\}", "ง2");
-        string = string.replaceAll("\\{DARKTEAL\\}", "ง3");
-        string = string.replaceAll("\\{DARKRED\\}", "ง4");
-        string = string.replaceAll("\\{PURPLE\\}", "ง5");
-        string = string.replaceAll("\\{GOLD\\}", "ง6");
-        string = string.replaceAll("\\{GRAY\\}", "ง7");
-        string = string.replaceAll("\\{DARKGRAY\\}", "ง8");
-        string = string.replaceAll("\\{BLUE\\}", "ง9");
-        string = string.replaceAll("\\{BRIGHTGREEN\\}", "งa");
-        string = string.replaceAll("\\{TEAL\\}", "งb");
-        string = string.replaceAll("\\{RED\\}", "งc");
-        string = string.replaceAll("\\{PINK\\}", "งd");
-        string = string.replaceAll("\\{YELLOW\\}", "งe");
-        string = string.replaceAll("\\{WHITE\\}", "งf");
+        string = string.replaceAll("\\{BLACK\\}", "ยง0");
+        string = string.replaceAll("\\{DARKBLUE\\}", "ยง1");
+        string = string.replaceAll("\\{DARKGREEN\\}", "ยง2");
+        string = string.replaceAll("\\{DARKTEAL\\}", "ยง3");
+        string = string.replaceAll("\\{DARKRED\\}", "ยง4");
+        string = string.replaceAll("\\{PURPLE\\}", "ยง5");
+        string = string.replaceAll("\\{GOLD\\}", "ยง6");
+        string = string.replaceAll("\\{GRAY\\}", "ยง7");
+        string = string.replaceAll("\\{DARKGRAY\\}", "ยง8");
+        string = string.replaceAll("\\{BLUE\\}", "ยง9");
+        string = string.replaceAll("\\{BRIGHTGREEN\\}", "ยงa");
+        string = string.replaceAll("\\{TEAL\\}", "ยงb");
+        string = string.replaceAll("\\{RED\\}", "ยงc");
+        string = string.replaceAll("\\{PINK\\}", "ยงd");
+        string = string.replaceAll("\\{YELLOW\\}", "ยงe");
+        string = string.replaceAll("\\{WHITE\\}", "ยงf");
 
         ///colors
-        string = string.replaceAll("\\{black\\}", "ง0");
-        string = string.replaceAll("\\{navy\\}", "ง1");
-        string = string.replaceAll("\\{green\\}", "ง2");
-        string = string.replaceAll("\\{blue\\}", "ง3");
-        string = string.replaceAll("\\{red\\}", "ง4");
-        string = string.replaceAll("\\{purple\\}", "ง5");
-        string = string.replaceAll("\\{gold\\}", "ง6");
-        string = string.replaceAll("\\{lightgray\\}", "ง7");
-        string = string.replaceAll("\\{gray\\}", "ง8");
-        string = string.replaceAll("\\{darkpurple\\}", "ง9");
-        string = string.replaceAll("\\{lightgreen\\}", "งa");
-        string = string.replaceAll("\\{lightblue\\}", "งb");
-        string = string.replaceAll("\\{rose\\}", "งc");
-        string = string.replaceAll("\\{lightpurple\\}", "งd");
-        string = string.replaceAll("\\{yellow\\}", "งe");
-        string = string.replaceAll("\\{white\\}", "งf");
+        string = string.replaceAll("\\{black\\}", "ยง0");
+        string = string.replaceAll("\\{navy\\}", "ยง1");
+        string = string.replaceAll("\\{green\\}", "ยง2");
+        string = string.replaceAll("\\{blue\\}", "ยง3");
+        string = string.replaceAll("\\{red\\}", "ยง4");
+        string = string.replaceAll("\\{purple\\}", "ยง5");
+        string = string.replaceAll("\\{gold\\}", "ยง6");
+        string = string.replaceAll("\\{lightgray\\}", "ยง7");
+        string = string.replaceAll("\\{gray\\}", "ยง8");
+        string = string.replaceAll("\\{darkpurple\\}", "ยง9");
+        string = string.replaceAll("\\{lightgreen\\}", "ยงa");
+        string = string.replaceAll("\\{lightblue\\}", "ยงb");
+        string = string.replaceAll("\\{rose\\}", "ยงc");
+        string = string.replaceAll("\\{lightpurple\\}", "ยงd");
+        string = string.replaceAll("\\{yellow\\}", "ยงe");
+        string = string.replaceAll("\\{white\\}", "ยงf");
 
-        string = string.replaceAll("\\{black\\}", "ง0");
-        string = string.replaceAll("\\{darkblue\\}", "ง1");
-        string = string.replaceAll("\\{darkgreen\\}", "ง2");
-        string = string.replaceAll("\\{darkteal\\}", "ง3");
-        string = string.replaceAll("\\{darkred\\}", "ง4");
-        string = string.replaceAll("\\{purple\\}", "ง5");
-        string = string.replaceAll("\\{gold\\}", "ง6");
-        string = string.replaceAll("\\{gray\\}", "ง7");
-        string = string.replaceAll("\\{darkgray\\}", "ง8");
-        string = string.replaceAll("\\{blue\\}", "ง9");
-        string = string.replaceAll("\\{brightgreen\\}", "งa");
-        string = string.replaceAll("\\{teal\\}", "งb");
-        string = string.replaceAll("\\{red\\}", "งc");
-        string = string.replaceAll("\\{pink\\}", "งd");
-        string = string.replaceAll("\\{yellow\\}", "งe");
-        string = string.replaceAll("\\{white\\}", "งf");
+        string = string.replaceAll("\\{black\\}", "ยง0");
+        string = string.replaceAll("\\{darkblue\\}", "ยง1");
+        string = string.replaceAll("\\{darkgreen\\}", "ยง2");
+        string = string.replaceAll("\\{darkteal\\}", "ยง3");
+        string = string.replaceAll("\\{darkred\\}", "ยง4");
+        string = string.replaceAll("\\{purple\\}", "ยง5");
+        string = string.replaceAll("\\{gold\\}", "ยง6");
+        string = string.replaceAll("\\{gray\\}", "ยง7");
+        string = string.replaceAll("\\{darkgray\\}", "ยง8");
+        string = string.replaceAll("\\{blue\\}", "ยง9");
+        string = string.replaceAll("\\{brightgreen\\}", "ยงa");
+        string = string.replaceAll("\\{teal\\}", "ยงb");
+        string = string.replaceAll("\\{red\\}", "ยงc");
+        string = string.replaceAll("\\{pink\\}", "ยงd");
+        string = string.replaceAll("\\{yellow\\}", "ยงe");
+        string = string.replaceAll("\\{white\\}", "ยงf");
 
         long stop = Util.timeMS();
         Util.logging.Debug("Took " + ((stop - start) / 1000) + " seconds (" + (stop - start) + "ms) to replace tags.");

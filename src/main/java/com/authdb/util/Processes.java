@@ -65,13 +65,14 @@ public class Processes {
             EBean eBeanClass = EBean.checkPlayer(player);
             eBeanClass.setAuthorized("true");
             eBeanClass.setRegistred("true");
-            AuthDB.database.save(eBeanClass);
             if (!AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
             }
-            if (AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
+            if (!AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
                 AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
             }
+            eBeanClass.setSessiontime(timestamp);
+			AuthDB.database.save(eBeanClass);
             ItemStack[] inv = AuthDB.getInventory(player);
             if (inv != null) {
                 player.getInventory().setContents(inv);
@@ -88,12 +89,7 @@ public class Processes {
     public static boolean Link(Player player, String name) {
         if (!AuthDB.isAuthorized(player) && Config.link_enabled) {
             EBean eBeanClass = EBean.checkPlayer(player);
-            String LinkedNames = eBeanClass.getLinkedname();
-            if (LinkedNames != null && LinkedNames != "") {
-                eBeanClass.setLinkedname(LinkedNames + ", " + name);
-            } else {
-                eBeanClass.setLinkedname(name);
-            }
+            eBeanClass.setLinkedname(name);
             AuthDB.database.save(eBeanClass);
             if (!AuthDB.AuthDB_LinkedNames.containsKey((player.getName()))) {
                 AuthDB.AuthDB_LinkedNames.put(player.getName(),name);
@@ -102,7 +98,7 @@ public class Processes {
                 AuthDB.AuthDB_LinkedNameCheck.remove(player.getName());
             }
             if (Config.link_rename) {
-                player.setDisplayName(name);
+                Util.craftFirePlayer.renamePlayer(player, name);
             }
             Login(player);
             return true;
@@ -112,15 +108,20 @@ public class Processes {
 
     public static boolean Unlink(Player player, String name) {
         if (AuthDB.isAuthorized(player) && Config.unlink_enabled) {
-            if (!AuthDB.AuthDB_LinkedNames.containsKey((player.getName()))) {
+            if (AuthDB.AuthDB_LinkedNames.containsKey((player.getName()))) {
                 AuthDB.AuthDB_LinkedNames.remove(player.getName());
             }
-            if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player.getName())) {
-                AuthDB.AuthDB_LinkedNameCheck.put(player.getName(),"yes");
+            if (AuthDB.AuthDB_LinkedNameCheck.containsKey(player.getName())) {
+                AuthDB.AuthDB_LinkedNameCheck.remove(player.getName());
             }
             if (Config.unlink_rename) {
-                player.setDisplayName(player.getName());
+                Util.craftFirePlayer.renamePlayer(player, player.getName());
             }
+            EBean eBeanClass = EBean.checkPlayer(player);
+            eBeanClass.setLinkedname("");
+            eBeanClass.setSessiontime(0);
+            eBeanClass.setRegistred("false");
+            AuthDB.database.save(eBeanClass);
             Logout(player);
             return true;
         }

@@ -52,6 +52,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
+import com.authdb.plugins.ZBukkitContrib;
 import com.authdb.plugins.ZCraftIRC;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
@@ -63,6 +64,7 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.EbeanServer;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
@@ -175,6 +177,8 @@ public class AuthDB extends JavaPlugin {
           }
           final Plugin Backpack = getServer().getPluginManager().getPlugin("Backpack");
           if (Backpack != null) { Config.hasBackpack = true; }
+          final Plugin Check = getServer().getPluginManager().getPlugin("BukkitContrib");
+          if (Check != null) { Config.hasBukkitContrib = true; }
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Low, this);
@@ -305,34 +309,49 @@ public class AuthDB extends JavaPlugin {
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
                         return true;
                     }
+                    else { player.sendMessage(NoPermission); }
                 }
             } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_logout)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_logout))) {
                 if (args.length == 0) {
-                    if (Processes.Logout(player)) {
-                        player.sendMessage("§aSucessfully logged out!");
-                        return true;
-                    } else {
-                        player.sendMessage("§aYou are not logged in!");
-                        return true;
-                    }
-                } else if (args.length == 1 && ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
-                    String PlayerName = args[0];
-                    List<Player> players = sender.getServer().matchPlayer(PlayerName);
-                    if (!players.isEmpty()) {
-                        if (Processes.Logout(players.get(0))) {
-                            player.sendMessage("Successfully logged out player '" + players.get(0).getName() + "'.");
-                            players.get(0).sendMessage("You have been logged out by an admin.");
+                    if (ZPermissions.isAllowed(player, Permission.command_logout)) {
+                        if (Processes.Logout(player)) {
+                            EBean eBeanClass = EBean.checkPlayer(player);
+                            eBeanClass.setSessiontime(0);
+                            getDatabase().save(eBeanClass);
+                            String check = Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player));
+                            if (AuthDB.AuthDB_Sessions.containsKey(check)) {
+                                AuthDB_Sessions.remove(check);
+                            }
+                            player.sendMessage("§aSucessfully logged out!");
                             return true;
                         } else {
-                            player.sendMessage("You cannot logout player '" + players.get(0).getName() + "' because the player is not logged in.");
+                            player.sendMessage("§aYou are not logged in!");
                             return true;
                         }
                     }
-                    player.sendMessage("§aCould not find player '" + PlayerName + "', please try again.");
-                    return true;
+                    else { player.sendMessage(NoPermission); }
+                } else if (args.length == 1) {
+                    if(ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
+                        String PlayerName = args[0];
+                        List<Player> players = sender.getServer().matchPlayer(PlayerName);
+                        if (!players.isEmpty()) {
+                            if (Processes.Logout(players.get(0))) {
+                                player.sendMessage("Successfully logged out player '" + players.get(0).getName() + "'.");
+                                players.get(0).sendMessage("You have been logged out by an admin.");
+                                return true;
+                            } else {
+                                player.sendMessage("You cannot logout player '" + players.get(0).getName() + "' because the player is not logged in.");
+                                return true;
+                            }
+                        }
+                        player.sendMessage("§aCould not find player '" + PlayerName + "', please try again.");
+                        return true;
+                    }
+                    else { player.sendMessage(NoPermission); }
                 }
             } else if (isAuthorized(player) && (cmd.getName().equalsIgnoreCase(commandString(Config.commands_login)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_login)))) {
-                if (args.length == 1 && ZPermissions.isAllowed(player, Permission.command_admin_login)) {
+                if (ZPermissions.isAllowed(player, Permission.command_admin_login)) {
+                    if (args.length == 1) {
                     String PlayerName = args[0];
                     List<Player> players = sender.getServer().matchPlayer(PlayerName);
                     if (!players.isEmpty()) {
@@ -347,10 +366,10 @@ public class AuthDB extends JavaPlugin {
                     }
                     player.sendMessage("§aCould not find player '" + PlayerName + "', please try again.");
                     return true;
+                    }
                 }
+                else { player.sendMessage(NoPermission); }
             }
-            player.sendMessage(NoPermission);
-            return true;
         }
         return false;
     }
@@ -589,7 +608,7 @@ public class AuthDB extends JavaPlugin {
         }
         if (!Set) { Util.logging.Info("Could not find translation files for " + Config.language + ", defaulting to " + Language); } 
         else { Util.logging.Debug(type + " language set to " + Language); }
-        new Config(type, getDataFolder() + "/translations/" + Language + "/" + type + "/", type + ".yml");
+        new Config(type, getDataFolder() + "/translations/" + Language + "/", type + ".yml");
         
         /*CodeSource src = getClass().getProtectionDomain().getCodeSource();
 
@@ -627,72 +646,76 @@ public class AuthDB extends JavaPlugin {
         boolean checkneeded = true;
         //if (Config.debug_enable)
             //logging.Debug("Running function: isRegistered(String player)");
-        if (when.equalsIgnoreCase("join")) {
-            if (!Config.database_keepalive) { MySQL.connect(); }
-            Config.hasForumBoard = false;
-            try {
-                if (Util.checkScript("checkuser",Config.script_name, player, null, null, null)) {
-                    AuthDB_Authed.put(Encryption.md5(player), "yes");
-                    dupe = true;
-                }
-            } catch (SQLException e) {
-                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-            }
-            if (!Config.database_keepalive) { 
-                MySQL.close(); 
-            }
-            if (!dupe) {
-                AuthDB_Authed.put(Encryption.md5(player), "no");
-            }
-            return dupe;
-        } else if (when.equalsIgnoreCase("command")) {
-            if (!Config.database_keepalive) { MySQL.connect(); }
-            Config.hasForumBoard = false;
-            try {
-                if (Util.checkScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
-                    AuthDB_Authed.put(Encryption.md5(player), "yes");
-                    dupe = true;
-                } else if (Util.checkOtherName(player) != player) {
-                    AuthDB_Authed.put(Encryption.md5(player), "yes");
-                    dupe = true;
-                }
-            } catch (SQLException e) {
-                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-            }
-            if (!Config.database_keepalive) {
-                MySQL.close(); 
-            }
-            if (!dupe) {
-                AuthDB_Authed.put(Encryption.md5(player), "no");
-            }
-            return dupe;
-        } else {
-            if (this.AuthDB_Authed.containsKey(Encryption.md5(player))) {
-                String check = AuthDB_Authed.get(Encryption.md5(player));
-                if (check.equalsIgnoreCase("yes")) {
-                    checkneeded = false;
-                    return true;
-                } else if (check.equalsIgnoreCase("no")) {
-                    return false;
-                }
-            } else if (checkneeded) {
+        EBean eBeanClass = EBean.checkPlayer(player);
+        if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
+            if (when.equalsIgnoreCase("join")) {
+                if (!Config.database_keepalive) { MySQL.connect(); }
+                Config.hasForumBoard = false;
                 try {
-                    if (!Config.database_keepalive) { MySQL.connect(); }
-                    Config.hasForumBoard = false;
-                    if (Util.checkScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
+                    if (Util.checkScript("checkuser",Config.script_name, player, null, null, null)) {
                         AuthDB_Authed.put(Encryption.md5(player), "yes");
                         dupe = true;
                     }
-                    if (!Config.database_keepalive) { 
-                        MySQL.close(); 
-                    }
-                    if (!dupe) {
-                        AuthDB_Authed.put(Encryption.md5(player), "no");
-                    }
-                    return dupe;
                 } catch (SQLException e) {
                     Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-                    Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
+                }
+                if (!Config.database_keepalive) { 
+                    MySQL.close(); 
+                }
+                if (!dupe) {
+                    AuthDB_Authed.put(Encryption.md5(player), "no");
+                }
+                return dupe;
+            } else if (when.equalsIgnoreCase("command")) {
+                if (!Config.database_keepalive) { MySQL.connect(); }
+                Config.hasForumBoard = false;
+                try {
+                    if (Util.checkScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
+                        AuthDB_Authed.put(Encryption.md5(player), "yes");
+                        dupe = true;
+                    } else if (Util.checkOtherName(player) != player) {
+                        AuthDB_Authed.put(Encryption.md5(player), "yes");
+                        dupe = true;
+                    }
+                } catch (SQLException e) {
+                    Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                }
+                if (!Config.database_keepalive) {
+                    MySQL.close(); 
+                }
+                if (!dupe) {
+                    AuthDB_Authed.put(Encryption.md5(player), "no");
+                }
+                return dupe;
+            } else {
+                if (this.AuthDB_Authed.containsKey(Encryption.md5(player))) {
+                    String check = AuthDB_Authed.get(Encryption.md5(player));
+                    if (check.equalsIgnoreCase("yes")) {
+                        checkneeded = false;
+                        return true;
+                    } else if (check.equalsIgnoreCase("no")) {
+                        return false;
+                    }
+                } else if (checkneeded) {
+    			Util.logging.Debug("Check to see if user is registred is needed, performing check");
+                    try {
+                        if (!Config.database_keepalive) { MySQL.connect(); }
+                        Config.hasForumBoard = false;
+                        if (Util.checkScript("checkuser", Config.script_name, player.toLowerCase(), null, null, null)) {
+                            AuthDB_Authed.put(Encryption.md5(player), "yes");
+                            dupe = true;
+                        }
+                        if (!Config.database_keepalive) { 
+                            MySQL.close(); 
+                        }
+                        if (!dupe) {
+                            AuthDB_Authed.put(Encryption.md5(player), "no");
+                        }
+                        return dupe;
+                    } catch (SQLException e) {
+                        Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                        Stop("ERRORS in checking user. Plugin will NOT work. Disabling it.");
+                    }
                 }
             }
         }
@@ -737,8 +760,9 @@ public class AuthDB extends JavaPlugin {
 
     public void updateLinkedNames() {
         for (Player player : this.getServer().getOnlinePlayers()) {
-            if (!Util.checkOtherName(player.getName()).equals(player.getName())) {
-                player.setDisplayName(Util.checkOtherName(player.getName()));
+            String name = Util.checkOtherName(player.getName());
+            if (!name.equals(player.getName())) {
+                Util.craftFirePlayer.renamePlayer(player, name);
             }
         }
     }

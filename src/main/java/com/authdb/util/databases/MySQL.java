@@ -105,6 +105,7 @@ public class MySQL {
 
     public static int countitall(String table) throws SQLException {
         String query = "SELECT LAST_INSERT_ID() FROM `" + table + "` LIMIT 1";
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         int dupe = 0;
@@ -116,6 +117,7 @@ public class MySQL {
     }
 
     public static void query(String query) throws SQLException {
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         stmt.executeUpdate(query);
         stmt.close();
@@ -123,6 +125,7 @@ public class MySQL {
 
     public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` LIKE '%" + value2 + "'% LIMIT 1";
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -135,6 +138,7 @@ public class MySQL {
 
     public static String getfromtable2(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` = '" + value2 + "' LIMIT 1";
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -147,6 +151,7 @@ public class MySQL {
 
     public static String getfromtablelike(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` LIKE '%" + value2 + "'% LIMIT 1";
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -159,6 +164,7 @@ public class MySQL {
 
     public static String getfromtable(String table,String column1,String column2,String value) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' LIMIT 1";
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -171,6 +177,7 @@ public class MySQL {
 
     public static String Unix_Timestamp() throws SQLException {
         String query = "SELECT UNIX_TIMESTAMP()";
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         String dupe = "fail";
@@ -183,6 +190,7 @@ public class MySQL {
 
     public static Blob getfromtableBlob(String table,String column1,String column2,String value) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' LIMIT 1";
+        Util.logging.mySQL(query);
         Statement stmt = mysql.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         Blob dupe = null;

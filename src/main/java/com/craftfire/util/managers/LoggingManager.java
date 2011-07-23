@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Stack;
 
 import com.authdb.util.Util;
 
@@ -44,6 +43,10 @@ public class LoggingManager {
 
     public void Warning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
+    }
+    
+    public void mySQL(String query) {
+        Debug("Executing MySQL query: " + query);
     }
 
     public void StackTrace(StackTraceElement[] stack, String function, int linenumber, String classname, String file) {

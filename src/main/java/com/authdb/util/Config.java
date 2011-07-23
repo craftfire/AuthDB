@@ -26,6 +26,7 @@ public class Config {
     public static boolean has_badcharacters;
     public static boolean hasForumBoard,capitalization;
     public static boolean hasBackpack = false;
+    public static boolean hasBukkitContrib = false;
     public static boolean onlineMode = true;
 
     ///////////////////////////////////////////
@@ -356,7 +357,7 @@ public class Config {
                     ///////////////////////////////////////////
                     //               welcome
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_welcome_guest = (String)Config.getConfigString("Core.welcome.guest", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please register with /register password email");
+                    Messages.AuthDB_message_welcome_guest = (String)Config.getConfigString("Core.welcome.guest", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email or {LINKCMD} otherusername password");
                     //Messages.AuthDB_message_welcome_user = (String)Config.getConfigString("Core.welcome.user", "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please login with /login password");
 
                     ///////////////////////////////////////////
@@ -437,7 +438,7 @@ public class Config {
                     Messages.AuthDB_message_password_notregistered = Config.getConfigString("Core.password.notregistered", "{RED}Register first!");
                     Messages.AuthDB_message_password_usage = Config.getConfigString("Core.password.usage", "{RED}Correct usage is: /password oldpassword password");
 
-                    Messages.AuthDB_message_session_valid = Config.getConfigString("Core.session.valid", "{BRIGHTGREEN}, I remember you! You are logged in!");
+                    Messages.AuthDB_message_session_valid = Config.getConfigString("Core.session.valid", "{BRIGHTGREEN}Hey, I remember you! You are logged in!");
                     Messages.AuthDB_message_session_protected = Config.getConfigString("Core.session.protected", "{RED}Sorry, a player with that name is already logged in on this server.");
 
                     ///////////////////////////////////////////

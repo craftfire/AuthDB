@@ -39,7 +39,6 @@ import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
-import com.avaje.ebean.Ebean;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -102,11 +101,12 @@ public class AuthDBPlayerListener extends PlayerListener {
         this.plugin.AuthDB_PasswordTries.put(player.getName(),"0");
         if (Config.session_length != 0) {
             long timestamp = System.currentTimeMillis()/1000;
-            if (AuthDB.AuthDB_Sessions.containsKey(player.getName())) {
-                long storedtime = AuthDB.AuthDB_Sessions.get(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)));
+            if (Util.authDBplayer.sessionTime(player) != 0) {
+                long storedtime = Util.authDBplayer.sessionTime(player);
                 Util.logging.Debug("Found session for " + player.getName() + ", timestamp: " + storedtime);
                 long timedifference = timestamp - storedtime;
                 Util.logging.Debug("Difference: " + timedifference);
+                Util.logging.Debug("Session in config: " + Config.session_length);
                 if (timedifference > Config.session_length) {
                     sessionallow = false;
                 } else {
@@ -143,16 +143,16 @@ public class AuthDBPlayerListener extends PlayerListener {
                 player.teleport(player.getWorld().getSpawnLocation());
             }
             EBean eBeanClass = EBean.checkPlayer(player);
-            if (eBeanClass.getReloadtime() + 30 >= Util.timeStamp()) {
+            if ((eBeanClass.getReloadtime() + 30) >= Util.timeStamp()) {
                 sessionallow = true;
             }
-
+            
             if (sessionallow) {
-                Messages.sendMessage(Message.session_valid, player, null);
                 long thetimestamp = System.currentTimeMillis()/1000;
                 this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
                 Processes.Login(event.getPlayer());
-            } else if (this.plugin.isRegistered("join",player.getName()) || this.plugin.isRegistered("join",Util.checkOtherName(player.getName()))) {
+                Messages.sendMessage(Message.session_valid, player, null);
+            } else if (this.plugin.isRegistered("join",player.getName())) {
                 if (Config.hasBackpack) {
                     BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                     BackpackPlayer.createBackpack();
@@ -196,7 +196,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             }
         } catch (IOException e) {
             Util.logging.Severe("[" + AuthDB.pluginName + "] Inventory file error:");
-            player.kickPlayer("inventory protection kicked");
+            player.kickPlayer("Inventory protection kicked.");
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             player.sendMessage(Color.red + "Error happend, report to admins!");
         }
@@ -229,14 +229,17 @@ public class AuthDBPlayerListener extends PlayerListener {
         long thetimestamp = System.currentTimeMillis()/1000;
         if (Config.session_start.equalsIgnoreCase("logoff")) {
             this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), thetimestamp);
+            EBean EBeanClass = EBean.checkPlayer(player);
+            EBeanClass.setSessiontime(thetimestamp);
             this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
-            Processes.Logout(player);
         }
 
         if (checkGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.checkOtherName(player.getName())) == false) {
             ItemStack[] theinv = new ItemStack[36];
             player.getInventory().setContents(theinv);
         }
+        
+        Processes.Logout(player);
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -264,16 +267,18 @@ public class AuthDBPlayerListener extends PlayerListener {
                     Util.logging.Debug(player.getName() + " login ********");
                     event.setMessage(Config.commands_login + " ******");
                     event.setCancelled(true);
-                } else {
-                    player.sendMessage(noPermission);
-                }
+                } else { player.sendMessage(noPermission); }
             } else if (split[0].equalsIgnoreCase(Config.commands_link) || split[0].equalsIgnoreCase(Config.aliases_link)) {
                 if (Config.link_enabled) {
                     if (ZPermissions.isAllowed(player, Permission.command_link)) {
                         if (split.length == 3) {
-                            if (!player.getName().equalsIgnoreCase(split[1])) {
-                                if (Util.checkOtherName(player.getName()).equals(player.getName())) {
-                                    if (this.plugin.checkPassword(split[1], split[2])) {
+                            if (!player.getName().equals(split[1])) {
+                                   if (Util.checkOtherName(player.getName()).equals(player.getName())) {
+                                       EBean eBeanClass = EBean.checkPlayer(split[1]);
+                                       String linkedname = eBeanClass.getLinkedname();
+                                       if (linkedname != null) {
+                                           player.sendMessage("You cannot link to a player which is already linked with another name.");
+                                       } else if (this.plugin.checkPassword(split[1], split[2])) {
                                         Processes.Link(player,split[1]);
                                         Messages.sendMessage(Message.link_success, player, null);
                                     } else {
@@ -282,28 +287,33 @@ public class AuthDBPlayerListener extends PlayerListener {
                                 } else {
                                     Messages.sendMessage(Message.link_exists, player, null);
                                 }
+                            } else {
+                                player.sendMessage("You cannot link with yourself!");
                             }
-                            player.sendMessage("You cannot link with yourself, use /login instead.");
                         } else {
                             Messages.sendMessage(Message.link_usage, player, null);
                         }
                         Util.logging.Debug(player.getName() + " link ******** ********");
-                        event.setMessage(Config.commands_unlink + " ****** ********");
+                        event.setMessage(Config.commands_link + " ****** ********");
                         event.setCancelled(true);
-                    } else {
-                        player.sendMessage(noPermission);
-                    }
+                    } else { player.sendMessage(noPermission); }
                 }
             } else if (split[0].equalsIgnoreCase(Config.commands_unlink) || split[0].equalsIgnoreCase(Config.aliases_unlink)) {
                 if (Config.unlink_enabled) {
                     if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
                         if (split.length == 3) {
                             if (Util.checkOtherName(player.getName()).equals(player.getDisplayName())) {
-                                if (this.plugin.checkPassword(split[1], split[2])) {
-                                    Processes.Unlink(player,split[1]);
-                                    Messages.sendMessage(Message.unlink_success, player, null);
+                                EBean eBeanClass = EBean.checkPlayer(player);
+                                String linkedname = eBeanClass.getLinkedname();
+                                if (linkedname.equals(split[1])) {
+                                    if (this.plugin.checkPassword(split[1], split[2])) {
+                                        Processes.Unlink(player,split[1]);
+                                        Messages.sendMessage(Message.unlink_success, player, null);
+                                    } else {
+                                        Messages.sendMessage(Message.unlink_failure, player, null);
+                                    }
                                 } else {
-                                    Messages.sendMessage(Message.unlink_failure, player, null);
+                                    player.sendMessage("You cannot unlink yourself with another username then the one you use while linking.");
                                 }
                             } else {
                                 Messages.sendMessage(Message.unlink_nonexist, player, null);
@@ -314,9 +324,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                         Util.logging.Debug(player.getName() + " unlink ******** ********");
                         event.setMessage(Config.commands_unlink + " ****** ********");
                         event.setCancelled(true);
-                    } else {
-                        player.sendMessage(noPermission);
-                    }
+                    } else { player.sendMessage(noPermission); }
                 }
             } else if (split[0].equalsIgnoreCase(Config.commands_register) || split[0].equalsIgnoreCase(Config.aliases_register)) {
                 if (ZPermissions.isAllowed(player, Permission.command_register)) {
@@ -354,6 +362,9 @@ public class AuthDBPlayerListener extends PlayerListener {
                                         long timestamp = System.currentTimeMillis()/1000;
                                         this.plugin.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
                                         this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
+                                        EBean eBeanClass = EBean.checkPlayer(player);
+                                        eBeanClass.setSessiontime(timestamp);
+										AuthDB.database.save(eBeanClass);
                                         Util.logging.Debug("Session started for " + player.getName());
                                         Processes.Login(player);
                                         long thetimestamp = System.currentTimeMillis()/1000;
@@ -379,16 +390,12 @@ public class AuthDBPlayerListener extends PlayerListener {
                         Util.logging.Debug(player.getName() + " register ********");
                         event.setMessage(Config.commands_register + " *****");
                         event.setCancelled(true);
-                    } else {
-                        player.sendMessage(noPermission);
-                    }
+                    } else { player.sendMessage(noPermission); }
                 } else if (!plugin.isAuthorized(player)) {
                     if (!checkGuest(player,Config.guests_commands)) {
                         event.setMessage("/iamnotloggedin");
                         event.setCancelled(true);
                     }
-                } else {
-                    player.sendMessage(noPermission);
                 }
             } else {
                 Util.logging.Debug("BukkitContrib is trying to check for SP client with command: " + event.getMessage());

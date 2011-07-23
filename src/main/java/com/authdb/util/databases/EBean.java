@@ -32,6 +32,7 @@ public class EBean {
         linkednames ("linkednames"),
         password ("password"),
         email ("email"),
+        sessiontime ("sessiontime"),
         salt ("salt"),
         inventory ("inventory"),
         armorinventory ("armorinventory"),
@@ -85,6 +86,15 @@ public class EBean {
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+        }
+    }
+    
+    public static void checkSessiontime(String player, long sessiontime) {
+        EBean eBeanClass = checkPlayer(player);
+        if (eBeanClass.getSessiontime() == 0 || eBeanClass.getSessiontime() != sessiontime) {
+            Util.logging.Debug("Session time in persistence is different than in hashmap, syncing session from hashmap.");
+            eBeanClass.setSessiontime(sessiontime);
+            AuthDB.database.save(eBeanClass);
         }
     }
 
@@ -173,6 +183,7 @@ public class EBean {
     private String authorized;
     private long timeout;
     private long reloadtime;
+    private long sessiontime;
 
 
     public void setId(int id) {
@@ -220,7 +231,7 @@ public class EBean {
     }
 
     public void setReloadtime(long reloadtime) {
-        this.reloadtime = reloadtime;
+        if(reloadtime != 0) { this.reloadtime = reloadtime; }
     }
 
     public String getPassword() {
@@ -284,7 +295,15 @@ public class EBean {
     }
 
     public void setTimeout(long timeout) {
-        this.timeout = timeout;
+        if(timeout != 0) { this.timeout = timeout; }
+    }
+    
+    public long getSessiontime() {
+        return sessiontime;
+    }
+
+    public void setSessiontime(long sessiontime) {
+        this.sessiontime = sessiontime; 
     }
 
     public String getArmorinventory() {

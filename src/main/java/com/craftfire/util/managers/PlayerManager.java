@@ -11,8 +11,10 @@ package com.craftfire.util.managers;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkitcontrib.BukkitContrib;
 
 public class PlayerManager {
+    PluginManager pluginManager = new PluginManager();
     public void clearArmorinventory(Player player) {
         final PlayerInventory i = player.getInventory();
         i.setHelmet(null);
@@ -22,6 +24,9 @@ public class PlayerManager {
     }
 
     public void renamePlayer(Player player, String name) {
+        if(pluginManager.config.hasBukkitContrib) {
+            BukkitContrib.getAppearanceManager().setGlobalTitle(player, name);
+        }
         player.setDisplayName(name);
     }
 
