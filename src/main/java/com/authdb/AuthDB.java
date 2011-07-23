@@ -293,7 +293,6 @@ public class AuthDB extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args)  { 
         if (sender instanceof Player) {
             Player player = (Player)sender;
-            String NoPermission = "You do not have permission to use this command.";
             if (cmd.getName().equalsIgnoreCase("authdb")) {
                 if (args.length == 0) {
                     player.sendMessage("§b Name: §f " + pluginName + " §4 " + pluginVersion);
@@ -309,7 +308,7 @@ public class AuthDB extends JavaPlugin {
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
                         return true;
                     }
-                    else { player.sendMessage(NoPermission); }
+                    else { Messages.sendMessage(Message.protection_denied, player, null); }
                 }
             } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_logout)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_logout))) {
                 if (args.length == 0) {
@@ -329,7 +328,7 @@ public class AuthDB extends JavaPlugin {
                             return true;
                         }
                     }
-                    else { player.sendMessage(NoPermission); }
+                    else { Messages.sendMessage(Message.protection_denied, player, null); }
                 } else if (args.length == 1) {
                     if(ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
                         String PlayerName = args[0];
@@ -347,7 +346,7 @@ public class AuthDB extends JavaPlugin {
                         player.sendMessage("§aCould not find player '" + PlayerName + "', please try again.");
                         return true;
                     }
-                    else { player.sendMessage(NoPermission); }
+                    else { Messages.sendMessage(Message.protection_denied, player, null); }
                 }
             } else if (isAuthorized(player) && (cmd.getName().equalsIgnoreCase(commandString(Config.commands_login)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_login)))) {
                 if (ZPermissions.isAllowed(player, Permission.command_admin_login)) {
@@ -368,7 +367,7 @@ public class AuthDB extends JavaPlugin {
                     return true;
                     }
                 }
-                else { player.sendMessage(NoPermission); }
+                else { Messages.sendMessage(Message.protection_denied, player, null); }
             }
         }
         return false;

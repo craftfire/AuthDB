@@ -205,26 +205,9 @@ public class AuthDBPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Messages.sendMessage(Message.left_server, player, null);
-        if (AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
-            AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
-            AuthDB.AuthDB_SpamMessage.remove(player.getName());
-            AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
-        }
         if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
             player.setHealth(20);
             player.teleport(player.getWorld().getSpawnLocation());
-        }
-        if (AuthDB.AuthDB_Timeouts.containsKey(player.getName())) {
-            int TaskID = AuthDB.AuthDB_Timeouts.get(player.getName());
-            Util.logging.Debug(player.getName() + " is in the TimeoutTaskList with ID: " + TaskID);
-            if (AuthDB.AuthDB_Timeouts.remove(player.getName()) != null) {
-                Util.logging.Debug(player.getName() + " was removed from the TimeoutTaskList");
-                plugin.getServer().getScheduler().cancelTask(TaskID);
-            } else {
-                Util.logging.Debug("Could not remove " + player.getName() + " from the timeout list.");
-            }
-        } else {
-            Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
         }
         long thetimestamp = System.currentTimeMillis()/1000;
         if (Config.session_start.equalsIgnoreCase("logoff")) {
@@ -333,7 +316,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                         if (!Config.register_enabled) {
                             Messages.sendMessage(Message.register_disabled, player, null);
                         } else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.checkOtherName(player.getName()))) {
-                            Messages.sendMessage(Message.register_registered, player, null);
+                            Messages.sendMessage(Message.register_exists, player, null);
                         } else if (split.length < 2) {
                             Messages.sendMessage(Message.register_usage, player, null);
                         } else if (split.length < 3 && email) {

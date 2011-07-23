@@ -351,6 +351,12 @@ public class Config {
                 ///////////////////////////////////////////
 
                     ///////////////////////////////////////////
+                    //               guest
+                    ///////////////////////////////////////////
+                    Messages.AuthDB_message_reload_success = Config.getConfigString("Core.reload.success", "AuthDB has successfully reloaded!");
+
+                
+                    ///////////////////////////////////////////
                     //               welcome
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_database_failure = Config.getConfigString("Core.database.failure", "{RED}database connection failed! Access is denied! Contact admin.");
@@ -370,9 +376,10 @@ public class Config {
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_register_success = Config.getConfigString("Core.register.success", "{RED}You have been registered!");
                     Messages.AuthDB_message_register_failure = Config.getConfigString("Core.register.failure", "{RED}Registration failed!");
-                    Messages.AuthDB_message_register_registered = Config.getConfigString("Core.register.exists", "{RED}You are already registered!");
+                    Messages.AuthDB_message_register_exists = Config.getConfigString("Core.register.exists", "{RED}You are already registered!");
                     Messages.AuthDB_message_register_disabled = Config.getConfigString("Core.register.disabled", "{RED}Registration not allowed!");
                     Messages.AuthDB_message_register_usage = Config.getConfigString("Core.register.usage", "{RED}Correct usage is: /register password email");
+                    Messages.AuthDB_message_register_timeout = Config.getConfigString("Core.register.timeout", "Kicked because you failed to register within {REGISTERTIMEOUT}.");
 
                     ///////////////////////////////////////////
                     //               unregister
@@ -382,6 +389,15 @@ public class Config {
                     Messages.AuthDB_message_unregister_usage = Config.getConfigString("Core.unregister.usage", "{RED}Correct usage is: /unregister password");
 
                     ///////////////////////////////////////////
+                    //               logout
+                    ///////////////////////////////////////////
+                    Messages.AuthDB_message_logout_success = Config.getConfigString("Core.logout.sucecss", "Successfully logged out!");
+                    Messages.AuthDB_message_logout_failure = Config.getConfigString("Core.logout.failure", "You are not logged in!");
+                    Messages.AuthDB_message_logout_admin = Config.getConfigString("Core.logout.admin", "You have been logged out by an admin.");
+                    Messages.AuthDB_message_logout_admin_success = Config.getConfigString("Core.logout.adminsuccess", "Successfully logged out player, {PLAYER}.");
+                    Messages.AuthDB_message_logout_admin_failure = Config.getConfigString("Core.logout.adminfailure", "You cannot logout player, {PLAYER}! That player is not logged in");
+                    Messages.AuthDB_message_logout_admin_notfound = Config.getConfigString("Core.logout.adminnotfound", "Could not find player, {PLAYER}! Please try again.");
+                    ///////////////////////////////////////////
                     //               login
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_login_normal = Config.getConfigString("Core.login.normal", "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use /login password");
@@ -390,6 +406,11 @@ public class Config {
                     Messages.AuthDB_message_login_failure = Config.getConfigString("Core.login.failure", "{RED}Password incorrect, please try again.");
                     Messages.AuthDB_message_login_authorized = Config.getConfigString("Core.login.authorized", "{BRIGHTGREEN}You are already logged in!");
                     Messages.AuthDB_message_login_notregistered = Config.getConfigString("Core.login.notregistered", "{RED}You are not registred yet!");
+                    Messages.AuthDB_message_login_timeout = Config.getConfigString("Core.login.usage", "Kicked because you failed to login within {LOGINTIMEOUT}.");
+                    Messages.AuthDB_message_login_admin = Config.getConfigString("Core.login.admin", "You have been logged in by an admin.");
+                    Messages.AuthDB_message_login_admin_success = Config.getConfigString("Core.login.admin.success", "Successfully logged in player, {PLAYER}.");
+                    Messages.AuthDB_message_login_admin_failure = Config.getConfigString("Core.login.adminfailure", "You cannot login player {PLAYER}! That player is already logged in.");
+                    Messages.AuthDB_message_login_admin_notfound = Config.getConfigString("Core.login.adminnotfound", "Could not find player, {PLAYER}! Please try again.");
                     Messages.AuthDB_message_login_usage = Config.getConfigString("Core.login.usage", "{RED}Correct usage is: /login password");
 
                     ///////////////////////////////////////////
@@ -413,6 +434,7 @@ public class Config {
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_email_required = Config.getConfigString("Core.email.required", "{RED}Email required for registration!");
                     Messages.AuthDB_message_email_invalid = Config.getConfigString("Core.email.invalid", "{RED}Invalid email! Please try again!");
+                    Messages.AuthDB_message_email_badcharacters = Config.getConfigString("Core.email.badcharacters", "{RED}Email contains bad characters! {BADCHARACTERS}!");
 
                     ///////////////////////////////////////////
                     //               filter
@@ -446,7 +468,12 @@ public class Config {
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_idle_kick = Config.getConfigString("Core.idle.kicked", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
                     Messages.AuthDB_message_idle_whitelist = Config.getConfigString("Core.idle.whitelist", "{BRIGHTGREEN}{PLAYER} is on the idle {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!");
-
+                    
+                    ///////////////////////////////////////////
+                    //               idle
+                    ///////////////////////////////////////////
+                    Messages.AuthDB_message_protection_denied = Config.getConfigString("Core.protection.denied", "You do not have permission to use that command.");
+                    
                 ///////////////////////////////////////////
                 //               CraftIRC
                 ///////////////////////////////////////////
