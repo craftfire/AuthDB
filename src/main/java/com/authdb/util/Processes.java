@@ -25,7 +25,6 @@ public class Processes {
             AuthDB.authorizedNames.remove(player.getName());
             EBean eBeanClass = EBean.checkPlayer(player);
             eBeanClass.setAuthorized("false");
-            AuthDB.database.save(eBeanClass);
 
             if (AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.remove(Encryption.md5(player.getName()));
@@ -38,9 +37,11 @@ public class Processes {
                 AuthDB.AuthDB_SpamMessage.remove(player.getName());
                 AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
             }
-            if (AuthDB.AuthDB_Timeouts.containsKey(player.getName())) {
+            int timeoutid = eBeanClass.getTimeoutid();
+            if (AuthDB.AuthDB_Timeouts.containsKey(player.getName()) || timeoutid != 0) {
                 int TaskID = AuthDB.AuthDB_Timeouts.get(player.getName());
                 Util.logging.Debug(player.getName() + " is in the TimeoutTaskList with ID: " + TaskID);
+                eBeanClass.setTimeoutid(0);
                 if (AuthDB.AuthDB_Timeouts.remove(player.getName()) != null) {
                     Util.logging.Debug(player.getName() + " was removed from the TimeoutTaskList");
                     AuthDB.server.getScheduler().cancelTask(TaskID);
@@ -50,6 +51,7 @@ public class Processes {
             } else {
                 Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
             }
+            EBean.save(eBeanClass);
             return true;
         }
         return false;

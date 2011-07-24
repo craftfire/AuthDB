@@ -181,7 +181,7 @@ public class EBean {
     private String activated;
     private String registred;
     private String authorized;
-    private long timeout;
+    private int timeoutid;
     private long reloadtime;
     private long sessiontime;
 
@@ -290,12 +290,12 @@ public class EBean {
         this.registred = registred;
     }
 
-    public long getTimeout() {
-        return timeout;
+    public int getTimeoutid() {
+        return timeoutid;
     }
 
-    public void setTimeout(long timeout) {
-        if(timeout != 0) { this.timeout = timeout; }
+    public void setTimeoutid(int timeoutid) {
+        if(timeoutid != 0) { this.timeoutid = timeoutid; }
     }
     
     public long getSessiontime() {

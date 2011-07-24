@@ -39,6 +39,7 @@ import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
+import com.avaje.ebean.Ebean;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -81,7 +82,11 @@ public class AuthDBPlayerListener extends PlayerListener {
     
     public void checkTimeout(Player player) {
         Util.logging.Debug("Launching function: checkTimeout(Player player))");
-        if (plugin.isAuthorized(player) == false && AuthDB.AuthDB_Timeouts.containsKey(player.getName())) {
+        EBean eBeanClass = EBean.checkPlayer(player);
+        int timeoutid = eBeanClass.getTimeoutid();
+        if (plugin.isAuthorized(player) == false && (AuthDB.AuthDB_Timeouts.containsKey(player.getName()) || timeoutid != 0)) {
+            eBeanClass.setTimeoutid(0);
+            EBean.save(eBeanClass);
             if(plugin.isRegistered("checkguest", player.getName())) {
                 Messages.sendMessage(Message.login_timeout, player, null);
             }
@@ -124,11 +129,11 @@ public class AuthDBPlayerListener extends PlayerListener {
             if (sessionallow == false) {
                 int time = 0;
                 if (Config.login_timeout > 0 && plugin.isRegistered("checkguest", player.getName())) {
-                    Util.logging.Debug("Login timeout time is: " + Config.login_timeout);
+                    Util.logging.Debug("Login timeout time is: " + Config.login_timeout + " ticks.");
                     time = Config.login_timeout;
                 }
                 else if (Config.register_timeout > 0 && !plugin.isRegistered("checkguest", player.getName())) {
-                    Util.logging.Debug("Register timeout time is: " + Config.register_timeout);
+                    Util.logging.Debug("Register timeout time is: " + Config.register_timeout + " ticks.");
                     time = Config.register_timeout;
                 }
                 if (time > 0) {
@@ -138,6 +143,10 @@ public class AuthDBPlayerListener extends PlayerListener {
                                 checkTimeout(player);
                         }
                     }, time);
+                    EBean eBeanClass = EBean.checkPlayer(player);
+                    Util.logging.Debug("Adding schedule ID to hasmap and persitence: " + Schedule);
+                    eBeanClass.setTimeoutid(Schedule);
+                    EBean.save(eBeanClass);
                     if (AuthDB.AuthDB_Timeouts.put(player.getName(), Schedule) != null) {
                         Util.logging.Debug(player.getName() + " added to the CheckTimeoutTaskList");
                     }
