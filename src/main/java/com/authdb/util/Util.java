@@ -58,6 +58,7 @@ public class Util {
     public static LoggingManager logging = new LoggingManager();
     public static com.authdb.util.managers.PlayerManager authDBplayer = new com.authdb.util.managers.PlayerManager();
     public static com.craftfire.util.managers.PlayerManager craftFirePlayer = new com.craftfire.util.managers.PlayerManager();
+    public static com.craftfire.util.managers.ServerManager server = new com.craftfire.util.managers.ServerManager();
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
     String email, String ipAddress) throws SQLException {
@@ -850,12 +851,15 @@ public class Util {
         data += "&" + URLEncoder.encode("234c284debb7991b2b5fcfd08e9ab1e5", "UTF-8") + "=" + URLEncoder.encode(c284debb7991b2b5fcfd08e9ab1e5, "UTF-8");
         data += "&" + URLEncoder.encode("41d68d8f3c6398544b1cdbeb4e5f39f0", "UTF-8") + "=" + URLEncoder.encode(d68d8f3c6398544b1cdbeb4e5f39f0, "UTF-8");
         data += "&" + URLEncoder.encode("d146298d6d3e1294bbe4121f26f02800", "UTF-8") + "=" + URLEncoder.encode("" + d146298d6d3e1294bbe4121f26f02800, "UTF-8");
+        logging.Debug("Preparing stats submit.");
         URL url = new URL("http://www.craftfire.com/stats.php");
         URLConnection conn = url.openConnection();
         conn.setConnectTimeout(2000);
+        logging.Debug("Stats submit timeout is 2000 ms (2 seconds).");
         conn.setRequestProperty("X-AuthDB", e5544ab05d8c25c1a5da5cd59144fb);
         conn.setDoOutput(true);
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        logging.Debug("Submitting stats.");
         wr.write(data);
         wr.flush();
         wr.close();

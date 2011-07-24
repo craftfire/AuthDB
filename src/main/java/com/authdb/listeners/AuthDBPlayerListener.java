@@ -10,7 +10,11 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.authdb.listeners;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 
 import org.bukkit.Location;
@@ -164,6 +168,24 @@ public class AuthDBPlayerListener extends PlayerListener {
                 sessionallow = true;
             }
             
+            if (Config.onlineMode) {
+                sessionallow = true;
+            } 
+            
+            /*else if (!Config.onlineMode) {
+                Util.logging.Debug("Session id: " + Util.server.getSessionId());
+                boolean allow = false;
+                URL verify = new URL("http://www.minecraft.net/game/checkserver.jsp?user=" + URLEncoder.encode(player.getName(), "UTF-8") + "&serverId=" + URLEncoder.encode(Util.server.getSessionId(), "UTF-8"));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(verify.openStream()));
+                String result = reader.readLine();
+                reader.close();
+                allow = result.equalsIgnoreCase("YES");
+                if(allow) { 
+                    Util.logging.Debug("Online mode is off but player '" + player.getName() + "' is authed with minecraft.net and does not have to login.");
+                    sessionallow = true;
+                }
+            }
+            */
             if (sessionallow) {
                 long thetimestamp = System.currentTimeMillis()/1000;
                 this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);

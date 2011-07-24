@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -196,8 +197,25 @@ public class AuthDB extends JavaPlugin {
         pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.ENTITY_TARGET, this.entityListener, Event.Priority.Normal, this);
-        PropertyManager TheSettings = new PropertyManager(new File("server.properties"));
-        if (TheSettings.getBoolean("online-mode", true)) { Config.onlineMode = true; }
+        //PropertyManager TheSettings = new PropertyManager(new File("server.properties"));
+        /* Properties prop = new Properties();
+        try {
+            FileInputStream in = new FileInputStream(new File("server.properties"));
+            prop.load(in);
+            String work = prop.getProperty("online-mode");
+            if(work.equalsIgnoreCase("true")) {
+                Config.onlineMode = true;
+            } else {
+                Config.onlineMode = false;
+            }
+        } catch(IOException e) {
+            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+        }
+        */
+        
+        Config.onlineMode = getServer().getOnlineMode();
+
+        Util.logging.Debug("Online mode: " + Config.onlineMode);
         updateLinkedNames();
 
         setupDatabase();

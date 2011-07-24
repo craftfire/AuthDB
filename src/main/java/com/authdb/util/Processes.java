@@ -37,8 +37,7 @@ public class Processes {
                 AuthDB.AuthDB_SpamMessage.remove(player.getName());
                 AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
             }
-            int timeoutid = eBeanClass.getTimeoutid();
-            if (AuthDB.AuthDB_Timeouts.containsKey(player.getName()) || timeoutid != 0) {
+            if (AuthDB.AuthDB_Timeouts.containsKey(player.getName())) {
                 int TaskID = AuthDB.AuthDB_Timeouts.get(player.getName());
                 Util.logging.Debug(player.getName() + " is in the TimeoutTaskList with ID: " + TaskID);
                 eBeanClass.setTimeoutid(0);

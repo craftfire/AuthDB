@@ -305,13 +305,6 @@ public class Drupal {
             if (salt.length() != 8)
                 return output;
 
-            String m1 = Encryption.SHA512(salt + password);
-            String hash = Encryption.pack(m1);
-            do {
-                hash = Encryption.pack(Encryption.SHA512(hash + password));
-            } while (--count > 0);
-
-            output = setting.substring(0, 12) + _hash_encode64(hash, 16);
 
             return output;
         }
