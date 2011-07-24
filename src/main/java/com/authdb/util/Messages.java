@@ -268,7 +268,7 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.register_disabled)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_disabled, player, null));
             } else if (type.equals(Message.register_timeout)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_register_timeout, player, null));
+                player.kickPlayer(Util.replaceStrings(AuthDB_message_register_timeout, player, null));
             } else if (type.equals(Message.register_usage)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_usage, player, null));
             } else if (type.equals(Message.unregister_success)) {
@@ -299,7 +299,7 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.login_notregistered)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_notregistered, player, null));
             } else if (type.equals(Message.login_timeout)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_login_timeout, player, null));
+                player.kickPlayer(Util.replaceStrings(AuthDB_message_login_timeout, player, null));
             } else if (type.equals(Message.login_admin)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_admin, player, null));
             } else if (type.equals(Message.login_usage)) {

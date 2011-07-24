@@ -698,7 +698,7 @@ public class AuthDB extends JavaPlugin {
                         return false;
                     }
                 } else if (checkneeded) {
-    			Util.logging.Debug("Check to see if user is registred is needed, performing check");
+                    Util.logging.Debug("Check to see if user is registred is needed, performing check");
                     try {
                         if (!Config.database_keepalive) { MySQL.connect(); }
                         Config.hasForumBoard = false;

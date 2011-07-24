@@ -406,7 +406,7 @@ public class Config {
                     Messages.AuthDB_message_login_failure = Config.getConfigString("Core.login.failure", "{RED}Password incorrect, please try again.");
                     Messages.AuthDB_message_login_authorized = Config.getConfigString("Core.login.authorized", "{BRIGHTGREEN}You are already logged in!");
                     Messages.AuthDB_message_login_notregistered = Config.getConfigString("Core.login.notregistered", "{RED}You are not registred yet!");
-                    Messages.AuthDB_message_login_timeout = Config.getConfigString("Core.login.usage", "Kicked because you failed to login within {LOGINTIMEOUT}.");
+                    Messages.AuthDB_message_login_timeout = Config.getConfigString("Core.login.timeout", "Kicked because you failed to login within {LOGINTIMEOUT}.");
                     Messages.AuthDB_message_login_admin = Config.getConfigString("Core.login.admin", "You have been logged in by an admin.");
                     Messages.AuthDB_message_login_admin_success = Config.getConfigString("Core.login.admin.success", "Successfully logged in player, {PLAYER}.");
                     Messages.AuthDB_message_login_admin_failure = Config.getConfigString("Core.login.adminfailure", "You cannot login player {PLAYER}! That player is already logged in.");

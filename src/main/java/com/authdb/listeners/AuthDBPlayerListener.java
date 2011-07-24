@@ -78,14 +78,17 @@ public class AuthDBPlayerListener extends PlayerListener {
             Util.craftFirePlayer.renamePlayer(player,Util.checkOtherName(player.getName()));
         }
     }
-
-    public boolean checkTimeout(Player player) throws IOException {
+    
+    public void checkTimeout(Player player) {
         Util.logging.Debug("Launching function: checkTimeout(Player player))");
         if (plugin.isAuthorized(player) == false && AuthDB.AuthDB_Timeouts.containsKey(player.getName())) {
-            Messages.sendMessage(Message.idle_kick, player, null);
-            return true;
+            if(plugin.isRegistered("checkguest", player.getName())) {
+                Messages.sendMessage(Message.login_timeout, player, null);
+            }
+            else {
+                Messages.sendMessage(Message.register_timeout, player, null);
+            }
         }
-        return false;
     }
 
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -118,22 +121,27 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
 
         try {
-            if (Config.login_timeout > 0 && sessionallow == false) {
-                Util.logging.Debug("Timeout time is: " + Config.login_timeout);
-                Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            checkTimeout(player);
-                        } catch (IOException e) {
-                            Util.logging.Warning("Error checking if player was in the timeout list");
-                            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            if (sessionallow == false) {
+                int time = 0;
+                if (Config.login_timeout > 0 && plugin.isRegistered("checkguest", player.getName())) {
+                    Util.logging.Debug("Login timeout time is: " + Config.login_timeout);
+                    time = Config.login_timeout;
+                }
+                else if (Config.register_timeout > 0 && !plugin.isRegistered("checkguest", player.getName())) {
+                    Util.logging.Debug("Register timeout time is: " + Config.register_timeout);
+                    time = Config.register_timeout;
+                }
+                if (time > 0) {
+                    Schedule = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                                checkTimeout(player);
                         }
+                    }, time);
+                    if (AuthDB.AuthDB_Timeouts.put(player.getName(), Schedule) != null) {
+                        Util.logging.Debug(player.getName() + " added to the CheckTimeoutTaskList");
                     }
-                }, Config.login_timeout);
-            if (AuthDB.AuthDB_Timeouts.put(player.getName(), Schedule) != null) {
-                Util.logging.Debug(player.getName() + " added to the CheckTimeoutTaskList");
-            }
+                }
             }
             if (Config.custom_enabled) if (Config.custom_encryption == null) {
                 player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT.");
