@@ -37,10 +37,6 @@ public class ZCraftIRC {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_password_success,player,""),Config.CraftIRC_tag);
             } else if (type.equals(Message.password_failure)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_password_failure,player,""),Config.CraftIRC_tag);
-            } else if (type.equals(Message.idle_kick)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_idle_kicked,player,""),Config.CraftIRC_tag);
-            } else if (type.equals(Message.idle_whitelist)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_idle_whitelist,player,""),Config.CraftIRC_tag);
             } else if (type.equals(Message.filter_renamed)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_renamed,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.filter_username)) {

@@ -192,8 +192,6 @@ static AuthDB plugin = new AuthDB();
         password_usage (AuthDB_message_password_usage),
         session_valid (AuthDB_message_session_valid),
         session_protected (AuthDB_message_session_protected),
-        idle_kick (AuthDB_message_idle_kick),
-        idle_whitelist (AuthDB_message_idle_whitelist),
         protection_denied (AuthDB_message_protection_denied),
         left_server ("fake"),
         kickPlayerIdleLoginMessage ("fake"),

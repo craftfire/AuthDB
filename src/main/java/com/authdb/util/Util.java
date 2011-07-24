@@ -953,9 +953,8 @@ public class Util {
             String whitelistname = st.nextToken().toLowerCase();
             logging.Debug("Whitelist: " + whitelistname);
             if (whitelistname.equals(username)) {
-                logging.Debug("FOUND USER IN WHITELIST: " + whitelistname);
-                if (whitelist.equalsIgnoreCase("idle")) { Messages.sendMessage(Message.idle_whitelist, player, null); }
-                else if (whitelist.equalsIgnoreCase("username")) { Messages.sendMessage(Message.filter_whitelist, player, null); }
+                logging.Debug("Found user in whitelist: " + whitelistname);
+                if (whitelist.equalsIgnoreCase("username")) { Messages.sendMessage(Message.filter_whitelist, player, null); }
                 return true;
             }
         }
