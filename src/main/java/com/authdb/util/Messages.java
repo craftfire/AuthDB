@@ -100,11 +100,6 @@ static AuthDB plugin = new AuthDB();
         //               session
         ///////////////////////////////////////////
         public static String AuthDB_message_session_valid, AuthDB_message_session_protected;
-
-        ///////////////////////////////////////////
-        //               idle
-        ///////////////////////////////////////////
-        public static String AuthDB_message_idle_kick, AuthDB_message_idle_whitelist;
         
         ///////////////////////////////////////////
         //               protection
@@ -372,10 +367,6 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid, player, null));
             } else if (type.equals(Message.session_protected)) {
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, null));
-            } else if (type.equals(Message.idle_kick)) {
-                player.kickPlayer(Util.replaceStrings(AuthDB_message_idle_kick, player, null));
-            } else if (type.equals(Message.idle_whitelist)) {
-                //player.sendMessage(Util.replaceStrings(AuthDB_message_idle_whitelist, player, null));
             } else if (type.equals(Message.protection_denied)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_protection_denied, player, null));
             }

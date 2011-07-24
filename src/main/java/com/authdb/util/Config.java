@@ -466,12 +466,6 @@ public class Config {
                     ///////////////////////////////////////////
                     //               idle
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_idle_kick = Config.getConfigString("Core.idle.kicked", "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}.");
-                    Messages.AuthDB_message_idle_whitelist = Config.getConfigString("Core.idle.whitelist", "{BRIGHTGREEN}{PLAYER} is on the idle {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!");
-                    
-                    ///////////////////////////////////////////
-                    //               idle
-                    ///////////////////////////////////////////
                     Messages.AuthDB_message_protection_denied = Config.getConfigString("Core.protection.denied", "You do not have permission to use that command.");
                     
                 ///////////////////////////////////////////
