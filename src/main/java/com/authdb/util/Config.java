@@ -365,12 +365,7 @@ public class Config {
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_welcome_guest = (String)Config.getConfigString("Core.welcome.guest", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email or {LINKCMD} otherusername password");
                     //Messages.AuthDB_message_welcome_user = (String)Config.getConfigString("Core.welcome.user", "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please login with /login password");
-
-                    ///////////////////////////////////////////
-                    //               guest
-                    ///////////////////////////////////////////
-                    Messages.AuthDB_message_guest_notauthorized = Config.getConfigString("Core.guest.notauthorized", "{RED}You are not authorized to do that!");
-
+                    
                     ///////////////////////////////////////////
                     //               register
                     ///////////////////////////////////////////
@@ -391,12 +386,13 @@ public class Config {
                     ///////////////////////////////////////////
                     //               logout
                     ///////////////////////////////////////////
-                    Messages.AuthDB_message_logout_success = Config.getConfigString("Core.logout.sucecss", "Successfully logged out!");
+                    Messages.AuthDB_message_logout_success = Config.getConfigString("Core.logout.success", "Successfully logged out!");
                     Messages.AuthDB_message_logout_failure = Config.getConfigString("Core.logout.failure", "You are not logged in!");
                     Messages.AuthDB_message_logout_admin = Config.getConfigString("Core.logout.admin", "You have been logged out by an admin.");
                     Messages.AuthDB_message_logout_admin_success = Config.getConfigString("Core.logout.adminsuccess", "Successfully logged out player, {PLAYER}.");
                     Messages.AuthDB_message_logout_admin_failure = Config.getConfigString("Core.logout.adminfailure", "You cannot logout player, {PLAYER}! That player is not logged in");
                     Messages.AuthDB_message_logout_admin_notfound = Config.getConfigString("Core.logout.adminnotfound", "Could not find player, {PLAYER}! Please try again.");
+                    Messages.AuthDB_message_logout_usage = Config.getConfigString("Core.logout.usage", "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}");
                     ///////////////////////////////////////////
                     //               login
                     ///////////////////////////////////////////
@@ -467,7 +463,8 @@ public class Config {
                     //               idle
                     ///////////////////////////////////////////
                     Messages.AuthDB_message_protection_denied = Config.getConfigString("Core.protection.denied", "You do not have permission to use that command.");
-                    
+                    Messages.AuthDB_message_protection_notauthorized = Config.getConfigString("Core.protection.notauthorized", "{RED}You are not authorized to do that!");
+ 
                 ///////////////////////////////////////////
                 //               CraftIRC
                 ///////////////////////////////////////////

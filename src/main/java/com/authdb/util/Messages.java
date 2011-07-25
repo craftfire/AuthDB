@@ -42,11 +42,6 @@ static AuthDB plugin = new AuthDB();
         public static String AuthDB_message_welcome_guest;
 
         ///////////////////////////////////////////
-        //               guest
-        ///////////////////////////////////////////
-        public static String AuthDB_message_guest_notauthorized;
-
-        ///////////////////////////////////////////
         //               register
         ///////////////////////////////////////////
         public static String AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout;
@@ -59,7 +54,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               logout
         ///////////////////////////////////////////
-        public static String AuthDB_message_logout_success, AuthDB_message_logout_failure, AuthDB_message_logout_admin, AuthDB_message_logout_admin_success, AuthDB_message_logout_admin_failure, AuthDB_message_logout_admin_notfound;
+        public static String AuthDB_message_logout_success, AuthDB_message_logout_failure, AuthDB_message_logout_admin, AuthDB_message_logout_admin_success, AuthDB_message_logout_admin_failure, AuthDB_message_logout_admin_notfound, AuthDB_message_logout_usage;
 
         ///////////////////////////////////////////
         //               login
@@ -104,7 +99,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               protection
         ///////////////////////////////////////////
-        public static String AuthDB_message_protection_denied;
+        public static String AuthDB_message_protection_denied, AuthDB_message_protection_notauthorized;
 
     ///////////////////////////////////////////
     //               CraftIRC
@@ -139,7 +134,6 @@ static AuthDB plugin = new AuthDB();
         database_failure (AuthDB_message_database_failure),
         reload_success (AuthDB_message_reload_success),
         welcome_guest (AuthDB_message_welcome_guest),
-        guest_notauthorized (AuthDB_message_guest_notauthorized),
         register_success (AuthDB_message_register_success),
         register_failure (AuthDB_message_register_failure),
         register_exists (AuthDB_message_register_exists),
@@ -167,6 +161,7 @@ static AuthDB plugin = new AuthDB();
         logout_admin_success (AuthDB_message_logout_admin_success),
         logout_admin_failure (AuthDB_message_logout_admin_failure),
         logout_admin_notfound (AuthDB_message_logout_admin_notfound),
+        logout_usage (AuthDB_message_logout_usage),
         link_success (AuthDB_message_link_success),
         link_failure (AuthDB_message_link_failure),
         link_exists (AuthDB_message_link_exists),
@@ -193,6 +188,7 @@ static AuthDB plugin = new AuthDB();
         session_valid (AuthDB_message_session_valid),
         session_protected (AuthDB_message_session_protected),
         protection_denied (AuthDB_message_protection_denied),
+        protection_notauthorized (AuthDB_message_protection_notauthorized),
         left_server ("fake"),
         kickPlayerIdleLoginMessage ("fake"),
         OnEnable ("fake"),
@@ -250,8 +246,6 @@ static AuthDB plugin = new AuthDB();
                 }
             } else if (type.equals(Message.reload_success)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_reload_success, player, null));
-            }else if (type.equals(Message.guest_notauthorized)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_guest_notauthorized, player, null));
             } else if (type.equals(Message.register_success)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_success, player, null));
             } else if (type.equals(Message.register_failure)) {
@@ -303,6 +297,8 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_logout_failure, player, null));
             } else if (type.equals(Message.logout_admin)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_logout_admin, player, null));
+            } else if (type.equals(Message.logout_usage)) {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_logout_usage, player, null));
             } else if (type.equals(Message.link_success)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_success, player, null));
             } else if (type.equals(Message.link_failure)) {
@@ -367,6 +363,8 @@ static AuthDB plugin = new AuthDB();
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, null));
             } else if (type.equals(Message.protection_denied)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_protection_denied, player, null));
+            } else if (type.equals(Message.protection_notauthorized)) {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_protection_notauthorized, player, null));
             }
         } else {
             Messages.sendMessage(Message.database_failure, null, null);
