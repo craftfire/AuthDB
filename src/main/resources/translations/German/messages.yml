@@ -68,9 +68,6 @@ Core:
   session:
     valid: "{BRIGHTGREEN}Hey, Ich erinnere mich an dich! Du bist noch eingeloggt!"
     protected: "Sorry, ein Spieler mit dem gleichen Namen ist bereits eingeloggt."
-  idle:
-    kicked: "Du wurdest gekickt, da du dich nicht innerhalb von {IDLELENGTH} {IDLETIME} eingeloggt hast."
-    whitelist: "{BRIGHTGREEN}{PLAYER} ist auf der Inaktivitäts-{WHITE}whitelist{BRIGHTGREEN}. Einschränkung umgangen!"
   filter:
     username: "Gekickt, da der Benutzername ungültige Zeichen enthält. {USERBADCHARACTERS}!"
     password: "{RED}Passwort enthält ungültige Zeichen! {PASSBADCHARACTERS}!"

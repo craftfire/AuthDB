@@ -32,6 +32,7 @@ Core:
     show: 10 seconds                                 # 
     timeout: 3 minutes                               # 
   login:
+    enabled: true                                    #
     method: prompt                                   # Set to normal to use /login password method or prompt for password input only.
     delay: 4 seconds                                 # 
     show: 10 seconds                                 # 
@@ -51,6 +52,7 @@ Core:
     minimum: 6                                       # 
     maximum: 16                                      # 
   session:
+    enabled: true                                    # 
     start: login                                     # 
     length: 1 hour                                   # 
     protect: true                                    # 

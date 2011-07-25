@@ -58,6 +58,7 @@ public class Processes {
 
     public static boolean Login(Player player) {
         if (!AuthDB.isAuthorized(player)) {
+           // Util.bukkitContrib.popGUI(player);
             long timestamp = Util.timeStamp();
             if (!AuthDB.AuthDB_AuthTime.containsKey(player.getName())) {
                 AuthDB.AuthDB_AuthTime.put(player.getName(), timestamp);

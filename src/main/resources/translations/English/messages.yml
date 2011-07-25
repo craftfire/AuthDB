@@ -12,11 +12,9 @@ Core:
     failure: "{RED}Database connection failed! Access is denied! Contact the server admin."
   reload:
     success: "AuthDB has successfully reloaded!"
-    failure: ""
+    failure: "AuthDB could not be reloaded!"
   welcome:
     guest: "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email or {LINKCMD} otherusername password"
-  guest:
-    notauthorized: "{RED}You are not authorized to do that! Login or register for access."
   register:
     success: "{BRIGHTGREEN}You have successfully registered! You are now logged in."
     failure: "{RED}Registration failed!"
@@ -67,15 +65,13 @@ Core:
   session:
     valid: "{BRIGHTGREEN}Hey, I remember you! You are logged in!"
     protected: "Sorry, a player with that name is already logged in on this server."
-  idle:
-    kicked: "Kicked because you failed to login within {IDLELENGTH} {IDLETIME}."
-    whitelist: "{BRIGHTGREEN}{PLAYER} is on the idle {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
   filter:
     username: "Kicked because username contains bad characters. {USERBADCHARACTERS}!"
     password: "{RED}Password contains bad characters! {PASSBADCHARACTERS}!"
     whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
   protection:
-    denied: "You do not have permission to use that command."
+    denied: "{RED}You do not have permission to use that command."
+    notauthorized: "{RED}You are not authorized to do that! Login or register for access."
 
 Plugins:
   CraftIRC:

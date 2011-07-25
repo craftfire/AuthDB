@@ -88,11 +88,13 @@ public void onEntityDamage(EntityDamageEvent event) {
         }
     }
 
-    public boolean checkGuest(Player player, boolean what) {
-     if (what == true && this.plugin.isRegistered("checkguest", player.getName()) == false) {
-              return true;
-     } else if (Config.protection_notify && this.plugin.isRegistered("checkguest", player.getName()) == false || this.plugin.isRegistered("checkguest", Util.checkOtherName(player.getName())) == false) {
-         if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
+boolean checkGuest(Player player,boolean what) {
+    if (what) {
+        if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
+            return true;
+        }
+    } else if (Config.protection_notify && !AuthDB.isAuthorized(player)) {
+        if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
              this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
              Messages.sendMessage(Message.guest_notauthorized, player, null);
          } else {

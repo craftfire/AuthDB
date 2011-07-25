@@ -437,34 +437,38 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     public void onPlayerChat(PlayerChatEvent event) {
         if (event.isCancelled()) { return; }
-        if (!plugin.isAuthorized(event.getPlayer())) {
+        if (!AuthDB.isAuthorized(event.getPlayer())) {
             Player player = event.getPlayer();
-            if (ZPermissions.isAllowed(player, Permission.command_login)) {
-                if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt") && (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.checkOtherName(event.getPlayer().getName())))) {
-                    String[] split = event.getMessage().split(" ");
-                    if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.checkOtherName(player.getName()))) {
-                        if (plugin.isAuthorized(player)) {
-                            Messages.sendMessage(Message.login_authorized, player, null);
-                        } else if (split.length > 1) {
-                            player.sendMessage("§bPlease type in the password for " + Util.checkOtherName(player.getName()));
-                        } else if (this.plugin.checkPassword(player.getName(), split[0]) || this.plugin.checkPassword(Util.checkOtherName(player.getName()), split[0])) {
-                            Processes.Login(player);
-                            Messages.sendMessage(Message.login_success, player, null);
-                        } else {
-                            Messages.sendMessage(Message.login_failure, player, null);
+                if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
+                    if (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.checkOtherName(event.getPlayer().getName()))) {
+                        String[] split = event.getMessage().split(" ");
+                        if (ZPermissions.isAllowed(player, Permission.command_login)) {
+                            if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.checkOtherName(player.getName()))) {
+                                if (AuthDB.isAuthorized(player)) {
+                                    Messages.sendMessage(Message.login_authorized, player, null);
+                                } else if (split.length > 1) {
+                                    Messages.sendMessage(Message.login_prompt, player, null);
+                                } else if (this.plugin.checkPassword(player.getName(), split[0]) || this.plugin.checkPassword(Util.checkOtherName(player.getName()), split[0])) {
+                                    Processes.Login(player);
+                                    Messages.sendMessage(Message.login_success, player, null);
+                                } else {
+                                    Messages.sendMessage(Message.login_failure, player, null);
+                                }
+                                Util.logging.Debug(player.getName() + " login ********");
+                                event.setMessage(" has logged in!");
+                                event.setCancelled(true);
+                            }
+                            event.setMessage("");
+                            event.setCancelled(true);
                         }
-                        Util.logging.Debug(player.getName() + " login ********");
-                        event.setMessage(" has logged in!");
+                    } else if (!checkGuest(event.getPlayer(), Config.guests_chat)) {
                         event.setCancelled(true);
                     }
-                    event.setMessage("");
+                } else if (!checkGuest(event.getPlayer(), Config.guests_chat)) {
                     event.setCancelled(true);
                 }
-            } else if (!checkGuest(event.getPlayer(),Config.guests_chat)) {
-                event.setCancelled(true);
             }
         }
-    }
 
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
@@ -505,7 +509,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
                 return true;
             }
-        } else if (Config.protection_notify && this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
+        } else if (Config.protection_notify && !AuthDB.isAuthorized(player)) {
             if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
                 this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
                 Messages.sendMessage(Message.guest_notauthorized, player, null);
