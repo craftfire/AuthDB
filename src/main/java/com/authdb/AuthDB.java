@@ -98,7 +98,7 @@ public class AuthDB extends JavaPlugin {
     public void onDisable() {
         for (Player p : getServer().getOnlinePlayers()) {
             EBean eBeanClass = EBean.checkPlayer(p);
-            if (eBeanClass.getAuthorized().equalsIgnoreCase("true")) {
+            if (eBeanClass.getAuthorized() != null && eBeanClass.getAuthorized().equalsIgnoreCase("true")) {
                 eBeanClass.setReloadtime(Util.timeStamp());
                 EBean.save(eBeanClass);
             }

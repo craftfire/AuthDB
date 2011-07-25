@@ -21,7 +21,7 @@ Core:
     exists: "{RED}You are already registered!"
     disabled: "{RED}Registration is disabled!"
     timeout: "Kicked because you failed to register within {REGISTERTIMEOUT}."
-    usage: "{RED}Correct usage is: {REGISTERCMD} password email"
+    usage: "{YELLOW}Correct usage is: {WHITE}{REGISTERCMD} password email"
   login:
     normal: "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use {LOGINCMD} password"
     prompt: "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:"
@@ -34,7 +34,7 @@ Core:
     adminsuccess: "Successfully logged in player, {PLAYER}."
     adminfailure: "You cannot login player {PLAYER}! That player is already logged in."
     adminnotfound: "Could not find player, {PLAYER}! Please try again."
-    usage: "{RED}Correct usage is: {LOGINCMD} password"
+    usage: "{YELLOW}Correct usage is: {WHITE}{LOGINCMD} password"
   logout:
     success: "Successfully logged out!"
     failure: "You are not logged in!"
@@ -42,16 +42,17 @@ Core:
     adminsuccess: "Successfully logged out player, {PLAYER}."
     adminfailure: "You cannot logout player, {PLAYER}! That player is not logged in."
     adminnotfound: "Could not find player, {PLAYER}! Please try again."
+#    usage: "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}"
   link:
     success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
     failure: "{RED}Username linking failed!"
     exists: "{RED}You are already linked to a username!"
-    usage: "{RED}Correct usage is: {LINKCMD} otherusername password"
+    usage: "{YELLOW}Correct usage is: {WHITE}{LINKCMD} otherusername password"
   unlink:
     success: "{BRIGHTGREEN}Username unlinked successfully!"
     failure: "{RED}Username unlinking failed!"
     nonexist: "{RED}You do not have a linked username!"
-    usage: "{RED}Correct usage is: {UNLINKCMD} otherusername password"
+    usage: "{YELLOW}Correct usage is: {WHITE}{UNLINKCMD} otherusername password"
   email:
     required: "{RED}Email required for registration!"
     invalid: "{RED}Email invalid! Please try again!"
@@ -71,7 +72,7 @@ Core:
     whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
   protection:
     denied: "{RED}You do not have permission to use that command."
-    notauthorized: "{RED}You are not authorized to do that! Login or register for access."
+#    notauthorized: "{RED}You are not authorized to do that."
 
 Plugins:
   CraftIRC:

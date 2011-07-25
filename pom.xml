@@ -76,17 +76,13 @@
 
     <!-- Repository locations -->
     <repositories>
-        <repository>
+        <!-- <repository>
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
-        </repository>
+        </repository> -->
         <repository>
             <id>craftfire-dbrepo</id>
             <url>http://db.craftfire.com/repo</url>
-        </repository>
-        <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/artifactory/repo</url>
         </repository>
     </repositories>
 
