@@ -55,7 +55,7 @@ public class LoggingManager {
         Warning("File name: " + file);
         Warning("Function name: " + function);
         Warning("Error line: " + linenumber);
-        if (PluginManager.config.logging) {
+        if (PluginManager.config.logging_enabled) {
             DateFormat LogFormat = new SimpleDateFormat(PluginManager.config.logformat);
             Date date = new Date();
             Warning("Check log file: " + PluginManager.plugin.getDataFolder() + "\\logs\\error\\" + LogFormat.format(date) + "-error.log");
@@ -89,7 +89,7 @@ public class LoggingManager {
     }
 
     private void ToFile(Type type, String line) {
-        if (PluginManager.config.logging) {
+        if (PluginManager.config.logging_enabled) {
             File data = new File(PluginManager.plugin.getDataFolder() + "/logs/", "");
             if (!data.exists()) {
                 if (data.mkdir()) {

@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import com.authdb.AuthDB;
-import com.authdb.plugins.ZBukkitContrib;
 import com.authdb.plugins.ZCraftIRC;
 
 public class Messages {

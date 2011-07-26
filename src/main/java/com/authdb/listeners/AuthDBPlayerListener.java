@@ -10,11 +10,7 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.authdb.listeners;
 
 import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.sql.SQLException;
 
 import org.bukkit.Location;
@@ -43,7 +39,6 @@ import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
-import com.avaje.ebean.Ebean;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -86,7 +81,7 @@ public class AuthDBPlayerListener extends PlayerListener {
     
     public void checkTimeout(Player player) {
         Util.logging.Debug("Launching function: checkTimeout(Player player))");
-        EBean eBeanClass = EBean.checkPlayer(player);
+        EBean eBeanClass = EBean.checkPlayer(player, true);
         int timeoutid = eBeanClass.getTimeoutid();
         if (plugin.isAuthorized(player) == false && (AuthDB.AuthDB_Timeouts.containsKey(player.getName()) || timeoutid != 0)) {
             eBeanClass.setTimeoutid(0);
@@ -111,7 +106,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             event.setJoinMessage(message);
         }
         this.plugin.AuthDB_PasswordTries.put(player.getName(),"0");
-        if (Config.session_length != 0) {
+        if (Config.session_enabled && Config.session_length != 0) {
             long timestamp = System.currentTimeMillis()/1000;
             if (Util.authDBplayer.sessionTime(player) != 0) {
                 long storedtime = Util.authDBplayer.sessionTime(player);
@@ -147,23 +142,23 @@ public class AuthDBPlayerListener extends PlayerListener {
                                 checkTimeout(player);
                         }
                     }, time);
-                    EBean eBeanClass = EBean.checkPlayer(player);
-                    Util.logging.Debug("Adding schedule ID to hasmap and persitence: " + Schedule);
+                    EBean eBeanClass = EBean.checkPlayer(player, true);
+                    Util.logging.Debug("Adding schedule ID to hashmap and persitence: " + Schedule);
                     eBeanClass.setTimeoutid(Schedule);
-                    EBean.save(eBeanClass);
+                    AuthDB.database.save(eBeanClass);
                     if (AuthDB.AuthDB_Timeouts.put(player.getName(), Schedule) != null) {
                         Util.logging.Debug(player.getName() + " added to the CheckTimeoutTaskList");
                     }
                 }
             }
-            if (Config.custom_enabled) if (Config.custom_encryption == null) {
+            if (Config.custom_enabled && (Config.custom_encryption.equals("") || Config.custom_encryption == null)) {
                 player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT.");
             }
             if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
                 player.setHealth(20);
                 player.teleport(player.getWorld().getSpawnLocation());
             }
-            EBean eBeanClass = EBean.checkPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player, true);
             if ((eBeanClass.getReloadtime() + 30) >= Util.timeStamp()) {
                 sessionallow = true;
             }
@@ -249,9 +244,9 @@ public class AuthDBPlayerListener extends PlayerListener {
             player.teleport(player.getWorld().getSpawnLocation());
         }
         long thetimestamp = System.currentTimeMillis()/1000;
-        if (Config.session_start.equalsIgnoreCase("logoff")) {
+        if (Config.session_enabled && Config.session_start.equalsIgnoreCase("logoff")) {
             this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), thetimestamp);
-            EBean EBeanClass = EBean.checkPlayer(player);
+            EBean EBeanClass = EBean.checkPlayer(player, true);
             EBeanClass.setSessiontime(thetimestamp);
             this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
         }
@@ -296,7 +291,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                         if (split.length == 3) {
                             if (!player.getName().equals(split[1])) {
                                    if (Util.checkOtherName(player.getName()).equals(player.getName())) {
-                                       EBean eBeanClass = EBean.checkPlayer(split[1]);
+                                       EBean eBeanClass = EBean.checkPlayer(split[1], true);
                                        String linkedname = eBeanClass.getLinkedname();
                                        if (linkedname != null) {
                                            player.sendMessage("You cannot link to a player which is already linked with another name.");
@@ -325,7 +320,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                     if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
                         if (split.length == 3) {
                             if (Util.checkOtherName(player.getName()).equals(player.getDisplayName())) {
-                                EBean eBeanClass = EBean.checkPlayer(player);
+                                EBean eBeanClass = EBean.checkPlayer(player, true);
                                 String linkedname = eBeanClass.getLinkedname();
                                 if (linkedname.equals(split[1])) {
                                     if (this.plugin.checkPassword(split[1], split[2])) {
@@ -383,11 +378,13 @@ public class AuthDBPlayerListener extends PlayerListener {
                                         }
                                         long timestamp = System.currentTimeMillis()/1000;
                                         this.plugin.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
-                                        this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
-                                        EBean eBeanClass = EBean.checkPlayer(player);
-                                        eBeanClass.setSessiontime(timestamp);
-										AuthDB.database.save(eBeanClass);
-                                        Util.logging.Debug("Session started for " + player.getName());
+                                        if(Config.session_enabled) {
+                                            this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
+                                            EBean eBeanClass = EBean.checkPlayer(player, true);
+                                            eBeanClass.setSessiontime(timestamp);
+                                            AuthDB.database.save(eBeanClass);
+                                            Util.logging.Debug("Session started for " + player.getName());
+                                        }
                                         Processes.Login(player);
                                         long thetimestamp = System.currentTimeMillis()/1000;
                                         this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);

@@ -458,18 +458,26 @@ public class API {
             }
         } else if (script.equalsIgnoreCase(Vanilla.Name) || script.equalsIgnoreCase(Vanilla.ShortName)) {
             if (Util.checkVersionInRange(Vanilla.VersionRange)) {
+                String userTable = "User";
+                String userRoleTable = "UserRole";
+                String roleTable = "Role";
+                if (Vanilla.check() == 2) {
+                    userTable = userTable.toLowerCase();
+                    userRoleTable = userRoleTable.toLowerCase();
+                    roleTable = roleTable.toLowerCase();
+                }
                 if (what.equalsIgnoreCase("getgroup")) {
-                    UserID = MySQL.getfromtable(Config.script_tableprefix + "user", "`UserID`", "Name",player.getName());
-                    GroupID = MySQL.getfromtable(Config.script_tableprefix + "userrole", "`RoleID`", "UserID",UserID);
-                    GroupName = MySQL.getfromtable(Config.script_tableprefix + "role", "`Name`", "RoleID", GroupID);
+                    UserID = MySQL.getfromtable(Config.script_tableprefix + userTable, "`UserID`", "Name",player.getName());
+                    GroupID = MySQL.getfromtable(Config.script_tableprefix + userRoleTable, "`RoleID`", "UserID",UserID);
+                    GroupName = MySQL.getfromtable(Config.script_tableprefix + roleTable, "`Name`", "RoleID", GroupID);
                 } else if (what.equalsIgnoreCase("checkifbanned")) {
                     if (player == null) {
                         return "";
                         //find addon
                     } else {
-                        String BanID = MySQL.getfromtable(Config.script_tableprefix + "role", "`RoleID`", "Name", "Banned");
-                        UserID = MySQL.getfromtable(Config.script_tableprefix + "user", "`UserID`", "Name",player.getName());
-                        IsBanned = MySQL.getfromtable2(Config.script_tableprefix + "userrole", "`UserID`", "UserID", "RoleID", UserID, BanID);
+                        String BanID = MySQL.getfromtable(Config.script_tableprefix + roleTable, "`RoleID`", "Name", "Banned");
+                        UserID = MySQL.getfromtable(Config.script_tableprefix + userTable, "`UserID`", "Name",player.getName());
+                        IsBanned = MySQL.getfromtable2(Config.script_tableprefix + userRoleTable, "`UserID`", "UserID", "RoleID", UserID, BanID);
                         if (IsBanned.equalsIgnoreCase("fail")) { return "false"; }
                         else { return "true"; }
                     }
@@ -481,29 +489,6 @@ public class API {
                     return "nodate";
                 }
 
-            } else if (Util.checkVersionInRange(Vanilla.VersionRange2)) {
-                if (what.equalsIgnoreCase("getgroup")) {
-                    UserID = MySQL.getfromtable(Config.script_tableprefix + "user", "`UserID`", "Name",player.getName());
-                    GroupID = MySQL.getfromtable(Config.script_tableprefix + "userrole", "`RoleID`", "UserID",UserID);
-                    GroupName = MySQL.getfromtable(Config.script_tableprefix + "role", "`Name`", "RoleID", GroupID);
-                } else if (what.equalsIgnoreCase("checkifbanned")) {
-                    if (player == null) {
-                        return "";
-                        //find addon
-                    } else {
-                        String BanID = MySQL.getfromtable(Config.script_tableprefix + "role", "`RoleID`", "Name", "Banned");
-                        UserID = MySQL.getfromtable(Config.script_tableprefix + "user", "`UserID`", "Name",player.getName());
-                        IsBanned = MySQL.getfromtable2(Config.script_tableprefix + "userrole", "`UserID`", "UserID", "RoleID", UserID, BanID);
-                        if (IsBanned.equalsIgnoreCase("fail")) { return "false"; }
-                        else { return "true"; }
-                    }
-                } else if (what.equalsIgnoreCase("banreason")) {
-                    //noreason on ban given
-                    return "noreason";
-                } else if (what.equalsIgnoreCase("bannedtodate")) {
-                    //no date on ban, just a group
-                    return "nodate";
-                }
             }
         } else if (script.equalsIgnoreCase(PunBB.Name) || script.equalsIgnoreCase(PunBB.ShortName)) {
             if (Util.checkVersionInRange(PunBB.VersionRange)) {

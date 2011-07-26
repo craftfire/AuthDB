@@ -49,24 +49,24 @@ public class EBean {
         }
     }
 
-    public static EBean checkPlayer(String player) {
+    public static EBean checkPlayer(String player, boolean save) {
         EBean eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).findUnique();
         if (eBeanClass == null)  {
             eBeanClass = new EBean();
             eBeanClass.setPlayername(player);
             eBeanClass.setRegistred("false");
-            save(eBeanClass);
+            if(save) { save(eBeanClass); }
         }
         return eBeanClass;
     }
 
-    public static EBean checkPlayer(Player player) {
+    public static EBean checkPlayer(Player player, boolean save) {
         EBean eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).findUnique();
         if (eBeanClass == null)  {
             eBeanClass = new EBean();
             eBeanClass.setPlayer(player);
             eBeanClass.setRegistred("false");
-            save(eBeanClass);
+            if(save) { save(eBeanClass); }
         }
         return eBeanClass;
     }
@@ -77,7 +77,7 @@ public class EBean {
 
     public static void sync(Player player) {
         try {
-            EBean eBeanClass = checkPlayer(player.getName());
+            EBean eBeanClass = checkPlayer(player.getName(), true);
             String registred = eBeanClass.getRegistred();
             if (registred != null && registred.equalsIgnoreCase("true")) {
                 Util.checkScript("syncpassword", Config.script_name, player.getName(), null, null, null);
@@ -90,7 +90,7 @@ public class EBean {
     }
     
     public static void checkSessiontime(String player, long sessiontime) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getSessiontime() == 0 || eBeanClass.getSessiontime() != sessiontime) {
             Util.logging.Debug("Session time in persistence is different than in hashmap, syncing session from hashmap.");
             eBeanClass.setSessiontime(sessiontime);
@@ -99,7 +99,7 @@ public class EBean {
     }
 
     public static void checkPassword(String player, String password) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getPassword() == null || eBeanClass.getPassword().equals(password) == false) {
             Util.logging.Debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
             eBeanClass.setPassword(password);
@@ -108,7 +108,7 @@ public class EBean {
     }
 
     public static void checkSalt(String player, String salt) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getSalt() == null || eBeanClass.getSalt().equals(salt) == false) {
             Util.logging.Debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
             eBeanClass.setSalt(salt);
@@ -117,7 +117,7 @@ public class EBean {
     }
 
     public static void checkIP(String player, String IP) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getIp() == null || eBeanClass.getIp().equals(IP) == false) {
             Util.logging.Debug("IP in persistence is different than the player's IP, syncing IP's.");
             eBeanClass.setIp(IP);
@@ -126,25 +126,25 @@ public class EBean {
     }
 
     public static EBean find(String player) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).findUnique();
         return eBeanClass;
     }
 
     public static EBean find(Player player) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).findUnique();
         return eBeanClass;
     }
 
     public static EBean find(Player player, Column column1, String value1) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).findUnique();
         return eBeanClass;
     }
 
     public static boolean find(Player player, Column column1, String value1, Column column2, String value2) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
         if (eBeanClass != null) {
             return true;
@@ -153,13 +153,13 @@ public class EBean {
     }
 
     public static EBean find(String player, Column column1, String value1) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).ieq(column1.name,value1).findUnique();
         return eBeanClass;
     }
 
     public static boolean find(String player, Column column1, String value1, Column column2, String value2) {
-        EBean eBeanClass = checkPlayer(player);
+        EBean eBeanClass = checkPlayer(player, true);
         eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
         if (eBeanClass != null) {
             return true;

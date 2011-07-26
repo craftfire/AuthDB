@@ -74,7 +74,7 @@ public class IPB {
     public static String hash(String action, String player, String password, String thesalt) throws SQLException {
         if (action.equals("find")) {
               try {
-                  EBean eBeanClass = EBean.checkPlayer(player);
+                  EBean eBeanClass = EBean.checkPlayer(player, true);
                   String StoredSalt = eBeanClass.getSalt();
                   return passwordHash(password, StoredSalt);
               } catch (NoSuchAlgorithmException e) {

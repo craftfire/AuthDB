@@ -108,7 +108,7 @@ public class PhpBB {
         ResultSet rs = stmt.executeQuery(query);
         if (rs.next()) { userid = rs.getInt(1); }
         else {
-            Util.logging.Warning("Could not get the latest user ID from users table, ERROR!");
+            Util.logging.error("Could not get the latest user ID from users table, ERROR!");
         }
         rs.close();
         stmt.close();

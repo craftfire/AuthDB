@@ -23,7 +23,7 @@ public class Processes {
             }
 
             AuthDB.authorizedNames.remove(player.getName());
-            EBean eBeanClass = EBean.checkPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player, true);
             eBeanClass.setAuthorized("false");
 
             if (AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
@@ -50,7 +50,7 @@ public class Processes {
             } else {
                 Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
             }
-            EBean.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
             return true;
         }
         return false;
@@ -58,23 +58,25 @@ public class Processes {
 
     public static boolean Login(Player player) {
         if (!AuthDB.isAuthorized(player)) {
-           // Util.bukkitContrib.popGUI(player);
+            //Util.bukkitContrib.popGUI(player);
             long timestamp = Util.timeStamp();
             if (!AuthDB.AuthDB_AuthTime.containsKey(player.getName())) {
                 AuthDB.AuthDB_AuthTime.put(player.getName(), timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
-            EBean eBeanClass = EBean.checkPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player, true);
             eBeanClass.setAuthorized("true");
             eBeanClass.setRegistred("true");
             if (!AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
             }
-            if (!AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
-                AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
+            if (Config.session_enabled) {
+                if (!AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
+                    AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
+                }
+                eBeanClass.setSessiontime(timestamp);
             }
-            eBeanClass.setSessiontime(timestamp);
-			AuthDB.database.save(eBeanClass);
+            AuthDB.database.save(eBeanClass);
             ItemStack[] inv = AuthDB.getInventory(player);
             if (inv != null) {
                 player.getInventory().setContents(inv);
@@ -90,7 +92,7 @@ public class Processes {
 
     public static boolean Link(Player player, String name) {
         if (!AuthDB.isAuthorized(player) && Config.link_enabled) {
-            EBean eBeanClass = EBean.checkPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player, true);
             eBeanClass.setLinkedname(name);
             AuthDB.database.save(eBeanClass);
             if (!AuthDB.AuthDB_LinkedNames.containsKey((player.getName()))) {
@@ -119,7 +121,7 @@ public class Processes {
             if (Config.unlink_rename) {
                 Util.craftFirePlayer.renamePlayer(player, player.getName());
             }
-            EBean eBeanClass = EBean.checkPlayer(player);
+            EBean eBeanClass = EBean.checkPlayer(player, true);
             eBeanClass.setLinkedname("");
             eBeanClass.setSessiontime(0);
             eBeanClass.setRegistred("false");

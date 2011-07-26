@@ -42,7 +42,7 @@ Core:
     adminsuccess: "Successfully logged out player, {PLAYER}."
     adminfailure: "You cannot logout player, {PLAYER}! That player is not logged in."
     adminnotfound: "Could not find player, {PLAYER}! Please try again."
-#    usage: "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}"
+    usage: "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}"
   link:
     success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
     failure: "{RED}Username linking failed!"
@@ -72,7 +72,7 @@ Core:
     whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
   protection:
     denied: "{RED}You do not have permission to use that command."
-#    notauthorized: "{RED}You are not authorized to do that."
+    notauthorized: "{RED}You are not authorized to do that."
 
 Plugins:
   CraftIRC:

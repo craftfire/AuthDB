@@ -63,7 +63,7 @@ public class PunBB {
     public static String hash(String action, String player,String password, String thesalt) throws SQLException {
         if (action.equalsIgnoreCase("find")) {
       try {
-          EBean eBeanClass = EBean.checkPlayer(player);
+          EBean eBeanClass = EBean.checkPlayer(player, true);
           String StoredSalt = eBeanClass.getSalt();
           return passwordHash(password, StoredSalt);
       } catch (NoSuchAlgorithmException e) {

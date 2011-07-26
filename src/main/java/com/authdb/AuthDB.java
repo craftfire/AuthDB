@@ -10,6 +10,7 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.authdb;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -25,7 +26,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -97,10 +97,10 @@ public class AuthDB extends JavaPlugin {
 
     public void onDisable() {
         for (Player p : getServer().getOnlinePlayers()) {
-            EBean eBeanClass = EBean.checkPlayer(p);
+            EBean eBeanClass = EBean.checkPlayer(p, true);
             if (eBeanClass.getAuthorized() != null && eBeanClass.getAuthorized().equalsIgnoreCase("true")) {
                 eBeanClass.setReloadtime(Util.timeStamp());
-                EBean.save(eBeanClass);
+                AuthDB.database.save(eBeanClass);
             }
             Processes.Logout(p);
         }
@@ -126,7 +126,6 @@ public class AuthDB extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         setupPluginInformation();
-        checkOldFiles();
         server = getServer();
         database = getDatabase();
         Plugin[] plugins = server.getPluginManager().getPlugins();
@@ -162,7 +161,8 @@ public class AuthDB extends JavaPlugin {
         
         LoadYml("messages");
         LoadYml("commands");
-
+        setupDatabase();
+        checkOldFiles();
           final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
           CheckPermissions();
           if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
@@ -217,8 +217,6 @@ public class AuthDB extends JavaPlugin {
 
         Util.logging.Debug("Online mode: " + Config.onlineMode);
         updateLinkedNames();
-
-        setupDatabase();
         
         MySQL.connect();
         try { Util.checkScript("numusers",Config.script_name, null, null, null, null); }
@@ -283,13 +281,13 @@ public class AuthDB extends JavaPlugin {
         String online = "" + getServer().getOnlinePlayers().length;
         String max = "" + getServer().getMaxPlayers();
         if (Config.usagestats_enabled) {
-            try { Util.postInfo(getServer().getServerName(),getServer().getVersion(),pluginVersion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins.toString(),online,max,server.getPort()); }
+            try { Util.craftFire.postInfo(getServer().getServerName(),getServer().getVersion(),pluginVersion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins.toString(),online,max,server.getPort()); }
             catch (IOException e1) { 
                 Util.logging.Debug("Could not send usage stats to main server.");
                 }
         }
         for (Player p : getServer().getOnlinePlayers()) {
-            EBean eBeanClass = EBean.checkPlayer(p);
+            EBean eBeanClass = EBean.checkPlayer(p, true);
             if (eBeanClass.getReloadtime() + 30 > Util.timeStamp()) {
                 Processes.Login(p);
             }
@@ -334,7 +332,7 @@ public class AuthDB extends JavaPlugin {
                 if (args.length == 0) {
                     if (ZPermissions.isAllowed(player, Permission.command_logout)) {
                         if (Processes.Logout(player)) {
-                            EBean eBeanClass = EBean.checkPlayer(player);
+                            EBean eBeanClass = EBean.checkPlayer(player, true);
                             eBeanClass.setSessiontime(0);
                             getDatabase().save(eBeanClass);
                             String check = Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player));
@@ -455,8 +453,33 @@ public class AuthDB extends JavaPlugin {
         }
         data = new File(getDataFolder() + "/", "othernames.db");
         if (data.exists()) { 
-            if (data.renameTo(new File(getDataFolder() + "/data/", "othernames.db"))) {
-                Util.logging.Debug("Moved file othernames.db from " + getDataFolder() + " to " + getDataFolder() + "\\data\\othernames.db");
+            try {
+                FileInputStream fstream = new FileInputStream(getDataFolder() + "/othernames.db");
+                DataInputStream in = new DataInputStream(fstream);
+                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                String strLine;
+                String[] split;
+                int count = 0;
+                EBean eBeanClass = null;
+                while ((strLine = br.readLine()) != null) {
+                    split = strLine.split(":");
+                    if(split.length == 2) {
+                        count++;
+                        Util.logging.Debug("Found linked name: " + split[0] + " linked with name: " + split[1]);
+                        eBeanClass = EBean.checkPlayer(split[0], false);
+                        eBeanClass.setLinkedname(split[1]);
+                        database.save(eBeanClass);
+                    }
+                }
+                in.close();
+                if(count > 0) {
+                    Util.logging.Debug("Successfully imported " + count + " linked names.");
+                }
+            } catch (Exception e) {
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            }
+            if (data.delete()) {
+                Util.logging.Debug("Deleted file othernames.db from " + getDataFolder());
             }
         }
         data = new File(getDataFolder() + "/", "idle.db");
@@ -665,7 +688,7 @@ public class AuthDB extends JavaPlugin {
         boolean checkneeded = true;
         //if (Config.debug_enable)
             //logging.Debug("Running function: isRegistered(String player)");
-        EBean eBeanClass = EBean.checkPlayer(player);
+        EBean eBeanClass = EBean.checkPlayer(player, true);
         if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
                 if (!Config.database_keepalive) { MySQL.connect(); }

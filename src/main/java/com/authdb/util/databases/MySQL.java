@@ -32,13 +32,13 @@ public class MySQL {
             mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
         } catch (SQLException e) {
             if (Config.debug_enable) {
-                logging.Warning("MYSQL CANNOT CONNECT!!!");
+                logging.error("MYSQL CANNOT CONNECT!!!");
                 Messages.sendMessage(Message.database_failure, null, null);
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 return false;
             } else {
-                logging.Warning("Cannot connect to MySQL host: " + Config.database_host);
-                logging.Warning("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                logging.error("Cannot connect to MySQL host: " + Config.database_host);
+                logging.error("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.sendMessage(Message.database_failure, null, null);
                 return false;
             }
@@ -65,7 +65,7 @@ public class MySQL {
             Class.forName(Util.toDriver(Config.database_driver));
         } catch (ClassNotFoundException e) {
             Config.database_ison = false;
-            logging.Warning("CANNOT FIND DATABASE DRIVER!!!");
+            logging.error("CANNOT FIND DATABASE DRIVER!!!");
             Messages.sendMessage(Message.database_failure, null, null);
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
@@ -91,13 +91,12 @@ public class MySQL {
         } catch (SQLException e) {
             Config.database_ison = false;
             if (Config.debug_enable) {
-                logging.Warning("MYSQL CANNOT CONNECT!!!");
+                logging.error("MYSQL CANNOT CONNECT!!!");
                 Messages.sendMessage(Message.database_failure, null, null);
                 logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
-                //Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             } else {
-                logging.Warning("MySQL cannot connect to the specified host: " + Config.database_host);
-                logging.Warning("Acces denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                logging.error("MySQL cannot connect to the specified host: " + Config.database_host);
+                logging.error("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.sendMessage(Message.database_failure, null, null);
             }
         }
@@ -121,6 +120,23 @@ public class MySQL {
         Statement stmt = mysql.createStatement();
         stmt.executeUpdate(query);
         stmt.close();
+    }
+    
+    public static String getQuery(String query) {
+        Util.logging.mySQL(query);
+        String dupe = "fail";
+        Statement stmt;
+        try {
+            stmt = mysql.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                dupe = rs.getString(1);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            return "fail";
+        }
+        return dupe;
     }
 
     public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {

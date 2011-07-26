@@ -19,11 +19,29 @@ import com.authdb.util.databases.MySQL;
 
 public class Vanilla {
 
-    public static String Name = "vanilla";
+    public static String Name = "Vanilla";
     public static String ShortName = "van";
-    public static String VersionRange = "2.0.17.8-2.0.17.8";
-    public static String VersionRange2 = "2.0.17.9-2.0.17.9";
-    public static String LatestVersionRange = VersionRange2;
+    public static String VersionRange = "2.0.17.8-2.0.17.9";
+    public static String LatestVersionRange = VersionRange;
+    public static int extraCheck = 0;
+    
+    public static int check() {
+        if (extraCheck > 0) { return extraCheck; }
+        String check = MySQL.getQuery("SELECT * FROM `GDN_User` LIMIT 1");
+        if(check.equalsIgnoreCase("fail")) {
+            check = MySQL.getQuery("SELECT * FROM `gdn_user` LIMIT 1");
+            if(check.equalsIgnoreCase("fail")) {
+                extraCheck = 0;
+            } else { 
+                Config.script_tableprefix = "gdn_";
+                extraCheck = 2; 
+            }
+        } else { 
+            Config.script_tableprefix = "GDN_";
+            extraCheck = 1; 
+        }
+        return extraCheck;
+    }
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
       long timestamp = System.currentTimeMillis()/1000;

@@ -42,7 +42,7 @@ public class Config {
         ///////////////////////////////////////////
         //               plugin
         ///////////////////////////////////////////
-        public static boolean autoupdate_enable,debug_enable,usagestats_enabled,logging;
+        public static boolean autoupdate_enable,debug_enable,usagestats_enabled,logging_enabled;
         public static String language, logformat;
 
         ///////////////////////////////////////////
@@ -101,7 +101,7 @@ public class Config {
         ///////////////////////////////////////////
         //               session
         ///////////////////////////////////////////
-        public static boolean session_protect;
+        public static boolean session_protect, session_enabled;
         public static String session_time,session_thelength,session_start;
         public static int session_length;
 
@@ -170,7 +170,7 @@ public class Config {
                     debug_enable = getConfigBoolean("Core.plugin.debugmode", false);
                     usagestats_enabled = getConfigBoolean("Core.plugin.usagestats", true);
                     logformat = getConfigString("Core.plugin.logformat", "yyyy-MM-dd");
-                    logging = getConfigBoolean("Core.plugin.logging", true);
+                    logging_enabled = getConfigBoolean("Core.plugin.logging", true);
 
                     ///////////////////////////////////////////
                     //               database
@@ -273,6 +273,7 @@ public class Config {
                     ///////////////////////////////////////////
                     //               session
                     ///////////////////////////////////////////
+                    session_enabled = getConfigBoolean("Core.session.enabled", false);
                     session_protect = getConfigBoolean("Core.session.protect", true);
                     session_thelength = Util.split(getConfigString("Core.session.length", "1 hour"), " ")[0];
                     session_time = Util.split(getConfigString("Core.session.length", "1 hour"), " ")[1];
