@@ -51,7 +51,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
-import com.authdb.plugins.ZBukkitContrib;
 import com.authdb.plugins.ZCraftIRC;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
@@ -63,8 +62,9 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
-import com.avaje.ebean.Ebean;
 import com.avaje.ebean.EbeanServer;
+import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
 
@@ -423,6 +423,7 @@ public class AuthDB extends JavaPlugin {
             ZPermissions.hasPermissionsBukkit = true;
         } else {
             if (ZPermissions.hasPlugin) {
+                ZPermissions.permissionsHandler = ((Permissions)Check1).getHandler();
                 Util.logging.Info("Found supported plugin: " + Check1.getDescription().getName() + " " + Check1.getDescription().getVersion());
             } else {
                 Util.logging.Info("Could not load a permissions plugin, going over to OP!");

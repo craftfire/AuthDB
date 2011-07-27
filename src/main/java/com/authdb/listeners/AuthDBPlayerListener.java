@@ -252,7 +252,9 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
 
         if (checkGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.checkOtherName(player.getName())) == false) {
-            ItemStack[] theinv = new ItemStack[36];
+            ItemStack[] theinv;
+			if (Config.hasBackpack) { theinv = new ItemStack[252]; }
+			else { theinv = new ItemStack[36]; }
             player.getInventory().setContents(theinv);
         }
         
