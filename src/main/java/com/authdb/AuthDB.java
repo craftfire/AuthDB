@@ -118,7 +118,7 @@ public class AuthDB extends JavaPlugin {
         AuthDB_Timeouts.clear();
         AuthDB_Sessions.clear();
         AuthDB_Authed.clear();
-        MySQL.close();
+        Util.databaseManager.close();
      }
 
     public void onEnable() {
@@ -195,28 +195,13 @@ public class AuthDB extends JavaPlugin {
         pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.ENTITY_TARGET, this.entityListener, Event.Priority.Normal, this);
-        //PropertyManager TheSettings = new PropertyManager(new File("server.properties"));
-        /* Properties prop = new Properties();
-        try {
-            FileInputStream in = new FileInputStream(new File("server.properties"));
-            prop.load(in);
-            String work = prop.getProperty("online-mode");
-            if(work.equalsIgnoreCase("true")) {
-                Config.onlineMode = true;
-            } else {
-                Config.onlineMode = false;
-            }
-        } catch(IOException e) {
-            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-        }
-        */
         
         Config.onlineMode = getServer().getOnlineMode();
 
         Util.logging.Debug("Online mode: " + Config.onlineMode);
         updateLinkedNames();
         
-        MySQL.connect();
+        Util.databaseManager.connect();
         try { Util.checkScript("numusers",Config.script_name, null, null, null, null); }
         catch (SQLException e) {
             if (Config.custom_enabled && Config.custom_autocreate) {
@@ -511,7 +496,7 @@ public class AuthDB extends JavaPlugin {
         long start = Util.timeMS();
         try {
             if (!Config.database_keepalive) { 
-                MySQL.connect(); 
+                Util.databaseManager.connect();
             }
             password = Matcher.quoteReplacement(password);
             if (!Util.checkOtherName(player).equals(player)) {
@@ -523,7 +508,7 @@ public class AuthDB extends JavaPlugin {
                 return true;
             }
             if (!Config.database_keepalive) { 
-                MySQL.close(); 
+                Util.databaseManager.close(); 
             }
         } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -553,7 +538,7 @@ public class AuthDB extends JavaPlugin {
             return false;
         }
         if (!Config.database_keepalive) { 
-            MySQL.connect(); 
+            Util.databaseManager.connect();
         }
         String player = theplayer.getName();
         if (!Util.checkFilter("password",password)) {
@@ -562,7 +547,7 @@ public class AuthDB extends JavaPlugin {
             Util.checkScript("adduser",Config.script_name,player, password, email, ipAddress);
         }
         if (!Config.database_keepalive) { 
-            MySQL.close(); 
+            Util.databaseManager.close(); 
         }
         return true;
     }
@@ -690,7 +675,7 @@ public class AuthDB extends JavaPlugin {
         EBean eBeanClass = EBean.checkPlayer(player, true);
         if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
-                if (!Config.database_keepalive) { MySQL.connect(); }
+                if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                 Config.hasForumBoard = false;
                 try {
                     if (Util.checkScript("checkuser",Config.script_name, player, null, null, null)) {
@@ -701,14 +686,14 @@ public class AuthDB extends JavaPlugin {
                     Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 }
                 if (!Config.database_keepalive) { 
-                    MySQL.close(); 
+                    Util.databaseManager.close(); 
                 }
                 if (!dupe) {
                     AuthDB_Authed.put(Encryption.md5(player), "no");
                 }
                 return dupe;
             } else if (when.equalsIgnoreCase("command")) {
-                if (!Config.database_keepalive) { MySQL.connect(); }
+                if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                 Config.hasForumBoard = false;
                 try {
                     if (Util.checkScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
@@ -722,7 +707,7 @@ public class AuthDB extends JavaPlugin {
                     Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 }
                 if (!Config.database_keepalive) {
-                    MySQL.close(); 
+                    Util.databaseManager.close(); 
                 }
                 if (!dupe) {
                     AuthDB_Authed.put(Encryption.md5(player), "no");
@@ -740,14 +725,14 @@ public class AuthDB extends JavaPlugin {
                 } else if (checkneeded) {
                     Util.logging.Debug("Check to see if user is registred is needed, performing check");
                     try {
-                        if (!Config.database_keepalive) { MySQL.connect(); }
+                        if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                         Config.hasForumBoard = false;
-                        if (Util.checkScript("checkuser", Config.script_name, player.toLowerCase(), null, null, null)) {
+                        if (Util.checkScript("checkuser", Config.script_name, player, null, null, null)) {
                             AuthDB_Authed.put(Encryption.md5(player), "yes");
                             dupe = true;
                         }
                         if (!Config.database_keepalive) { 
-                            MySQL.close(); 
+                            Util.databaseManager.close(); 
                         }
                         if (!dupe) {
                             AuthDB_Authed.put(Encryption.md5(player), "no");

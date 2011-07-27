@@ -1,0 +1,18 @@
+plugin:
+  language: English                                # Set the language you want to use that matches a directory under translations.
+  debugmode: false                                 # Set to true to enable debugging mode and additional console output.
+  usagestats: true                                 # Set to false to disable usage stats reporting to CraftFire devs.
+  logging: true                                    # Set to false to disable logging to files.
+  logformat: yyyy-MM-dd                            # Change the filename format of the AuthDB debug and error log files.
+database:
+  type: mysql                                      # Database type/driver to use. Current options are MySQL and eBean (Bukkit persistence).
+  host: localhost                                  # MySQL server hostname, domain, IP, or localhost for local connections. MySQL only.
+  port: 3306                                       # Port used for connecting to your MySQL server. This is usually 3306. MySQL only.
+  username: root                                   # Username used to connect to your database. Only valid for MySQL.
+  password: root                                   # Set the password used to connect to your database. MySQL only.
+  name: forum                                      # Set the name of the database you are connecting to. MySQL only.
+  keepalive: false                                 # Set to true to keep database connection alive. MySQL only.
+script:
+  name: phpBB                                      # Set the name of the script you are using.
+  version: 3.0.8                                   # Set the version of the script you are using.
+  tableprefix: phpbb_                              # Set the prefix of the database you are connecting to if you use one.

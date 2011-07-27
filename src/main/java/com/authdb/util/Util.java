@@ -37,30 +37,53 @@ import com.authdb.scripts.forum.MyBB;
 import com.authdb.scripts.forum.PhpBB;
 import com.authdb.scripts.forum.PunBB;
 import com.authdb.scripts.forum.SMF;
-import com.authdb.scripts.forum.XenForo;
-import com.authdb.scripts.forum.Vanilla;
 import com.authdb.scripts.forum.VBulletin;
+import com.authdb.scripts.forum.Vanilla;
+import com.authdb.scripts.forum.XenForo;
 import com.authdb.util.Messages.Message;
-import com.authdb.util.databases.MySQL;
 import com.authdb.util.databases.EBean;
-import com.authdb.util.databases.EBean.Column;
+import com.authdb.util.databases.MySQL;
+import com.craftfire.util.general.GeneralUtil;
 import com.craftfire.util.managers.CraftFireManager;
+import com.craftfire.util.managers.DatabaseManager;
 import com.craftfire.util.managers.LoggingManager;
 import com.craftfire.util.managers.ServerManager;
-
 import com.mysql.jdbc.Blob;
 
 public class Util {
     public static LoggingManager logging = new LoggingManager();
     public static CraftFireManager craftFire = new CraftFireManager();
+    public static DatabaseManager databaseManager = new DatabaseManager();
     public static ZBukkitContrib bukkitContrib = new ZBukkitContrib();
+    public static GeneralUtil gUtil = new GeneralUtil();
     public static com.authdb.util.managers.PlayerManager authDBplayer = new com.authdb.util.managers.PlayerManager();
     public static com.craftfire.util.managers.PlayerManager craftFirePlayer = new com.craftfire.util.managers.PlayerManager();
     public static ServerManager server = new ServerManager();
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
     String email, String ipAddress) throws SQLException {
-        if (Config.database_ison) {
+        if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
+            EBean eBeanClass = EBean.checkPlayer(player, true);
+            if (type.equalsIgnoreCase("checkuser")) {
+                if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
+                    return true;
+                }
+                return false;
+            } else if (type.equalsIgnoreCase("checkpassword")) {
+                String storedPassword = eBeanClass.getPassword();
+                if (Encryption.SHA512(password).equals(storedPassword)) { return true; }
+                return false;
+            } else if (type.equalsIgnoreCase("adduser")) {
+                Custom.adduser(player, email, password, ipAddress);
+                eBeanClass.setEmail(email);
+                eBeanClass.setPassword(Encryption.SHA512(password));
+                eBeanClass.setRegistred("true");
+                eBeanClass.setIp(ipAddress);
+            } else if (type.equalsIgnoreCase("numusers")) {
+                int amount = EBean.getUsers(); 
+                logging.Info(amount + " user registrations in database");
+            }
+    }   else if (Config.database_ison) {
             String usertable = null, usernamefield = null, passwordfield = null, saltfield = "";
             boolean bans = false;
             PreparedStatement ps = null;
@@ -886,14 +909,6 @@ public class Util {
             return lengthint;
         }
         return 0;
-    }
-
-    public static String toDriver(String dataname) {
-        dataname = dataname.toLowerCase();
-        if (dataname.equalsIgnoreCase("mysql"))
-            return "com.mysql.jdbc.Driver";
-
-        return "com.mysql.jdbc.Driver";
     }
 
     public static String toLoginMethod(String method) {

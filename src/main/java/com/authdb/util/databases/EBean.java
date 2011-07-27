@@ -10,6 +10,7 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.authdb.util.databases;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -132,6 +133,12 @@ public class EBean {
             eBeanClass.setIp(IP);
             AuthDB.database.save(eBeanClass);
         }
+    }
+    
+    public static int getUsers() {
+        List<EBean> amount = AuthDB.database.find(EBean.class).findList();
+        if (amount.isEmpty()) { return 0; }
+        return amount.size();
     }
 
     public static EBean find(String player) {

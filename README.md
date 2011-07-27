@@ -1,12 +1,23 @@
+[![][Project Logo]][Website]
+
 AuthDB
 ======
-Script and custom MySQL database user authentication plugin for CraftBukkit.
+Copyright &copy; 2011, CraftFire, Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
 
-Website: [http://www.craftfire.com](http://www.craftfire.com)
-Bugs/Suggestions: [http://www.craftfire.com/issues](http://www.craftfire.com/issues)
+About
+-----
+Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.
+
+Website and News
+----------------
+All about Jenkins CI can be found on our [Website]. Follow us on Twitter @[Twitter].
+
+Source
+------
+Our latest and greatest source of AuthDB can be found on [GitHub].
 
 Coding and Pull Request Conventions
------------
+-----------------------------------
 * We generally follow the Sun/Oracle coding standards.
 * No tabs; use 4 spaces instead.
 * No trailing whitespaces.
@@ -17,3 +28,11 @@ Coding and Pull Request Conventions
 * Pull requests should be tested (does it compile AND does it work?) before submission.
 
 Follow the above conventions if you want your pull requests accepted.
+
+[Project Logo]: http://assets.craftfire.com/img/logo/authdb_353x93.png
+[CraftFire Logo]: http://assets.craftfire.com/img/craftfire_150x38.png
+[License]: http://creativecommons.org/licenses/by-nc-nd/3.0/
+[GitHub]: https://github.com/CraftFire/AuthDB
+[Issues]: http://issues.craftfire.com
+[Website]: http://craftfire.com
+[Twitter]: http://twitter.com/CraftFireDev

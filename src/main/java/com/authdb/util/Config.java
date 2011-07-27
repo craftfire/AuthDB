@@ -523,7 +523,6 @@ public class Config {
                 aliases_logout = Config.getConfigString("Core.aliases.logout", "/lo");
                 aliases_setspawn = Config.getConfigString("Core.aliases.setspawn", "/s");
                 aliases_reload = Config.getConfigString("Core.aliases.reload", "/ar");
-                save("Core.aliases.reload", "HELLO");
             }
       }
 

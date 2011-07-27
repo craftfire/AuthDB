@@ -9,8 +9,11 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.craftfire.util.managers;
 
+import com.authdb.util.databases.MySQL;
+
 public class PluginManager {
     public com.authdb.AuthDB plugin = com.authdb.AuthDB.plugin;
     public com.authdb.util.Util util;
     public com.authdb.util.Config config;
+    public MySQL mySQL;
 }

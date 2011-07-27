@@ -1,0 +1,4 @@
+CraftIRC:
+  enabled: false                                   # Enable/disable extended features and support for CraftIRC plugin.
+  tag: admin                                       # ???
+  prefix: "%b%%green%[{PLUGIN}]%k%%b%"             # Prefix format and coloring for displaying messages in CraftIRC.

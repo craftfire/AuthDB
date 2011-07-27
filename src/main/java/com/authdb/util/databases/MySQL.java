@@ -21,6 +21,7 @@ import com.authdb.util.Config;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
+import com.craftfire.util.general.GeneralUtil;
 import com.craftfire.util.managers.LoggingManager;
 
 public class MySQL {
@@ -62,7 +63,7 @@ public class MySQL {
 
     public static void connect() {
         try {
-            Class.forName(Util.toDriver(Config.database_type));
+            Class.forName(Util.gUtil.toDriver(Config.database_type));
         } catch (ClassNotFoundException e) {
             Config.database_ison = false;
             logging.error("CANNOT FIND DATABASE DRIVER!!!");
