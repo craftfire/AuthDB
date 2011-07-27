@@ -62,7 +62,7 @@ public class MySQL {
 
     public static void connect() {
         try {
-            Class.forName(Util.toDriver(Config.database_driver));
+            Class.forName(Util.toDriver(Config.database_type));
         } catch (ClassNotFoundException e) {
             Config.database_ison = false;
             logging.error("CANNOT FIND DATABASE DRIVER!!!");
@@ -73,7 +73,7 @@ public class MySQL {
         if (Config.debug_enable) {
             Util.logging.Debug("Lauching function: connect()");
             Util.logging.Debug("MySQL: " + Config.dbDb);
-            Util.logging.Debug("MySQL driver: " + Config.database_driver);
+            Util.logging.Debug("MySQL driver: " + Config.database_type);
             Util.logging.Debug("MySQL username: " + Config.database_username);
             Util.logging.Debug("MySQL password: " + Config.database_password);
             Util.logging.Debug("MySQL host: " + Config.database_host);

@@ -33,7 +33,7 @@ public class Config {
     //               database
     ///////////////////////////////////////////
     public static boolean database_keepalive;
-    public static String database_driver, database_username,database_password,database_port,database_host,database_database,dbDb;
+    public static String database_type, database_username,database_password,database_port,database_host,database_database,dbDb;
 
     ///////////////////////////////////////////
     //               Core
@@ -176,7 +176,7 @@ public class Config {
                     ///////////////////////////////////////////
                     //               database
                     ///////////////////////////////////////////
-                    database_driver =  getConfigString("Core.database.driver", "mysql");
+                    database_type =  getConfigString("Core.database.type", "mysql");
                     database_username =  getConfigString("Core.database.username", "root");
                     database_password =  getConfigString("Core.database.password", "");
                     database_port =  getConfigString("Core.database.port", "3306");
@@ -417,6 +417,8 @@ public class Config {
                     Messages.AuthDB_message_link_success = Config.getConfigString("Core.link.success", "{BRIGHTGREEN}You have successfully linked!. You are now logged in");
                     Messages.AuthDB_message_link_failure = Config.getConfigString("Core.link.failure", "{RED}Error while linking!");
                     Messages.AuthDB_message_link_exists = Config.getConfigString("Core.link.exists", "{RED}You are already linked to a username!");
+                    Messages.AuthDB_message_link_duplicate = Config.getConfigString("Core.link.duplicate", "RED}Username is already linked to another player!");
+                    Messages.AuthDB_message_link_invaliduser = Config.getConfigString("Core.link.invaliduser", "{RED}You cannot link with yourself!");
                     Messages.AuthDB_message_link_usage = Config.getConfigString("Core.link.usage", "{RED}Correct usage is: /link otherusername password");
 
                     ///////////////////////////////////////////
@@ -425,6 +427,8 @@ public class Config {
                     Messages.AuthDB_message_unlink_success = Config.getConfigString("Core.unlink.success", "{BRIGHTGREEN}You have successfully unlinked!");
                     Messages.AuthDB_message_unlink_failure = Config.getConfigString("Core.unlink.failure", "{RED}Error while unlinking!");
                     Messages.AuthDB_message_unlink_nonexist = Config.getConfigString("Core.unlink.nonexist", "{RED}You do not have a linked username!");
+                    Messages.AuthDB_message_unlink_invaliduser = Config.getConfigString("Core.unlink.invaliduser", "{RED}Invalid linked username!");
+                    Messages.AuthDB_message_unlink_invalidpass = Config.getConfigString("Core.unlink.invalidpass", "{RED}Invalid linked password!");
                     Messages.AuthDB_message_unlink_usage = Config.getConfigString("Core.unlink.usage", "{RED}Correct usage is: /unlink otherusername password");
 
                     ///////////////////////////////////////////

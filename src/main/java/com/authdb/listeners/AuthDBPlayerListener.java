@@ -296,7 +296,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                                        EBean eBeanClass = EBean.checkPlayer(split[1], true);
                                        String linkedname = eBeanClass.getLinkedname();
                                        if (linkedname != null) {
-                                           player.sendMessage("You cannot link to a player which is already linked with another name.");
+                                           Messages.sendMessage(Message.link_duplicate, player, null);
                                        } else if (this.plugin.checkPassword(split[1], split[2])) {
                                         Processes.Link(player,split[1]);
                                         Messages.sendMessage(Message.link_success, player, null);
@@ -307,7 +307,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                                     Messages.sendMessage(Message.link_exists, player, null);
                                 }
                             } else {
-                                player.sendMessage("You cannot link with yourself!");
+                                Messages.sendMessage(Message.link_invaliduser, player, null);
                             }
                         } else {
                             Messages.sendMessage(Message.link_usage, player, null);
@@ -329,10 +329,10 @@ public class AuthDBPlayerListener extends PlayerListener {
                                         Processes.Unlink(player,split[1]);
                                         Messages.sendMessage(Message.unlink_success, player, null);
                                     } else {
-                                        Messages.sendMessage(Message.unlink_failure, player, null);
+                                        Messages.sendMessage(Message.unlink_invalidpass, player, null);
                                     }
                                 } else {
-                                    player.sendMessage("You cannot unlink yourself with another username then the one you use while linking.");
+                                    Messages.sendMessage(Message.unlink_invaliduser, player, null);
                                 }
                             } else {
                                 Messages.sendMessage(Message.unlink_nonexist, player, null);

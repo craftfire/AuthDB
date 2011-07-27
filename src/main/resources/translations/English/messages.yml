@@ -47,11 +47,15 @@ Core:
     success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
     failure: "{RED}Username linking failed!"
     exists: "{RED}You are already linked to a username!"
+    duplicate: "{RED}Username is already linked to another player!"
+    invaliduser: "{RED}You cannot link with yourself!"
     usage: "{YELLOW}Correct usage is: {WHITE}{LINKCMD} otherusername password"
   unlink:
     success: "{BRIGHTGREEN}Username unlinked successfully!"
     failure: "{RED}Username unlinking failed!"
     nonexist: "{RED}You do not have a linked username!"
+    invaliduser: "{RED}Invalid linked username!"
+    invalidpass: "{RED}Invalid linked password!"
     usage: "{YELLOW}Correct usage is: {WHITE}{UNLINKCMD} otherusername password"
   email:
     required: "{RED}Email required for registration!"
