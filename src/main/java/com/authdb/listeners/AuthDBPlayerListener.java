@@ -163,9 +163,9 @@ public class AuthDBPlayerListener extends PlayerListener {
                 sessionallow = true;
             }
             
-            if (Config.onlineMode) {
+            if (Config.onlineMode && this.plugin.isRegistered("join",player.getName())) {
                 sessionallow = true;
-            } 
+            }
             
             /*else if (!Config.onlineMode) {
                 Util.logging.Debug("Session id: " + Util.server.getSessionId());

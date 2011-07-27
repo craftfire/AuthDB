@@ -19,6 +19,7 @@ import com.avaje.ebean.validation.NotNull;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
+import com.authdb.util.Encryption;
 import com.authdb.util.Util;
 
 import org.bukkit.Bukkit;
@@ -79,6 +80,14 @@ public class EBean {
         try {
             EBean eBeanClass = checkPlayer(player.getName(), true);
             String registred = eBeanClass.getRegistred();
+            if (!Util.checkScript("checkuser", Config.script_name, player.getName(), null, null, null)) {
+                if (registred != null && registred.equalsIgnoreCase("true")) {
+                    Util.logging.Debug("Registred value for " + player.getName() + " in persistence is different than in MySQL, syncing registred value from MySQL.");
+                    eBeanClass.setRegistred("false");
+                    save(eBeanClass);
+                    registred = "false";
+                }
+            }
             if (registred != null && registred.equalsIgnoreCase("true")) {
                 Util.checkScript("syncpassword", Config.script_name, player.getName(), null, null, null);
                 Util.checkScript("syncsalt", Config.script_name, player.getName(), null, null, null);

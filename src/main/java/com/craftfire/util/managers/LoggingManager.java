@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.authdb.util.Config;
 import com.authdb.util.Util;
 
 public class LoggingManager {
@@ -41,26 +42,35 @@ public class LoggingManager {
             PluginManager.plugin.log.severe("[" + PluginManager.plugin.pluginName + "] " + line);
     }
 
-    public void Warning(String line) {
-        PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
+    public void advancedWarning(String line) {
+         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]\n" +
+        "|-----------------------------------------------------------------------------|\n" +
+        "|--------------------------------AUTHDB WARNING-------------------------------|\n" +
+        "|-----------------------------------------------------------------------------|\n" +
+        "| " + line.toUpperCase() + "\n" +
+        "|-----------------------------------------------------------------------------|");
     }
+    
+    public void plainWarning(String line) {
+        PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
+   }
     
     public void mySQL(String query) {
         Debug("Executing MySQL query: " + query);
     }
 
     public void StackTrace(StackTraceElement[] stack, String function, int linenumber, String classname, String file) {
-        Warning("StackTrace Error");
-        Warning("Class name: " + classname);
-        Warning("File name: " + file);
-        Warning("Function name: " + function);
-        Warning("Error line: " + linenumber);
+        advancedWarning("StackTrace Error");
+        plainWarning("Class name: " + classname);
+        plainWarning("File name: " + file);
+        plainWarning("Function name: " + function);
+        plainWarning("Error line: " + linenumber);
         if (PluginManager.config.logging_enabled) {
             DateFormat LogFormat = new SimpleDateFormat(PluginManager.config.logformat);
             Date date = new Date();
-            Warning("Check log file: " + PluginManager.plugin.getDataFolder() + "\\logs\\error\\" + LogFormat.format(date) + "-error.log");
+            plainWarning("Check log file: " + PluginManager.plugin.getDataFolder() + "\\logs\\error\\" + LogFormat.format(date) + "-error.log");
         } else {
-            Warning("Enable logging in the config to get more information about the error.");
+            plainWarning("Enable logging in the config to get more information about the error.");
         }
 
         logError("--------------------------- STACKTRACE ERROR ---------------------------");
@@ -76,7 +86,7 @@ public class LoggingManager {
     }
     
     public void error(String error) {
-    	Warning(error);
+        plainWarning(error);
     	logError(error);
     }
 

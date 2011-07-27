@@ -74,6 +74,7 @@ public class Config {
         ///////////////////////////////////////////
         //               login
         ///////////////////////////////////////////
+        public static boolean login_enabled;
         public static String login_method,login_tries,login_action,login_delay_length,login_delay_time,login_timeout_length,login_timeout_time,login_show_length,login_show_time;
         public static int login_delay,login_timeout,login_show;
 

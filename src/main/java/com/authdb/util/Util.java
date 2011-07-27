@@ -578,8 +578,8 @@ public class Util {
                 }
             }
             if (Config.hasForumBoard && type.equalsIgnoreCase("checkuser") && !Config.custom_enabled) {
-                EBean eBeanClass = EBean.find(player, Column.registred, "true");
-                if (eBeanClass != null) { return true; }
+                //EBean eBeanClass = EBean.find(player, Column.registred, "true");
+                //if (eBeanClass != null) { return true; }
                 String check = MySQL.getfromtable(Config.script_tableprefix + usertable, "*", usernamefield, player);
                 if (check != "fail") { return true; }
             }

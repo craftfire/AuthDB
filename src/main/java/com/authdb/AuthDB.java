@@ -35,8 +35,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.persistence.PersistenceException;
 
-import net.minecraft.server.PropertyManager;
-
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -541,7 +539,7 @@ public class AuthDB extends JavaPlugin {
     }
 
     void Stop(String error) {
-        Util.logging.Warning(error);
+        Util.logging.advancedWarning(error);
         getServer().getPluginManager().disablePlugin(((org.bukkit.plugin.Plugin) (this)));
     }
 
