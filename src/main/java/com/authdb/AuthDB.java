@@ -820,7 +820,9 @@ public class AuthDB extends JavaPlugin {
             String data = eBeanClass.getInventory();
             if (data != "" && data != null) {
                 String[] inv = Util.split(data, ", ");
-                ItemStack[] inventory = new ItemStack[36];
+                ItemStack[] inventory;
+                if (Config.hasBackpack) { inventory = new ItemStack[252]; }
+                else { inventory = new ItemStack[36]; }
                 
                 for (int i=0; i<inv.length; i++) {
                     String line = inv[i];
