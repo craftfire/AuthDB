@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,6 +43,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -63,12 +65,14 @@ import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
 import com.avaje.ebean.EbeanServer;
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
 
 public class AuthDB extends JavaPlugin {
+    //
+    public String configFolder;
+    public String logFolder;
     //
     public static org.bukkit.Server server;
     public static AuthDB plugin;
@@ -121,7 +125,7 @@ public class AuthDB extends JavaPlugin {
         Util.databaseManager.close();
      }
 
-    public void onEnable() {
+    public void onEnable() {        
         plugin = this;
         setupPluginInformation();
         server = getServer();
@@ -157,8 +161,8 @@ public class AuthDB extends JavaPlugin {
             DefaultFile("customdb.sql", "config");
         }
         
-        LoadYml("messages");
-        LoadYml("commands");
+        LoadYml("messages", getClass().getProtectionDomain().getCodeSource());
+        LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
         setupDatabase();
         checkOldFiles();
           final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
@@ -178,6 +182,8 @@ public class AuthDB extends JavaPlugin {
           if (Backpack != null) { Config.hasBackpack = true; }
           final Plugin Check = getServer().getPluginManager().getPlugin("BukkitContrib");
           if (Check != null) { Config.hasBukkitContrib = true; }
+          final Plugin CheckSpout = getServer().getPluginManager().getPlugin("Spout");
+          if (CheckSpout != null) { Config.hasSpout = true; }
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Low, this);
@@ -303,8 +309,8 @@ public class AuthDB extends JavaPlugin {
                 if (args.length == 1) {
                     if (ZPermissions.isAllowed(player, Permission.command_admin_reload)) {
                         new Config("config", "plugins/" + pluginName + "/config/", "config.yml");
-                        LoadYml("commands");
-                        LoadYml("messages");
+                        LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
+                        LoadYml("messages", getClass().getProtectionDomain().getCodeSource());
                         player.sendMessage("§a AuthDB has been successfully reloaded!");
                         Messages.sendMessage(Message.reload_success, player, null);
                         return true;
@@ -569,9 +575,8 @@ public class AuthDB extends JavaPlugin {
         return temp;
     } 
     
-    void LoadYml(String type) {
+    void LoadYml(String type, CodeSource src) {
         String Language = "English";
-        //String[] LanguagesAll = new File(getDataFolder() + "/translations/" + type + "/").list();
         File LanguagesAll = new File(getDataFolder() + "/translations");
         boolean Set = false;
         File[] directories;
@@ -581,12 +586,6 @@ public class AuthDB extends JavaPlugin {
             }
         };
         
-        CodeSource src = getClass().getProtectionDomain().getCodeSource();
-/*
-        if(directories.length > 0) { Util.logging.Debug("Found " + directories.length + " directories for " + type); }
-        else { Util.logging.error("Error! Could not find any directories for " + type); }
-        for (int i=0; i<directories.length; i++) {
-        	Util.logging.Debug("Found translation directory '" + directories[i].getName() + "' for " + type); */
         if (src != null) {
             try {
                 URL jar = src.getLocation();
@@ -621,9 +620,6 @@ public class AuthDB extends JavaPlugin {
         directories = LanguagesAll.listFiles(fileFilter);
         if(directories.length > 0) { Util.logging.Debug("Found " + directories.length + " directories for " + type); }
         else { Util.logging.error("Error! Could not find any directories for " + type); }
-       /* for (int i=0; i<directories.length; i++) {
-        	Util.logging.Debug("Found translation directory '" + directories[i].getName() + "' for " + type);
-        */
         if (!Set) {
             for (int z=0; z<directories.length; z++) {
                 if (Config.language.equalsIgnoreCase(directories[z].getName()))  { 
@@ -635,43 +631,11 @@ public class AuthDB extends JavaPlugin {
         if (!Set) { Util.logging.Info("Could not find translation files for " + Config.language + ", defaulting to " + Language); } 
         else { Util.logging.Debug(type + " language set to " + Language); }
         new Config(type, getDataFolder() + "/translations/" + Language + "/", type + ".yml");
-        
-        /*CodeSource src = getClass().getProtectionDomain().getCodeSource();
-
-        if (src != null) {
-            try {
-                URL jar = src.getLocation();
-                ZipInputStream zip = new ZipInputStream(jar.openStream());
-                ZipEntry ze = null;
-                
-                while ((ze = zip.getNextEntry()) != null) {
-                    String fileName = ze.getName();
-                    if (fileName.startsWith("files/translations/" + type + "/") && fileName.endsWith(".yml"))  {
-                        fileName = fileName.replace("files/translations/" + type + "/", "");
-                        File f = new File(getDataFolder() + "/translations/" + type + "/" + fileName);
-                        if (!f.exists()) {
-                            Util.logging.Info(fileName + " could not be found in plugins/AuthDB/translations/" + type + "/! Creating " + fileName);
-                            DefaultFile(fileName,"translations/" + type);
-                        }
-                        if ((Config.language + ".yml").equalsIgnoreCase(fileName))  { 
-                            Set = true;
-                            Language = fileName; 
-                        } 
-                    }
-                }
-                zip.close();
-            } catch (IOException e) {
-                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-            }
-            */
-        
     }    
     
     public boolean isRegistered(String when, String player) {
         boolean dupe = false;
         boolean checkneeded = true;
-        //if (Config.debug_enable)
-            //logging.Debug("Running function: isRegistered(String player)");
         EBean eBeanClass = EBean.checkPlayer(player, true);
         if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
@@ -798,6 +762,7 @@ public class AuthDB extends JavaPlugin {
         pluginVersion = getDescription().getVersion();
         pluginWebsite = getDescription().getWebsite();
         pluginDescrption = getDescription().getDescription();
+        configFolder = getDataFolder() + "\\config\\";
     }
 
     public static ItemStack[] getInventory(Player player) {

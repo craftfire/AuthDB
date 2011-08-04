@@ -32,6 +32,7 @@ import com.authdb.AuthDB;
 import com.authdb.plugins.ZBukkitContrib;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
+import com.authdb.plugins.ZSpout;
 import com.authdb.util.Config;
 import com.authdb.util.Encryption;
 import com.authdb.util.Messages;
@@ -206,7 +207,9 @@ public class AuthDBPlayerListener extends PlayerListener {
                     }
                 } , 20);
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-                    Messages.sendMessage(Message.login_prompt, player, null);
+                    if(!ZSpout.popGUI(player)) {
+                        Messages.sendMessage(Message.login_prompt, player, null);
+                    }
                 } else {
                     Messages.sendMessage(Message.login_normal, player, null);
                 }
@@ -419,7 +422,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                     }
                 }
             } else {
-                Util.logging.Debug("BukkitContrib is trying to check for SP client with command: " + event.getMessage());
+                Util.logging.Debug("BukkitContrib or Spout is trying to check for SP client with command: " + event.getMessage());
             }
             long stop = Util.timeMS();
             Util.logging.timeUsage(stop - start, "process a command");

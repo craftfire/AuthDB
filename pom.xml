@@ -14,10 +14,9 @@
     <version>dev-SNAPSHOT</version>
     <name>AuthDB</name>
     <url>http://craftfire.com</url>
-    <description>Script and custom MySQL database user authentication plugin for CraftBukkit.</description>
+    <description>Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.</description>
 
     <properties>
-        <skipTests>true</skipTests>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -118,14 +117,19 @@
 
         <!-- Third-party plugins -->
         <dependency>
+            <groupId>org.getspout</groupId>
+            <artifactId>spoutapi</artifactId>
+            <version>dev-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org</groupId>
             <artifactId>bukkitcontrib</artifactId>
-            <version>dev-SNAPSHOT</version>
+            <version>0.1.7</version>
         </dependency>
         <dependency>
             <groupId>com.platymuus.bukkit</groupId>
             <artifactId>permissions</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>com.nijikokun.bukkit</groupId>
@@ -140,7 +144,7 @@
         <dependency>
             <groupId>com.afforess</groupId>
             <artifactId>minecartmaniacore</artifactId>
-            <version>dev-SNAPSHOT</version>
+            <version>1.2.8</version>
         </dependency>
         <dependency>
             <groupId>com.afforess</groupId>
@@ -168,8 +172,7 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/config</directory>
                 <includes>
-                    <include>config.yml</include>
-                    <include>customdb.sql</include>
+                    <include>*</include>
                 </includes>
             </resource>
             <resource>

@@ -196,7 +196,7 @@ static AuthDB plugin = new AuthDB();
         kickPlayerIdleLoginMessage ("fake"),
         OnEnable ("fake"),
         OnDisable ("fake");
-        private String text;
+        public String text;
 
         Message(String text) {
             this.text = text;

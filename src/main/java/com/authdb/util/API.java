@@ -84,7 +84,7 @@ public class API {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("NULL") || BannedToDate.equalsIgnoreCase("0")) {
                                 return "perma";
                             } else {
-                                return BanReason + ",unix";
+                                return BannedToDate + ",unix";
                             }
                         } else {
                             return "nodate";
@@ -96,7 +96,7 @@ public class API {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("NULL") || BannedToDate.equalsIgnoreCase("0")) {
                                 return "perma";
                             } else {
-                                return BanReason + ",unix";
+                                return BannedToDate + ",unix";
                             }
                         } else {
                             return "nodate";
@@ -172,7 +172,7 @@ public class API {
                         BanReason = MySQL.getfromtable(Config.script_tableprefix + "ban_groups", "`expire_time`", "ID_BAN_GROUP",BanGroup);
                         if (BannedToDate != "fail") {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("NULL")) { return "perma"; }
-                            else { return BanReason + ",unix"; }
+                            else { return BannedToDate + ",unix"; }
                         }
                         else { return "nodate"; }
                     }
@@ -217,7 +217,7 @@ public class API {
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "ban_groups", "`expire_time`", "id_ban_group",BanGroup);
                         if (BannedToDate != "fail") {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("NULL")) { return "perma"; }
-                            else { return BanReason + ",unix"; }
+                            else { return BannedToDate + ",unix"; }
                         } else { return "nodate"; }
                     }
                 }
@@ -310,7 +310,7 @@ public class API {
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "userban", "`liftdate`", "userid",UserID);
                         if (BannedToDate != "fail") {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("0")) { return "perma"; }
-                            else { return BanReason + ",unix"; }
+                            else { return BannedToDate + ",unix"; }
                         }
                         else { return "nodate"; }
                     }
@@ -348,7 +348,7 @@ public class API {
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "userban", "`liftdate`", "userid",UserID);
                         if (BannedToDate != "fail") {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("0")) { return "perma"; }
-                            else { return BanReason + ",unix"; }
+                            else { return BannedToDate + ",unix"; }
                         }
                         else { return "nodate"; }
                     }
@@ -520,13 +520,13 @@ public class API {
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "bans", "`expire`", "ip", extra);
                         if (BannedToDate != "fail") {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("0") || BannedToDate.equalsIgnoreCase("NULL")) { return "perma"; }
-                            else { return BanReason + ",unix"; }
+                            else { return BannedToDate + ",unix"; }
                         } else { return "nodate"; }
                     } else {
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "bans", "`expire`", "username", player.getName());
                         if (BannedToDate != "fail") {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("0") || BannedToDate.equalsIgnoreCase("NULL")) { return "perma"; }
-                            else { return BanReason + ",unix"; }
+                            else { return BannedToDate + ",unix"; }
                         }
                         else { return "nodate"; }
                     }
@@ -577,7 +577,7 @@ public class API {
                         BannedToDate = MySQL.getfromtable(Config.script_tableprefix + "user_ban", "`end_date`", "user_id",UserID);
                         if (BannedToDate != "fail") {
                             if (BannedToDate == null || BannedToDate.equalsIgnoreCase("0") || BannedToDate.equalsIgnoreCase("NULL")) { return "perma"; }
-                            else { return BanReason + ",unix"; }
+                            else { return BannedToDate + ",unix"; }
                         } else { return "nodate"; }
                     }
                 }

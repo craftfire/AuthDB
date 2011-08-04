@@ -6,6 +6,8 @@ customdb:
   passfield: password                              # Field/column name to use for storing user passwords.
   emailfield: email                                # Field/column name to use for storing user email addresses. Leave blank to disable email requirement.
   encryption: md5                                  # Encription type to use for password hashing. Options are MD5, SHA1, and SHA512.
+#  saltfield: salt                                  # 
+#  hashformat: "{PASSWORD}{SALT}{NAME}"             # 
 register:
   enabled: true                                    # Enable/disable allowing users to register.
   force: true                                      # Enable/disable forcing users to register.

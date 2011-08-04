@@ -25,7 +25,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
-import com.authdb.plugins.ZBukkitContrib;
 import com.authdb.scripts.Custom;
 import com.authdb.scripts.cms.DLE;
 import com.authdb.scripts.cms.Drupal;
@@ -54,7 +53,7 @@ public class Util {
     public static LoggingManager logging = new LoggingManager();
     public static CraftFireManager craftFire = new CraftFireManager();
     public static DatabaseManager databaseManager = new DatabaseManager();
-    public static ZBukkitContrib bukkitContrib = new ZBukkitContrib();
+   // public static ZBukkitContrib bukkitContrib = new ZBukkitContrib();
     public static GeneralUtil gUtil = new GeneralUtil();
     public static com.authdb.util.managers.PlayerManager authDBplayer = new com.authdb.util.managers.PlayerManager();
     public static com.craftfire.util.managers.PlayerManager craftFirePlayer = new com.craftfire.util.managers.PlayerManager();

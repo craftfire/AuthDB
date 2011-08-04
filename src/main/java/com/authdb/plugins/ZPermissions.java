@@ -35,7 +35,7 @@ public class ZPermissions {
         command_admin_login ("command.admin.login"),
         command_admin_unregister ("command.admin.unregister"),
         command_admin_password ("command.admin.password"),
-        command_admin_reload ("command.admin.reload"),;
+        command_admin_reload ("command.admin.reload");
 
         private String permission;
         Permission(String permission) { this.permission = permission; }
@@ -48,6 +48,32 @@ public class ZPermissions {
             }
         } else if (hasPlugin) {
             if (permissionsHandler.has(player, AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
+                return true;
+            }
+        } else {
+            Permission[] Permissions = Permission.values();
+            for (int i=0; i<Permissions.length; i++) {
+                if (Permissions[i].toString().equals(permission.toString())) {
+                    if (Permissions[i].toString().startsWith(AuthDB.pluginName.toLowerCase() + "." + "admin.")) {
+                        if (player.isOp()) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isAllowed(Player player, String permission) {
+        if (hasPermissionsBukkit) {
+            if (player.hasPermission(AuthDB.pluginName.toLowerCase() + "." + permission)) {
+                return true;
+            }
+        } else if (hasPlugin) {
+            if (permissionsHandler.has(player, AuthDB.pluginName.toLowerCase() + "." + permission)) {
                 return true;
             }
         } else {

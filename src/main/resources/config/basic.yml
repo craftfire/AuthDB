@@ -16,3 +16,4 @@ script:
   name: phpBB                                      # Set the name of the script you are using.
   version: 3.0.8                                   # Set the version of the script you are using.
   tableprefix: phpbb_                              # Set the prefix of the database you are connecting to if you use one.
+#  passwordsalt:                                   # 

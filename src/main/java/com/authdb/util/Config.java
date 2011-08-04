@@ -22,11 +22,11 @@ public class Config {
     ///////////////////////////////////////////
     //               GLOBAL
     ///////////////////////////////////////////
+    
     public static boolean database_ison;
     public static boolean has_badcharacters;
     public static boolean hasForumBoard,capitalization;
-    public static boolean hasBackpack = false;
-    public static boolean hasBukkitContrib = false;
+    public static boolean hasBackpack = false, hasBukkitContrib = false, hasSpout = false;
     public static boolean onlineMode = true;
 
     ///////////////////////////////////////////
@@ -212,8 +212,8 @@ public class Config {
                     welcome_time = getConfigString("Core.welcome.time", "seconds");
                     welcome_delay = getConfigString("Core.welcome.delay", "2");
                     welcome_length = getConfigString("Core.welcome.length", "10");
-                    welcome_delay_ticks = Util.toTicks(welcome_time,welcome_delay);
-                    welcome_length_ticks = Util.toTicks(welcome_time,welcome_length);
+                    welcome_delay_ticks = Util.toTicks(welcome_time, welcome_delay);
+                    welcome_length_ticks = Util.toTicks(welcome_time, welcome_length);
 
                     ///////////////////////////////////////////
                     //               register
