@@ -59,6 +59,8 @@ public class AuthDBScreenListener extends ScreenListener {
                     popup.setVisible(false);
                     //Messages.sendMessage(Message.login_success, player, null);
                     this.plugin.AuthDB_GUI_PasswordFieldIDs.remove(player.getName());
+                    ZSpout spout = new ZSpout();
+                    spout.showGUI(screen, true);
                     player.sendNotification("Success!", "Logged in!", Material.GOLD_INGOT);
                 } else {
                     ZSpout spout = new ZSpout();

@@ -43,6 +43,7 @@ public class ZSpout {
                 PopupScreen popup = new GenericPopup();
                 InGameHUD screen = spoutPlayer.getMainScreen();
                 screen.attachPopupScreen(popup);
+                showGUI(screen, false);
                 Button button = new GenericButton("Login");
                 button.setCentered(true);
                 button.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2);
@@ -56,6 +57,19 @@ public class ZSpout {
             }
         }
         return false;
+    }
+    
+    public void showGUI(InGameHUD screen, boolean show) {
+        screen.getArmorBar().setVisible(show);
+        screen.getArmorBar().setDirty(true);
+        screen.getBubbleBar().setVisible(show);
+        screen.getBubbleBar().setDirty(true);
+        screen.getChatBar().setVisible(show);
+        screen.getChatBar().setDirty(true);
+        screen.getChatTextBox().setVisible(show);
+        screen.getChatTextBox().setDirty(true);
+        screen.getHealthBar().setVisible(show);
+        screen.getHealthBar().setDirty(true);
     }
     
     public void wrongPassword(Player player, InGameHUD screen, PopupScreen popup) {
