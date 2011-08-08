@@ -1,12 +1,12 @@
 name: AuthDB
-main: com.authdb.AuthDB
-version: ${project.version}
-website: http://www.authdb.com
+version: 2.3.0.${build.number}
 description: Script and custom database user authentication through MySQL.
-authors:
-  - CraftFire
-  - Contex
-  - Wulfspider
+authors: [CraftFire, Contex, Wulfspider]
+website: http://www.authdb.com
+
+main: com.authdb.AuthDB
+database: true
+
 commands:
   register:
     description: Register for an account.
@@ -29,4 +29,3 @@ commands:
   authdb:
     description: Set of commands to reload, show version, and more.
     usage: /<command> <extra>
-database: true

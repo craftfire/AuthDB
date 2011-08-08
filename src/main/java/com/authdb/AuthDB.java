@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,6 +54,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
+import com.authdb.listeners.AuthDBScreenListener;
+import com.authdb.listeners.AuthDBSpoutListener;
 import com.authdb.plugins.ZCraftIRC;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
@@ -84,6 +87,8 @@ public class AuthDB extends JavaPlugin {
     private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
     private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
+    private AuthDBSpoutListener spoutListener;
+    private AuthDBScreenListener screenListener;
     public static List<String> authorizedNames = new ArrayList<String>();
     public static HashMap<String, Integer> AuthDB_Timeouts = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_Sessions = new HashMap<String, Long>();
@@ -95,6 +100,8 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, String> AuthDB_PasswordTries = new HashMap<String, String>();
     public static HashMap<String, String> AuthDB_LinkedNames = new HashMap<String, String>();
     public static HashMap<String, String> AuthDB_LinkedNameCheck = new HashMap<String, String>();
+    public static HashMap<String, UUID> AuthDB_GUI_PasswordFieldIDs = new HashMap<String, UUID>();
+    public static HashMap<String, UUID> AuthDB_GUI_ErrorFieldIDs = new HashMap<String, UUID>();
     public static Logger log = Logger.getLogger("Minecraft");
 
     public void onDisable() {
@@ -116,6 +123,8 @@ public class AuthDB extends JavaPlugin {
         AuthDB_RemindLogin.clear();
         AuthDB_SpamMessage.clear();
         AuthDB_SpamMessageTime.clear();
+        AuthDB_GUI_PasswordFieldIDs.clear();
+        AuthDB_GUI_ErrorFieldIDs.clear();
         AuthDB_LinkedNames.clear();
         AuthDB_LinkedNameCheck.clear();
         AuthDB_PasswordTries.clear();
@@ -178,13 +187,19 @@ public class AuthDB extends JavaPlugin {
                   } 
               }, 100);
           }
+          PluginManager pm = getServer().getPluginManager();
           final Plugin Backpack = getServer().getPluginManager().getPlugin("Backpack");
           if (Backpack != null) { Config.hasBackpack = true; }
           final Plugin Check = getServer().getPluginManager().getPlugin("BukkitContrib");
           if (Check != null) { Config.hasBukkitContrib = true; }
           final Plugin CheckSpout = getServer().getPluginManager().getPlugin("Spout");
-          if (CheckSpout != null) { Config.hasSpout = true; }
-        PluginManager pm = getServer().getPluginManager();
+          if (CheckSpout != null) { 
+              spoutListener = new AuthDBSpoutListener(this);
+              screenListener = new AuthDBScreenListener(this);
+              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.spoutListener, Priority.Normal, this);
+              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.screenListener, Priority.Normal, this);
+              Config.hasSpout = true; 
+          }
         pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Low, this);

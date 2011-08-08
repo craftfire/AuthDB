@@ -64,6 +64,7 @@ public class Processes {
                 AuthDB.AuthDB_AuthTime.put(player.getName(), timestamp);
             }
             AuthDB.authorizedNames.add(player.getName());
+            AuthDB.AuthDB_PasswordTries.put(player.getName(), "0");
             EBean eBeanClass = EBean.checkPlayer(player, true);
             eBeanClass.setAuthorized("true");
             eBeanClass.setRegistred("true");

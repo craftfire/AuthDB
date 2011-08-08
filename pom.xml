@@ -30,36 +30,6 @@
         </license>
     </licenses>
 
-    <!-- Organization -->
-    <organization>
-        <name>CraftFire</name>
-        <url>http://craftfire.com</url>
-    </organization>
-
-    <!-- Team members -->
-    <developers>
-        <developer>
-            <id>Contex</id>
-            <email>contex@craftfire.com</email>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>+1</timezone>
-            <properties>
-            </properties>
-        </developer>
-	    <developer>
-            <id>Wulfspider</id>
-            <email>wulfspider@craftfire.com</email>
-            <roles>
-                <role>architect</role>
-            </roles>
-            <timezone>-5</timezone>
-            <properties>
-            </properties>
-        </developer>
-    </developers>
-
     <!-- Source code -->
     <scm>
         <developerConnection>scm:git:git@github.com:CraftFire/${project.name}.git</developerConnection>
@@ -75,13 +45,23 @@
 
     <!-- Repository locations -->
     <repositories>
-        <!-- <repository>
+        <repository>
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
-        </repository> -->
+        </repository>
         <repository>
             <id>craftfire-dbrepo</id>
             <url>http://db.craftfire.com/repo</url>
+        </repository>
+        <repository>
+            <id>spout-repo</id>
+            <url>http://repo.getspout.org</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -93,28 +73,24 @@
             <artifactId>util</artifactId>
             <version>1.0.0</version>
         </dependency> -->
-
         <!-- Debugging  -->
         <!-- <dependency>
             <groupId>fm.void.jetm</groupId>
             <artifactId>jetm</artifactId>
             <version>1.2.3</version>
         </dependency> -->
-
         <!-- Bukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
         <!-- CraftBukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
         <!-- Third-party plugins -->
         <dependency>
             <groupId>org.getspout</groupId>
@@ -194,7 +170,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
             </plugin>
-
             <!-- JAR creation plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

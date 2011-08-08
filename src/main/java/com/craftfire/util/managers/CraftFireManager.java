@@ -36,8 +36,9 @@ public class CraftFireManager {
         loggingManager.Debug("Preparing stats submit.");
         URL url = new URL("http://www.craftfire.com/stats.php");
         URLConnection conn = url.openConnection();
-        conn.setConnectTimeout(2000);
-        loggingManager.Debug("Stats submit timeout is 2000 ms (2 seconds).");
+        conn.setConnectTimeout(4000);
+        conn.setReadTimeout(4000);
+        loggingManager.Debug("Stats submit timeout is 4000 ms (4 seconds).");
         conn.setRequestProperty("X-AuthDB", e5544ab05d8c25c1a5da5cd59144fb);
         conn.setDoOutput(true);
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());

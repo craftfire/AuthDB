@@ -207,7 +207,8 @@ public class AuthDBPlayerListener extends PlayerListener {
                     }
                 } , 20);
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-                    if(!ZSpout.popGUI(player)) {
+                    ZSpout spout = new ZSpout();
+                    if(!spout.popGUI(player)) {
                         Messages.sendMessage(Message.login_prompt, player, null);
                     }
                 } else {
