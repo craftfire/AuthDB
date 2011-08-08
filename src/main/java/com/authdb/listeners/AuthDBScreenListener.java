@@ -11,6 +11,7 @@ package com.authdb.listeners;
 
 import java.util.UUID;
 
+import org.bukkit.Material;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
 import org.getspout.spoutapi.event.screen.ScreenListener;
@@ -53,10 +54,12 @@ public class AuthDBScreenListener extends ScreenListener {
                     for (Widget w : popup.getAttachedWidgets()) {
                         popup.removeWidget(w);
                     }
-                    screen.closePopup();
                     Processes.Login(player);
-                    Messages.sendMessage(Message.login_success, player, null);
+                    screen.closePopup();
+                    popup.setVisible(false);
+                    //Messages.sendMessage(Message.login_success, player, null);
                     this.plugin.AuthDB_GUI_PasswordFieldIDs.remove(player.getName());
+                    player.sendNotification("Success!", "Logged in!", Material.GOLD_INGOT);
                 } else {
                     ZSpout spout = new ZSpout();
                     String temp = AuthDB.AuthDB_PasswordTries.get(player.getName());
@@ -65,8 +68,7 @@ public class AuthDBScreenListener extends ScreenListener {
                         screen.closePopup();
                         AuthDB.AuthDB_PasswordTries.put(player.getName(), "0");
                         this.plugin.AuthDB_GUI_PasswordFieldIDs.remove(player.getName());
-                        Util.logging.Debug("KICK MESSAGE: " + Message.login_failure);
-                        player.kickPlayer(Util.replaceStrings(""+Message.login_failure, player, null));
+                        player.kickPlayer(Util.replaceStrings(""+Message.login_failure.text, player, null));
                     } else {
                         AuthDB.AuthDB_PasswordTries.put(player.getName(), "" + tries);
                     }

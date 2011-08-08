@@ -53,6 +53,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
+import com.authdb.listeners.AuthDBInputListener;
 import com.authdb.listeners.AuthDBPlayerListener;
 import com.authdb.listeners.AuthDBScreenListener;
 import com.authdb.listeners.AuthDBSpoutListener;
@@ -89,6 +90,7 @@ public class AuthDB extends JavaPlugin {
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
     private AuthDBSpoutListener spoutListener;
     private AuthDBScreenListener screenListener;
+    private AuthDBInputListener inputListener;
     public static List<String> authorizedNames = new ArrayList<String>();
     public static HashMap<String, Integer> AuthDB_Timeouts = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_Sessions = new HashMap<String, Long>();
@@ -102,6 +104,7 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, String> AuthDB_LinkedNameCheck = new HashMap<String, String>();
     public static HashMap<String, UUID> AuthDB_GUI_PasswordFieldIDs = new HashMap<String, UUID>();
     public static HashMap<String, UUID> AuthDB_GUI_ErrorFieldIDs = new HashMap<String, UUID>();
+    public static HashMap<String, String> AuthDB_GUI_TempPasswords = new HashMap<String, String>();
     public static Logger log = Logger.getLogger("Minecraft");
 
     public void onDisable() {
@@ -128,6 +131,7 @@ public class AuthDB extends JavaPlugin {
         AuthDB_LinkedNames.clear();
         AuthDB_LinkedNameCheck.clear();
         AuthDB_PasswordTries.clear();
+        AuthDB_GUI_TempPasswords.clear();
         AuthDB_Timeouts.clear();
         AuthDB_Sessions.clear();
         AuthDB_Authed.clear();
@@ -196,8 +200,10 @@ public class AuthDB extends JavaPlugin {
           if (CheckSpout != null) { 
               spoutListener = new AuthDBSpoutListener(this);
               screenListener = new AuthDBScreenListener(this);
+              inputListener = new AuthDBInputListener(this);
               pm.registerEvent(Event.Type.CUSTOM_EVENT, this.spoutListener, Priority.Normal, this);
               pm.registerEvent(Event.Type.CUSTOM_EVENT, this.screenListener, Priority.Normal, this);
+              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.inputListener, Priority.Normal, this);
               Config.hasSpout = true; 
           }
         pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
