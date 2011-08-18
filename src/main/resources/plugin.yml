@@ -6,6 +6,7 @@ website: http://www.authdb.com
 
 main: com.authdb.AuthDB
 database: true
+softdepend: [Spout]
 
 commands:
   register:
@@ -29,3 +30,61 @@ commands:
   authdb:
     description: Set of commands to reload, show version, and more.
     usage: /<command> <extra>
+
+permissions:
+  authdb.command.user.*
+    description: 
+    children:
+      authdb.command.user.register: true
+      authdb.command.user.unregister: true
+      authdb.command.user.login: true
+      authdb.command.user.logout: true
+      authdb.command.user.link: true
+      authdb.command.user.unlink: true
+      authdb.command.user.password: true
+      authdb.command.user.email: true
+      authdb.command.user.users: true
+  authdb.command.user.register
+    description: 
+  authdb.command.user.unregister
+    description: 
+  authdb.command.user.login
+    description: 
+  authdb.command.user.logout
+    description: 
+  authdb.command.user.link
+    description: 
+  authdb.command.user.unlink
+    description: 
+  authdb.command.user.password
+    description: 
+  authdb.command.user.email
+    description: 
+  authdb.command.user.users
+    description: 
+  authdb.command.admin.unregister
+    description: 
+    default: op
+  authdb.command.admin.*
+    description: 
+    children:
+      authdb.command.admin.login: true
+      authdb.command.admin.logout: true
+      authdb.command.admin.password: true
+      authdb.command.admin.email: true
+      authdb.command.admin.reload: true
+  authdb.command.admin.login
+    description: 
+    default: op
+  authdb.command.admin.logout
+    description: 
+    default: op
+  authdb.command.admin.password
+    description: 
+    default: op
+  authdb.command.admin.email
+    description: 
+    default: op
+  authdb.command.admin.reload
+    description: 
+    default: op

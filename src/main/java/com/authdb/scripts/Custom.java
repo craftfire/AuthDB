@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.authdb.util.Config;
-import com.authdb.util.Encryption;
+import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
@@ -24,7 +24,7 @@ import com.authdb.util.databases.MySQL;
             PreparedStatement ps;
             if (Config.custom_encryption != null) {
                 try {
-                    password = Encryption.encrypt(Config.custom_encryption,password);
+                    password = Encryption.encrypt(Config.custom_encryption, password);
                 } catch (NoSuchAlgorithmException e) {
                     Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 } catch (UnsupportedEncodingException e) {

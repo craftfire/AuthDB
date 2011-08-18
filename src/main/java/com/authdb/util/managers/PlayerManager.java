@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
-import com.authdb.util.Encryption;
+import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.EBean;
 

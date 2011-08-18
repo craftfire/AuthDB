@@ -34,7 +34,7 @@ import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.plugins.ZSpout;
 import com.authdb.util.Config;
-import com.authdb.util.Encryption;
+import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;

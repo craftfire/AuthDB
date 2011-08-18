@@ -8,7 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-import com.authdb.util.Encryption;
+import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Util;
 
 public class CraftFireManager {

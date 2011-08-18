@@ -4,6 +4,8 @@ Core:
     milliseconds: milliseconds
     second: second
     seconds: seconds
+    minute: minute
+    minutes: minutes
     hour: hour
     hours: hours
     day: day

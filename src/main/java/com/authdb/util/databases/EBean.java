@@ -20,7 +20,7 @@ import com.avaje.ebean.validation.NotNull;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
-import com.authdb.util.Encryption;
+import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Util;
 
 import org.bukkit.Bukkit;

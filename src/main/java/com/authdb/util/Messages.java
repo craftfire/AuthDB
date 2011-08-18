@@ -25,6 +25,7 @@ static AuthDB plugin = new AuthDB();
     ///////////////////////////////////////////
     //               AuthDB
     ///////////////////////////////////////////
+        public static String time_millisecond, time_milliseconds, time_second, time_seconds, time_minute, time_minutes, time_hour, time_hours, time_day, time_days;
         ///////////////////////////////////////////
         //               database
         ///////////////////////////////////////////

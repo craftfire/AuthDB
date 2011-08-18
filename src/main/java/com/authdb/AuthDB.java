@@ -61,7 +61,7 @@ import com.authdb.plugins.ZCraftIRC;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.util.Config;
-import com.authdb.util.Encryption;
+import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
@@ -161,12 +161,26 @@ public class AuthDB extends JavaPlugin {
             }
             counter++;
         }
-        File f = new File("plugins/" + pluginName + "/config/config.yml");
+        File f = new File("plugins/" + pluginName + "/config/basic.yml");
         if (!f.exists()) {
-            Util.logging.Info("config.yml could not be found in plugins/AuthDB/config/! Creating config.yml!");
-            DefaultFile("config.yml", "config");
+            Util.logging.Info("basic.yml could not be found in plugins/AuthDB/config/! Creating basic.yml!");
+            DefaultFile("basic.yml", "config");
         }
-        new Config("config", "plugins/" + pluginName + "/config/", "config.yml");
+        new Config("basic", "plugins/" + pluginName + "/config/", "basic.yml");
+        
+        f = new File("plugins/" + pluginName + "/config/advanced.yml");
+        if (!f.exists()) {
+            Util.logging.Info("advanced.yml could not be found in plugins/AuthDB/config/! Creating advanced.yml!");
+            DefaultFile("advanced.yml", "config");
+        }
+        new Config("advanced", "plugins/" + pluginName + "/config/", "advanced.yml");
+        
+        f = new File("plugins/" + pluginName + "/config/plugins.yml");
+        if (!f.exists()) {
+            Util.logging.Info("plugins.yml could not be found in plugins/AuthDB/config/! Creating plugins.yml!");
+            DefaultFile("plugins.yml", "config");
+        }
+        new Config("plugins", "plugins/" + pluginName + "/config/", "plugins.yml");
         
         f = new File(getDataFolder() + "/config/customdb.sql");
         if (!f.exists()) {
@@ -196,6 +210,8 @@ public class AuthDB extends JavaPlugin {
           if (Backpack != null) { Config.hasBackpack = true; }
           final Plugin Check = getServer().getPluginManager().getPlugin("BukkitContrib");
           if (Check != null) { Config.hasBukkitContrib = true; }
+          final Plugin CheckBuildr = getServer().getPluginManager().getPlugin("Buildr");
+          if (CheckBuildr != null) { Config.hasBuildr = true; }
           final Plugin CheckSpout = getServer().getPluginManager().getPlugin("Spout");
           if (CheckSpout != null) { 
               spoutListener = new AuthDBSpoutListener(this);
@@ -794,6 +810,7 @@ public class AuthDB extends JavaPlugin {
                 String[] inv = Util.split(data, ", ");
                 ItemStack[] inventory;
                 if (Config.hasBackpack) { inventory = new ItemStack[252]; }
+                else if (Config.hasBuildr) { inventory = new ItemStack[72]; }
                 else { inventory = new ItemStack[36]; }
                 
                 for (int i=0; i<inv.length; i++) {

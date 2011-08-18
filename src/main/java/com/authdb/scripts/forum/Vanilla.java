@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.authdb.util.Config;
-import com.authdb.util.Encryption;
+import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 

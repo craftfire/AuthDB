@@ -7,7 +7,7 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-
 or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 **/
 
-package com.authdb.util;
+package com.authdb.util.encryption;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -15,11 +15,23 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+
 public class Encryption {
     public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        Whirlpool whirpool = new Whirlpool();
         if (encryption.equalsIgnoreCase("md5")) return md5(toencrypt);
         else if (encryption.equalsIgnoreCase("sha1")) return SHA1(toencrypt);
         else if (encryption.equalsIgnoreCase("sha512")) return SHA512(toencrypt);
+        else if (encryption.equalsIgnoreCase("whirlpool") || encryption.equalsIgnoreCase("xauth")) {
+            byte[] digest = new byte[Whirlpool.DIGESTBYTES];
+            whirpool.NESSIEinit();
+            whirpool.NESSIEadd(toencrypt);
+            whirpool.NESSIEfinalize(digest);
+            String done = Whirlpool.display(digest);
+            return done;
+        }
         if (Config.debug_enable) Util.logging.Info("Could not find encryption method: " + Config.custom_encryption + ", using default: md5");
         Config.custom_encryption = "md5";
         return md5(toencrypt);

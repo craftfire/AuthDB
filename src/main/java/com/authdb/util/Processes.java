@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
 import com.authdb.util.databases.EBean;
+import com.authdb.util.encryption.Encryption;
 
 public class Processes {
     public static boolean Logout(Player player) {

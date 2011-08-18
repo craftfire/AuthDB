@@ -42,6 +42,7 @@ import com.authdb.scripts.forum.XenForo;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
+import com.authdb.util.encryption.Encryption;
 import com.craftfire.util.general.GeneralUtil;
 import com.craftfire.util.managers.CraftFireManager;
 import com.craftfire.util.managers.DatabaseManager;
@@ -53,7 +54,6 @@ public class Util {
     public static LoggingManager logging = new LoggingManager();
     public static CraftFireManager craftFire = new CraftFireManager();
     public static DatabaseManager databaseManager = new DatabaseManager();
-   // public static ZBukkitContrib bukkitContrib = new ZBukkitContrib();
     public static GeneralUtil gUtil = new GeneralUtil();
     public static com.authdb.util.managers.PlayerManager authDBplayer = new com.authdb.util.managers.PlayerManager();
     public static com.craftfire.util.managers.PlayerManager craftFirePlayer = new com.craftfire.util.managers.PlayerManager();
@@ -904,7 +904,7 @@ public class Util {
         else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
             return lengthint * 60;
         }
-        else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
+        else if (time.equalsIgnoreCase("second") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
             return lengthint;
         }
         return 0;
@@ -1049,8 +1049,8 @@ public class Util {
         string = string.replaceAll("\\{PASSMAX\\}", Config.password_maximum);
         string = string.replaceAll("\\{PLUGIN\\}", AuthDB.pluginName);
         string = string.replaceAll("\\{VERSION\\}", AuthDB.pluginVersion);
-        string = string.replaceAll("\\{LOGINTIMEOUT\\}", Config.login_timeout_length + " " + Config.login_timeout_time);
-        string = string.replaceAll("\\{REGISTERTIMEOUT\\}", "" + Config.register_timeout_length + " " + Config.register_timeout_time);
+        string = string.replaceAll("\\{LOGINTIMEOUT\\}", Config.login_timeout_length + " " + replaceTime(Config.login_timeout_length, Config.login_timeout_time));
+        string = string.replaceAll("\\{REGISTERTIMEOUT\\}", "" + Config.register_timeout_length + " " + replaceTime(Config.register_timeout_length, Config.register_timeout_time));
         string = string.replaceAll("\\{USERBADCHARACTERS\\}", Matcher.quoteReplacement(Config.filter_username));
         string = string.replaceAll("\\{PASSBADCHARACTERS\\}", Matcher.quoteReplacement(Config.filter_password));
         string = string.replaceAll("\\{NEWLINE\\}", "\n");
@@ -1139,6 +1139,31 @@ public class Util {
         
         return string;
     }
+    
+    public static String replaceTime(String length, String time) {
+        int lengthint = Integer.parseInt(length);
+        if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
+            if(lengthint > 1) { return Messages.time_days; }
+            else { return Messages.time_day; }
+        }
+        else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
+            if(lengthint > 1) { return Messages.time_hours; }
+            else { return Messages.time_hour; }
+        }
+        else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
+            if(lengthint > 1) { return Messages.time_minutes; }
+            else { return Messages.time_minute; }
+        }
+        else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
+            if(lengthint > 1) { return Messages.time_seconds; }
+            else { return Messages.time_second; }
+        }
+        else if (time.equalsIgnoreCase("milliseconds") || time.equalsIgnoreCase("millisecond") || time.equalsIgnoreCase("milli") || time.equalsIgnoreCase("ms")) {
+            if(lengthint > 1) { return Messages.time_milliseconds; }
+            else { return Messages.time_millisecond; }
+        }
+        return time;
+    }
 
     public static String removeColors(String toremove) {
         long start = Util.timeMS();
@@ -1198,7 +1223,7 @@ public class Util {
         return sb.toString();
     }
 
-    static int randomNumber(int min, int max) {
+    public static int randomNumber(int min, int max) {
         return (int) (Math.random() * (max - min + 1)) + min;
     }
 
@@ -1242,7 +1267,7 @@ public class Util {
     }
 
 
-    static int hexToInt(char ch) {
+    public static int hexToInt(char ch) {
         if (ch >= '0' && ch <= '9') { return ch - '0'; }
         ch = Character.toUpperCase(ch);
         if (ch >= 'A' && ch <= 'F') { return ch - 'A' + 0xA; }
@@ -1262,7 +1287,7 @@ public class Util {
         else { return "login"; }
     }
 
-    static String convertToHex(byte[] data) {
+    public static String convertToHex(byte[] data) {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
             int halfbyte = (data[i] >>> 4) & 0x0F;
@@ -1276,7 +1301,7 @@ public class Util {
         return buf.toString();
     }
 
-    static String bytes2hex(byte[] bytes) {
+    public static String bytes2hex(byte[] bytes) {
         StringBuffer r = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {
             String x = Integer.toHexString(bytes[i] & 0xff);
