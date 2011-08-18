@@ -6,34 +6,40 @@ website: http://www.authdb.com
 
 main: com.authdb.AuthDB
 database: true
-softdepend: [Spout]
+softdepend: [Spout, CraftIRC]
 
 commands:
   register:
     description: Register for an account.
-    usage: /<command> <password> <email>
+    permission: authdb.command.user.register
+    usage: /<command> password email
   login:
     description: Login to your account.
-    usage: /<command> <password>
+    permission: authdb.command.user.login
+    usage: /<command> password
   logout:
     description: Logout yourself or specified player.
-    usage: /<command> <player>
+    permission: authdb.command.user.logout
+    usage: /<command> player
   link:
     description: Links you to another account.
-    usage: /<command> <player> <password>
+    permission: authdb.command.user.link
+    usage: /<command> player password
   unlink:
     description: Unlinks you from the other account.
-    usage: /<command> <player> <password>
-  setspawn:
-    description: Set spawn locations for guest and registered player groups.
-    usage: /<command> <group>
+    permission: authdb.command.user.unlink
+    usage: /<command> player password
+#  setspawn:
+#    description: Set spawn locations for guest and registered player groups.
+#    permission: authdb.command.user.setspawn
+#    usage: /<command> group
   authdb:
     description: Set of commands to reload, show version, and more.
     usage: /<command> <extra>
 
 permissions:
-  authdb.command.user.*
-    description: 
+  authdb.command.user.*:
+    description: Placeholder
     children:
       authdb.command.user.register: true
       authdb.command.user.unregister: true
@@ -44,47 +50,54 @@ permissions:
       authdb.command.user.password: true
       authdb.command.user.email: true
       authdb.command.user.users: true
-  authdb.command.user.register
-    description: 
-  authdb.command.user.unregister
-    description: 
-  authdb.command.user.login
-    description: 
-  authdb.command.user.logout
-    description: 
-  authdb.command.user.link
-    description: 
-  authdb.command.user.unlink
-    description: 
-  authdb.command.user.password
-    description: 
-  authdb.command.user.email
-    description: 
-  authdb.command.user.users
-    description: 
-  authdb.command.admin.unregister
-    description: 
-    default: op
-  authdb.command.admin.*
-    description: 
+  authdb.command.user.register:
+    description: Placeholder
+    default: true
+#  authdb.command.user.unregister:
+#    description: Placeholder
+#    default: true
+  authdb.command.user.login:
+    description: Placeholder
+    default: true
+  authdb.command.user.logout:
+    description: Placeholder
+    default: true
+  authdb.command.user.link:
+    description: Placeholder
+    default: true
+  authdb.command.user.unlink:
+    description: Placeholder
+    default: true
+#  authdb.command.user.password:
+#    description: Placeholder
+#    default: true
+#  authdb.command.user.email:
+#    description: Placeholder
+#    default: true
+  authdb.command.user.users:
+    description: Placeholder
+    default: true
+#  authdb.command.admin.unregister:
+#    default: op
+  authdb.command.admin.*:
     children:
       authdb.command.admin.login: true
       authdb.command.admin.logout: true
       authdb.command.admin.password: true
       authdb.command.admin.email: true
       authdb.command.admin.reload: true
-  authdb.command.admin.login
-    description: 
+  authdb.command.admin.login:
+    description: Placeholder
     default: op
-  authdb.command.admin.logout
-    description: 
+  authdb.command.admin.logout:
+    description: Placeholder
     default: op
-  authdb.command.admin.password
-    description: 
+  authdb.command.admin.password:
+    description: Placeholder
     default: op
-  authdb.command.admin.email
-    description: 
-    default: op
-  authdb.command.admin.reload
-    description: 
+#  authdb.command.admin.email:
+#    description: Placeholder
+#    default: op
+  authdb.command.admin.reload:
+    description: Placeholder
     default: op

@@ -20,22 +20,24 @@ public class ZPermissions {
     public static boolean hasPlugin = false;
     public static boolean hasPermissionsBukkit = false;
     public static PermissionHandler permissionsHandler;
-
+    static String pluginName = AuthDB.pluginName.toLowerCase();
+    static String userPermissions = pluginName + ".command.user.";
+    static String adminPermissions = pluginName + ".command.admin.";
     public enum Permission {
-        command_login ("command.login"),
-        command_logout ("command.logout"),
-        command_users ("command.users"),
-        command_register ("command.register"),
-        command_unregister ("command.unregister"),
-        command_password ("command.password"),
-        command_email ("command.email"),
-        command_link ("command.link"),
-        command_unlink ("command.unlink"),
-        command_admin_logout ("command.admin.logout"),
-        command_admin_login ("command.admin.login"),
-        command_admin_unregister ("command.admin.unregister"),
-        command_admin_password ("command.admin.password"),
-        command_admin_reload ("command.admin.reload");
+        command_register (userPermissions+"register"),
+        command_unregister (userPermissions+"unregister"),
+        command_login (userPermissions+"login"),
+        command_logout (userPermissions+"logout"),
+        command_link (userPermissions+"link"),
+        command_unlink (userPermissions+"unlink"),
+        command_password (userPermissions+"password"),
+        command_email (userPermissions+"email"),
+        command_users (userPermissions+"users"),
+        command_admin_unregister (adminPermissions+"unregister"),
+        command_admin_login (adminPermissions+"login"),
+        command_admin_logout (adminPermissions+"logout"),
+        command_admin_password (adminPermissions+"password"),
+        command_admin_reload (adminPermissions+"reload");
 
         private String permission;
         Permission(String permission) { this.permission = permission; }
@@ -43,18 +45,38 @@ public class ZPermissions {
 
     public static boolean isAllowed(Player player, Permission permission) {
         if (hasPermissionsBukkit) {
-            if (player.hasPermission(AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
+            if (player.hasPermission(permission.permission)) {
                 return true;
+            } else if(player.hasPermission(pluginName + ".*")) {
+                return true;
+            } else if (permission.permission.startsWith(adminPermissions)) {
+                if(player.hasPermission(adminPermissions + "*")) {
+                    return true;
+                }
+            } else if (permission.permission.startsWith(userPermissions)) {
+                if(player.hasPermission(userPermissions + "*")) {
+                    return true;
+                }
             }
         } else if (hasPlugin) {
-            if (permissionsHandler.has(player, AuthDB.pluginName.toLowerCase() + "." + permission.permission)) {
+            if (permissionsHandler.has(player, permission.permission)) {
                 return true;
+            } else if(permissionsHandler.has(player, pluginName + ".*")) {
+                return true;
+            } else if (permission.permission.startsWith(adminPermissions)) {
+                if(permissionsHandler.has(player, adminPermissions + "*")) {
+                    return true;
+                }
+            } else if (permission.permission.startsWith(userPermissions)) {
+                if(permissionsHandler.has(player, userPermissions + "*")) {
+                    return true;
+                }
             }
         } else {
             Permission[] Permissions = Permission.values();
             for (int i=0; i<Permissions.length; i++) {
                 if (Permissions[i].toString().equals(permission.toString())) {
-                    if (Permissions[i].toString().startsWith(AuthDB.pluginName.toLowerCase() + "." + "admin.")) {
+                    if (Permissions[i].toString().startsWith(adminPermissions)) {
                         if (player.isOp()) {
                             return true;
                         }
@@ -69,18 +91,38 @@ public class ZPermissions {
     
     public static boolean isAllowed(Player player, String permission) {
         if (hasPermissionsBukkit) {
-            if (player.hasPermission(AuthDB.pluginName.toLowerCase() + "." + permission)) {
+            if (player.hasPermission(permission)) {
                 return true;
+            } else if(player.hasPermission(pluginName + ".*")) {
+                    return true;
+            } else if (permission.startsWith(adminPermissions)) {
+                if(player.hasPermission(adminPermissions + "*")) {
+                    return true;
+                }
+            } else if (permission.startsWith(userPermissions)) {
+                if(player.hasPermission(userPermissions + "*")) {
+                    return true;
+                }
             }
         } else if (hasPlugin) {
-            if (permissionsHandler.has(player, AuthDB.pluginName.toLowerCase() + "." + permission)) {
+            if (permissionsHandler.has(player, permission)) {
                 return true;
+            } else if(permissionsHandler.has(player, pluginName + ".*")) {
+                return true;
+            } else if (permission.startsWith(adminPermissions)) {
+                if(permissionsHandler.has(player, adminPermissions + "*")) {
+                    return true;
+                }
+            } else if (permission.startsWith(userPermissions)) {
+                if(permissionsHandler.has(player, userPermissions + "*")) {
+                    return true;
+                }
             }
         } else {
             Permission[] Permissions = Permission.values();
             for (int i=0; i<Permissions.length; i++) {
                 if (Permissions[i].toString().equals(permission.toString())) {
-                    if (Permissions[i].toString().startsWith(AuthDB.pluginName.toLowerCase() + "." + "admin.")) {
+                    if (Permissions[i].toString().startsWith(adminPermissions)) {
                         if (player.isOp()) {
                             return true;
                         }
