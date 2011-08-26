@@ -99,6 +99,7 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, Long> AuthDB_RemindLogin = new HashMap<String, Long>();
     public static HashMap<String, Integer> AuthDB_SpamMessage = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_SpamMessageTime = new HashMap<String, Long>();
+    public static HashMap<String, Long> AuthDB_JoinTime = new HashMap<String, Long>();
     public static HashMap<String, String> AuthDB_PasswordTries = new HashMap<String, String>();
     public static HashMap<String, String> AuthDB_LinkedNames = new HashMap<String, String>();
     public static HashMap<String, String> AuthDB_LinkedNameCheck = new HashMap<String, String>();
@@ -128,6 +129,7 @@ public class AuthDB extends JavaPlugin {
         AuthDB_SpamMessageTime.clear();
         AuthDB_GUI_PasswordFieldIDs.clear();
         AuthDB_GUI_ErrorFieldIDs.clear();
+        AuthDB_JoinTime.clear();
         AuthDB_LinkedNames.clear();
         AuthDB_LinkedNameCheck.clear();
         AuthDB_PasswordTries.clear();
@@ -591,6 +593,10 @@ public class AuthDB extends JavaPlugin {
                 Util.logging.Debug("Registred player: " + theplayer.getName());
             } else {
                 Util.logging.Debug("Failed registring player: " + theplayer.getName());
+                if (!Config.database_keepalive) { 
+                    Util.databaseManager.close(); 
+                }
+                return false;
             }
         }
         if (!Config.database_keepalive) { 

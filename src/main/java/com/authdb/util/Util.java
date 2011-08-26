@@ -1232,7 +1232,7 @@ public class Util {
         while (location.getBlock().getType().getId() == 0) {
             location.setY(location.getY() - 1);
         }
-        location.setY(location.getY() + 1);
+        location.setY(location.getY() + 2);
         return location;
     }
 

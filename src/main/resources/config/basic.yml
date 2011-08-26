@@ -16,4 +16,4 @@ script:
   name: phpBB                                      # Name of the script you are using.
   version: 3.0.8                                   # Version of the script you are using.
   tableprefix: phpbb_                              # Database table prefix for the script, if you use one.
-#  passwordsalt:                                   # Unique/custom password salt, if needed by the script.
+#  passwordsalt:                                    # NOT IMPLEMENTED YET! Unique/custom password salt, if needed by the script.

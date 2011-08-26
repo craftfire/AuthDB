@@ -105,6 +105,7 @@ public class AuthDBPlayerListener extends PlayerListener {
 
         EBean.checkIP(player.getName(), Util.craftFirePlayer.getIP(player));
         player.teleport(Util.landLocation(player.getLocation()));
+        this.plugin.AuthDB_JoinTime.put(player.getName(), Util.timeStamp());
         if (Config.link_rename && !Util.checkOtherName(player.getName()).equals(player.getName())) {
             String message = event.getJoinMessage();
             message = message.replaceAll(player.getName(), player.getDisplayName());
@@ -438,7 +439,14 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (event.isCancelled()) { return; }
         if (!plugin.isAuthorized(event.getPlayer())) {
             if (!checkGuest(event.getPlayer(),Config.guests_movement)) {
-                event.getPlayer().teleport(event.getFrom());
+                if(this.plugin.AuthDB_JoinTime.containsKey(event.getPlayer().getName())) {
+                    long jointime = this.plugin.AuthDB_JoinTime.get(event.getPlayer().getName());
+                    if (jointime + 1 < Util.timeStamp()) {
+                        this.plugin.AuthDB_JoinTime.remove(event.getPlayer().getName());
+                    }
+                } else {
+                    event.getPlayer().teleport(event.getFrom());
+                }
             }
         }
     }
