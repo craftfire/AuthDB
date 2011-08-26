@@ -217,9 +217,9 @@ public class AuthDB extends JavaPlugin {
               spoutListener = new AuthDBSpoutListener(this);
               screenListener = new AuthDBScreenListener(this);
               inputListener = new AuthDBInputListener(this);
-              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.spoutListener, Priority.Normal, this);
-              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.screenListener, Priority.Normal, this);
-              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.inputListener, Priority.Normal, this);
+              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.spoutListener, Priority.Low, this);
+              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.screenListener, Priority.Low, this);
+              pm.registerEvent(Event.Type.CUSTOM_EVENT, this.inputListener, Priority.Low, this);
               Config.hasSpout = true; 
           }
         pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
@@ -615,6 +615,11 @@ public class AuthDB extends JavaPlugin {
     void LoadYml(String type, CodeSource src) {
         String Language = "English";
         File LanguagesAll = new File(getDataFolder() + "/translations");
+        if(!LanguagesAll.exists()) {
+            if(LanguagesAll.mkdir()) {
+                Util.logging.Debug("Sucesfully created directory: "+LanguagesAll);
+            }
+        }
         boolean Set = false;
         File[] directories;
         FileFilter fileFilter = new FileFilter() {
@@ -673,6 +678,7 @@ public class AuthDB extends JavaPlugin {
     public boolean isRegistered(String when, String player) {
         boolean dupe = false;
         boolean checkneeded = true;
+        Util.logging.Debug("Checking if player " + player + " is registred.");
         EBean eBeanClass = EBean.checkPlayer(player, true);
         if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
@@ -697,7 +703,7 @@ public class AuthDB extends JavaPlugin {
                 if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                 Config.hasForumBoard = false;
                 try {
-                    if (Util.checkScript("checkuser",Config.script_name, player.toLowerCase(), null, null, null)) {
+                    if (Util.checkScript("checkuser",Config.script_name, player, null, null, null)) {
                         AuthDB_Authed.put(Encryption.md5(player), "yes");
                         dupe = true;
                     } else if (Util.checkOtherName(player) != player) {
@@ -810,7 +816,7 @@ public class AuthDB extends JavaPlugin {
                 String[] inv = Util.split(data, ", ");
                 ItemStack[] inventory;
                 if (Config.hasBackpack) { inventory = new ItemStack[252]; }
-                else if (Config.hasBuildr) { inventory = new ItemStack[72]; }
+                //else if (Config.hasBuildr) { inventory = new ItemStack[72]; }
                 else { inventory = new ItemStack[36]; }
                 
                 for (int i=0; i<inv.length; i++) {
@@ -916,7 +922,7 @@ public class AuthDB extends JavaPlugin {
                     }
                   } catch (Exception e) {
                       Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-                  } 
+                  }
                   try {
                     if (output != null) {
                       output.close();

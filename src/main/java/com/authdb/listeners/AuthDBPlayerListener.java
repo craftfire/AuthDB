@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -40,6 +41,7 @@ import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
+import com.authdb.util.databases.MySQL;
 
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
@@ -55,9 +57,12 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        /*if (!MySQL.check()) {
+        if (!MySQL.isConnected()) {
             event.disallow(Result.KICK_OTHER, "You can't join the server when the server has no connection to MySQL.");
-        }*/
+            return;
+        }
+        
+        
         EBean.sync(player);
 
         if (Config.session_protect && Util.checkIfLoggedIn(player)) {
@@ -207,12 +212,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                     }
                 } , 20);
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-                    if(Config.hasSpout) { 
-                        ZSpout spout = new ZSpout();
-                        if(!spout.popGUI(player)) {
-                            Messages.sendMessage(Message.login_prompt, player, null);
-                        }
-                    } else {
+                    if(!Config.hasSpout) {
                         Messages.sendMessage(Message.login_prompt, player, null);
                     }
                 } else {
@@ -270,6 +270,7 @@ public class AuthDBPlayerListener extends PlayerListener {
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        Util.logging.Info("Command: " + event.getMessage());
         long start = Util.timeMS();
         String noPermission = "You do not have permission to use this command.";
         String Contrib = event.getMessage();

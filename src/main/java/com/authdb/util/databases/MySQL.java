@@ -21,12 +21,12 @@ import com.authdb.util.Config;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
-import com.craftfire.util.general.GeneralUtil;
 import com.craftfire.util.managers.LoggingManager;
 
 public class MySQL {
     static LoggingManager logging = new LoggingManager();
     public static Connection mysql = null;
+    public static boolean isConnected = false;
 
     public static boolean check() {
         try {
@@ -36,20 +36,41 @@ public class MySQL {
                 logging.error("MYSQL CANNOT CONNECT!!!");
                 Messages.sendMessage(Message.database_failure, null, null);
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                isConnected = false;
                 return false;
             } else {
                 logging.error("Cannot connect to MySQL host: " + Config.database_host);
                 logging.error("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 Messages.sendMessage(Message.database_failure, null, null);
+                isConnected = false;
                 return false;
             }
         }
+        isConnected = true;
         return true;
+    }
+    
+    public static boolean isConnected() {
+        if(Config.database_keepalive) {
+            if(isConnected) {
+                return true;
+            }
+            return false;
+        } else {
+            try {
+                mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
+            } catch (SQLException e) {
+                return false;
+            }
+            isConnected = true;
+            return true;
+        }
     }
 
     public static void close() {
         if (mysql != null) {
             try {
+                isConnected = false;
                 mysql.close();
             } catch (SQLException localSQLException) {
                 Util.logging.StackTrace(localSQLException.getStackTrace(),
@@ -68,7 +89,9 @@ public class MySQL {
             Config.database_ison = false;
             logging.error("CANNOT FIND DATABASE DRIVER!!!");
             Messages.sendMessage(Message.database_failure, null, null);
+            isConnected = false;
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            return;
         }
 
         if (Config.debug_enable) {
@@ -94,13 +117,18 @@ public class MySQL {
             if (Config.debug_enable) {
                 logging.error("MYSQL CANNOT CONNECT!!!");
                 Messages.sendMessage(Message.database_failure, null, null);
+                isConnected = false;
                 logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
+                return;
             } else {
                 logging.error("MySQL cannot connect to the specified host: " + Config.database_host);
                 logging.error("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
+                isConnected = false;
                 Messages.sendMessage(Message.database_failure, null, null);
+                return;
             }
         }
+        isConnected = true;
     }
 
     public static int countitall(String table) throws SQLException {

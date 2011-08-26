@@ -6,7 +6,7 @@ website: http://www.authdb.com
 
 main: com.authdb.AuthDB
 database: true
-softdepend: [Spout, CraftIRC]
+softdepend: [Spout]
 
 commands:
   register:
@@ -38,66 +38,84 @@ commands:
     usage: /<command> <extra>
 
 permissions:
-  authdb.command.user.*:
-    description: Placeholder
+  authdb.*:
+    description: Give player permission to ALL commands.
     children:
       authdb.command.user.register: true
-      authdb.command.user.unregister: true
+#      authdb.command.user.unregister: true
       authdb.command.user.login: true
       authdb.command.user.logout: true
       authdb.command.user.link: true
       authdb.command.user.unlink: true
-      authdb.command.user.password: true
-      authdb.command.user.email: true
-      authdb.command.user.users: true
+#      authdb.command.user.password: true
+#      authdb.command.user.email: true
+#      authdb.command.user.users: true
+      authdb.command.admin.login: true
+      authdb.command.admin.logout: true
+#      authdb.command.admin.password: true
+#      authdb.command.admin.email: true
+      authdb.command.admin.reload: true
+  authdb.command.user.*:
+    description: Give player permission to all regular user commands.
+    children:
+      authdb.command.user.register: true
+#      authdb.command.user.unregister: true
+      authdb.command.user.login: true
+      authdb.command.user.logout: true
+      authdb.command.user.link: true
+      authdb.command.user.unlink: true
+#      authdb.command.user.password: true
+#      authdb.command.user.email: true
+#      authdb.command.user.users: true
   authdb.command.user.register:
-    description: Placeholder
+    description: Give player permission to register.
     default: true
 #  authdb.command.user.unregister:
-#    description: Placeholder
+#    description: Give player permission to unregister.
 #    default: true
   authdb.command.user.login:
-    description: Placeholder
+    description: Give player permission to login.
     default: true
   authdb.command.user.logout:
-    description: Placeholder
+    description: Give player permission to logout.
     default: true
   authdb.command.user.link:
-    description: Placeholder
+    description: Give player permission to link to an account.
     default: true
   authdb.command.user.unlink:
-    description: Placeholder
+    description: Give player permission to unlink from an account.
     default: true
 #  authdb.command.user.password:
-#    description: Placeholder
+#    description: Give player permission to change their password.
 #    default: true
 #  authdb.command.user.email:
-#    description: Placeholder
+#    description: Give player permission to change their email.
 #    default: true
   authdb.command.user.users:
-    description: Placeholder
+    description: Give player permission to check the number of registered users.
     default: true
 #  authdb.command.admin.unregister:
 #    default: op
   authdb.command.admin.*:
+    description: Give player permission to all admin commands.
     children:
       authdb.command.admin.login: true
       authdb.command.admin.logout: true
-      authdb.command.admin.password: true
-      authdb.command.admin.email: true
+#      authdb.command.admin.password: true
+#      authdb.command.admin.email: true
       authdb.command.admin.reload: true
   authdb.command.admin.login:
-    description: Placeholder
+    description: Give player permission to login a specified player.
     default: op
   authdb.command.admin.logout:
-    description: Placeholder
+    description: Give player permission to logout a specified player.
     default: op
-  authdb.command.admin.password:
-    description: Placeholder
-    default: op
+#  authdb.command.admin.password:
+#    description: Give player permission to change a player's password.
+#    default: op
 #  authdb.command.admin.email:
-#    description: Placeholder
+#    description: Give player permission to change a player's email.
 #    default: op
   authdb.command.admin.reload:
-    description: Placeholder
+    description: Give player permission to reload the config, commands, and messages.
     default: op

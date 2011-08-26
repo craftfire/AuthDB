@@ -42,7 +42,7 @@ public class AuthDBInputListener extends InputListener {
     public AuthDBInputListener(AuthDB instance) {
         plugin = instance;
     }
-/*
+
     public void onKeyPressedEvent(KeyPressedEvent event) {
         final SpoutPlayer player = event.getPlayer();
         if(this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
@@ -87,7 +87,8 @@ public class AuthDBInputListener extends InputListener {
                         spout.wrongPassword(player, screen, popup);
                     }
                 }
-            } else if(event.getKey().equals(Keyboard.KEY_BACK)) {
+            } 
+            /* else if(event.getKey().equals(Keyboard.KEY_BACK)) {
                 InGameHUD screen = player.getMainScreen();
                 PopupScreen popup = screen.getActivePopup();
                 UUID id = this.plugin.AuthDB_GUI_PasswordFieldIDs.get(player.getName());
@@ -127,8 +128,7 @@ public class AuthDBInputListener extends InputListener {
                     }
                 }, 2);
             }
+            */
         }
-    }
-    */
-    
+    }  
 }

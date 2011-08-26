@@ -79,6 +79,7 @@ public class EBean {
 
     public static void sync(Player player) {
         try {
+            if (!Config.database_keepalive) { Util.databaseManager.connect(); }
             EBean eBeanClass = checkPlayer(player.getName(), true);
             String registred = eBeanClass.getRegistred();
             if (!Util.checkScript("checkuser", Config.script_name, player.getName(), null, null, null)) {
@@ -93,6 +94,7 @@ public class EBean {
                 Util.checkScript("syncpassword", Config.script_name, player.getName(), null, null, null);
                 Util.checkScript("syncsalt", Config.script_name, player.getName(), null, null, null);
             }
+            if (!Config.database_keepalive) { Util.databaseManager.close(); }
         }
         catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());

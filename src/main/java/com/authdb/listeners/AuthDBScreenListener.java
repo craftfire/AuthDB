@@ -57,7 +57,6 @@ public class AuthDBScreenListener extends ScreenListener {
                     Processes.Login(player);
                     screen.closePopup();
                     popup.setVisible(false);
-                    //Messages.sendMessage(Message.login_success, player, null);
                     this.plugin.AuthDB_GUI_PasswordFieldIDs.remove(player.getName());
                     ZSpout spout = new ZSpout();
                     spout.showGUI(screen, true);
@@ -81,8 +80,11 @@ public class AuthDBScreenListener extends ScreenListener {
     }
     
     public void onScreenClose(ScreenCloseEvent event) {
+        Util.logging.Debug("CLOSING SCREEN!");
         if (!AuthDB.isAuthorized(event.getPlayer())) {
+            Util.logging.Debug("IS NOT AUTHED!");
             if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
+                Util.logging.Debug("CANCEL IT!!");
                 event.setCancelled(true);
             }
         }

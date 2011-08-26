@@ -9,11 +9,9 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.plugins;
 
-import java.awt.Color;
-
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.Button;
-import org.getspout.spoutapi.gui.ChatTextBox;
+import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -28,35 +26,43 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
-import com.authdb.util.Util;
 
 public class ZSpout {
     
     private int width = 200;
     private int height = 20;
-    private int offset = 40;
     
-    public boolean popGUI(Player player) {
+    public boolean checkGUI(Player player) {
         if(Config.hasSpout) {
             SpoutPlayer spoutPlayer = (SpoutPlayer)player;
-            if(spoutPlayer.isSpoutCraftEnabled() && spoutPlayer.getVersion() >=18) {
-                PopupScreen popup = new GenericPopup();
-                InGameHUD screen = spoutPlayer.getMainScreen();
-                screen.attachPopupScreen(popup);
-                showGUI(screen, false);
-                Button button = new GenericButton("Login");
-                button.setCentered(true);
-                button.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2);
-                popup.attachWidget(button);
-                TextField textField = new GenericTextField();
-                textField.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2-offset);
-                textField.setBorderColor(13);
-                AuthDB.AuthDB_GUI_PasswordFieldIDs.put(player.getName(), textField.getId());
-                popup.attachWidget(textField);
+            if(!AuthDB.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName()) && spoutPlayer.isSpoutCraftEnabled() && spoutPlayer.getVersion() >=18) {
+                popGUI(spoutPlayer);
                 return true;
             }
         }
         return false;
+    }
+    
+    public void popGUI(SpoutPlayer spoutPlayer) {
+        PopupScreen popup = new GenericPopup();
+        InGameHUD screen = spoutPlayer.getMainScreen();
+        screen.attachPopupScreen(popup);
+        showGUI(screen, false);
+        
+        Label pleaseLogin = new GenericLabel();
+        pleaseLogin.setText("Please enter your password");
+        int offset = 20;
+        pleaseLogin.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2 + offset + 3).setY((screen.getHeight()-height)/2 - (offset*2));
+        popup.attachWidget(AuthDB.plugin, pleaseLogin);
+        
+        Button button = new GenericButton("Login");
+        button.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2 + (offset / 2));
+        popup.attachWidget(AuthDB.plugin, button);
+        
+        TextField textField = new GenericTextField();
+        textField.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2-offset);
+        AuthDB.AuthDB_GUI_PasswordFieldIDs.put(spoutPlayer.getName(), textField.getId());
+        popup.attachWidget(AuthDB.plugin, textField);
     }
     
     public void showGUI(InGameHUD screen, boolean show) {
@@ -82,19 +88,22 @@ public class ZSpout {
         for (Widget w : popup.getAttachedWidgets()) {
             if(w.getType().equals(WidgetType.Label)) {
                 Label wrongPassword = (Label)w;
-                wrongPassword.setText("Wrong password, try again." + extra);
-                wrongPassword.setDirty(true);
-                set = true;
-                break;
+                if(wrongPassword.getText().startsWith("Wrong password"))
+                {
+                    wrongPassword.setText("Wrong password, try again." + extra);
+                    wrongPassword.setDirty(true);
+                    set = true;
+                    break;
+                }
             }
         } 
         if (!set) {
             Label wrongPassword = new GenericLabel();
             wrongPassword.setText("Wrong password, try again." + extra);
-            wrongPassword.setHexColor(16711680);
+            wrongPassword.setTextColor(new Color(1.0F, 0, 0, 1.0F));
             int offset = 20;
             wrongPassword.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2 - offset - 3).setY((screen.getHeight()-height)/2 + (offset*2));
-            popup.attachWidget(wrongPassword);
+            popup.attachWidget(AuthDB.plugin, wrongPassword);
         }
     }
 }

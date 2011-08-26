@@ -48,6 +48,12 @@
         <repository>
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
+			<releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
         <repository>
             <id>craftfire-dbrepo</id>
@@ -126,6 +132,11 @@
             <groupId>com.afforess</groupId>
             <artifactId>backpack</artifactId>
             <version>2.2.0</version>
+        </dependency>
+		<dependency>
+            <groupId>me.simplex</groupId>
+            <artifactId>buildr</artifactId>
+            <version>0.6</version>
         </dependency>
     </dependencies>
 

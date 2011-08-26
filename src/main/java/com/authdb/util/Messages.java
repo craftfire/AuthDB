@@ -369,7 +369,7 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.password_usage)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_usage, player, null));
             } else if (type.equals(Message.session_valid)) {
-                if(Config.hasBukkitContrib) { player.sendMessage(""); }
+                if(Config.hasBukkitContrib || Config.hasSpout) { player.sendMessage(""); }
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid, player, null));
             } else if (type.equals(Message.session_protected)) {
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, null));

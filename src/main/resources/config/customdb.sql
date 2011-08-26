@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS `authdb_users` (
   `username` varchar(40) NOT NULL,
   `password` varchar(40) NOT NULL,
   `email` varchar(100) NOT NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
