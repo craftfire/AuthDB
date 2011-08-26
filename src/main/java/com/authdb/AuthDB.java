@@ -587,7 +587,11 @@ public class AuthDB extends JavaPlugin {
         if (!Util.checkFilter("password",password)) {
             Messages.sendMessage(Message.filter_password, theplayer, null);
         } else {
-            Util.checkScript("adduser",Config.script_name,player, password, email, ipAddress);
+            if(Util.checkScript("adduser", Config.script_name, player, password, email, ipAddress)) {
+                Util.logging.Debug("Registred player: " + theplayer.getName());
+            } else {
+                Util.logging.Debug("Failed registring player: " + theplayer.getName());
+            }
         }
         if (!Config.database_keepalive) { 
             Util.databaseManager.close(); 

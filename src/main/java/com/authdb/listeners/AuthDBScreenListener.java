@@ -80,11 +80,8 @@ public class AuthDBScreenListener extends ScreenListener {
     }
     
     public void onScreenClose(ScreenCloseEvent event) {
-        Util.logging.Debug("CLOSING SCREEN!");
         if (!AuthDB.isAuthorized(event.getPlayer())) {
-            Util.logging.Debug("IS NOT AUTHED!");
             if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-                Util.logging.Debug("CANCEL IT!!");
                 event.setCancelled(true);
             }
         }

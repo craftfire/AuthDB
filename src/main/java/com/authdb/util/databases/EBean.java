@@ -82,14 +82,18 @@ public class EBean {
             if (!Config.database_keepalive) { Util.databaseManager.connect(); }
             EBean eBeanClass = checkPlayer(player.getName(), true);
             String registred = eBeanClass.getRegistred();
-            if (!Util.checkScript("checkuser", Config.script_name, player.getName(), null, null, null)) {
+            if (Util.checkScript("checkuser", Config.script_name, player.getName(), null, null, null)) {
+				eBeanClass.setRegistred("true");
+				save(eBeanClass);
+				registred = "true";
+            } else {
                 if (registred != null && registred.equalsIgnoreCase("true")) {
                     Util.logging.Debug("Registred value for " + player.getName() + " in persistence is different than in MySQL, syncing registred value from MySQL.");
                     eBeanClass.setRegistred("false");
                     save(eBeanClass);
                     registred = "false";
                 }
-            }
+			}
             if (registred != null && registred.equalsIgnoreCase("true")) {
                 Util.checkScript("syncpassword", Config.script_name, player.getName(), null, null, null);
                 Util.checkScript("syncsalt", Config.script_name, player.getName(), null, null, null);
