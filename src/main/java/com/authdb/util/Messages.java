@@ -372,7 +372,7 @@ static AuthDB plugin = new AuthDB();
                 if(Config.hasBukkitContrib || Config.hasSpout) { player.sendMessage(""); }
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid, player, null));
             } else if (type.equals(Message.session_protected)) {
-                event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, null));
+                event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, "login"));
             } else if (type.equals(Message.protection_denied)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_protection_denied, player, null));
             } else if (type.equals(Message.protection_notauthorized)) {

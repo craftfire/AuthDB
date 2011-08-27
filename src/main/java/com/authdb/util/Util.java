@@ -1036,7 +1036,11 @@ public class Util {
     public static String replaceStrings(String string, Player player, String additional) {
         long start = Util.timeMS();
         logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
-        if (!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum)) {
+        String extra = "";
+        if(additional != null) {
+            extra = additional;
+        }
+        if (!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum) && extra.equalsIgnoreCase("login") == false) {
             string = string.replaceAll("\\{IP\\}", craftFirePlayer.getIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");
