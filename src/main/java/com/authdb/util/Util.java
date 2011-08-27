@@ -1045,6 +1045,11 @@ public class Util {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", checkOtherName(player.getName()));
             }
         } else { string = string.replaceAll("&", Matcher.quoteReplacement("§"));  }
+        String email = "";
+        if(Config.custom_emailrequired) {
+            email = "email";
+        }
+        
         string = string.replaceAll("\\{USERMIN\\}", Config.username_minimum);
         string = string.replaceAll("\\{USERMAX\\}", Config.username_maximum);
         string = string.replaceAll("\\{PASSMIN\\}", Config.password_minimum);
@@ -1055,6 +1060,7 @@ public class Util {
         string = string.replaceAll("\\{REGISTERTIMEOUT\\}", "" + Config.register_timeout_length + " " + replaceTime(Config.register_timeout_length, Config.register_timeout_time));
         string = string.replaceAll("\\{USERBADCHARACTERS\\}", Matcher.quoteReplacement(Config.filter_username));
         string = string.replaceAll("\\{PASSBADCHARACTERS\\}", Matcher.quoteReplacement(Config.filter_password));
+        string = string.replaceAll("\\{EMAILREQUIRED\\}", email);
         string = string.replaceAll("\\{NEWLINE\\}", "\n");
         string = string.replaceAll("\\{newline\\}", "\n");
         string = string.replaceAll("\\{N\\}", "\n");
