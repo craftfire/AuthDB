@@ -109,6 +109,7 @@ public class Util {
                     return true;
                 } else if (type.equalsIgnoreCase("adduser")) {
                     Custom.adduser(player, email, password, ipAddress);
+                    return true;
                 } else if (type.equalsIgnoreCase("numusers")) {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `" + Config.custom_table + "`");
                     ResultSet rs = ps.executeQuery();

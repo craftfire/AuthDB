@@ -9,10 +9,12 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.util;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
+import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.encryption.Encryption;
 
@@ -75,6 +77,7 @@ public class Processes {
             if (Config.session_enabled) {
                 if (!AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
                     AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
+                    Util.logging.Debug("Session started for " + player.getName());
                 }
                 eBeanClass.setSessiontime(timestamp);
             }

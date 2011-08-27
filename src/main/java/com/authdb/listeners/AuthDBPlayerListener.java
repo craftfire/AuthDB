@@ -228,10 +228,10 @@ public class AuthDBPlayerListener extends PlayerListener {
                 }
                 player.getInventory().clear();
                 Util.craftFirePlayer.clearArmorinventory(player);
-                Messages.sendMessage(Message.welcome_guest, player, null);
+                Messages.sendMessage(Message.register_welcome, player, null);
             } else if (!Config.register_force) {
                 if(Config.register_enabled) {
-                    Messages.sendMessage(Message.welcome_guest, player, null);
+                    Messages.sendMessage(Message.register_welcome, player, null);
                 }
             } else {
                 long thetimestamp = System.currentTimeMillis()/1000;
@@ -272,7 +272,6 @@ public class AuthDBPlayerListener extends PlayerListener {
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        Util.logging.Info("Command: " + event.getMessage());
         long start = Util.timeMS();
         String Contrib = event.getMessage();
         Contrib = Contrib.replaceAll("/", "");
@@ -358,6 +357,9 @@ public class AuthDBPlayerListener extends PlayerListener {
             } else if (split[0].equalsIgnoreCase(Config.commands_register) || split[0].equalsIgnoreCase(Config.aliases_register)) {
                 if (ZPermissions.isAllowed(player, Permission.command_register)) {
                     Boolean email = true;
+                    if (Config.custom_enabled) {
+                        email = Config.custom_emailrequired;
+                    }
                     if (Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
                     if (!Config.register_enabled) {
                         Messages.sendMessage(Message.register_disabled, player, null);
@@ -368,7 +370,6 @@ public class AuthDBPlayerListener extends PlayerListener {
                     } else if (split.length < 3 && email) {
                         Messages.sendMessage(Message.email_required, player, null);
                     } else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2]))) {
-                        Util.logging.Debug("LOG: "+split[2]);
                         Messages.sendMessage(Message.email_invalid, player, null);
                     } else {
                         try {
@@ -380,34 +381,12 @@ public class AuthDBPlayerListener extends PlayerListener {
                                     themail = split[2];
                                 }
                                 if (this.plugin.register(player, split[1], themail,Util.craftFirePlayer.getIP(player))) {
-                                    ItemStack[] inv = this.plugin.getInventory(player);
-                                    if (inv != null) {
-                                        player.getInventory().setContents(inv);
+                                    if(Processes.Login(player)) {
+                                        Messages.sendMessage(Message.register_success, player, null);
+                                    } else {
+                                        Messages.sendMessage(Message.register_failure, player, null);
+                                        Util.logging.Debug("Registering user failed!");
                                     }
-                                    inv = AuthDB.getArmorInventory(player);
-                                    if (inv != null) {
-                                        player.getInventory().setArmorContents(inv);
-                                    }
-                                    long timestamp = System.currentTimeMillis()/1000;
-                                    this.plugin.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
-                                    if(Config.session_enabled) {
-                                        this.plugin.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
-                                        EBean eBeanClass = EBean.checkPlayer(player, true);
-                                        eBeanClass.setSessiontime(timestamp);
-                                        AuthDB.database.save(eBeanClass);
-                                        Util.logging.Debug("Session started for " + player.getName());
-                                    }
-                                    Processes.Login(player);
-                                    long thetimestamp = System.currentTimeMillis()/1000;
-                                    this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
-                                    Location temploc = event.getPlayer().getLocation();
-                                    while (temploc.getBlock().getTypeId() == 0) {
-                                        temploc.setY(temploc.getY() - 1);
-                                    }
-                                    temploc.setY(temploc.getY() + 1);
-                                    event.getPlayer().teleport(temploc);
-
-                                    Messages.sendMessage(Message.register_success, player, null);
                                 }
                             }
                         } catch (IOException e) {
@@ -441,7 +420,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             if (!checkGuest(event.getPlayer(),Config.guests_movement)) {
                 if(this.plugin.AuthDB_JoinTime.containsKey(event.getPlayer().getName())) {
                     long jointime = this.plugin.AuthDB_JoinTime.get(event.getPlayer().getName());
-                    if (jointime + 1 < Util.timeStamp()) {
+                    if (jointime + 3 < Util.timeStamp()) {
                         this.plugin.AuthDB_JoinTime.remove(event.getPlayer().getName());
                     }
                 } else {

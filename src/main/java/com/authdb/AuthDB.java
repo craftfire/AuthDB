@@ -247,7 +247,7 @@ public class AuthDB extends JavaPlugin {
         updateLinkedNames();
         
         Util.databaseManager.connect();
-        try { Util.checkScript("numusers",Config.script_name, null, null, null, null); }
+        try { Util.checkScript("numusers", Config.script_name, null, null, null, null); }
         catch (SQLException e) {
             if (Config.custom_enabled && Config.custom_autocreate) {
                 String enter = "\n";
@@ -412,8 +412,7 @@ public class AuthDB extends JavaPlugin {
                     Messages.sendMessage(Message.login_admin_notfound, player, null, PlayerName);
                     return true;
                     }
-                }
-                else { Messages.sendMessage(Message.protection_denied, player, null); }
+                } else { Messages.sendMessage(Message.protection_denied, player, null); }
             }
         }
         return false;

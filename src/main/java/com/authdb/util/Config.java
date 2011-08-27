@@ -33,7 +33,7 @@ public class Config {
     public static boolean script_updatestatus;
 
     public static String custom_table,custom_userfield,custom_passfield,custom_encryption,custom_emailfield;
-    public static boolean custom_enabled,custom_autocreate,custom_salt;
+    public static boolean custom_enabled,custom_autocreate,custom_salt, custom_emailrequired;
 
     public static boolean register_enabled,register_force;
     public static String register_delay_length,register_delay_time,register_timeout_length,register_timeout_time,register_show_length,register_show_time;
@@ -106,11 +106,12 @@ public class Config {
                 
                 custom_enabled = getConfigBoolean("customdb.enabled", false);
                 custom_autocreate = getConfigBoolean("customdb.autocreate", true);
+                custom_emailrequired = getConfigBoolean("customdb.emailrequired", false);
                 custom_table = getConfigString("customdb.table", "authdb_users");
                 custom_userfield = getConfigString("customdb.userfield", "username");
                 custom_passfield = getConfigString("customdb.passfield", "password");
-                custom_emailfield = getConfigString("customdb.emailfield", "");
-                custom_encryption = getConfigString("customdb.encryption", "").toLowerCase();
+                custom_emailfield = getConfigString("customdb.emailfield", "email");
+                custom_encryption = getConfigString("customdb.encryption", "md5").toLowerCase();
 
                 register_enabled = getConfigBoolean("register.enabled", true);
                 register_force = getConfigBoolean("register.force", true);
@@ -213,9 +214,7 @@ public class Config {
 
                 Messages.AuthDB_message_database_failure = Config.getConfigString("Core.database.failure", "{RED}database connection failed! Access is denied! Contact admin.");
 
-                Messages.AuthDB_message_welcome_guest = (String)Config.getConfigString("Core.welcome.guest", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email or {LINKCMD} otherusername password");
-                //Messages.AuthDB_message_welcome_user = (String)Config.getConfigString("Core.welcome.user", "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please login with /login password");
-                    
+                Messages.AuthDB_message_register_welcome = (String)Config.getConfigString("Core.register.welcome", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email");
                 Messages.AuthDB_message_register_success = Config.getConfigString("Core.register.success", "{RED}You have been registered!");
                 Messages.AuthDB_message_register_failure = Config.getConfigString("Core.register.failure", "{RED}Registration failed!");
                 Messages.AuthDB_message_register_exists = Config.getConfigString("Core.register.exists", "{RED}You are already registered!");
@@ -248,6 +247,7 @@ public class Config {
                 Messages.AuthDB_message_login_admin_notfound = Config.getConfigString("Core.login.adminnotfound", "Could not find player, {PLAYER}! Please try again.");
                 Messages.AuthDB_message_login_usage = Config.getConfigString("Core.login.usage", "{RED}Correct usage is: /login password");
 
+                Messages.AuthDB_message_link_welcome = (String)Config.getConfigString("Core.link.welcome", "or {LINKCMD} otherusername password");
                 Messages.AuthDB_message_link_success = Config.getConfigString("Core.link.success", "{BRIGHTGREEN}You have successfully linked!. You are now logged in");
                 Messages.AuthDB_message_link_failure = Config.getConfigString("Core.link.failure", "{RED}Error while linking!");
                 Messages.AuthDB_message_link_exists = Config.getConfigString("Core.link.exists", "{RED}You are already linked to a username!");

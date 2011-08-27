@@ -23,7 +23,7 @@ public class ZCraftIRC {
             if (type.equals(Message.database_failure)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.AuthDB_message_database_failure,player,""), Config.CraftIRC_tag);
             }
-            if (type.equals(Message.welcome_guest) || type.equals(Message.login_prompt) || type.equals(Message.login_normal)) {
+            if (type.equals(Message.register_welcome) || type.equals(Message.login_prompt) || type.equals(Message.login_normal)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_status_join,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.left_server)) {
                 AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_status_quit,player,""), Config.CraftIRC_tag);
