@@ -43,7 +43,7 @@ public class WordPress {
             ps.close();
             int userid = MySQL.countitall(Config.script_tableprefix + "users");
             
-            String[] fields = {"first_name", "last_name", "nickname", "description", "rich_editing", "comment_shortcuts", "admin_color", "use_ssl", "show_admin_bar_front", "show_admin_bar_admin", "aim", "yim", "jabber", "wp__321__capabilities", "wp__321__user_level"};
+            String[] fields = {"first_name", "last_name", "nickname", "description", "rich_editing", "comment_shortcuts", "admin_color", "use_ssl", "show_admin_bar_front", "show_admin_bar_admin", "aim", "yim", "jabber", Config.script_tableprefix + "capabilities", Config.script_tableprefix + "user_level"};
             String[] values = {"", "", player, "", "true", "false", "fresh", "0", "true", "false", "", "", "", "a:1:{s:10:\"subscriber\";s:1:\"1\";}", "0"};
             for (int i = 0; i < fields.length; i++) {
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "usermeta" + "` (`user_id`, `meta_key`, `meta_value`)  VALUES (?, ?, ?)", 1);
