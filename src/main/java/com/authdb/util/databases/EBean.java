@@ -42,7 +42,7 @@ public class EBean {
         authorized ("authorized"),
         timeout ("timeout"),
         reloadtime ("reloadtime"),
-        registred ("registred"),
+        registered ("registered"),
         ip ("ip");
 
         private String name;
@@ -56,7 +56,7 @@ public class EBean {
         if (eBeanClass == null)  {
             eBeanClass = new EBean();
             eBeanClass.setPlayername(player);
-            eBeanClass.setRegistred("false");
+            eBeanClass.setRegistered("false");
             if(save) { save(eBeanClass); }
         }
         return eBeanClass;
@@ -67,7 +67,7 @@ public class EBean {
         if (eBeanClass == null)  {
             eBeanClass = new EBean();
             eBeanClass.setPlayer(player);
-            eBeanClass.setRegistred("false");
+            eBeanClass.setRegistered("false");
             if(save) { save(eBeanClass); }
         }
         return eBeanClass;
@@ -81,15 +81,15 @@ public class EBean {
         try {
             if (!Config.database_keepalive) { Util.databaseManager.connect(); }
             EBean eBeanClass = checkPlayer(player.getName(), true);
-            String registred = eBeanClass.getRegistred();
+            String registred = eBeanClass.getRegistered();
             if (Util.checkScript("checkuser", Config.script_name, player.getName(), null, null, null)) {
-				eBeanClass.setRegistred("true");
+				eBeanClass.setRegistered("true");
 				save(eBeanClass);
 				registred = "true";
             } else {
                 if (registred != null && registred.equalsIgnoreCase("true")) {
                     Util.logging.Debug("Registred value for " + player.getName() + " in persistence is different than in MySQL, syncing registred value from MySQL.");
-                    eBeanClass.setRegistred("false");
+                    eBeanClass.setRegistered("false");
                     save(eBeanClass);
                     registred = "false";
                 }
@@ -199,9 +199,9 @@ public class EBean {
     private String ip;
     private String email;
     private String inventory;
-    private String armorinventory;
+    private String equipment;
     private String activated;
-    private String registred;
+    private String registered;
     private String authorized;
     private int timeoutid;
     private long reloadtime;
@@ -304,12 +304,12 @@ public class EBean {
         this.inventory = inv;
     }
 
-    public String getRegistred() {
-        return registred;
+    public String getRegistered() {
+        return registered;
     }
 
-    public void setRegistred(String registred) {
-        this.registred = registred;
+    public void setRegistered(String registered) {
+        this.registered = registered;
     }
 
     public int getTimeoutid() {
@@ -328,11 +328,11 @@ public class EBean {
         this.sessiontime = sessiontime; 
     }
 
-    public String getArmorinventory() {
-        return armorinventory;
+    public String getEquipment() {
+        return equipment;
     }
 
-    public void setArmorinventory(String armorinv) {
-        this.armorinventory = armorinv;
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
     }
 }

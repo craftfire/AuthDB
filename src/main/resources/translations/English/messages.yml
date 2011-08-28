@@ -47,7 +47,7 @@ Core:
     adminnotfound: "Could not find player, {PLAYER}! Please try again."
     usage: "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}"
   link:
-    welcome: "or {LINKCMD} otherusername password"
+    welcome: "{N}or {LINKCMD} otherusername password"
     success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
     failure: "{RED}Username linking failed!"
     exists: "{RED}You are already linked to a username!"

@@ -56,7 +56,7 @@ public class PlayerManager {
 
           EBean eBeanClass = EBean.find(player);
           eBeanClass.setInventory(inv.toString());
-          eBeanClass.setArmorinventory(armorinv.toString());
+          eBeanClass.setEquipment(armorinv.toString());
           pluginManager.plugin.database.save(eBeanClass);
       }
     
@@ -106,7 +106,7 @@ public class PlayerManager {
     public ItemStack[] getArmorInventory(Player player) {
         EBean eBeanClass = EBean.find(player);
         if (eBeanClass != null) {
-            String data = eBeanClass.getArmorinventory();
+            String data = eBeanClass.getEquipment();
             if (data != "" && data != null) {
                 String[] inv = pluginManager.util.split(data, ", ");
                 ItemStack[] inventory = new ItemStack[4];
@@ -134,7 +134,7 @@ public class PlayerManager {
                       }
                     }
                   }
-                eBeanClass.setArmorinventory(null);
+                eBeanClass.setEquipment(null);
                 pluginManager.plugin.database.save(eBeanClass);
                 return inventory;
             }

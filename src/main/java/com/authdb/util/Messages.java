@@ -243,15 +243,11 @@ static AuthDB plugin = new AuthDB();
         } else if (Config.database_ison) {
             if (type.equals(Message.register_welcome)) {
                 if(Config.authdb_enabled) {
-                    if (Config.register_force) {
-                        Util.spamText(player, Message.register_welcome.text, Config.register_delay, Config.register_show);
-                    } else {
-                        if(Config.link_enabled) {
-                            player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome + " " + AuthDB_message_link_welcome, player, null));
-                        } else {
-                            player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome, player, null));
-                        }
-                    } 
+					if(Config.link_enabled) {
+						player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome + " " + AuthDB_message_link_welcome, player, null));
+					} else {
+						player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome, player, null));
+					}
                 } else {
                     player.sendMessage(Util.replaceStrings(AuthDB_message_register_offline, player, null));
                 }

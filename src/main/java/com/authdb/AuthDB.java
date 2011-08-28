@@ -715,7 +715,7 @@ public class AuthDB extends JavaPlugin {
         boolean checkneeded = true;
         Util.logging.Debug("Checking if player " + player + " is registred.");
         EBean eBeanClass = EBean.checkPlayer(player, true);
-        if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
+        if(eBeanClass.getRegistered().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
                 if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                 Config.hasForumBoard = false;

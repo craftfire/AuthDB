@@ -64,7 +64,7 @@ public class Util {
         if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
             EBean eBeanClass = EBean.checkPlayer(player, true);
             if (type.equalsIgnoreCase("checkuser")) {
-                if(eBeanClass.getRegistred().equalsIgnoreCase("true")) {
+                if(eBeanClass.getRegistered().equalsIgnoreCase("true")) {
                     return true;
                 }
                 return false;
@@ -76,7 +76,7 @@ public class Util {
                 Custom.adduser(player, email, password, ipAddress);
                 eBeanClass.setEmail(email);
                 eBeanClass.setPassword(Encryption.SHA512(password));
-                eBeanClass.setRegistred("true");
+                eBeanClass.setRegistered("true");
                 eBeanClass.setIp(ipAddress);
             } else if (type.equalsIgnoreCase("numusers")) {
                 int amount = EBean.getUsers(); 

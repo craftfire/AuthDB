@@ -74,7 +74,7 @@ public class Processes {
             AuthDB.AuthDB_PasswordTries.put(player.getName(), "0");
             EBean eBeanClass = EBean.checkPlayer(player, true);
             eBeanClass.setAuthorized("true");
-            eBeanClass.setRegistred("true");
+            eBeanClass.setRegistered("true");
             if (!AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
                 AuthDB.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
             }
@@ -126,7 +126,7 @@ public class Processes {
             EBean eBeanClass = EBean.checkPlayer(player, true);
             eBeanClass.setLinkedname("");
             eBeanClass.setSessiontime(0);
-            eBeanClass.setRegistred("false");
+            eBeanClass.setRegistered("false");
             AuthDB.database.save(eBeanClass);
             Logout(player);
             return true;
