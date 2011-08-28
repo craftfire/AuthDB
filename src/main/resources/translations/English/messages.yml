@@ -52,6 +52,7 @@ Core:
     failure: "{RED}Username linking failed!"
     exists: "{RED}You are already linked to a username!"
     duplicate: "{RED}Username is already linked to another player!"
+    registered: "{RED}You cannot link as this username is already registered!"
     invaliduser: "{RED}You cannot link with yourself!"
     usage: "{YELLOW}Correct usage is: {WHITE}{LINKCMD} otherusername password"
   unlink:

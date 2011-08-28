@@ -59,7 +59,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               link
         ///////////////////////////////////////////
-        public static String AuthDB_message_link_welcome, AuthDB_message_link_success, AuthDB_message_link_failure, AuthDB_message_link_exists, AuthDB_message_link_usage, AuthDB_message_link_duplicate, AuthDB_message_link_invaliduser;
+        public static String AuthDB_message_link_welcome, AuthDB_message_link_success, AuthDB_message_link_failure, AuthDB_message_link_exists, AuthDB_message_link_usage, AuthDB_message_link_duplicate, AuthDB_message_link_registred, AuthDB_message_link_invaliduser;
 
         ///////////////////////////////////////////
         //               unlink
@@ -164,6 +164,7 @@ static AuthDB plugin = new AuthDB();
         link_failure (AuthDB_message_link_failure),
         link_exists (AuthDB_message_link_exists),
         link_duplicate (AuthDB_message_link_duplicate),
+        link_registred (AuthDB_message_link_registred),
         link_invaliduser (AuthDB_message_link_invaliduser),
         link_usage (AuthDB_message_link_usage),
         unlink_success (AuthDB_message_unlink_success),
@@ -323,6 +324,8 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_usage, player, null));
             } else if (type.equals(Message.link_duplicate)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_duplicate, player, null));
+            } else if (type.equals(Message.link_registred)) {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_link_registred, player, null));
             } else if (type.equals(Message.link_invaliduser)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_invaliduser, player, null));
             } else if (type.equals(Message.unlink_success)) {

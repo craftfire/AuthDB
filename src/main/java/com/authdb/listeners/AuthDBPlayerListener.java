@@ -308,19 +308,23 @@ public class AuthDBPlayerListener extends PlayerListener {
                     if (ZPermissions.isAllowed(player, Permission.command_link)) {
                         if (split.length == 3) {
                             if (!player.getName().equals(split[1])) {
+                                if (this.plugin.isRegistered("link",player.getName()) == false) {
                                    if (Util.checkOtherName(player.getName()).equals(player.getName())) {
                                        EBean eBeanClass = EBean.checkPlayer(split[1], true);
                                        String linkedname = eBeanClass.getLinkedname();
                                        if (linkedname != null) {
                                            Messages.sendMessage(Message.link_duplicate, player, null);
                                        } else if (this.plugin.checkPassword(split[1], split[2])) {
-                                        Processes.Link(player,split[1]);
-                                        Messages.sendMessage(Message.link_success, player, null);
+                                           Processes.Link(player,split[1]);
+                                           Messages.sendMessage(Message.link_success, player, null);
+                                       } else {
+                                           Messages.sendMessage(Message.link_failure, player, null);
+                                       }
                                     } else {
-                                        Messages.sendMessage(Message.link_failure, player, null);
+                                        Messages.sendMessage(Message.link_exists, player, null);
                                     }
                                 } else {
-                                    Messages.sendMessage(Message.link_exists, player, null);
+                                    Messages.sendMessage(Message.link_registred, player, null);
                                 }
                             } else {
                                 Messages.sendMessage(Message.link_invaliduser, player, null);

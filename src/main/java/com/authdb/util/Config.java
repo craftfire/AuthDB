@@ -253,7 +253,8 @@ public class Config {
                 Messages.AuthDB_message_link_success = Config.getConfigString("Core.link.success", "{BRIGHTGREEN}You have successfully linked!. You are now logged in");
                 Messages.AuthDB_message_link_failure = Config.getConfigString("Core.link.failure", "{RED}Error while linking!");
                 Messages.AuthDB_message_link_exists = Config.getConfigString("Core.link.exists", "{RED}You are already linked to a username!");
-                Messages.AuthDB_message_link_duplicate = Config.getConfigString("Core.link.duplicate", "RED}Username is already linked to another player!");
+                Messages.AuthDB_message_link_duplicate = Config.getConfigString("Core.link.duplicate", "{RED}Username is already linked to another player!");
+                Messages.AuthDB_message_link_registred = Config.getConfigString("Core.link.registred", "{RED}You cannot link as this username is already registered!");
                 Messages.AuthDB_message_link_invaliduser = Config.getConfigString("Core.link.invaliduser", "{RED}You cannot link with yourself!");
                 Messages.AuthDB_message_link_usage = Config.getConfigString("Core.link.usage", "{RED}Correct usage is: /link otherusername password");
 
