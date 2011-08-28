@@ -22,6 +22,7 @@ import com.authdb.util.databases.EBean;
 
 public class PlayerManager {
     PluginManager pluginManager = new PluginManager();
+    LoggingManager loggingManager = new LoggingManager();
     
     public void setInventoryFromStorage(Player player) {
         ItemStack[] inv = getInventory(player);
@@ -39,15 +40,19 @@ public class PlayerManager {
         StringBuffer armorinv = new StringBuffer();
         for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
             if (inventory[i] != null) {
-                inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ", ");
+                inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "0" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ",");
             } else { inv.append("0:0:0:0,"); }
         }
         
+        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s inventory: " + inv);
+        
         for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
             if (armorinventory[i] != null) {
-                armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ", ");
+                armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "0" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ",");
             } else { armorinv.append("0:0:0:0,"); }
         }
+        
+        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s armor inventory: " + armorinv);
 
           EBean eBeanClass = EBean.find(player);
           eBeanClass.setInventory(inv.toString());
@@ -60,7 +65,7 @@ public class PlayerManager {
         if (eBeanClass != null) {
             String data = eBeanClass.getInventory();
             if (data != "" && data != null) {
-                String[] inv = pluginManager.util.split(data, ", ");
+                String[] inv = pluginManager.util.split(data, ",");
                 ItemStack[] inventory;
                 if (pluginManager.config.hasBackpack) { inventory = new ItemStack[252]; }
                 else { inventory = new ItemStack[36]; }
