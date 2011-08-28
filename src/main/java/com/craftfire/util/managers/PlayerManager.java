@@ -10,11 +10,24 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 package com.craftfire.util.managers;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkitcontrib.BukkitContrib;
 
 public class PlayerManager {
     PluginManager pluginManager = new PluginManager();
+    
+    public void setInventoryFromStorage(Player player) {
+        ItemStack[] inv = pluginManager.plugin.getInventory(player);
+        if (inv != null) {
+            player.getInventory().setContents(inv);
+        }
+        inv = pluginManager.plugin.getArmorInventory(player);
+        if (inv != null) {
+            player.getInventory().setArmorContents(inv);
+        }
+    }
+    
     public void clearArmorinventory(Player player) {
         final PlayerInventory i = player.getInventory();
         i.setHelmet(null);

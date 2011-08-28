@@ -80,11 +80,17 @@ public class AuthDBScreenListener extends ScreenListener {
     }
     
     public void onScreenClose(ScreenCloseEvent event) {
+        Util.logging.Debug("OnScreenEvent start");
         if (!AuthDB.isAuthorized(event.getPlayer())) {
-            if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-                event.setCancelled(true);
+            Util.logging.Debug("Player is not authed");
+            if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt") && this.plugin.AuthDB_GUI_ScreenIDs.containsKey(event.getPlayer().getName())) {
+                if(event.getScreen().getId().equals(this.plugin.AuthDB_GUI_ScreenIDs.get(event.getPlayer().getName()))) {
+                    Util.logging.Debug("Closing screen");
+                    event.setCancelled(true);
+                }
             }
         }
+        Util.logging.Debug("OnScreenEvent end");
     }
     
 }

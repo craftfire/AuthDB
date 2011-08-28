@@ -35,7 +35,7 @@ public class ZSpout {
     public boolean checkGUI(Player player) {
         if(Config.hasSpout) {
             SpoutPlayer spoutPlayer = (SpoutPlayer)player;
-            if(!AuthDB.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName()) && spoutPlayer.isSpoutCraftEnabled() && spoutPlayer.getVersion() >=18) {
+            if(spoutPlayer.isSpoutCraftEnabled()) {
                 popGUI(spoutPlayer);
                 return true;
             }
@@ -62,6 +62,7 @@ public class ZSpout {
         TextField textField = new GenericTextField();
         textField.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2-offset);
         AuthDB.AuthDB_GUI_PasswordFieldIDs.put(spoutPlayer.getName(), textField.getId());
+        AuthDB.AuthDB_GUI_ScreenIDs.put(spoutPlayer.getName(), screen.getId());
         popup.attachWidget(AuthDB.plugin, textField);
     }
     

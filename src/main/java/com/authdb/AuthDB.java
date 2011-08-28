@@ -104,6 +104,7 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, String> AuthDB_LinkedNames = new HashMap<String, String>();
     public static HashMap<String, String> AuthDB_LinkedNameCheck = new HashMap<String, String>();
     public static HashMap<String, UUID> AuthDB_GUI_PasswordFieldIDs = new HashMap<String, UUID>();
+    public static HashMap<String, UUID> AuthDB_GUI_ScreenIDs = new HashMap<String, UUID>();
     public static HashMap<String, UUID> AuthDB_GUI_ErrorFieldIDs = new HashMap<String, UUID>();
     public static HashMap<String, String> AuthDB_GUI_TempPasswords = new HashMap<String, String>();
     public static Logger log = Logger.getLogger("Minecraft");
@@ -124,6 +125,7 @@ public class AuthDB extends JavaPlugin {
         }
         authorizedNames.clear();
         AuthDB_AuthTime.clear();
+        AuthDB_GUI_ScreenIDs.clear();
         AuthDB_RemindLogin.clear();
         AuthDB_SpamMessage.clear();
         AuthDB_SpamMessageTime.clear();
@@ -206,16 +208,33 @@ public class AuthDB extends JavaPlugin {
                       ZCraftIRC.sendMessage(Message.OnEnable, null); } 
                   } 
               }, 100);
+          } else {
+              Util.logging.Debug("Server is running without CraftIRC.");
           }
           PluginManager pm = getServer().getPluginManager();
-          final Plugin Backpack = getServer().getPluginManager().getPlugin("Backpack");
-          if (Backpack != null) { Config.hasBackpack = true; }
-          final Plugin Check = getServer().getPluginManager().getPlugin("BukkitContrib");
-          if (Check != null) { Config.hasBukkitContrib = true; }
-          final Plugin CheckBuildr = getServer().getPluginManager().getPlugin("Buildr");
-          if (CheckBuildr != null) { Config.hasBuildr = true; }
-          final Plugin CheckSpout = getServer().getPluginManager().getPlugin("Spout");
-          if (CheckSpout != null) { 
+          Plugin check = getServer().getPluginManager().getPlugin("Backpack");
+          if (check != null) { 
+              Config.hasBackpack = true;
+              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+          } else {
+              Util.logging.Debug("Server is running without Backpack.");
+          }
+          check = getServer().getPluginManager().getPlugin("BukkitContrib");
+          if (check != null) { 
+              Config.hasBukkitContrib = true; 
+              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+          } else {
+              Util.logging.Debug("Server is running without BukkitContrib.");
+          }
+          check = getServer().getPluginManager().getPlugin("Buildr");
+          if (check != null) { 
+              Config.hasBuildr = true; 
+              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+          } else {
+              Util.logging.Debug("Server is running without Buildr.");
+          }
+          check = getServer().getPluginManager().getPlugin("Spout");
+          if (check != null) { 
               spoutListener = new AuthDBSpoutListener(this);
               screenListener = new AuthDBScreenListener(this);
               inputListener = new AuthDBInputListener(this);
@@ -223,6 +242,9 @@ public class AuthDB extends JavaPlugin {
               pm.registerEvent(Event.Type.CUSTOM_EVENT, this.screenListener, Priority.Low, this);
               pm.registerEvent(Event.Type.CUSTOM_EVENT, this.inputListener, Priority.Low, this);
               Config.hasSpout = true; 
+              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+          } else {
+              Util.logging.Debug("Server is running without Spout.");
           }
         pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Low, this);
@@ -281,11 +303,15 @@ public class AuthDB extends JavaPlugin {
                     }
                     ps.close();
                 } catch (SQLException e1) {
-                    Util.logging.Info("Failed creating user table " + Config.custom_table);
+                    Util.logging.error("Failed creating user table " + Config.custom_table);
+                    Config.authdb_enabled = false;
                     Util.logging.StackTrace(e1.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 }
             } else {
+                Util.logging.error("Could not find script's tables in database: " + Config.database_database + "!");
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                Config.authdb_enabled = false;
+                // getServer().getPluginManager().disablePlugin(((org.bukkit.plugin.Plugin) (this)));
             }
             
         }

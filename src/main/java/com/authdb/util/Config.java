@@ -17,7 +17,7 @@ import org.bukkit.util.config.Configuration;
 
 public class Config {
     
-    public static boolean database_ison;
+    public static boolean database_ison, authdb_enabled = true;
     public static boolean has_badcharacters;
     public static boolean hasForumBoard,capitalization;
     public static boolean hasBackpack = false, hasBukkitContrib = false, hasSpout = false, hasBuildr = false;
@@ -217,6 +217,7 @@ public class Config {
                 Messages.AuthDB_message_register_welcome = (String)Config.getConfigString("Core.register.welcome", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email");
                 Messages.AuthDB_message_register_success = Config.getConfigString("Core.register.success", "{RED}You have been registered!");
                 Messages.AuthDB_message_register_failure = Config.getConfigString("Core.register.failure", "{RED}Registration failed!");
+                Messages.AuthDB_message_register_offline = Config.getConfigString("Core.register.offline", "{RED}Database is unavailable. Unable to verify password!");
                 Messages.AuthDB_message_register_exists = Config.getConfigString("Core.register.exists", "{RED}You are already registered!");
                 Messages.AuthDB_message_register_disabled = Config.getConfigString("Core.register.disabled", "{RED}Registration not allowed!");
                 Messages.AuthDB_message_register_usage = Config.getConfigString("Core.register.usage", "{RED}Correct usage is: /register password email");
@@ -238,6 +239,7 @@ public class Config {
                 Messages.AuthDB_message_login_prompt = Config.getConfigString("Core.login.prompt", "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:");
                 Messages.AuthDB_message_login_success = Config.getConfigString("Core.login.success", "{BRIGHTGREEN}Password accepted. Welcome!");
                 Messages.AuthDB_message_login_failure = Config.getConfigString("Core.login.failure", "{RED}Password incorrect, please try again.");
+                Messages.AuthDB_message_login_offline = Config.getConfigString("Core.login.offline", "{RED}Database is unavailable. Unable to verify password!");
                 Messages.AuthDB_message_login_authorized = Config.getConfigString("Core.login.authorized", "{BRIGHTGREEN}You are already logged in!");
                 Messages.AuthDB_message_login_notregistered = Config.getConfigString("Core.login.notregistered", "{RED}You are not registred yet!");
                 Messages.AuthDB_message_login_timeout = Config.getConfigString("Core.login.timeout", "Kicked because you failed to login within {LOGINTIMEOUT}.");

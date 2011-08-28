@@ -39,7 +39,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               register
         ///////////////////////////////////////////
-        public static String AuthDB_message_register_welcome, AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout;
+        public static String AuthDB_message_register_welcome, AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_offline, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout;
 
         ///////////////////////////////////////////
         //               unregister
@@ -54,7 +54,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               login
         ///////////////////////////////////////////
-        public static String AuthDB_message_login_normal, AuthDB_message_login_prompt, AuthDB_message_login_success, AuthDB_message_login_failure, AuthDB_message_login_authorized, AuthDB_message_login_notregistered, AuthDB_message_login_timeout, AuthDB_message_login_admin, AuthDB_message_login_admin_success, AuthDB_message_login_admin_failure, AuthDB_message_login_admin_notfound, AuthDB_message_login_usage;
+        public static String AuthDB_message_login_normal, AuthDB_message_login_prompt, AuthDB_message_login_success, AuthDB_message_login_failure, AuthDB_message_login_offline, AuthDB_message_login_authorized, AuthDB_message_login_notregistered, AuthDB_message_login_timeout, AuthDB_message_login_admin, AuthDB_message_login_admin_success, AuthDB_message_login_admin_failure, AuthDB_message_login_admin_notfound, AuthDB_message_login_usage;
 
         ///////////////////////////////////////////
         //               link
@@ -131,6 +131,7 @@ static AuthDB plugin = new AuthDB();
         register_welcome (AuthDB_message_register_welcome),
         register_success (AuthDB_message_register_success),
         register_failure (AuthDB_message_register_failure),
+        register_offline (AuthDB_message_register_offline),
         register_exists (AuthDB_message_register_exists),
         register_disabled (AuthDB_message_register_disabled),
         register_timeout (AuthDB_message_register_timeout),
@@ -142,6 +143,7 @@ static AuthDB plugin = new AuthDB();
         login_prompt (AuthDB_message_login_prompt),
         login_success (AuthDB_message_login_success),
         login_failure (AuthDB_message_login_failure),
+        login_offline (AuthDB_message_login_offline),
         login_authorized (AuthDB_message_login_authorized),
         login_notregistered (AuthDB_message_login_notregistered),
         login_timeout (AuthDB_message_login_timeout),
@@ -239,14 +241,18 @@ static AuthDB plugin = new AuthDB();
             AuthDB.server.broadcastMessage(Util.replaceStrings(AuthDB_message_database_failure, null, null));
         } else if (Config.database_ison) {
             if (type.equals(Message.register_welcome)) {
-                if (Config.register_force) {
-                    Util.spamText(player, Message.register_welcome.text, Config.register_delay, Config.register_show);
-                } else {
-                    if(Config.link_enabled) {
-                        player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome + " " + AuthDB_message_link_welcome, player, null));
+                if(Config.authdb_enabled) {
+                    if (Config.register_force) {
+                        Util.spamText(player, Message.register_welcome.text, Config.register_delay, Config.register_show);
                     } else {
-                        player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome, player, null));
-                    }
+                        if(Config.link_enabled) {
+                            player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome + " " + AuthDB_message_link_welcome, player, null));
+                        } else {
+                            player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome, player, null));
+                        }
+                    } 
+                } else {
+                    player.sendMessage(Util.replaceStrings(AuthDB_message_register_offline, player, null));
                 }
             } else if (type.equals(Message.reload_success)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_reload_success, player, null));
@@ -254,6 +260,8 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_success, player, null));
             } else if (type.equals(Message.register_failure)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_failure, player, null));
+            } else if (type.equals(Message.register_offline)) {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_register_offline, player, null));
             } else if (type.equals(Message.register_exists)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_register_exists, player, null));
             } else if (type.equals(Message.register_disabled)) {
@@ -285,6 +293,8 @@ static AuthDB plugin = new AuthDB();
                         AuthDB.AuthDB_PasswordTries.put(player.getName(), "" + tries);
                         player.sendMessage(Util.replaceStrings(AuthDB_message_login_failure, player, null));
                     }
+            } else if (type.equals(Message.login_offline)) {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_login_offline, player, null));
             } else if (type.equals(Message.login_authorized)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_authorized, player, null));
             } else if (type.equals(Message.login_notregistered)) {

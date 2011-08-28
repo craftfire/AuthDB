@@ -249,6 +249,9 @@ public class AuthDBPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Messages.sendMessage(Message.left_server, player, null);
+        if(this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
+            this.plugin.AuthDB_GUI_PasswordFieldIDs.remove(player.getName());
+        }
         if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
             player.setHealth(20);
             player.teleport(player.getWorld().getSpawnLocation());
@@ -268,7 +271,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             player.getInventory().setContents(theinv);
         }
         
-        Processes.Logout(player);
+        Processes.Quit(player);
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -290,7 +293,11 @@ public class AuthDBPlayerListener extends PlayerListener {
                         Processes.Login(player);
                         Messages.sendMessage(Message.login_success, player, null);
                     } else {
-                        Messages.sendMessage(Message.login_failure, player, null);
+                        if(Config.authdb_enabled) {
+                            Messages.sendMessage(Message.login_failure, player, null);
+                        } else {
+                            Messages.sendMessage(Message.login_offline, player, null);
+                        }
                     }
                     Util.logging.Debug(player.getName() + " login ********");
                     event.setMessage(Config.commands_login + " ******");
