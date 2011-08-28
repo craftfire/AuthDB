@@ -9,24 +9,133 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.craftfire.util.managers;
 
+import java.io.IOException;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.MaterialData;
 import org.bukkitcontrib.BukkitContrib;
+
+import com.authdb.util.databases.EBean;
 
 public class PlayerManager {
     PluginManager pluginManager = new PluginManager();
     
     public void setInventoryFromStorage(Player player) {
-        ItemStack[] inv = pluginManager.plugin.getInventory(player);
+        ItemStack[] inv = getInventory(player);
         if (inv != null) {
             player.getInventory().setContents(inv);
         }
-        inv = pluginManager.plugin.getArmorInventory(player);
+        inv = getArmorInventory(player);
         if (inv != null) {
             player.getInventory().setArmorContents(inv);
         }
     }
+    
+    public void storeInventory(Player player, ItemStack[] inventory, ItemStack[] armorinventory) throws IOException {
+        StringBuffer inv = new StringBuffer();
+        StringBuffer armorinv = new StringBuffer();
+        for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
+            if (inventory[i] != null) {
+                inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ", ");
+            } else { inv.append("0:0:0:0,"); }
+        }
+        
+        for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
+            if (armorinventory[i] != null) {
+                armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ", ");
+            } else { armorinv.append("0:0:0:0,"); }
+        }
+
+          EBean eBeanClass = EBean.find(player);
+          eBeanClass.setInventory(inv.toString());
+          eBeanClass.setArmorinventory(armorinv.toString());
+          pluginManager.plugin.database.save(eBeanClass);
+      }
+    
+    public ItemStack[] getInventory(Player player) {
+        EBean eBeanClass = EBean.find(player);
+        if (eBeanClass != null) {
+            String data = eBeanClass.getInventory();
+            if (data != "" && data != null) {
+                String[] inv = pluginManager.util.split(data, ", ");
+                ItemStack[] inventory;
+                if (pluginManager.config.hasBackpack) { inventory = new ItemStack[252]; }
+                else { inventory = new ItemStack[36]; }
+                
+                for (int i=0; i<inv.length; i++) {
+                    String line = inv[i];
+                    String[] split = line.split(":");
+                    if (split.length == 4) {
+                      int type = Integer.valueOf(split[0]).intValue();
+                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
+    
+                      short dur = Short.valueOf(split[3]).shortValue();
+                      if (dur > 0) {
+                          inventory[i].setDurability(dur);
+                      }
+                      byte dd;
+                      if (split[2].length() == 0) {
+                        dd = 0;
+                      } else {
+                        dd = Byte.valueOf(split[2]).byteValue();
+                      }
+                      Material mat = Material.getMaterial(type);
+                      if (mat == null) {
+                          inventory[i].setData(new MaterialData(type, dd));
+                      } else {
+                          inventory[i].setData(mat.getNewData(dd));
+                      }
+                    }
+                  }
+                eBeanClass.setInventory(null);
+                pluginManager.plugin.database.save(eBeanClass);
+                return inventory;
+            }
+        }
+        return null;
+      }
+    
+    public ItemStack[] getArmorInventory(Player player) {
+        EBean eBeanClass = EBean.find(player);
+        if (eBeanClass != null) {
+            String data = eBeanClass.getArmorinventory();
+            if (data != "" && data != null) {
+                String[] inv = pluginManager.util.split(data, ", ");
+                ItemStack[] inventory = new ItemStack[4];
+                for (int i=0; i<inv.length; i++) {
+                    String line = inv[i];
+                    String[] split = line.split(":");
+                    if (split.length == 4) {
+                      int type = Integer.valueOf(split[0]).intValue();
+                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
+                      short dur = Short.valueOf(split[3]).shortValue();
+                      if (dur > 0) {
+                          inventory[i].setDurability(dur);
+                      }
+                      byte dd;
+                      if (split[2].length() == 0) {
+                        dd = 0;
+                      } else {
+                        dd = Byte.valueOf(split[2]).byteValue();
+                      }
+                      Material mat = Material.getMaterial(type);
+                      if (mat == null) {
+                          inventory[i].setData(new MaterialData(type, dd));
+                      } else {
+                          inventory[i].setData(mat.getNewData(dd));
+                      }
+                    }
+                  }
+                eBeanClass.setArmorinventory(null);
+                pluginManager.plugin.database.save(eBeanClass);
+                return inventory;
+            }
+        }
+        return null;
+      }
     
     public void clearArmorinventory(Player player) {
         final PlayerInventory i = player.getInventory();

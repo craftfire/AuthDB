@@ -86,14 +86,7 @@ public class Processes {
                 eBeanClass.setSessiontime(timestamp);
             }
             AuthDB.database.save(eBeanClass);
-            ItemStack[] inv = AuthDB.getInventory(player);
-            if (inv != null) {
-                player.getInventory().setContents(inv);
-            }
-            inv = AuthDB.getArmorInventory(player);
-            if (inv != null) {
-                player.getInventory().setArmorContents(inv);
-            }
+            Util.craftFirePlayer.setInventoryFromStorage(player);
             return true;
         }
         return false;

@@ -196,9 +196,9 @@ public class AuthDBPlayerListener extends PlayerListener {
                 if (Config.hasBackpack) {
                     BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                     BackpackPlayer.createBackpack();
-                    this.plugin.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
+                    Util.craftFirePlayer.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
                 } else {
-                    this.plugin.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
+                    Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
                 }
                 player.getInventory().clear();
                 plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -222,9 +222,9 @@ public class AuthDBPlayerListener extends PlayerListener {
                 if (Config.hasBackpack) {
                     BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                     BackpackPlayer.createBackpack();
-                    this.plugin.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
+                    Util.craftFirePlayer.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
                 } else {
-                    this.plugin.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
+                    Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
                 }
                 player.getInventory().clear();
                 Util.craftFirePlayer.clearArmorinventory(player);

@@ -805,27 +805,6 @@ public class AuthDB extends JavaPlugin {
           }
     }
 
-      public void storeInventory(Player player, ItemStack[] inventory, ItemStack[] armorinventory) throws IOException {
-        StringBuffer inv = new StringBuffer();
-        StringBuffer armorinv = new StringBuffer();
-        for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
-            if (inventory[i] != null) {
-                inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ", ");
-            } else { inv.append("0:0:0:0,"); }
-        }
-        
-        for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
-            if (armorinventory[i] != null) {
-                armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ", ");
-            } else { armorinv.append("0:0:0:0,"); }
-        }
-
-          EBean eBeanClass = EBean.find(player);
-          eBeanClass.setInventory(inv.toString());
-          eBeanClass.setArmorinventory(armorinv.toString());
-          AuthDB.database.save(eBeanClass);
-      }
-
     public void updateLinkedNames() {
         for (Player player : this.getServer().getOnlinePlayers()) {
             String name = Util.checkOtherName(player.getName());
@@ -842,89 +821,6 @@ public class AuthDB extends JavaPlugin {
         pluginDescrption = getDescription().getDescription();
         configFolder = getDataFolder() + "\\config\\";
     }
-
-    public static ItemStack[] getInventory(Player player) {
-        EBean eBeanClass = EBean.find(player);
-        if (eBeanClass != null) {
-            String data = eBeanClass.getInventory();
-            if (data != "" && data != null) {
-                String[] inv = Util.split(data, ", ");
-                ItemStack[] inventory;
-                if (Config.hasBackpack) { inventory = new ItemStack[252]; }
-                //else if (Config.hasBuildr) { inventory = new ItemStack[72]; }
-                else { inventory = new ItemStack[36]; }
-                
-                for (int i=0; i<inv.length; i++) {
-                    String line = inv[i];
-                    String[] split = line.split(":");
-                    if (split.length == 4) {
-                      int type = Integer.valueOf(split[0]).intValue();
-                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
-    
-                      short dur = Short.valueOf(split[3]).shortValue();
-                      if (dur > 0) {
-                          inventory[i].setDurability(dur);
-                      }
-                      byte dd;
-                      if (split[2].length() == 0) {
-                        dd = 0;
-                      } else {
-                        dd = Byte.valueOf(split[2]).byteValue();
-                      }
-                      Material mat = Material.getMaterial(type);
-                      if (mat == null) {
-                          inventory[i].setData(new MaterialData(type, dd));
-                      } else {
-                          inventory[i].setData(mat.getNewData(dd));
-                      }
-                    }
-                  }
-                eBeanClass.setInventory(null);
-                AuthDB.database.save(eBeanClass);
-                return inventory;
-            }
-        }
-        return null;
-      }
-
-    public static ItemStack[] getArmorInventory(Player player) {
-        EBean eBeanClass = EBean.find(player);
-        if (eBeanClass != null) {
-            String data = eBeanClass.getArmorinventory();
-            if (data != "" && data != null) {
-                String[] inv = Util.split(data, ", ");
-                ItemStack[] inventory = new ItemStack[4];
-                for (int i=0; i<inv.length; i++) {
-                    String line = inv[i];
-                    String[] split = line.split(":");
-                    if (split.length == 4) {
-                      int type = Integer.valueOf(split[0]).intValue();
-                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
-                      short dur = Short.valueOf(split[3]).shortValue();
-                      if (dur > 0) {
-                          inventory[i].setDurability(dur);
-                      }
-                      byte dd;
-                      if (split[2].length() == 0) {
-                        dd = 0;
-                      } else {
-                        dd = Byte.valueOf(split[2]).byteValue();
-                      }
-                      Material mat = Material.getMaterial(type);
-                      if (mat == null) {
-                          inventory[i].setData(new MaterialData(type, dd));
-                      } else {
-                          inventory[i].setData(mat.getNewData(dd));
-                      }
-                    }
-                  }
-                eBeanClass.setArmorinventory(null);
-                AuthDB.database.save(eBeanClass);
-                return inventory;
-            }
-        }
-        return null;
-      }
 
      private void DefaultFile(String name, String folder) {
             File actual = new File(getDataFolder() + "/" + folder + "/", name);
