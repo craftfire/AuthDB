@@ -233,7 +233,8 @@ public class AuthDB extends JavaPlugin {
           } else {
               Util.logging.Debug("Server is running without Buildr.");
           }
-          check = getServer().getPluginManager().getPlugin("Spout");
+         /* SPOUT START
+          * check = getServer().getPluginManager().getPlugin("Spout");
           if (check != null) { 
               spoutListener = new AuthDBSpoutListener(this);
               screenListener = new AuthDBScreenListener(this);
@@ -246,6 +247,7 @@ public class AuthDB extends JavaPlugin {
           } else {
               Util.logging.Debug("Server is running without Spout.");
           }
+          */
         pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Low, this);
@@ -714,13 +716,14 @@ public class AuthDB extends JavaPlugin {
         boolean dupe = false;
         boolean checkneeded = true;
         Util.logging.Debug("Checking if player " + player + " is registred.");
+        player = Util.checkOtherName(player);
         EBean eBeanClass = EBean.checkPlayer(player, true);
         if(eBeanClass.getRegistered().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
                 if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                 Config.hasForumBoard = false;
                 try {
-                    if (Util.checkScript("checkuser",Config.script_name, player, null, null, null)) {
+                    if (Util.checkScript("checkuser", Config.script_name, player, null, null, null)) {
                         AuthDB_Authed.put(Encryption.md5(player), "yes");
                         dupe = true;
                     }

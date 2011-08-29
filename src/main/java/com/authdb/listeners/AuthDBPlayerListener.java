@@ -169,7 +169,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 sessionallow = true;
             }
             
-            if (Config.onlineMode && this.plugin.isRegistered("join",player.getName())) {
+            if (Config.onlineMode && this.plugin.isRegistered("join", player.getName())) {
                 sessionallow = true;
             }
             
@@ -192,7 +192,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
                 Processes.Login(event.getPlayer());
                 Messages.sendMessage(Message.session_valid, player, null);
-            } else if (this.plugin.isRegistered("join",player.getName())) {
+            } else if (this.plugin.isRegistered("join", player.getName())) {
                 if (Config.hasBackpack) {
                     BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
                     BackpackPlayer.createBackpack();
@@ -212,9 +212,9 @@ public class AuthDBPlayerListener extends PlayerListener {
                     }
                 } , 20);
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-                    if(!Config.hasSpout) {
+                   //SPOUT START if(!Config.hasSpout) {
                         Messages.sendMessage(Message.login_prompt, player, null);
-                    }
+                      //SPOUT START  }
                 } else {
                     Messages.sendMessage(Message.login_normal, player, null);
                 }

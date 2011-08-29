@@ -48,7 +48,7 @@
         <repository>
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
-			<releases>
+            <releases>
                 <updatePolicy>always</updatePolicy>
             </releases>
             <snapshots>
@@ -133,7 +133,7 @@
             <artifactId>backpack</artifactId>
             <version>2.2.0</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>me.simplex</groupId>
             <artifactId>buildr</artifactId>
             <version>0.6</version>

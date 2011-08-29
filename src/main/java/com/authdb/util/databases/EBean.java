@@ -37,7 +37,7 @@ public class EBean {
         sessiontime ("sessiontime"),
         salt ("salt"),
         inventory ("inventory"),
-        armorinventory ("armorinventory"),
+        equipment ("equipment"),
         activated ("activated"),
         authorized ("authorized"),
         timeout ("timeout"),
@@ -58,6 +58,7 @@ public class EBean {
             eBeanClass.setPlayername(player);
             eBeanClass.setRegistered("false");
             if(save) { save(eBeanClass); }
+			sync(player);
         }
         return eBeanClass;
     }
@@ -69,6 +70,7 @@ public class EBean {
             eBeanClass.setPlayer(player);
             eBeanClass.setRegistered("false");
             if(save) { save(eBeanClass); }
+			sync(player);
         }
         return eBeanClass;
     }
@@ -76,27 +78,35 @@ public class EBean {
     public static void save(EBean eBeanClass) {
         AuthDB.database.save(eBeanClass);
     }
-
+    
     public static void sync(Player player) {
+        sync(player.getName());
+    }
+
+    public static void sync(String player) {
         try {
             if (!Config.database_keepalive) { Util.databaseManager.connect(); }
-            EBean eBeanClass = checkPlayer(player.getName(), true);
+            EBean eBeanClass = checkPlayer(player, true);
             String registred = eBeanClass.getRegistered();
-            if (Util.checkScript("checkuser", Config.script_name, player.getName(), null, null, null)) {
+            if (!Util.checkOtherName(player).equals(player)) {
+                eBeanClass.setRegistered("true");
+                save(eBeanClass);
+                registred = "true";
+            } else if (Util.checkScript("checkuser", Config.script_name, Util.checkOtherName(player), null, null, null)) {
 				eBeanClass.setRegistered("true");
 				save(eBeanClass);
 				registred = "true";
             } else {
                 if (registred != null && registred.equalsIgnoreCase("true")) {
-                    Util.logging.Debug("Registred value for " + player.getName() + " in persistence is different than in MySQL, syncing registred value from MySQL.");
+                    Util.logging.Debug("Registred value for " + player + " in persistence is different than in MySQL, syncing registred value from MySQL.");
                     eBeanClass.setRegistered("false");
                     save(eBeanClass);
                     registred = "false";
                 }
 			}
             if (registred != null && registred.equalsIgnoreCase("true")) {
-                Util.checkScript("syncpassword", Config.script_name, player.getName(), null, null, null);
-                Util.checkScript("syncsalt", Config.script_name, player.getName(), null, null, null);
+                Util.checkScript("syncpassword", Config.script_name, Util.checkOtherName(player), null, null, null);
+                Util.checkScript("syncsalt", Config.script_name, Util.checkOtherName(player), null, null, null);
             }
             if (!Config.database_keepalive) { Util.databaseManager.close(); }
         }
