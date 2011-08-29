@@ -184,7 +184,7 @@ public class Config {
 
                 filter_action = Util.getAction(getConfigString("filter.action", "kick").toLowerCase());
                 filter_username = getConfigString("filter.username", "`~!@#$%^&*()-= + {[]}|\\:;\"<,>.?/");
-                filter_password = getConfigString("filter.password", "&");
+                filter_password = getConfigString("filter.password", "$&\"\\");
                 filter_whitelist= getConfigString("filter.whitelist", "");
             } else if (config.equalsIgnoreCase("plugins")) {
 
@@ -329,8 +329,8 @@ public class Config {
                 aliases_user_unlink = Config.getConfigString("Core.aliases.user.unlink", "/ul");
                 aliases_user_login = Config.getConfigString("Core.aliases.user.login", "/l");
                 aliases_user_logout = Config.getConfigString("Core.aliases.user.logout", "/lo");
-                aliases_admin_login = Config.getConfigString("Core.aliases.admin.login", "/ar");
-                aliases_admin_logout = Config.getConfigString("Core.aliases.admin.logout", "/ar");
+                aliases_admin_login = Config.getConfigString("Core.aliases.admin.login", "/al");
+                aliases_admin_logout = Config.getConfigString("Core.aliases.admin.logout", "/alo");
                 aliases_admin_reload = Config.getConfigString("Core.aliases.admin.reload", "/ar");
             }
       }
