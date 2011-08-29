@@ -77,6 +77,7 @@ public class Processes {
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
             player.getInventory().clear();
+            Util.logging.Debug("Logged out player: " + player.getName());
             return true;
         }
         return false;

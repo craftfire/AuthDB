@@ -283,7 +283,10 @@ static AuthDB plugin = new AuthDB();
                 AuthDB.AuthDB_PasswordTries.put(player.getName(), "0");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_success, player, null));
             } else if (type.equals(Message.login_failure)) {
-                String temp = AuthDB.AuthDB_PasswordTries.get(player.getName());
+                String temp = "0";
+                if(AuthDB.AuthDB_PasswordTries.containsKey(player.getName())) {
+                    temp = AuthDB.AuthDB_PasswordTries.get(player.getName());
+                }
                 int tries = Integer.parseInt(temp) + 1;
                     if (tries > Integer.parseInt(Config.login_tries) && Config.login_action.equalsIgnoreCase("kick")) {
                         player.kickPlayer(Util.replaceStrings(AuthDB_message_login_failure, player, null));
