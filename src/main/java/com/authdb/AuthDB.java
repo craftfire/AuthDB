@@ -432,8 +432,8 @@ public class AuthDB extends JavaPlugin {
                         if (!players.isEmpty()) {
                             if (Processes.Logout(players.get(0))) {
                                 Messages.sendMessage(Message.logout_admin_success, player, null, players.get(0).getName());
-                                Messages.sendMessage(Message.login_normal, players.get(0), null);
                                 Messages.sendMessage(Message.logout_admin, players.get(0), null);
+                                Messages.sendMessage(Message.login_normal, players.get(0), null);
                                 return true;
                             } else {
                                 Messages.sendMessage(Message.logout_admin_failure, player, null, players.get(0).getName());
