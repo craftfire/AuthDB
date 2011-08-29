@@ -430,9 +430,11 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (!plugin.isAuthorized(event.getPlayer())) {
             if (!checkGuest(event.getPlayer(),Config.guests_movement)) {
                 if(this.plugin.AuthDB_JoinTime.containsKey(event.getPlayer().getName())) {
-                    long jointime = this.plugin.AuthDB_JoinTime.get(event.getPlayer().getName());
-                    if (jointime + 3 < Util.timeStamp()) {
-                        this.plugin.AuthDB_JoinTime.remove(event.getPlayer().getName());
+                    if (Config.protection_freeze) {
+                        long jointime = this.plugin.AuthDB_JoinTime.get(event.getPlayer().getName());
+                        if (jointime + Config.protection_freeze_delay < Util.timeStamp()) {
+                            this.plugin.AuthDB_JoinTime.remove(event.getPlayer().getName());
+                        }
                     }
                 } else {
                     event.getPlayer().teleport(event.getFrom());
@@ -517,12 +519,12 @@ public class AuthDBPlayerListener extends PlayerListener {
             }
         } else if (Config.protection_notify && !AuthDB.isAuthorized(player)) {
             if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
-                this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
+                this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_notify_delay);
                 Messages.sendMessage(Message.protection_notauthorized, player, null);
             } else {
                 if (this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.timeStamp()) {
                     Messages.sendMessage(Message.protection_notauthorized, player, null);
-                    this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
+                    this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_notify_delay);
                 }
             }
         } else {

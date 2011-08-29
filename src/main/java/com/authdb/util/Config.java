@@ -57,9 +57,9 @@ public class Config {
 
     public static boolean guests_commands,guests_movement,guests_inventory,guests_drop,guests_pickup,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
 
-    public static boolean protection_notify;
-    public static int protection_delay;
-    public static String protection_delay_time,protection_delay_length;
+    public static boolean protection_notify, protection_freeze;
+    public static int protection_notify_delay, protection_freeze_delay;
+    public static String protection_notify_delay_time, protection_notify_delay_length, protection_freeze_delay_time, protection_freeze_delay_length;
 
     public static String filter_action,filter_username,filter_password,filter_whitelist="";
 
@@ -171,10 +171,14 @@ public class Config {
                 guests_mobtargeting = getConfigBoolean("guest.mobtargeting", false);
                 guests_pvp = getConfigBoolean("guest.pvp", false);
 
+                protection_freeze = getConfigBoolean("protection.freeze", true);
+                protection_freeze_delay_length = Util.split(getConfigString("protection.freeze.delay", "2 seconds"), " ")[0];
+                protection_freeze_delay_time = Util.split(getConfigString("protection.freeze.delay", "2 seconds"), " ")[1];
+                protection_freeze_delay = Util.toSeconds(protection_freeze_delay_time, protection_freeze_delay_length);
                 protection_notify = getConfigBoolean("protection.notify", true);
-                protection_delay_length = Util.split(getConfigString("protection.delay", "3 seconds"), " ")[0];
-                protection_delay_time = Util.split(getConfigString("protection.delay", "3 seconds"), " ")[1];
-                protection_delay = Util.toSeconds(protection_delay_time,protection_delay_length);
+                protection_notify_delay_length = Util.split(getConfigString("protection.notify.delay", "3 seconds"), " ")[0];
+                protection_notify_delay_time = Util.split(getConfigString("protection.notify.delay", "3 seconds"), " ")[1];
+                protection_notify_delay = Util.toSeconds(protection_notify_delay_time, protection_notify_delay_length);
 
                 filter_action = Util.getAction(getConfigString("filter.action", "kick").toLowerCase());
                 filter_username = getConfigString("filter.username", "`~!@#$%^&*()-= + {[]}|\\:;\"<,>.?/");

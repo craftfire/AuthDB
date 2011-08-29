@@ -95,12 +95,12 @@ boolean checkGuest(Player player,boolean what) {
         }
     } else if (Config.protection_notify && !AuthDB.isAuthorized(player)) {
         if (!this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
-             this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
+             this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_notify_delay);
              Messages.sendMessage(Message.protection_notauthorized, player, null);
          } else {
              if (this.plugin.AuthDB_RemindLogin.get(player.getName()) < Util.timeStamp()) {
                  Messages.sendMessage(Message.protection_notauthorized, player, null);
-                 this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_delay);
+                 this.plugin.AuthDB_RemindLogin.put(player.getName(), Util.timeStamp() + Config.protection_notify_delay);
              }
          }
      } else if (this.plugin.isRegistered("checkguest", player.getName()) == true && plugin.isAuthorized(player) == true) {
