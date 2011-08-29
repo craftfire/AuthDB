@@ -53,9 +53,11 @@ guest:
   mobtargeting: false                              # Enable/disable mobs targeting guest.
   mobdamage: false                                 # Enable/disable mob damage from guest.
 protection:
-  freeze: true                                     # Enable/disable freezing players on join to prevent movement.
+  freeze:
+    enabled: true                                  # Enable/disable freezing players on join to prevent movement.
     delay: 2 seconds                               # Amount of time before players are frozen and unable to move.
-  notify: true                                     # Enable/disable protection message being sent to player.
+  notify:
+    enabled: true                                  # Enable/disable protection message being sent to player.
     delay: 3 seconds                               # Amount of time before protection message can be sent to player again.
 filter:
   action: kick                                     # Action to perform when a username matches the filter. Options are kick and rename.
