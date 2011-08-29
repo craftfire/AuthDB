@@ -30,7 +30,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.authdb.AuthDB;
-import com.authdb.plugins.ZBukkitContrib;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.plugins.ZSpout;
@@ -281,154 +280,148 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         long start = Util.timeMS();
-        String Contrib = event.getMessage();
-        Contrib = Contrib.replaceAll("/", "");
-        if (!ZBukkitContrib.checkCommand(Contrib)) {
-            String[] split = event.getMessage().split(" ");
-            Player player = event.getPlayer();
-            if (split[0].equalsIgnoreCase(Config.commands_user_login) || split[0].equalsIgnoreCase(Config.aliases_user_login)) {
-                if (ZPermissions.isAllowed(player, Permission.command_login)) {
-                    if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.checkOtherName(player.getName())) == false) {
-                        Messages.sendMessage(Message.login_notregistered, player, null);
-                    } else if (plugin.isAuthorized(player)) {
-                        Messages.sendMessage(Message.login_authorized, player, null);
-                    } else if (split.length < 2) {
-                        Messages.sendMessage(Message.login_usage, player, null);
-                    } else if (this.plugin.checkPassword(player.getName(), split[1])) {
-                        Processes.Login(player);
-                        Messages.sendMessage(Message.login_success, player, null);
+        String[] split = event.getMessage().split(" ");
+        Player player = event.getPlayer();
+        if (split[0].equalsIgnoreCase(Config.commands_user_login) || split[0].equalsIgnoreCase(Config.aliases_user_login)) {
+            if (ZPermissions.isAllowed(player, Permission.command_login)) {
+                if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.checkOtherName(player.getName())) == false) {
+                    Messages.sendMessage(Message.login_notregistered, player, null);
+                } else if (plugin.isAuthorized(player)) {
+                    Messages.sendMessage(Message.login_authorized, player, null);
+                } else if (split.length < 2) {
+                    Messages.sendMessage(Message.login_usage, player, null);
+                } else if (this.plugin.checkPassword(player.getName(), split[1])) {
+                    Processes.Login(player);
+                    Messages.sendMessage(Message.login_success, player, null);
+                } else {
+                    if(Config.authdb_enabled) {
+                        Messages.sendMessage(Message.login_failure, player, null);
                     } else {
-                        if(Config.authdb_enabled) {
-                            Messages.sendMessage(Message.login_failure, player, null);
-                        } else {
-                            Messages.sendMessage(Message.login_offline, player, null);
-                        }
+                        Messages.sendMessage(Message.login_offline, player, null);
                     }
-                    Util.logging.Debug(player.getName() + " login ********");
-                    event.setMessage(Config.commands_user_login + " ******");
-                    event.setCancelled(true);
-                } else { Messages.sendMessage(Message.protection_denied, player, null); }
-            } else if (split[0].equalsIgnoreCase(Config.commands_user_link) || split[0].equalsIgnoreCase(Config.aliases_user_link)) {
-                if (Config.link_enabled) {
-                    if (ZPermissions.isAllowed(player, Permission.command_link)) {
-                        if (split.length == 3) {
-                            if (!player.getName().equals(split[1])) {
-                                if (this.plugin.isRegistered("link",player.getName()) == false) {
-                                   if (Util.checkOtherName(player.getName()).equals(player.getName())) {
-                                       EBean eBeanClass = EBean.checkPlayer(split[1], true);
-                                       String linkedname = eBeanClass.getLinkedname();
-                                       if (linkedname != null) {
-                                           Messages.sendMessage(Message.link_duplicate, player, null);
-                                       } else if (this.plugin.checkPassword(split[1], split[2])) {
-                                           Processes.Link(player,split[1]);
-                                           Messages.sendMessage(Message.link_success, player, null);
-                                       } else {
-                                           Messages.sendMessage(Message.link_failure, player, null);
-                                       }
-                                    } else {
-                                        Messages.sendMessage(Message.link_exists, player, null);
-                                    }
+                }
+                Util.logging.Debug(player.getName() + " login ********");
+                event.setMessage(Config.commands_user_login + " ******");
+                event.setCancelled(true);
+            } else { Messages.sendMessage(Message.protection_denied, player, null); }
+        } else if (split[0].equalsIgnoreCase(Config.commands_user_link) || split[0].equalsIgnoreCase(Config.aliases_user_link)) {
+            if (Config.link_enabled) {
+                if (ZPermissions.isAllowed(player, Permission.command_link)) {
+                    if (split.length == 3) {
+                        if (!player.getName().equals(split[1])) {
+                            if (this.plugin.isRegistered("link",player.getName()) == false) {
+                               if (Util.checkOtherName(player.getName()).equals(player.getName())) {
+                                   EBean eBeanClass = EBean.checkPlayer(split[1], true);
+                                   String linkedname = eBeanClass.getLinkedname();
+                                   if (linkedname != null) {
+                                       Messages.sendMessage(Message.link_duplicate, player, null);
+                                   } else if (this.plugin.checkPassword(split[1], split[2])) {
+                                       Processes.Link(player,split[1]);
+                                       Messages.sendMessage(Message.link_success, player, null);
+                                   } else {
+                                       Messages.sendMessage(Message.link_failure, player, null);
+                                   }
                                 } else {
-                                    Messages.sendMessage(Message.link_registred, player, null);
+                                    Messages.sendMessage(Message.link_exists, player, null);
                                 }
                             } else {
-                                Messages.sendMessage(Message.link_invaliduser, player, null);
+                                Messages.sendMessage(Message.link_registred, player, null);
                             }
                         } else {
-                            Messages.sendMessage(Message.link_usage, player, null);
+                            Messages.sendMessage(Message.link_invaliduser, player, null);
                         }
-                        Util.logging.Debug(player.getName() + " link ******** ********");
-                        event.setMessage(Config.commands_user_link + " ****** ********");
-                        event.setCancelled(true);
-                    } else { Messages.sendMessage(Message.protection_denied, player, null); }
-                }
-            } else if (split[0].equalsIgnoreCase(Config.commands_user_unlink) || split[0].equalsIgnoreCase(Config.aliases_user_unlink)) {
-                if (Config.unlink_enabled) {
-                    if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
-                        if (split.length == 3) {
-                            if (Util.checkOtherName(player.getName()).equals(player.getDisplayName())) {
-                                EBean eBeanClass = EBean.checkPlayer(player, true);
-                                String linkedname = eBeanClass.getLinkedname();
-                                if (linkedname.equals(split[1])) {
-                                    if (this.plugin.checkPassword(split[1], split[2])) {
-                                        Processes.Unlink(player,split[1]);
-                                        Messages.sendMessage(Message.unlink_success, player, null);
-                                    } else {
-                                        Messages.sendMessage(Message.unlink_invalidpass, player, null);
-                                    }
-                                } else {
-                                    Messages.sendMessage(Message.unlink_invaliduser, player, null);
-                                }
-                            } else {
-                                Messages.sendMessage(Message.unlink_nonexist, player, null);
-                            }
-                        } else {
-                            Messages.sendMessage(Message.unlink_usage, player, null);
-                        }
-                        Util.logging.Debug(player.getName() + " unlink ******** ********");
-                        event.setMessage(Config.commands_user_unlink + " ****** ********");
-                        event.setCancelled(true);
-                    } else { Messages.sendMessage(Message.protection_denied, player, null); }
-                }
-            } else if (split[0].equalsIgnoreCase(Config.commands_user_register) || split[0].equalsIgnoreCase(Config.aliases_user_register)) {
-                if (ZPermissions.isAllowed(player, Permission.command_register)) {
-                    Boolean email = true;
-                    if (Config.custom_enabled) {
-                        email = Config.custom_emailrequired;
-                    }
-                    if (Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
-                    if (!Config.register_enabled) {
-                        Messages.sendMessage(Message.register_disabled, player, null);
-                    } else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.checkOtherName(player.getName()))) {
-                        Messages.sendMessage(Message.register_exists, player, null);
-                    } else if (split.length < 2) {
-                        Messages.sendMessage(Message.register_usage, player, null);
-                    } else if (split.length < 3 && email) {
-                        Messages.sendMessage(Message.email_required, player, null);
-                    } else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2]))) {
-                        Messages.sendMessage(Message.email_invalid, player, null);
                     } else {
-                        try {
-                            if (split.length >= 3 || (!email && split.length >= 2)) {
-                                String themail = null;
-                                if (!email) {
-                                    themail = null;
-                                } else {
-                                    themail = split[2];
-                                }
-                                if (this.plugin.register(player, split[1], themail,Util.craftFirePlayer.getIP(player))) {
-                                    if(Processes.Login(player)) {
-                                        Messages.sendMessage(Message.register_success, player, null);
-                                    } else {
-                                        Messages.sendMessage(Message.register_failure, player, null);
-                                        Util.logging.Debug("Registering user failed!");
-                                    }
-                                }
-                            }
-                        } catch (IOException e) {
-                            Messages.sendMessage(Message.register_failure, player, null);
-                            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-                        } catch (SQLException e) {
-                            Messages.sendMessage(Message.register_failure, player, null);
-                            Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-                        }
+                        Messages.sendMessage(Message.link_usage, player, null);
                     }
-                    Util.logging.Debug(player.getName() + " register ********");
-                    event.setMessage(Config.commands_user_register + " *****");
+                    Util.logging.Debug(player.getName() + " link ******** ********");
+                    event.setMessage(Config.commands_user_link + " ****** ********");
                     event.setCancelled(true);
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
-            } else if (!plugin.isAuthorized(player)) {
-                if (!checkGuest(player,Config.guests_commands)) {
-                    event.setMessage("/iamnotloggedin");
+            }
+        } else if (split[0].equalsIgnoreCase(Config.commands_user_unlink) || split[0].equalsIgnoreCase(Config.aliases_user_unlink)) {
+            if (Config.unlink_enabled) {
+                if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
+                    if (split.length == 3) {
+                        if (Util.checkOtherName(player.getName()).equals(player.getDisplayName())) {
+                            EBean eBeanClass = EBean.checkPlayer(player, true);
+                            String linkedname = eBeanClass.getLinkedname();
+                            if (linkedname.equals(split[1])) {
+                                if (this.plugin.checkPassword(split[1], split[2])) {
+                                    Processes.Unlink(player,split[1]);
+                                    Messages.sendMessage(Message.unlink_success, player, null);
+                                } else {
+                                    Messages.sendMessage(Message.unlink_invalidpass, player, null);
+                                }
+                            } else {
+                                Messages.sendMessage(Message.unlink_invaliduser, player, null);
+                            }
+                        } else {
+                            Messages.sendMessage(Message.unlink_nonexist, player, null);
+                        }
+                    } else {
+                        Messages.sendMessage(Message.unlink_usage, player, null);
+                    }
+                    Util.logging.Debug(player.getName() + " unlink ******** ********");
+                    event.setMessage(Config.commands_user_unlink + " ****** ********");
                     event.setCancelled(true);
+                } else { Messages.sendMessage(Message.protection_denied, player, null); }
+            }
+        } else if (split[0].equalsIgnoreCase(Config.commands_user_register) || split[0].equalsIgnoreCase(Config.aliases_user_register)) {
+            if (ZPermissions.isAllowed(player, Permission.command_register)) {
+                Boolean email = true;
+                if (Config.custom_enabled) {
+                    email = Config.custom_emailrequired;
                 }
+                if (Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
+                if (!Config.register_enabled) {
+                    Messages.sendMessage(Message.register_disabled, player, null);
+                } else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.checkOtherName(player.getName()))) {
+                    Messages.sendMessage(Message.register_exists, player, null);
+                } else if (split.length < 2) {
+                    Messages.sendMessage(Message.register_usage, player, null);
+                } else if (split.length < 3 && email) {
+                    Messages.sendMessage(Message.email_required, player, null);
+                } else if ((split.length >= 3 && email) && (!this.plugin.checkEmail(split[2]))) {
+                    Messages.sendMessage(Message.email_invalid, player, null);
+                } else {
+                    try {
+                        if (split.length >= 3 || (!email && split.length >= 2)) {
+                            String themail = null;
+                            if (!email) {
+                                themail = null;
+                            } else {
+                                themail = split[2];
+                            }
+                            if (this.plugin.register(player, split[1], themail,Util.craftFirePlayer.getIP(player))) {
+                                if(Processes.Login(player)) {
+                                    Messages.sendMessage(Message.register_success, player, null);
+                                } else {
+                                    Messages.sendMessage(Message.register_failure, player, null);
+                                    Util.logging.Debug("Registering user failed!");
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        Messages.sendMessage(Message.register_failure, player, null);
+                        Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                    } catch (SQLException e) {
+                        Messages.sendMessage(Message.register_failure, player, null);
+                        Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                    }
+                }
+                Util.logging.Debug(player.getName() + " register ********");
+                event.setMessage(Config.commands_user_register + " *****");
+                event.setCancelled(true);
+            } else { Messages.sendMessage(Message.protection_denied, player, null); }
+        } else if (!plugin.isAuthorized(player)) {
+            if (!checkGuest(player,Config.guests_commands)) {
+                event.setMessage("/iamnotloggedin");
+                event.setCancelled(true);
             }
-            } else {
-                Util.logging.Debug("BukkitContrib or Spout is trying to check for SP client with command: " + event.getMessage());
-            }
-            long stop = Util.timeMS();
-            Util.logging.timeUsage(stop - start, "process a command");
         }
+        long stop = Util.timeMS();
+        Util.logging.timeUsage(stop - start, "process a command");
+    }
 
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.isCancelled()) { return; }
