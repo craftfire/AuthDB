@@ -171,11 +171,11 @@ public class Config {
                 guests_mobtargeting = getConfigBoolean("guest.mobtargeting", false);
                 guests_pvp = getConfigBoolean("guest.pvp", false);
 
-                protection_freeze = getConfigBoolean("protection.freeze", true);
+                protection_freeze = getConfigBoolean("protection.freeze.enabled", true);
                 protection_freeze_delay_length = Util.split(getConfigString("protection.freeze.delay", "2 seconds"), " ")[0];
                 protection_freeze_delay_time = Util.split(getConfigString("protection.freeze.delay", "2 seconds"), " ")[1];
                 protection_freeze_delay = Util.toSeconds(protection_freeze_delay_time, protection_freeze_delay_length);
-                protection_notify = getConfigBoolean("protection.notify", true);
+                protection_notify = getConfigBoolean("protection.notify.enabled", true);
                 protection_notify_delay_length = Util.split(getConfigString("protection.notify.delay", "3 seconds"), " ")[0];
                 protection_notify_delay_time = Util.split(getConfigString("protection.notify.delay", "3 seconds"), " ")[1];
                 protection_notify_delay = Util.toSeconds(protection_notify_delay_time, protection_notify_delay_length);
