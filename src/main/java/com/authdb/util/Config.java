@@ -70,8 +70,10 @@ public class Config {
 
     public static boolean CraftIRC_messages_enabled,CraftIRC_messages_welcome_enabled,CraftIRC_messages_register_enabled,CraftIRC_messages_unregister_enabled,CraftIRC_messages_login_enabled,CraftIRC_messages_email_enabled,CraftIRC_messages_username_enabled,CraftIRC_messages_password_enabled,CraftIRC_messages_idle_enabled;
 
-    public static String commands_register,commands_link,commands_unlink,commands_login,commands_logout,commands_setspawn,commands_reload;
-    public static String aliases_register,aliases_link,aliases_unlink,aliases_login,aliases_logout,aliases_setspawn,aliases_reload;
+    public static String commands_user_register,commands_user_link,commands_user_unlink,commands_user_login,commands_user_logout;
+    public static String commands_admin_login, commands_admin_logout, commands_admin_reload;
+    public static String aliases_user_register,aliases_user_link,aliases_user_unlink,aliases_user_login,aliases_user_logout;
+    public static String aliases_admin_login, aliases_admin_logout, aliases_admin_reload;
 
       public static Configuration template = null;
 
@@ -312,21 +314,23 @@ public class Config {
                 Messages.CraftIRC_message_filter_whitelist = Config.getConfigString("Plugins.CraftIRC.filter.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
 
             } else if (config.equalsIgnoreCase("commands")) {
-                commands_register = Config.getConfigString("Core.commands.register", "/register");
-                commands_link = Config.getConfigString("Core.commands.link", "/link");
-                commands_unlink = Config.getConfigString("Core.commands.unlink", "/unlink");
-                commands_login = Config.getConfigString("Core.commands.login", "/login");
-                commands_logout = Config.getConfigString("Core.commands.logout", "/logout");
-                commands_setspawn = Config.getConfigString("Core.commands.setspawn", "/authdb setspawn");
-                commands_reload = Config.getConfigString("Core.commands.reload", "/authdb reload");
+                commands_user_register = Config.getConfigString("Core.commands.user.register", "/register");
+                commands_user_link = Config.getConfigString("Core.commands.user.link", "/link");
+                commands_user_unlink = Config.getConfigString("Core.commands.user.unlink", "/unlink");
+                commands_user_login = Config.getConfigString("Core.commands.user.login", "/login");
+                commands_user_logout = Config.getConfigString("Core.commands.user.logout", "/logout");
+                commands_admin_login = Config.getConfigString("Core.commands.admin.login", "/authdb login");
+                commands_admin_logout = Config.getConfigString("Core.commands.admin.logout", "/authdb logout");
+                commands_admin_reload = Config.getConfigString("Core.commands.admin.reload", "/authdb reload");
 
-                aliases_register = Config.getConfigString("Core.aliases.register", "/r");
-                aliases_link = Config.getConfigString("Core.aliases.link", "/li");
-                aliases_unlink = Config.getConfigString("Core.aliases.unlink", "/ul");
-                aliases_login = Config.getConfigString("Core.aliases.login", "/l");
-                aliases_logout = Config.getConfigString("Core.aliases.logout", "/lo");
-                aliases_setspawn = Config.getConfigString("Core.aliases.setspawn", "/s");
-                aliases_reload = Config.getConfigString("Core.aliases.reload", "/ar");
+                aliases_user_register = Config.getConfigString("Core.aliases.user.register", "/r");
+                aliases_user_link = Config.getConfigString("Core.aliases.user.link", "/li");
+                aliases_user_unlink = Config.getConfigString("Core.aliases.user.unlink", "/ul");
+                aliases_user_login = Config.getConfigString("Core.aliases.user.login", "/l");
+                aliases_user_logout = Config.getConfigString("Core.aliases.user.logout", "/lo");
+                aliases_admin_login = Config.getConfigString("Core.aliases.admin.login", "/ar");
+                aliases_admin_logout = Config.getConfigString("Core.aliases.admin.logout", "/ar");
+                aliases_admin_reload = Config.getConfigString("Core.aliases.admin.reload", "/ar");
             }
       }
 

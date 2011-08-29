@@ -1,17 +1,23 @@
 Core:
   commands:
-    register: "/register"
-    link: "/link"
-    unlink: "/unlink"
-    login: "/login"
-    logout: "/logout"
-    setspawn: "/authdb setspawn"
-    reload: "/authdb reload"
+    user:
+      register: "/register"
+      link: "/link"
+      unlink: "/unlink"
+      login: "/login"
+      logout: "/logout"
+    admin:
+      login: "/authdb login"
+      logout: "/authdb logout"
+      reload: "/authdb reload"
   aliases:
-    register: "/r"
-    link: "/li"
-    unlink: "/ul"
-    login: "/l"
-    logout: "/lo"
-    setspawn: "/ss"
-    reload: "/ar"
+    user:
+      register: "/r"
+      link: "/li"
+      unlink: "/ul"
+      login: "/l"
+      logout: "/lo"
+    admin:
+      login: "/al"
+      logout: "/alo"
+      reload: "/ar"

@@ -286,7 +286,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (!ZBukkitContrib.checkCommand(Contrib)) {
             String[] split = event.getMessage().split(" ");
             Player player = event.getPlayer();
-            if (split[0].equalsIgnoreCase(Config.commands_login) || split[0].equalsIgnoreCase(Config.aliases_login)) {
+            if (split[0].equalsIgnoreCase(Config.commands_user_login) || split[0].equalsIgnoreCase(Config.aliases_user_login)) {
                 if (ZPermissions.isAllowed(player, Permission.command_login)) {
                     if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.checkOtherName(player.getName())) == false) {
                         Messages.sendMessage(Message.login_notregistered, player, null);
@@ -305,10 +305,10 @@ public class AuthDBPlayerListener extends PlayerListener {
                         }
                     }
                     Util.logging.Debug(player.getName() + " login ********");
-                    event.setMessage(Config.commands_login + " ******");
+                    event.setMessage(Config.commands_user_login + " ******");
                     event.setCancelled(true);
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
-            } else if (split[0].equalsIgnoreCase(Config.commands_link) || split[0].equalsIgnoreCase(Config.aliases_link)) {
+            } else if (split[0].equalsIgnoreCase(Config.commands_user_link) || split[0].equalsIgnoreCase(Config.aliases_user_link)) {
                 if (Config.link_enabled) {
                     if (ZPermissions.isAllowed(player, Permission.command_link)) {
                         if (split.length == 3) {
@@ -338,11 +338,11 @@ public class AuthDBPlayerListener extends PlayerListener {
                             Messages.sendMessage(Message.link_usage, player, null);
                         }
                         Util.logging.Debug(player.getName() + " link ******** ********");
-                        event.setMessage(Config.commands_link + " ****** ********");
+                        event.setMessage(Config.commands_user_link + " ****** ********");
                         event.setCancelled(true);
                     } else { Messages.sendMessage(Message.protection_denied, player, null); }
                 }
-            } else if (split[0].equalsIgnoreCase(Config.commands_unlink) || split[0].equalsIgnoreCase(Config.aliases_unlink)) {
+            } else if (split[0].equalsIgnoreCase(Config.commands_user_unlink) || split[0].equalsIgnoreCase(Config.aliases_user_unlink)) {
                 if (Config.unlink_enabled) {
                     if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
                         if (split.length == 3) {
@@ -366,11 +366,11 @@ public class AuthDBPlayerListener extends PlayerListener {
                             Messages.sendMessage(Message.unlink_usage, player, null);
                         }
                         Util.logging.Debug(player.getName() + " unlink ******** ********");
-                        event.setMessage(Config.commands_unlink + " ****** ********");
+                        event.setMessage(Config.commands_user_unlink + " ****** ********");
                         event.setCancelled(true);
                     } else { Messages.sendMessage(Message.protection_denied, player, null); }
                 }
-            } else if (split[0].equalsIgnoreCase(Config.commands_register) || split[0].equalsIgnoreCase(Config.aliases_register)) {
+            } else if (split[0].equalsIgnoreCase(Config.commands_user_register) || split[0].equalsIgnoreCase(Config.aliases_user_register)) {
                 if (ZPermissions.isAllowed(player, Permission.command_register)) {
                     Boolean email = true;
                     if (Config.custom_enabled) {
@@ -414,7 +414,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                         }
                     }
                     Util.logging.Debug(player.getName() + " register ********");
-                    event.setMessage(Config.commands_register + " *****");
+                    event.setMessage(Config.commands_user_register + " *****");
                     event.setCancelled(true);
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
             } else if (!plugin.isAuthorized(player)) {

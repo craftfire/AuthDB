@@ -357,61 +357,76 @@ public class AuthDB extends JavaPlugin {
         }
     }
     
-    public String commandString(String command) {
-        if (command.contains(" ")) {
+    public String commandString(String command, boolean check) {
+       /*if (command.contains(" ")) {
             String[] temp = command.split(" ");
             if (temp.length > 0) {
                 command =  temp[0].replaceAll("/", "");
+                if (check) {
+                    for (int i=1; i<temp.length; i++) {
+                        command += " " + temp[i];
+                    }
+                }
             }
-        } else { 
+        } else { */
             command = command.replaceAll("/", ""); 
-        }
+        //}
         return command;
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args)  { 
         if (sender instanceof Player) {
+            String command = cmd.getName();
+            if(args.length > 0) {
+                for(int i=0; i<args.length; i++) {
+                    command += " " + args[i];
+                }
+            }
             Player player = (Player)sender;
-            if (cmd.getName().equalsIgnoreCase("authdb") && args.length == 0) {
+            if ((cmd.getName().equalsIgnoreCase("authdb") && args.length == 0) || (command.equalsIgnoreCase("authdb version"))) {
                 String tempName = "§f" + pluginName.substring(0, 4);
                 tempName += "§b" + pluginName.substring(4, pluginName.length()) + "§f";
-                player.sendMessage("§fName: §f" + tempName + " §f" + pluginVersion);
-                player.sendMessage("§f" + tempName + " is developed by §cCraft§fFire§f<dev@craftfire.com>");
+                player.sendMessage("§f" + tempName + " §f" + pluginVersion);
+                player.sendMessage("§fDeveloped by §fCraft§cFire §f<dev@craftfire.com>");
                 player.sendMessage("§f" + pluginWebsite);
                 return true;
-            } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_reload)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_reload))) {
-                if (args.length == 1) {
-                    if (ZPermissions.isAllowed(player, Permission.command_admin_reload)) {
-                        new Config("config", "plugins/" + pluginName + "/config/", "config.yml");
-                        LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
-                        LoadYml("messages", getClass().getProtectionDomain().getCodeSource());
-                        Messages.sendMessage(Message.reload_success, player, null);
+            } else if (command.equalsIgnoreCase(commandString(Config.commands_admin_reload, true)) || command.equalsIgnoreCase(commandString(Config.aliases_admin_reload, true))) {
+                if (ZPermissions.isAllowed(player, Permission.command_admin_reload)) {
+                    new Config("config", "plugins/" + pluginName + "/config/", "config.yml");
+                    LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
+                    LoadYml("messages", getClass().getProtectionDomain().getCodeSource());
+                    Messages.sendMessage(Message.reload_success, player, null);
+                    return true;
+                }
+                else {
+                    Messages.sendMessage(Message.protection_denied, player, null); 
+                    return true;
+                }
+            } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_user_logout, false)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_user_logout, false))) {
+                if (ZPermissions.isAllowed(player, Permission.command_logout)) {
+                    if (Processes.Logout(player)) {
+                        EBean eBeanClass = EBean.checkPlayer(player, true);
+                        eBeanClass.setSessiontime(0);
+                        getDatabase().save(eBeanClass);
+                        String check = Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player));
+                        if (AuthDB.AuthDB_Sessions.containsKey(check)) {
+                            AuthDB_Sessions.remove(check);
+                        }
+                        Messages.sendMessage(Message.logout_success, player, null);
+                        return true;
+                    } else {
+                        Messages.sendMessage(Message.logout_failure, player, null);
                         return true;
                     }
-                    else { Messages.sendMessage(Message.protection_denied, player, null); }
+                } else {
+                    Messages.sendMessage(Message.protection_denied, player, null); 
+                    return true;
                 }
-            } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_logout)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_logout))) {
-                if (args.length == 0) {
-                    if (ZPermissions.isAllowed(player, Permission.command_logout)) {
-                        if (Processes.Logout(player)) {
-                            EBean eBeanClass = EBean.checkPlayer(player, true);
-                            eBeanClass.setSessiontime(0);
-                            getDatabase().save(eBeanClass);
-                            String check = Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player));
-                            if (AuthDB.AuthDB_Sessions.containsKey(check)) {
-                                AuthDB_Sessions.remove(check);
-                            }
-                            Messages.sendMessage(Message.logout_success, player, null);
-                            return true;
-                        } else {
-                            Messages.sendMessage(Message.logout_failure, player, null);
-                            return true;
-                        }
-                    }
-                    else { Messages.sendMessage(Message.protection_denied, player, null); }
-                } else if (args.length == 1) {
-                    if(ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
-                        String PlayerName = args[0];
+            } else if (command.startsWith(commandString(Config.commands_admin_logout, true)) || command.startsWith(commandString(Config.aliases_admin_logout, true))) {
+                if(ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
+                    String[] temp = commandString(Config.commands_admin_logout, true).split(" ");
+                    if (args.length == temp.length) {
+                        String PlayerName = args[temp.length - 1];
                         List<Player> players = sender.getServer().matchPlayer(PlayerName);
                         if (!players.isEmpty()) {
                             if (Processes.Logout(players.get(0))) {
@@ -425,31 +440,43 @@ public class AuthDB extends JavaPlugin {
                         }
                         Messages.sendMessage(Message.logout_admin_notfound, player, null, PlayerName);
                         return true;
+                    } else {
+                        player.sendMessage("Usage: " + cmd.getUsage());
+                        return true;
                     }
-                    else { Messages.sendMessage(Message.protection_denied, player, null); }
-                }
-            } else if (isAuthorized(player) && (cmd.getName().equalsIgnoreCase(commandString(Config.commands_login)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_login)))) {
-                if (ZPermissions.isAllowed(player, Permission.command_admin_login)) {
-                    if (args.length == 1) {
-                    String PlayerName = args[0];
-                    List<Player> players = sender.getServer().matchPlayer(PlayerName);
-                    if (!players.isEmpty()) {
-                        if (Processes.Logout(players.get(0))) {
-                            Messages.sendMessage(Message.login_admin_success, player, null, players.get(0).getName());
-                            Messages.sendMessage(Message.login_admin, players.get(0), null);
-                            return true;
-                        } else {
-                            Messages.sendMessage(Message.login_admin_failure, player, null, players.get(0).getName());
-                            return true;
-                        }
-                    }
-                    Messages.sendMessage(Message.login_admin_notfound, player, null, PlayerName);
+                } else {
+                    Messages.sendMessage(Message.protection_denied, player, null); 
                     return true;
+                }
+            } else if (command.startsWith(commandString(Config.commands_admin_login, true)) || command.startsWith(commandString(Config.aliases_admin_login, true))) {
+                if(ZPermissions.isAllowed(player, Permission.command_admin_login)) {
+                    String[] temp = commandString(Config.commands_admin_login, true).split(" ");
+                    if (args.length == temp.length) {
+                        String PlayerName = args[temp.length - 1];
+                        List<Player> players = sender.getServer().matchPlayer(PlayerName);
+                        if (!players.isEmpty()) {
+                            if (Processes.Login(players.get(0))) {
+                                Messages.sendMessage(Message.login_admin_success, player, null, players.get(0).getName());
+                                Messages.sendMessage(Message.login_admin, players.get(0), null);
+                                return true;
+                            } else {
+                                Messages.sendMessage(Message.login_admin_failure, player, null, players.get(0).getName());
+                                return true;
+                            }
+                        }
+                        Messages.sendMessage(Message.login_admin_notfound, player, null, PlayerName);
+                        return true;
+                    } else {
+                        player.sendMessage("Usage: " + cmd.getUsage());
+                        return true;
                     }
-                } else { Messages.sendMessage(Message.protection_denied, player, null); }
+                } else {
+                    Messages.sendMessage(Message.protection_denied, player, null); 
+                    return true;
+                }
             }
         }
-        return false;
+        return true;
     }
     
     private void setupDatabase() {

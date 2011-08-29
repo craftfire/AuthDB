@@ -59,12 +59,12 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               link
         ///////////////////////////////////////////
-        public static String AuthDB_message_link_welcome, AuthDB_message_link_success, AuthDB_message_link_failure, AuthDB_message_link_exists, AuthDB_message_link_usage, AuthDB_message_link_duplicate, AuthDB_message_link_registred, AuthDB_message_link_invaliduser;
+        public static String AuthDB_message_link_welcome, AuthDB_message_link_success, AuthDB_message_link_failure, AuthDB_message_link_exists, AuthDB_message_link_usage, AuthDB_message_link_duplicate, AuthDB_message_link_registred, AuthDB_message_link_invaliduser, AuthDB_message_link_renamed;
 
         ///////////////////////////////////////////
         //               unlink
         ///////////////////////////////////////////
-        public static String AuthDB_message_unlink_success, AuthDB_message_unlink_failure, AuthDB_message_unlink_nonexist, AuthDB_message_unlink_usage, AuthDB_message_unlink_invaliduser, AuthDB_message_unlink_invalidpass;
+        public static String AuthDB_message_unlink_success, AuthDB_message_unlink_failure, AuthDB_message_unlink_nonexist, AuthDB_message_unlink_usage, AuthDB_message_unlink_invaliduser, AuthDB_message_unlink_invalidpass, AuthDB_message_unlink_renamed;
 
         ///////////////////////////////////////////
         //               email
@@ -324,6 +324,8 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_registred, player, null));
             } else if (type.equals(Message.link_invaliduser)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_invaliduser, player, null));
+            } else if (type.equals(Message.link_renamed)) {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_link_renamed, player, null));
             } else if (type.equals(Message.unlink_success)) {
                 Util.logging.Debug("Player " + player.getName() + " unlinked sucessfully");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_success, player, null));
@@ -340,6 +342,8 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_invalidpass, player, null));
             } else if (type.equals(Message.unlink_invaliduser)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_invaliduser, player, null));
+            } else if (type.equals(Message.unlink_renamed)) {
+                player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_renamed, player, null));
             } else if (type.equals(Message.email_required)) {
                 Util.logging.Debug("Player " + player.getName() + " tried to register without an email.");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_email_required, player, null));

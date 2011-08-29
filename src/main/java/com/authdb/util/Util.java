@@ -1071,10 +1071,10 @@ public class Util {
         string = string.replaceAll("\\{n\\}", "\n");
 
         //COMMANDS
-        string = string.replaceAll("\\{REGISTERCMD\\}", Config.commands_register + " (" + Config.aliases_register + ")");
-        string = string.replaceAll("\\{LINKCMD\\}", Config.commands_link + " (" + Config.aliases_link + ")");
-        string = string.replaceAll("\\{UNLINKCMD\\}", Config.commands_unlink + " (" + Config.aliases_unlink + ")");
-        string = string.replaceAll("\\{LOGINCMD\\}", Config.commands_login + " (" + Config.aliases_login + ")");
+        string = string.replaceAll("\\{REGISTERCMD\\}", Config.commands_user_register + " (" + Config.aliases_user_register + ")");
+        string = string.replaceAll("\\{LINKCMD\\}", Config.commands_user_link + " (" + Config.aliases_user_link + ")");
+        string = string.replaceAll("\\{UNLINKCMD\\}", Config.commands_user_unlink + " (" + Config.aliases_user_unlink + ")");
+        string = string.replaceAll("\\{LOGINCMD\\}", Config.commands_user_login + " (" + Config.aliases_user_login + ")");
        
         ///COLORS
         string = string.replaceAll("\\{BLACK\\}", "§0");
