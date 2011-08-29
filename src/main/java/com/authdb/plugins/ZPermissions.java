@@ -12,6 +12,7 @@ package com.authdb.plugins;
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
+import com.authdb.util.Config;
 import com.authdb.util.Util;
 
 import com.nijiko.permissions.PermissionHandler;
@@ -19,6 +20,7 @@ import com.nijiko.permissions.PermissionHandler;
 public class ZPermissions {
     public static boolean hasPlugin = false;
     public static boolean hasPermissionsBukkit = false;
+    public static boolean hasbPermissions = false;
     public static PermissionHandler permissionsHandler;
     static String pluginName = AuthDB.pluginName.toLowerCase();
     static String userPermissions = pluginName + ".command.user.";
@@ -44,7 +46,7 @@ public class ZPermissions {
     }
 
     public static boolean isAllowed(Player player, Permission permission) {
-        if (hasPermissionsBukkit) {
+        if (hasPermissionsBukkit || hasbPermissions) {
             if (player.hasPermission(permission.permission)) {
                 return true;
             } else if(player.hasPermission(pluginName + ".*")) {
@@ -90,7 +92,7 @@ public class ZPermissions {
     }
     
     public static boolean isAllowed(Player player, String permission) {
-        if (hasPermissionsBukkit) {
+        if (hasPermissionsBukkit || hasbPermissions) {
             if (player.hasPermission(permission)) {
                 return true;
             } else if(player.hasPermission(pluginName + ".*")) {

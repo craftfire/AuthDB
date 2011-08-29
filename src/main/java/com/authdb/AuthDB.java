@@ -233,6 +233,13 @@ public class AuthDB extends JavaPlugin {
           } else {
               Util.logging.Debug("Server is running without Buildr.");
           }
+          check = getServer().getPluginManager().getPlugin("bPermissions");
+          if (check != null) { 
+              ZPermissions.hasbPermissions = true; 
+              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+          } else {
+              Util.logging.Debug("Server is running without bPermissions.");
+          }
          /* SPOUT START
           * check = getServer().getPluginManager().getPlugin("Spout");
           if (check != null) { 
