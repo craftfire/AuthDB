@@ -372,20 +372,19 @@ public class AuthDB extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args)  { 
         if (sender instanceof Player) {
             Player player = (Player)sender;
-            if (cmd.getName().equalsIgnoreCase("authdb")) {
-                if (args.length == 0) {
-                    player.sendMessage("§b Name: §f " + pluginName + " §4 " + pluginVersion);
-                    player.sendMessage("§b " + pluginName + " is developed by §4 CraftFire �e<dev@craftfire.com>");
-                    player.sendMessage("§d " + pluginWebsite);
-                    return true;
-                }
+            if (cmd.getName().equalsIgnoreCase("authdb") && args.length == 0) {
+                String tempName = "§f" + pluginName.substring(0, 4);
+                tempName += "§b" + pluginName.substring(4, pluginName.length()) + "§f";
+                player.sendMessage("§fName: §f" + tempName + " §f" + pluginVersion);
+                player.sendMessage("§f" + tempName + " is developed by §cCraft§fFire§f<dev@craftfire.com>");
+                player.sendMessage("§f" + pluginWebsite);
+                return true;
             } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_reload)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_reload))) {
                 if (args.length == 1) {
                     if (ZPermissions.isAllowed(player, Permission.command_admin_reload)) {
                         new Config("config", "plugins/" + pluginName + "/config/", "config.yml");
                         LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
                         LoadYml("messages", getClass().getProtectionDomain().getCodeSource());
-                        player.sendMessage("§a AuthDB has been successfully reloaded!");
                         Messages.sendMessage(Message.reload_success, player, null);
                         return true;
                     }

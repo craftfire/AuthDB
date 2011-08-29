@@ -17,25 +17,35 @@ commands:
     description: Login to your account.
     permission: authdb.command.user.login
     usage: /<command> password
+  login:
+    description: Force login another player.
+    permission: authdb.command.admin.login
+    usage: /<command> player
   logout:
-    description: Logout yourself or specified player.
+    description: Logout of your account.
     permission: authdb.command.user.logout
+    usage: /<command>
+  logout:
+    description: Force logout another player.
+    permission: authdb.command.admin.logout
     usage: /<command> player
   link:
     description: Links you to another account.
     permission: authdb.command.user.link
-    usage: /<command> player password
+    usage: /<command> username password
   unlink:
     description: Unlinks you from the other account.
     permission: authdb.command.user.unlink
-    usage: /<command> player password
+    usage: /<command> username password
 #  setspawn:
 #    description: Set spawn locations for guest and registered player groups.
 #    permission: authdb.command.user.setspawn
-#    usage: /<command> group
+#    usage: /<command>
   authdb:
-    description: Set of commands to reload, show version, and more.
-    usage: /<command> <extra>
+    description: Commands to reload and show plugin version information.
+    usage: |
+      /<command> reload
+      /<command> version
 
 permissions:
   authdb.*:
@@ -91,9 +101,9 @@ permissions:
 #  authdb.command.user.email:
 #    description: Give player permission to change their email.
 #    default: true
-  authdb.command.user.users:
-    description: Give player permission to check the number of registered users.
-    default: true
+#  authdb.command.user.users:
+#    description: Give player permission to check the number of registered users.
+#    default: true
 #  authdb.command.admin.unregister:
 #    default: op
   authdb.command.admin.*:
