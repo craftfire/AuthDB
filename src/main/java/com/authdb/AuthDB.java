@@ -402,7 +402,7 @@ public class AuthDB extends JavaPlugin {
                     Messages.sendMessage(Message.protection_denied, player, null); 
                     return true;
                 }
-            } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_user_logout, false)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_user_logout, false))) {
+            } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_user_logout, true)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_user_logout, true))) {
                 if (ZPermissions.isAllowed(player, Permission.command_logout)) {
                     if (Processes.Logout(player)) {
                         EBean eBeanClass = EBean.checkPlayer(player, true);

@@ -60,5 +60,5 @@ protection:
 filter:
   action: kick                                     # Action to perform when a username matches the filter. Options are kick and rename.
   username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "    # Characters and symbols to check for in usernames. We recommend leaving this as is.
-  password: "&"                                    # Characters and symbols to check for in passwords. We recommend leaving this as is.
+  password: "$&\\\""                               # Characters and symbols to check for in passwords. We recommend leaving this as is.
   whitelist: Contex,Wulfspider                     # Usernames to exclude from username and password filtering.
