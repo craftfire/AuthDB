@@ -185,8 +185,8 @@ public class Util {
                         EBean.checkPassword(player, hash);
                         if (SMF.check_hash(SMF.hash(1, player, password), hash)) { return true; }
                     }
-                } else if (checkVersionInRange(SMF.VersionRange2) || checkVersionInRange("2.0")
-                || checkVersionInRange("2.0.0") || checkVersionInRange("2.0.0.0")) {
+                } else if (checkVersionInRange(SMF.VersionRange2) || checkVersionInRange("2.0-2.0")
+                || checkVersionInRange("2.0.0-2.0.0")) {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
                     Config.hasForumBoard = true;
@@ -389,34 +389,38 @@ public class Util {
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         Blob hash = MySQL.getfromtableBlob(Config.script_tableprefix + "user_authenticate", "`data`", "user_id", userid);
-                        int offset = -1;
-                        int chunkSize = 1024;
-                        long blobLength = hash.length();
-                        if (chunkSize > blobLength) {
-                        chunkSize = (int) blobLength;
-                        }
-                        char buffer[] = new char[chunkSize];
-                        StringBuilder stringBuffer = new StringBuilder();
-                        Reader reader = new InputStreamReader(hash.getBinaryStream());
-
-                        try {
-                            while ((offset = reader.read(buffer)) != -1) {
-                            stringBuffer.append(buffer, 0, offset);
+                        if (hash != null) {
+                            int offset = -1;
+                            int chunkSize = 1024;
+                            long blobLength = hash.length();
+                            if (chunkSize > blobLength) {
+                            chunkSize = (int) blobLength;
                             }
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                            char buffer[] = new char[chunkSize];
+                            StringBuilder stringBuffer = new StringBuilder();
+                            Reader reader = new InputStreamReader(hash.getBinaryStream());
+    
+                            try {
+                                while ((offset = reader.read(buffer)) != -1) {
+                                stringBuffer.append(buffer, 0, offset);
+                                }
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                            }
+                            String cache = stringBuffer.toString();
+                            String thehash = forumCacheValue(cache, "hash");
+                            String thesalt = forumCacheValue(cache, "salt");
+                            EBean eBeanClass = EBean.find(player);
+                            String storedPassword = eBeanClass.getPassword();
+                            String storedSalt = eBeanClass.getSalt();
+                            if (storedPassword != null && storedSalt != null && XenForo.check_hash(XenForo.hash(1, storedSalt, password), storedPassword)) { return true; }
+                            EBean.checkSalt(player, thesalt);
+                            EBean.checkPassword(player, thehash);
+                            if (XenForo.check_hash(XenForo.hash(1, thesalt, password), thehash)) { return true; }
+                        } else {
+                            return false;
                         }
-                        String cache = stringBuffer.toString();
-                        String thehash = forumCacheValue(cache, "hash");
-                        String thesalt = forumCacheValue(cache, "salt");
-                        EBean eBeanClass = EBean.find(player);
-                        String storedPassword = eBeanClass.getPassword();
-                        String storedSalt = eBeanClass.getSalt();
-                        if (storedPassword != null && storedSalt != null && XenForo.check_hash(XenForo.hash(1, storedSalt, password), storedPassword)) { return true; }
-                        EBean.checkSalt(player, thesalt);
-                        EBean.checkPassword(player, thehash);
-                        if (XenForo.check_hash(XenForo.hash(1, thesalt, password), thehash)) { return true; }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -797,8 +801,8 @@ public class Util {
 
     public static boolean checkVersionInRange(String versionrange) {
         String version = Config.script_version;
-        String[] versions= version.split("\\.");
-        String[] versionss= versionrange.split("\\-");
+        String[] versions = version.split("\\.");
+        String[] versionss = versionrange.split("\\-");
         String[] versionrange1= versionss[0].split("\\.");
         String[] versionrange2= versionss[1].split("\\.");
         if (versionrange1.length == versions.length) {
