@@ -750,7 +750,7 @@ public class AuthDB extends JavaPlugin {
     public boolean isRegistered(String when, String player) {
         boolean dupe = false;
         boolean checkneeded = true;
-        Util.logging.Debug("Checking if player " + player + " is registred.");
+        //Util.logging.Debug("Checking if player " + player + " is registred.");
         player = Util.checkOtherName(player);
         EBean eBeanClass = EBean.checkPlayer(player, true);
         if(eBeanClass.getRegistered().equalsIgnoreCase("true")) {

@@ -426,13 +426,12 @@ public class AuthDBPlayerListener extends PlayerListener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.isCancelled()) { return; }
         if (!plugin.isAuthorized(event.getPlayer())) {
-            if (!checkGuest(event.getPlayer(),Config.guests_movement)) {
+            Location test = new Location(event.getPlayer().getWorld(), event.getFrom().getX(), event.getFrom().getY() - 1, event.getFrom().getZ());
+            if (test.getBlock().getTypeId() != 0 && !checkGuest(event.getPlayer(),Config.guests_movement)) {
                 if(this.plugin.AuthDB_JoinTime.containsKey(event.getPlayer().getName())) {
                     if (Config.protection_freeze) {
                         long jointime = this.plugin.AuthDB_JoinTime.get(event.getPlayer().getName());
-                        Location temp = event.getFrom();
-                        temp.setY(temp.getY() - 1);
-                        if (jointime + Config.protection_freeze_delay < Util.timeStamp() && temp.getBlock().getTypeId() != 0) {
+                        if (jointime + Config.protection_freeze_delay < Util.timeStamp()) {
                             this.plugin.AuthDB_JoinTime.remove(event.getPlayer().getName());
                         }
                     }

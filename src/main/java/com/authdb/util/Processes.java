@@ -9,10 +9,14 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 
 package com.authdb.util;
 
+import java.io.IOException;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.afforess.backpack.BackpackManager;
+import com.afforess.backpack.BackpackPlayer;
 import com.authdb.AuthDB;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
@@ -59,6 +63,20 @@ public class Processes {
                 Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
             }
             AuthDB.database.save(eBeanClass);
+            try {
+                if (Config.hasBackpack) {
+                    BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
+                    BackpackPlayer.createBackpack();
+                    Util.craftFirePlayer.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
+                } else {
+                    Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
+                }
+            } catch (IOException e) {
+                Util.logging.Severe("[" + AuthDB.pluginName + "] Inventory file error:");
+                player.kickPlayer("Inventory protection kicked.");
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            }
+            player.getInventory().clear();
             return true;
         }
         return false;
