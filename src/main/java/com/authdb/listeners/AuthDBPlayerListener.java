@@ -437,7 +437,9 @@ public class AuthDBPlayerListener extends PlayerListener {
                 if(this.plugin.AuthDB_JoinTime.containsKey(event.getPlayer().getName())) {
                     if (Config.protection_freeze) {
                         long jointime = this.plugin.AuthDB_JoinTime.get(event.getPlayer().getName());
-                        if (jointime + Config.protection_freeze_delay < Util.timeStamp()) {
+                        Location temp = event.getFrom();
+                        temp.setY(temp.getY() - 1);
+                        if (jointime + Config.protection_freeze_delay < Util.timeStamp() && temp.getBlock().getTypeId() != 0) {
                             this.plugin.AuthDB_JoinTime.remove(event.getPlayer().getName());
                         }
                     }
