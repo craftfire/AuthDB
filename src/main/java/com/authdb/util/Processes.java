@@ -130,6 +130,7 @@ public class Processes {
             eBeanClass.setSessiontime(0);
             eBeanClass.setRegistered("false");
             AuthDB.database.save(eBeanClass);
+            Messages.sendMessage(Message.register_welcome, player, null);
             Logout(player);
             return true;
         }
