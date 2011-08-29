@@ -61,7 +61,9 @@ public void onEntityDamage(EntityDamageEvent event) {
                    }
                } else if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
                   Player t = (Player)e.getDamager();
-                  if (!checkGuest(t, Config.guests_pvp) && !checkGuest(p,Config.guests_health)) {
+                  Util.logging.Debug("I'm here 2");
+                  if ((this.plugin.isRegistered("health", p.getName()) == true && plugin.isAuthorized(p) == false) || (!checkGuest(t, Config.guests_pvp) && !checkGuest(p,Config.guests_health))) {
+                      Util.logging.Debug("I'm here 3");
                         event.setCancelled(true);
                   }
                } else {
