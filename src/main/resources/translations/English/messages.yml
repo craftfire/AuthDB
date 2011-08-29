@@ -54,7 +54,7 @@ Core:
     duplicate: "{RED}Username is already linked to another player!"
     registered: "{RED}You cannot link as this username is already registered!"
     invaliduser: "{RED}You cannot link with yourself!"
-#    renamed: "{YELLOW}{PLAYER} has been renamed to {PLAYERNEW}."
+    renamed: "{YELLOW}{PLAYER} has been renamed to {DISPLAYNAME}."
     usage: "{YELLOW}Correct usage is: {WHITE}{LINKCMD} otherusername password"
   unlink:
     success: "{BRIGHTGREEN}Username unlinked successfully!"
@@ -62,7 +62,7 @@ Core:
     nonexist: "{RED}You do not have a linked username!"
     invaliduser: "{RED}Invalid linked username!"
     invalidpass: "{RED}Invalid linked password!"
-#    renamed: "{YELLOW}{PLAYERNEW} has been renamed to {PLAYER}."
+    renamed: "{YELLOW}{DISPLAYNAME} has been renamed to {PLAYER}."
     usage: "{YELLOW}Correct usage is: {WHITE}{UNLINKCMD} otherusername password"
   email:
     required: "{RED}Email required for registration!"

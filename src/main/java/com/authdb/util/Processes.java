@@ -104,6 +104,7 @@ public class Processes {
                 AuthDB.AuthDB_LinkedNameCheck.remove(player.getName());
             }
             if (Config.link_rename) {
+                Messages.sendMessage(Message.link_renamed, player, null);
                 Util.craftFirePlayer.renamePlayer(player, name);
             }
             Login(player);
@@ -121,6 +122,7 @@ public class Processes {
                 AuthDB.AuthDB_LinkedNameCheck.remove(player.getName());
             }
             if (Config.unlink_rename) {
+                Messages.sendMessage(Message.unlink_renamed, player, null);
                 Util.craftFirePlayer.renamePlayer(player, player.getName());
             }
             EBean eBeanClass = EBean.checkPlayer(player, true);

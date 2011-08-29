@@ -262,6 +262,7 @@ public class Config {
                 Messages.AuthDB_message_link_duplicate = Config.getConfigString("Core.link.duplicate", "{RED}Username is already linked to another player!");
                 Messages.AuthDB_message_link_registred = Config.getConfigString("Core.link.registred", "{RED}You cannot link as this username is already registered!");
                 Messages.AuthDB_message_link_invaliduser = Config.getConfigString("Core.link.invaliduser", "{RED}You cannot link with yourself!");
+                Messages.AuthDB_message_link_renamed = Config.getConfigString("Core.link.renamed", "{YELLOW}{PLAYER} has been renamed to {DISPLAYNAME}.");
                 Messages.AuthDB_message_link_usage = Config.getConfigString("Core.link.usage", "{RED}Correct usage is: /link otherusername password");
 
                 Messages.AuthDB_message_unlink_success = Config.getConfigString("Core.unlink.success", "{BRIGHTGREEN}You have successfully unlinked!");
@@ -269,8 +270,8 @@ public class Config {
                 Messages.AuthDB_message_unlink_nonexist = Config.getConfigString("Core.unlink.nonexist", "{RED}You do not have a linked username!");
                 Messages.AuthDB_message_unlink_invaliduser = Config.getConfigString("Core.unlink.invaliduser", "{RED}Invalid linked username!");
                 Messages.AuthDB_message_unlink_invalidpass = Config.getConfigString("Core.unlink.invalidpass", "{RED}Invalid linked password!");
+                Messages.AuthDB_message_unlink_renamed = Config.getConfigString("Core.unlink.renamed", "{YELLOW}{DISPLAYNAME} has been renamed to {PLAYER}.");
                 Messages.AuthDB_message_unlink_usage = Config.getConfigString("Core.unlink.usage", "{RED}Correct usage is: /unlink otherusername password");
-
                 Messages.AuthDB_message_email_required = Config.getConfigString("Core.email.required", "{RED}Email required for registration!");
                 Messages.AuthDB_message_email_invalid = Config.getConfigString("Core.email.invalid", "{RED}Invalid email! Please try again!");
                 Messages.AuthDB_message_email_badcharacters = Config.getConfigString("Core.email.badcharacters", "{RED}Email contains bad characters! {BADCHARACTERS}!");

@@ -166,12 +166,14 @@ static AuthDB plugin = new AuthDB();
         link_duplicate (AuthDB_message_link_duplicate),
         link_registred (AuthDB_message_link_registred),
         link_invaliduser (AuthDB_message_link_invaliduser),
+        link_renamed (AuthDB_message_link_renamed),
         link_usage (AuthDB_message_link_usage),
         unlink_success (AuthDB_message_unlink_success),
         unlink_failure (AuthDB_message_unlink_failure),
         unlink_nonexist (AuthDB_message_unlink_nonexist),
         unlink_invaliduser (AuthDB_message_unlink_invaliduser),
         unlink_invalidpass (AuthDB_message_unlink_invalidpass),
+        unlink_renamed (AuthDB_message_unlink_renamed),
         unlink_usage (AuthDB_message_unlink_usage),
         email_required (AuthDB_message_email_required),
         email_invalid (AuthDB_message_email_invalid),
@@ -325,7 +327,7 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.link_invaliduser)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_link_invaliduser, player, null));
             } else if (type.equals(Message.link_renamed)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_link_renamed, player, null));
+                player.getServer().broadcastMessage(Util.replaceStrings(AuthDB_message_link_renamed, player, null));
             } else if (type.equals(Message.unlink_success)) {
                 Util.logging.Debug("Player " + player.getName() + " unlinked sucessfully");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_success, player, null));
@@ -343,7 +345,7 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.unlink_invaliduser)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_invaliduser, player, null));
             } else if (type.equals(Message.unlink_renamed)) {
-                player.sendMessage(Util.replaceStrings(AuthDB_message_unlink_renamed, player, null));
+                player.getServer().broadcastMessage(Util.replaceStrings(AuthDB_message_unlink_renamed, player, null));
             } else if (type.equals(Message.email_required)) {
                 Util.logging.Debug("Player " + player.getName() + " tried to register without an email.");
                 player.sendMessage(Util.replaceStrings(AuthDB_message_email_required, player, null));

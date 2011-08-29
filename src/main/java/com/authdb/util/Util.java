@@ -1044,6 +1044,7 @@ public class Util {
             string = string.replaceAll("\\{IP\\}", craftFirePlayer.getIP(player));
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");
+            string = string.replaceAll("\\{PLAYERNEW\\}", "");
             string = string.replaceAll("&", "§");
             if (!Util.checkOtherName(player.getName()).equals(player.getName())) {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", checkOtherName(player.getName()));
