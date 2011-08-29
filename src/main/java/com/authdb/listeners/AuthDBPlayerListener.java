@@ -248,6 +248,11 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        if (Config.link_rename && !Util.checkOtherName(player.getName()).equals(player.getName())) {
+            String message = event.getQuitMessage();
+            message = message.replaceAll(player.getName(), player.getDisplayName());
+            event.setQuitMessage(message);
+        }
         Messages.sendMessage(Message.left_server, player, null);
         if(this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
             this.plugin.AuthDB_GUI_PasswordFieldIDs.remove(player.getName());
