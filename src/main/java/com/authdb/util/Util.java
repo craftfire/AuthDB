@@ -212,19 +212,18 @@ public class Util {
             } else if (script.equalsIgnoreCase(MyBB.Name) || script.equalsIgnoreCase(MyBB.ShortName)) {
                 usertable = "users";
                 if (checkVersionInRange(MyBB.VersionRange)) {
-                    saltfield = "salt";
-                    usernamefield = "username";
-                    passwordfield = "password";
+                    usernamefield = "user_login";
+                    passwordfield = "user_pass";
                     Config.hasForumBoard = true;
                     bans = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && MyBB.check_hash(MyBB.hash("find", player, password, ""), storedPassword)) { return true; }
+                        if (storedPassword != null && MyBB.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (MyBB.check_hash(MyBB.hash("find", player, password, ""), hash)) { return true; }
+                        if (MyBB.check_hash(password, hash)) { return true; }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
