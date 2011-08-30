@@ -1,5 +1,7 @@
 plugin:
-  language: English                                # Language you want to use that matches a directory under translations.
+#  language:
+#    commands: English                              # Language you want to use for commands that matches a directory under translations.
+#    messages: English                              # Language you want to use for messages that matches a directory under translations.
   debugmode: false                                 # Enable/disable debugging mode and additional console output.
   usagestats: true                                 # Enable/disable usage stats reporting to CraftFire devs.
   logging: true                                    # Enable/disable logging to files.
@@ -14,6 +16,6 @@ database:
   keepalive: true                                  # Enable/disable keeping database connection alive. MySQL only.
 script:
   name: phpBB                                      # Name of the script you are using.
-  version: 3.0.9                                   # Version of the script you are using.
+  version: 3.0.8                                   # Version of the script you are using.
   tableprefix: phpbb_                              # Database table prefix for the script, if you use one.
 #  passwordsalt:                                    # NOT IMPLEMENTED YET! Unique/custom password salt, if needed by the script.

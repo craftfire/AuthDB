@@ -121,7 +121,8 @@ public class AuthDB_API {
     
     public String getConfigPath() { return AuthDB.plugin.configFolder; }
     public File getDataFolder() { return AuthDB.plugin.getDataFolder(); }
-    public String getLanguage() { return Config.language; }
+    public String getCommandsLanguage() { return Config.language_commands; }
+    public String getMessagesLanguage() { return Config.language_messages; }
     public boolean hasPermissions(Player player, String permission) { return ZPermissions.isAllowed(player, permission); }
     public void noPermission(Player player) { Messages.sendMessage(Message.protection_denied, player, null); }
 }

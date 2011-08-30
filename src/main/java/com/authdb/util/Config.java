@@ -27,7 +27,7 @@ public class Config {
     public static String database_type, database_username,database_password,database_port,database_host,database_database,dbDb;
     
     public static boolean autoupdate_enable,debug_enable,usagestats_enabled,logging_enabled;
-    public static String language, logformat;
+    public static String language_commands, language_messages, logformat;
 
     public static String script_name,script_version,script_salt,script_tableprefix;
     public static boolean script_updatestatus;
@@ -82,7 +82,8 @@ public class Config {
           template.load();
             if (config.equalsIgnoreCase("basic")) {
                 
-                language = getConfigString("plugin.language", "English");
+                language_commands = getConfigString("plugin.language.commands", "English");
+                language_messages = getConfigString("plugin.language.messages", "English");
                 autoupdate_enable = getConfigBoolean("plugin.autoupdate", true);
                 debug_enable = getConfigBoolean("plugin.debugmode", false);
                 usagestats_enabled = getConfigBoolean("plugin.usagestats", true);
@@ -324,7 +325,7 @@ public class Config {
                 commands_admin_logout = Config.getConfigString("Core.commands.admin.logout", "/authdb logout");
                 commands_admin_reload = Config.getConfigString("Core.commands.admin.reload", "/authdb reload");
 
-                aliases_user_register = Config.getConfigString("Core.aliases.user.register", "/r");
+                aliases_user_register = Config.getConfigString("Core.aliases.user.register", "/reg");
                 aliases_user_link = Config.getConfigString("Core.aliases.user.link", "/li");
                 aliases_user_unlink = Config.getConfigString("Core.aliases.user.unlink", "/ul");
                 aliases_user_login = Config.getConfigString("Core.aliases.user.login", "/l");

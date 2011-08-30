@@ -10,7 +10,7 @@ softdepend: [Spout]
 
 commands:
   register:
-    aliases: rg
+    aliases: reg
     description: Register for an account.
     permission: authdb.command.user.register
     usage: /<command> password email
