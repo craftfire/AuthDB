@@ -62,7 +62,9 @@ public class Util {
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
     String email, String ipAddress) throws SQLException {
-        player = player.toLowerCase();
+        if(player != null) {
+            player = player.toLowerCase();
+        }
         if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
             EBean eBeanClass = EBean.checkPlayer(player, true);
             if (type.equalsIgnoreCase("checkuser")) {
