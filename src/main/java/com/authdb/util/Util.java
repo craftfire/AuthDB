@@ -62,6 +62,7 @@ public class Util {
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
     String email, String ipAddress) throws SQLException {
+        player = player.toLowerCase();
         if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
             EBean eBeanClass = EBean.checkPlayer(player, true);
             if (type.equalsIgnoreCase("checkuser")) {
@@ -120,7 +121,7 @@ public class Util {
                 usertable = "users";
                 //bantable = "banlist";
                 if (checkVersionInRange(PhpBB.VersionRange)) {
-                    usernamefield = "username";
+                    usernamefield = "username_clean";
                     passwordfield = "user_password";
                     /*useridfield = "user_id";
                     banipfield = "ban_ip";
@@ -150,7 +151,7 @@ public class Util {
                           else { return false; }
                     } */
                 } else if (checkVersionInRange(PhpBB.VersionRange2)) {
-                    usernamefield = "username";
+                    usernamefield = "username_clean"; // TODO: use equalsIgnoreCase to allow for all variations?
                     passwordfield = "user_password";
                     Config.hasForumBoard = true;
                     bans = true;
