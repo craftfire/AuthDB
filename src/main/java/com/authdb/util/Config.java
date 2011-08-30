@@ -247,7 +247,7 @@ public class Config {
                 Messages.AuthDB_message_login_failure = Config.getConfigString("Core.login.failure", "{RED}Password incorrect, please try again.");
                 Messages.AuthDB_message_login_offline = Config.getConfigString("Core.login.offline", "{RED}Database is unavailable. Unable to verify password!");
                 Messages.AuthDB_message_login_authorized = Config.getConfigString("Core.login.authorized", "{BRIGHTGREEN}You are already logged in!");
-                Messages.AuthDB_message_login_notregistered = Config.getConfigString("Core.login.notregistered", "{RED}You are not registred yet!");
+                Messages.AuthDB_message_login_notregistered = Config.getConfigString("Core.login.notregistered", "{RED}You are not registered yet!");
                 Messages.AuthDB_message_login_timeout = Config.getConfigString("Core.login.timeout", "Kicked because you failed to login within {LOGINTIMEOUT}.");
                 Messages.AuthDB_message_login_admin = Config.getConfigString("Core.login.admin", "You have been logged in by an admin.");
                 Messages.AuthDB_message_login_admin_success = Config.getConfigString("Core.login.admin.success", "Successfully logged in player, {PLAYER}.");
@@ -260,7 +260,7 @@ public class Config {
                 Messages.AuthDB_message_link_failure = Config.getConfigString("Core.link.failure", "{RED}Error while linking!");
                 Messages.AuthDB_message_link_exists = Config.getConfigString("Core.link.exists", "{RED}You are already linked to a username!");
                 Messages.AuthDB_message_link_duplicate = Config.getConfigString("Core.link.duplicate", "{RED}Username is already linked to another player!");
-                Messages.AuthDB_message_link_registred = Config.getConfigString("Core.link.registred", "{RED}You cannot link as this username is already registered!");
+                Messages.AuthDB_message_link_registered = Config.getConfigString("Core.link.registered", "{RED}You cannot link as this username is already registered!");
                 Messages.AuthDB_message_link_invaliduser = Config.getConfigString("Core.link.invaliduser", "{RED}You cannot link with yourself!");
                 Messages.AuthDB_message_link_renamed = Config.getConfigString("Core.link.renamed", "{YELLOW}{PLAYER} has been renamed to {DISPLAYNAME}.");
                 Messages.AuthDB_message_link_usage = Config.getConfigString("Core.link.usage", "{RED}Correct usage is: /link otherusername password");

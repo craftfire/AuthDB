@@ -10,12 +10,12 @@ softdepend: [Spout]
 
 commands:
   register:
-    aliases: r
+    aliases: rg
     description: Register for an account.
     permission: authdb.command.user.register
     usage: /<command> password email
   login:
-    aliases: l
+    aliases: li
     description: Login to your account.
     permission: authdb.command.user.login
     usage: /<command> password
@@ -25,7 +25,7 @@ commands:
     permission: authdb.command.user.logout
     usage: /<command>
   link:
-    aliases: li
+    aliases: lk
     description: Links you to another account.
     permission: authdb.command.user.link
     usage: /<command> username password

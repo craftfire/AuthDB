@@ -652,7 +652,7 @@ public class AuthDB extends JavaPlugin {
             Messages.sendMessage(Message.filter_password, theplayer, null);
         } else {
             if(Util.checkScript("adduser", Config.script_name, player, password, email, ipAddress)) {
-                Util.logging.Debug("Registred player: " + theplayer.getName());
+                Util.logging.Debug("Registered player: " + theplayer.getName());
             } else {
                 Util.logging.Debug("Failed registring player: " + theplayer.getName());
                 if (!Config.database_keepalive) { 
@@ -750,7 +750,7 @@ public class AuthDB extends JavaPlugin {
     public boolean isRegistered(String when, String player) {
         boolean dupe = false;
         boolean checkneeded = true;
-        //Util.logging.Debug("Checking if player " + player + " is registred.");
+        //Util.logging.Debug("Checking if player " + player + " is registered.");
         player = Util.checkOtherName(player);
         EBean eBeanClass = EBean.checkPlayer(player, true);
         if(eBeanClass.getRegistered().equalsIgnoreCase("true")) {
@@ -803,7 +803,7 @@ public class AuthDB extends JavaPlugin {
                         return false;
                     }
                 } else if (checkneeded) {
-                    Util.logging.Debug("Check to see if user is registred is needed, performing check");
+                    Util.logging.Debug("Check to see if user is registered is needed, performing check");
                     try {
                         if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                         Config.hasForumBoard = false;

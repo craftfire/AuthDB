@@ -21,6 +21,8 @@ import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 
+import com.mysql.jdbc.Blob;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -48,7 +50,6 @@ import com.craftfire.util.managers.CraftFireManager;
 import com.craftfire.util.managers.DatabaseManager;
 import com.craftfire.util.managers.LoggingManager;
 import com.craftfire.util.managers.ServerManager;
-import com.mysql.jdbc.Blob;
 
 public class Util {
     public static LoggingManager logging = new LoggingManager();
@@ -82,7 +83,7 @@ public class Util {
                 int amount = EBean.getUsers(); 
                 logging.Info(amount + " user registrations in database");
             }
-    }   else if (Config.database_ison) {
+        } else if (Config.database_ison) {
             String usertable = null, usernamefield = null, passwordfield = null, saltfield = "";
             boolean bans = false;
             PreparedStatement ps = null;
@@ -119,7 +120,7 @@ public class Util {
                 usertable = "users";
                 //bantable = "banlist";
                 if (checkVersionInRange(PhpBB.VersionRange)) {
-                    usernamefield = "username_clean";
+                    usernamefield = "username";
                     passwordfield = "user_password";
                     /*useridfield = "user_id";
                     banipfield = "ban_ip";
@@ -605,7 +606,7 @@ public class Util {
                 }
             }
             if (Config.hasForumBoard && type.equalsIgnoreCase("checkuser") && !Config.custom_enabled) {
-                //EBean eBeanClass = EBean.find(player, Column.registred, "true");
+                //EBean eBeanClass = EBean.find(player, Column.registered, "true");
                 //if (eBeanClass != null) { return true; }
                 String check = MySQL.getfromtable(Config.script_tableprefix + usertable, "*", usernamefield, player);
                 if (check != "fail") { return true; }

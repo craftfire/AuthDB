@@ -12,12 +12,12 @@ Core:
       reload: "/authdb reload"
   aliases:
     user:
-      register: "/r"
-      link: "/li"
+      register: "/rg"
+      link: "/lk"
       unlink: "/ul"
-      login: "/l"
+      login: "/li"
       logout: "/lo"
     admin:
-      login: "/al"
+      login: "/ali"
       logout: "/alo"
       reload: "/ar"

@@ -57,7 +57,7 @@ public class AuthDBPlayerListener extends PlayerListener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
         if (!MySQL.isConnected()) {
-            event.disallow(Result.KICK_OTHER, "You can't join the server when the server has no connection to MySQL.");
+            event.disallow(Result.KICK_OTHER, "You cannot join when the server has no database connection.");
             return;
         }
         
@@ -325,7 +325,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                                     Messages.sendMessage(Message.link_exists, player, null);
                                 }
                             } else {
-                                Messages.sendMessage(Message.link_registred, player, null);
+                                Messages.sendMessage(Message.link_registered, player, null);
                             }
                         } else {
                             Messages.sendMessage(Message.link_invaliduser, player, null);
