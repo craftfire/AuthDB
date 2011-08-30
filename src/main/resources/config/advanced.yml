@@ -13,11 +13,11 @@ register:
   enabled: true                                    # Enable/disable allowing users to register.
   force: true                                      # Enable/disable forcing users to register.
   delay: 4 seconds                                 # Amount of time before register message is shown to player.
-  timeout: 3 minutes                               # Amount of time a playerh as to register before the configured action is taken.
+  timeout: 3 minutes                               # Amount of time a player has to register before the configured action is taken.
 login:
 #  enabled: true                                    # NOT IMPLEMENTED YET! Enable/disable players being able to login.
   method: prompt                                   # Login method to use. Options are normal and prompt.
-  delay: 4 seconds                                 # Amount of time before login messaage is shown to player.
+  delay: 4 seconds                                 # Amount of time before login message is shown to player.
   timeout: 3 minutes                               # Amount of time a player has to login before the configured action is taken.
   tries: 3                                         # Number of allowed incorrect password tries.
   action: kick                                     # Action to perform when a maximum number of password tries is reached. Currently only option is kick.
@@ -28,10 +28,10 @@ unlink:
   enabled: true                                    # Enable/disable username unlinking.
   rename: true                                     # Enable/disable renaming users to original name on unlink.
 username:
-  minimum: 3                                       # Minumum number of characters a username can be.
+  minimum: 3                                       # Minimum number of characters a username can be.
   maximum: 16                                      # Maximum number of characters a username can be.
 password:
-  minimum: 6                                       # Minumum number of characters a password can be.
+  minimum: 6                                       # Minimum number of characters a password can be.
   maximum: 16                                      # Maximum number of characters a password can be.
 session:
   enabled: true                                    # Enable/disable player sessions.

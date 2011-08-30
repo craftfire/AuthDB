@@ -35,6 +35,7 @@ public class MyBB {
         //
         PreparedStatement ps;
         //
+        Util.logging.mySQL("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`, `password`, `salt`, `email`, `regdate`, `lastactive`, `lastvisit`, `regip`, `longregip`, `signature`, `buddylist`, `ignorelist`, `pmfolders`, `notepad`, `usernotes`, `usergroup`)  VALUES (" + player + ", " + hash + ", " + salt + ", " + email + ", " + timestamp + ", " + timestamp + ", " + timestamp + ", " + ipAddress + ", " + Util.ip2Long(ipAddress) + ", '', '', '', '', '', '', '')");
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`, `password`, `salt`, `email`, `regdate`, `lastactive`, `lastvisit`, `regip`, `longregip`, `signature`, `buddylist`, `ignorelist`, `pmfolders`, `notepad`, `usernotes`, `usergroup`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //username
         ps.setString(2, hash); // password

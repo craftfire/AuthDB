@@ -12,7 +12,7 @@ Core:
       reload: "/authdb reload"
   aliases:
     user:
-      register: "/rg"
+      register: "/reg"
       link: "/lk"
       unlink: "/ul"
       login: "/li"
