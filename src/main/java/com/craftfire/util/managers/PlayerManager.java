@@ -16,7 +16,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
-import org.bukkitcontrib.BukkitContrib;
+import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.player.AppearanceManager;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.authdb.util.databases.EBean;
 
@@ -151,8 +153,8 @@ public class PlayerManager {
     }
 
     public void renamePlayer(Player player, String name) {
-        if(pluginManager.config.hasBukkitContrib) {
-            BukkitContrib.getAppearanceManager().setGlobalTitle(player, name);
+        if(pluginManager.config.hasSpout) {
+        	SpoutManager.getAppearanceManager().setGlobalTitle(player, name);
         }
         player.setDisplayName(name);
     }

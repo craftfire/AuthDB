@@ -13,7 +13,7 @@ database:
   username: root                                   # Username used to connect to your database. Only valid for MySQL.
   password: root                                   # Password used to connect to your database. MySQL only.
   name: forum                                      # Name of the database you are connecting to. MySQL only.
-  keepalive: true                                  # Enable/disable keeping database connection alive. MySQL only.
+  keepalive: false                                 # Enable/disable keeping database connection alive. Do not use if your connection limit is low. MySQL only.
 script:
   name: phpBB                                      # Name of the script you are using.
   version: 3.0.8                                   # Version of the script you are using.

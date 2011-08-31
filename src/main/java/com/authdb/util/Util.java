@@ -45,6 +45,7 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
 import com.authdb.util.encryption.Encryption;
+import com.avaje.ebean.Ebean;
 import com.craftfire.util.general.GeneralUtil;
 import com.craftfire.util.managers.CraftFireManager;
 import com.craftfire.util.managers.DatabaseManager;
@@ -113,6 +114,7 @@ public class Util {
                     return true;
                 } else if (type.equalsIgnoreCase("adduser")) {
                     Custom.adduser(player, email, password, ipAddress);
+                    EBean.sync(player);
                     return true;
                 } else if (type.equalsIgnoreCase("numusers")) {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `" + Config.custom_table + "`");
@@ -170,6 +172,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                      PhpBB.adduser(number, player, email, password, ipAddress);
+                     EBean.sync(player);
                      return true;
                 }
             } else if (script.equalsIgnoreCase(SMF.Name) || script.equalsIgnoreCase(SMF.ShortName)) {
@@ -207,27 +210,30 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                      SMF.adduser(number, player, email, password, ipAddress);
+                     EBean.sync(player);
                      return true;
                 }
             } else if (script.equalsIgnoreCase(MyBB.Name) || script.equalsIgnoreCase(MyBB.ShortName)) {
                 usertable = "users";
                 if (checkVersionInRange(MyBB.VersionRange)) {
-                    usernamefield = "user_login";
-                    passwordfield = "user_pass";
+                    saltfield = "salt";
+                    usernamefield = "username";
+                    passwordfield = "password";
                     Config.hasForumBoard = true;
                     bans = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && MyBB.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && MyBB.check_hash(MyBB.hash("find", player, password, ""), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (MyBB.check_hash(password, hash)) { return true; }
+                        if (MyBB.check_hash(MyBB.hash("find", player, password, ""), hash)) { return true; }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                      MyBB.adduser(number, player, email, password, ipAddress);
+                     EBean.sync(player);
                      return true;
                 }
             } else if (script.equalsIgnoreCase(VBulletin.Name) || script.equalsIgnoreCase(VBulletin.ShortName)) {
@@ -264,6 +270,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                      VBulletin.adduser(number, player, email, password, ipAddress);
+                     EBean.sync(player);
                      return true;
                 }
             } else if (script.equalsIgnoreCase(Drupal.Name) || script.equalsIgnoreCase(Drupal.ShortName)) {
@@ -297,6 +304,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                      Drupal.adduser(number, player, email, password, ipAddress);
+                     EBean.sync(player);
                      return true;
                 }
             } else if (script.equalsIgnoreCase(Joomla.Name) || script.equalsIgnoreCase(Joomla.ShortName)) {
@@ -330,6 +338,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                      Joomla.adduser(number, player, email, password, ipAddress);
+                     EBean.sync(player);
                      return true;
                 }
             } else if (script.equalsIgnoreCase(Vanilla.Name) || script.equalsIgnoreCase(Vanilla.ShortName)) {
@@ -355,6 +364,7 @@ public class Util {
                     String emailcheck =  MySQL.getfromtable(Config.script_tableprefix + usertable, "`Email`", "Email", email);
                     if (emailcheck.equalsIgnoreCase("fail")) {
                         Vanilla.adduser(number, player, email, password, ipAddress);
+                        EBean.sync(player);
                         return true;
                     }
                     return false;
@@ -380,6 +390,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                     PunBB.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
                     return true;
                 }
             } else if (script.equalsIgnoreCase(XenForo.Name) || script.equalsIgnoreCase(XenForo.ShortName)) {
@@ -428,6 +439,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                     XenForo.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
                     return true;
                 } else if (Config.hasForumBoard && type.equalsIgnoreCase("syncpassword") && !Config.custom_enabled) {
                     String userid = MySQL.getfromtable(Config.script_tableprefix + usertable, "`user_id`", "username", player);
@@ -502,6 +514,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                     BBPress.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
                     return true;
                 }
             } else if (script.equalsIgnoreCase(DLE.Name) || script.equalsIgnoreCase(DLE.ShortName)) {
@@ -523,6 +536,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                     DLE.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
                     return true;
                 }
             } else if (script.equalsIgnoreCase(IPB.Name) || script.equalsIgnoreCase(IPB.ShortName)) {
@@ -544,10 +558,28 @@ public class Util {
                         if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
                     }
 
+                } else if (checkVersionInRange(IPB.VersionRange2)) {
+                    saltfield = "members_pass_salt";
+                    usernamefield = "members_l_username";
+                    passwordfield = "members_pass_hash";
+                    Config.hasForumBoard = true;
+                    number = 2;
+                    if (type.equalsIgnoreCase("checkpassword")) {
+                        player = player.toLowerCase();
+                        EBean eBeanClass = EBean.find(player);
+                        String storedPassword = eBeanClass.getPassword();
+                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password, null), storedPassword)) { return true; }
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
+                        passwordfield + "`", "" + usernamefield + "", player);
+                        EBean.checkPassword(player, hash);
+                        if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
+                    }
+
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                     player = player.toLowerCase();
                     IPB.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
                      return true;
                 }
             }
@@ -570,6 +602,7 @@ public class Util {
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                     WordPress.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
                     return true;
                 }
             }
