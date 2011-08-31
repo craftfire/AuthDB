@@ -553,7 +553,7 @@ public class Util {
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password, null), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        passwordfield + "`", "" + usernamefield + "", player);
+                        "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
                     }
