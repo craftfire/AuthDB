@@ -651,11 +651,11 @@ public class Util {
                 if (check != "fail") { return true; }
             }*/ else if (Config.hasForumBoard && type.equalsIgnoreCase("numusers") && !Config.custom_enabled) {
                 if (script.equalsIgnoreCase(PhpBB.Name) || script.equalsIgnoreCase(PhpBB.ShortName)) {
-                ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
-                 + Config.script_tableprefix + usertable + "` WHERE  `group_id` !=6");
+                    ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
+                     + Config.script_tableprefix + usertable + "` WHERE  `group_id` !=6");
                 } else {
-                ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
-                 + Config.script_tableprefix + usertable + "`");
+                    ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
+                     + Config.script_tableprefix + usertable + "`");
                 }
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) { logging.Info(rs.getInt("countit") + " user registrations in database"); }
