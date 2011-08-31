@@ -570,7 +570,7 @@ public class Util {
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password, null), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        passwordfield + "`", "" + usernamefield + "", player);
+                        "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
                     }
@@ -596,7 +596,6 @@ public class Util {
                         if (storedPassword != null && WordPress.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        Util.logging.Info("HASH = "+hash);
                         if (WordPress.check_hash(password, hash)) { return true; }
                     }
                 }
