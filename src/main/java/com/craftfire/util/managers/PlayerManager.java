@@ -29,10 +29,12 @@ public class PlayerManager {
     public void setInventoryFromStorage(Player player) {
         ItemStack[] inv = getInventory(player);
         if (inv != null) {
+            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s inventory: " + inv);
             player.getInventory().setContents(inv);
         }
         inv = getArmorInventory(player);
         if (inv != null) {
+            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s armor inventory: " + inv);
             player.getInventory().setArmorContents(inv);
         }
     }

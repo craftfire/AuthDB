@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotNull;
 
 import com.authdb.AuthDB;
@@ -208,6 +209,7 @@ public class EBean {
     private String salt;
     private String ip;
     private String email;
+    @Length(max = 600)
     private String inventory;
     private String equipment;
     private String activated;
