@@ -41,21 +41,21 @@ public class CraftFireManager {
         data += "&" + URLEncoder.encode("234c284debb7991b2b5fcfd08e9ab1e5", "UTF-8") + "=" + URLEncoder.encode(c284debb7991b2b5fcfd08e9ab1e5, "UTF-8");
         data += "&" + URLEncoder.encode("41d68d8f3c6398544b1cdbeb4e5f39f0", "UTF-8") + "=" + URLEncoder.encode(d68d8f3c6398544b1cdbeb4e5f39f0, "UTF-8");
         data += "&" + URLEncoder.encode("d146298d6d3e1294bbe4121f26f02800", "UTF-8") + "=" + URLEncoder.encode("" + d146298d6d3e1294bbe4121f26f02800, "UTF-8");
-        loggingManager.Debug("Preparing stats submit.");
+        loggingManager.Debug("Preparing usage stats for submission.");
         URL url = new URL("http://www.craftfire.com/stats.php");
         URLConnection conn = url.openConnection();
         conn.setConnectTimeout(4000);
         conn.setReadTimeout(4000);
-        loggingManager.Debug("Stats submit timeout is 4000 ms (4 seconds).");
+        loggingManager.Debug("Usage stats submission timeout is 4000 ms (4 seconds).");
         conn.setRequestProperty("X-AuthDB", e5544ab05d8c25c1a5da5cd59144fb);
         conn.setDoOutput(true);
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-        loggingManager.Debug("Submitting stats.");
+        loggingManager.Debug("Attempting to submit usage stats.");
         wr.write(data);
         wr.flush();
         wr.close();
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        Util.logging.Debug("Sent usage stats to CraftFire.");
+        Util.logging.Debug("Successfully sent usage stats to CraftFire.");
         rd.close();
     }
 }

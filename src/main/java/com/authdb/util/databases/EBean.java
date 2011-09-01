@@ -209,7 +209,7 @@ public class EBean {
     private String salt;
     private String ip;
     private String email;
-    @Length(max = 600)
+ //   @Length(max = 600)
     private String inventory;
     private String equipment;
     private String activated;

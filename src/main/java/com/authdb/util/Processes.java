@@ -25,10 +25,10 @@ import com.authdb.util.encryption.Encryption;
 public class Processes {
     public static void Quit(Player player) {
         Util.craftFirePlayer.setInventoryFromStorage(player);
-        Logout(player);
+        Logout(player, false);
     }
     
-    public static boolean Logout(Player player) {
+    public static boolean Logout(Player player, boolean storeInventory) {
         if (AuthDB.isAuthorized(player)) {
             if (AuthDB.AuthDB_AuthTime.containsKey(player.getName())) {
                 AuthDB.AuthDB_AuthTime.remove(player.getName());
@@ -63,20 +63,22 @@ public class Processes {
                 Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
             }
             AuthDB.database.save(eBeanClass);
-            try {
-                if (Config.hasBackpack) {
-                    BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
-                    BackpackPlayer.createBackpack();
-                    Util.craftFirePlayer.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
-                } else {
-                    Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
+            if(storeInventory) {
+                try {
+                    if (Config.hasBackpack) {
+                        BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
+                        BackpackPlayer.createBackpack();
+                        Util.craftFirePlayer.storeInventory(player, BackpackPlayer.getInventory().getContents(), player.getInventory().getArmorContents());
+                    } else {
+                        Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
+                    }
+                } catch (IOException e) {
+                    Util.logging.Severe("[" + AuthDB.pluginName + "] Inventory file error:");
+                    player.kickPlayer("Inventory protection kicked.");
+                    Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 }
-            } catch (IOException e) {
-                Util.logging.Severe("[" + AuthDB.pluginName + "] Inventory file error:");
-                player.kickPlayer("Inventory protection kicked.");
-                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+                player.getInventory().clear();
             }
-            player.getInventory().clear();
             Util.logging.Debug("Logged out player: " + player.getName());
             return true;
         }
@@ -150,7 +152,7 @@ public class Processes {
             eBeanClass.setRegistered("false");
             AuthDB.database.save(eBeanClass);
             Messages.sendMessage(Message.register_welcome, player, null);
-            Logout(player);
+            Logout(player, true);
             return true;
         }
         return false;

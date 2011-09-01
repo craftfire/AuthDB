@@ -121,7 +121,7 @@ public class MySQL {
                 logging.StackTrace(e.getStackTrace(),Thread.currentThread().getStackTrace()[1].getMethodName(),Thread.currentThread().getStackTrace()[1].getLineNumber(),Thread.currentThread().getStackTrace()[1].getClassName(),Thread.currentThread().getStackTrace()[1].getFileName());
                 return;
             } else {
-                logging.error("MySQL cannot connect to the specified host: " + Config.database_host);
+                logging.error("Cannot connect to MySQL server on " + Config.database_host + "!");
                 logging.error("Access denied, check if the password/username is correct and that remote connection is enabled if the MySQL database is located on another host then your server.");
                 isConnected = false;
                 Messages.sendMessage(Message.database_failure, null, null);

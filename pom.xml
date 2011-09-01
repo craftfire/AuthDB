@@ -13,7 +13,7 @@
     <artifactId>authdb</artifactId>
     <version>dev-SNAPSHOT</version>
     <name>AuthDB</name>
-    <url>http://craftfire.com</url>
+    <url>http://www.authdb.com</url>
     <description>Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.</description>
 
     <properties>
@@ -49,10 +49,10 @@
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
             <releases>
-                <updatePolicy>always</updatePolicy>
+                <updatePolicy>daily</updatePolicy>
             </releases>
             <snapshots>
-                <updatePolicy>always</updatePolicy>
+                <updatePolicy>daily</updatePolicy>
             </snapshots>
         </repository>
         <repository>
@@ -63,10 +63,10 @@
             <id>spout-repo</id>
             <url>http://repo.getspout.org</url>
             <releases>
-                <updatePolicy>always</updatePolicy>
+                <updatePolicy>daily</updatePolicy>
             </releases>
             <snapshots>
-                <updatePolicy>always</updatePolicy>
+                <updatePolicy>daily</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
@@ -185,7 +185,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
+                <version>2.3.2</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
