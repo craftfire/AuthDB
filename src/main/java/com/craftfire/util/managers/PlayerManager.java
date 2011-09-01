@@ -45,7 +45,9 @@ public class PlayerManager {
         for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
             if (inventory[i] != null) {
                 inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "0" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ",");
-            } else { inv.append("0:0:0:0,"); }
+            } else {
+                inv.append("0:0:0:0,");
+            }
         }
         
         loggingManager.Debug("Sucessfully stored " + player.getName() + "'s inventory: " + inv);
@@ -53,7 +55,9 @@ public class PlayerManager {
         for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
             if (armorinventory[i] != null) {
                 armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "0" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ",");
-            } else { armorinv.append("0:0:0:0,"); }
+            } else {
+                armorinv.append("0:0:0:0,");
+            }
         }
         
         loggingManager.Debug("Sucessfully stored " + player.getName() + "'s armor inventory: " + armorinv);

@@ -117,7 +117,7 @@ public class AuthDB extends JavaPlugin {
                 eBeanClass.setReloadtime(Util.timeStamp());
                 AuthDB.database.save(eBeanClass);
             }
-            Processes.Logout(p, true);
+            Processes.Logout(p, false);
         }
         Util.logging.Info(pluginVersion + " has been disabled");
         Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");

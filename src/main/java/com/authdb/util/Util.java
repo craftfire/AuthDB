@@ -63,7 +63,7 @@ public class Util {
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
     String email, String ipAddress) throws SQLException {
-        if(player != null && type.equalsIgnoreCase("checkpassword")) {
+        if(player != null && (type.equalsIgnoreCase("checkpassword") || type.equalsIgnoreCase("syncpassword") || type.equalsIgnoreCase("syncsalt"))) {
             player = player.toLowerCase();
         }
         if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
