@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
+
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.AppearanceManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -25,7 +26,7 @@ import com.authdb.util.databases.EBean;
 public class PlayerManager {
     PluginManager pluginManager = new PluginManager();
     LoggingManager loggingManager = new LoggingManager();
-    
+
     public void setInventoryFromStorage(Player player) {
         ItemStack[] inv = getInventory(player);
         if (inv != null) {
@@ -38,7 +39,7 @@ public class PlayerManager {
             player.getInventory().setArmorContents(inv);
         }
     }
-    
+
     public void storeInventory(Player player, ItemStack[] inventory, ItemStack[] armorinventory) throws IOException {
         StringBuffer inv = new StringBuffer();
         StringBuffer armorinv = new StringBuffer();
@@ -49,9 +50,9 @@ public class PlayerManager {
                 inv.append("0:0:0:0,");
             }
         }
-        
+
         loggingManager.Debug("Sucessfully stored " + player.getName() + "'s inventory: " + inv);
-        
+
         for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
             if (armorinventory[i] != null) {
                 armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "0" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ",");
@@ -59,15 +60,15 @@ public class PlayerManager {
                 armorinv.append("0:0:0:0,");
             }
         }
-        
+
         loggingManager.Debug("Sucessfully stored " + player.getName() + "'s armor inventory: " + armorinv);
 
-          EBean eBeanClass = EBean.find(player);
-          eBeanClass.setInventory(inv.toString());
-          eBeanClass.setEquipment(armorinv.toString());
-          pluginManager.plugin.database.save(eBeanClass);
-      }
-    
+        EBean eBeanClass = EBean.find(player);
+        eBeanClass.setInventory(inv.toString());
+        eBeanClass.setEquipment(armorinv.toString());
+        pluginManager.plugin.database.save(eBeanClass);
+    }
+
     public ItemStack[] getInventory(Player player) {
         EBean eBeanClass = EBean.find(player);
         if (eBeanClass != null) {
@@ -75,81 +76,82 @@ public class PlayerManager {
             if (data != "" && data != null) {
                 String[] inv = pluginManager.util.split(data, ",");
                 ItemStack[] inventory;
-                if (pluginManager.config.hasBackpack) { inventory = new ItemStack[252]; }
-                else { inventory = new ItemStack[36]; }
-                
+                if (pluginManager.config.hasBackpack) {
+                    inventory = new ItemStack[252];
+                } else {
+                    inventory = new ItemStack[36];
+                }
                 for (int i=0; i<inv.length; i++) {
                     String line = inv[i];
                     String[] split = line.split(":");
                     if (split.length == 4) {
-                      int type = Integer.valueOf(split[0]).intValue();
-                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
-    
-                      short dur = Short.valueOf(split[3]).shortValue();
-                      if (dur > 0) {
-                          inventory[i].setDurability(dur);
-                      }
-                      byte dd;
-                      if (split[2].length() == 0) {
-                        dd = 0;
-                      } else {
-                        dd = Byte.valueOf(split[2]).byteValue();
-                      }
-                      Material mat = Material.getMaterial(type);
-                      if (mat == null) {
-                          inventory[i].setData(new MaterialData(type, dd));
-                      } else {
-                          inventory[i].setData(mat.getNewData(dd));
-                      }
+                        int type = Integer.valueOf(split[0]).intValue();
+                        inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
+                        short dur = Short.valueOf(split[3]).shortValue();
+                        if (dur > 0) {
+                           inventory[i].setDurability(dur);
+                        }
+                        byte dd;
+                        if (split[2].length() == 0) {
+                            dd = 0;
+                        } else {
+                            dd = Byte.valueOf(split[2]).byteValue();
+                        }
+                        Material mat = Material.getMaterial(type);
+                        if (mat == null) {
+                            inventory[i].setData(new MaterialData(type, dd));
+                        } else {
+                            inventory[i].setData(mat.getNewData(dd));
+                        }
                     }
-                  }
+                }
                 eBeanClass.setInventory(null);
                 pluginManager.plugin.database.save(eBeanClass);
                 return inventory;
             }
         }
         return null;
-      }
-    
+    }
+
     public ItemStack[] getArmorInventory(Player player) {
         EBean eBeanClass = EBean.find(player);
         if (eBeanClass != null) {
             String data = eBeanClass.getEquipment();
             if (data != "" && data != null) {
-                String[] inv = pluginManager.util.split(data, ", ");
+                String[] inv = pluginManager.util.split(data, ",");
                 ItemStack[] inventory = new ItemStack[4];
                 for (int i=0; i<inv.length; i++) {
                     String line = inv[i];
                     String[] split = line.split(":");
                     if (split.length == 4) {
-                      int type = Integer.valueOf(split[0]).intValue();
-                      inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
-                      short dur = Short.valueOf(split[3]).shortValue();
-                      if (dur > 0) {
-                          inventory[i].setDurability(dur);
-                      }
-                      byte dd;
-                      if (split[2].length() == 0) {
-                        dd = 0;
-                      } else {
-                        dd = Byte.valueOf(split[2]).byteValue();
-                      }
-                      Material mat = Material.getMaterial(type);
-                      if (mat == null) {
-                          inventory[i].setData(new MaterialData(type, dd));
-                      } else {
-                          inventory[i].setData(mat.getNewData(dd));
-                      }
+                        int type = Integer.valueOf(split[0]).intValue();
+                        inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
+                        short dur = Short.valueOf(split[3]).shortValue();
+                        if (dur > 0) {
+                            inventory[i].setDurability(dur);
+                        }
+                        byte dd;
+                        if (split[2].length() == 0) {
+                            dd = 0;
+                        } else {
+                            dd = Byte.valueOf(split[2]).byteValue();
+                        }
+                        Material mat = Material.getMaterial(type);
+                        if (mat == null) {
+                            inventory[i].setData(new MaterialData(type, dd));
+                        } else {
+                            inventory[i].setData(mat.getNewData(dd));
+                        }
                     }
-                  }
+                }
                 eBeanClass.setEquipment(null);
                 pluginManager.plugin.database.save(eBeanClass);
                 return inventory;
             }
         }
         return null;
-      }
-    
+    }
+
     public void clearArmorinventory(Player player) {
         final PlayerInventory i = player.getInventory();
         i.setHelmet(null);
@@ -160,7 +162,7 @@ public class PlayerManager {
 
     public void renamePlayer(Player player, String name) {
         if(pluginManager.config.hasSpout) {
-        	SpoutManager.getAppearanceManager().setGlobalTitle(player, name);
+            SpoutManager.getAppearanceManager().setGlobalTitle(player, name);
         }
         player.setDisplayName(name);
     }
