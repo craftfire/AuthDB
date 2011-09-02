@@ -33,18 +33,18 @@ public class LoggingManager {
             ToFile(Type.debug, "[" + PluginManager.plugin.pluginName + "] " + line, logFolder);
         }
     }
-    
+
     public void debug(String line, String pluginName) {
         if (PluginManager.config.debug_enable) {
             PluginManager.plugin.log.info("[" + pluginName + "] " + line);
             ToFile(Type.debug, "[" + pluginName + "] " + line, logFolder);
         }
     }
-    
+
     public void info(String line, String pluginName) {
         PluginManager.plugin.log.info("[" + pluginName + "] " + line);
     }
-    
+
     public void severe(String line, String pluginName) {
         PluginManager.plugin.log.severe("[" + pluginName + "] " + line);
     }
@@ -68,11 +68,11 @@ public class LoggingManager {
         "| " + line.toUpperCase() + "\n" +
         "|-----------------------------------------------------------------------------|");
     }
-    
+
     public void plainWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
    }
-    
+
     public void advancedWarning(String line, String pluginName) {
         PluginManager.plugin.log.warning("[" + pluginName + "]\n" +
        "|-----------------------------------------------------------------------------|\n" +
@@ -81,11 +81,11 @@ public class LoggingManager {
        "| " + line.toUpperCase() + "\n" +
        "|-----------------------------------------------------------------------------|");
    }
-   
+
    public void plainWarning(String line, String pluginName) {
        PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
   }
-    
+
     public void mySQL(String query) {
         Debug("Executing MySQL query: " + query);
     }
@@ -115,7 +115,7 @@ public class LoggingManager {
         }
         logError("---------------------------- STACKTRACE END ----------------------------");
     }
-    
+
     public void stackTrace(String pluginName, StackTraceElement[] stack, String function, int linenumber, String classname, String file) {
         advancedWarning("StackTrace Error", pluginName);
         plainWarning("Class name: " + classname, pluginName);
@@ -141,12 +141,12 @@ public class LoggingManager {
         }
         logError("---------------------------- STACKTRACE END ----------------------------", pluginName);
     }
-    
+
     public void error(String error) {
         plainWarning(error);
     	logError(error);
     }
-    
+
     public void error(String error, String pluginName) {
         plainWarning(error, pluginName);
         logError(error, pluginName);
@@ -155,11 +155,11 @@ public class LoggingManager {
     public void logError(String error) {
         ToFile(Type.error, error, logFolder);
     }
-    
+
     public void logError(String error, String pluginName) {
         ToFile(Type.error, "[" + pluginName + "] " + error, logFolder);
     }
-    
+
     public void timeUsage(long time, String string) {
         Util.logging.Debug("Took " + (time / 1000) + " seconds (" + time + "ms) to " + string + ".");
     }
