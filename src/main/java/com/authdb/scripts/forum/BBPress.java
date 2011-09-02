@@ -35,7 +35,7 @@ public class BBPress {
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`user_login`, `user_pass`, `user_nicename`, `user_email`, `user_registered`, `display_name`)  VALUES (?, ?, ?, ?, ?, ?)", 1);
         ps.setString(1, player); //user_login
         ps.setString(2, passwordhashed); //user_pass
-        ps.setString(3, player); //user_nicename
+        ps.setString(3, player.toLowerCase()); //user_nicename
         ps.setString(4, email); //user_email
         ps.setString(5, realdate); //user_registered
         ps.setString(6, player); //display_name
