@@ -36,7 +36,7 @@ public class MyBB {
         PreparedStatement ps;
         //
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`username`, `password`, `salt`, `email`, `regdate`, `lastactive`, `lastvisit`, `regip`, `longregip`, `signature`, `buddylist`, `ignorelist`, `pmfolders`, `notepad`, `usernotes`, `usergroup`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
-        ps.setString(1, player); //username
+        ps.setString(1, player.toLowerCase()); //username
         ps.setString(2, hash); // password
         ps.setString(3, salt); //salt
         ps.setString(4, email); //email
