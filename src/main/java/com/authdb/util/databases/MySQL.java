@@ -140,6 +140,7 @@ public class MySQL {
         if (rs.next()) {
             dupe = rs.getInt(1);
         }
+        rs.close();
         stmt.close();
         return dupe;
     }
@@ -161,8 +162,10 @@ public class MySQL {
             if (rs.next()) {
                 dupe = rs.getString(1);
             }
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
+        	
             return "fail";
         }
         return dupe;
@@ -177,6 +180,7 @@ public class MySQL {
         if (rs.next()) {
             dupe = rs.getString(1);
         }
+        rs.close();
         stmt.close();
         return dupe;
     }
@@ -190,6 +194,7 @@ public class MySQL {
         if (rs.next()) {
             dupe = rs.getString(1);
         }
+        rs.close();
         stmt.close();
         return dupe;
     }
@@ -203,6 +208,7 @@ public class MySQL {
         if (rs.next()) {
             dupe = rs.getString(1);
         }
+        rs.close();
         stmt.close();
         return dupe;
     }
@@ -216,6 +222,7 @@ public class MySQL {
         if (rs.next()) {
             dupe = rs.getString(1);
         }
+        rs.close();
         stmt.close();
         return dupe;
     }
@@ -229,6 +236,7 @@ public class MySQL {
         if (rs.next()) {
             dupe = rs.getString(1);
         }
+        rs.close();
         stmt.close();
         return dupe;
     }
@@ -242,6 +250,7 @@ public class MySQL {
         if (rs.next()) {
             dupe = (Blob) rs.getBlob(1);
         }
+        rs.close();
         stmt.close();
         return dupe;
     }

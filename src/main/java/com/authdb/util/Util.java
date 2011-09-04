@@ -363,7 +363,7 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                    String emailcheck =  MySQL.getfromtable(Config.script_tableprefix + usertable, "`Email`", "Email", email);
+                    String emailcheck =  MySQL.getfromtable(Config.script_tableprefix + usertable, "`" + usernamefield + "`", "Email", email);
                     if (emailcheck.equalsIgnoreCase("fail")) {
                         Vanilla.adduser(number, player, email, password, ipAddress);
                         EBean.sync(player);
