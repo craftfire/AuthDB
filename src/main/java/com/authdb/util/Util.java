@@ -244,6 +244,7 @@ public class Util {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     bans = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
@@ -260,6 +261,7 @@ public class Util {
                     Config.hasForumBoard = true;
                     bans = true;
                     number = 2;
+                    caseSensitive = true;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
