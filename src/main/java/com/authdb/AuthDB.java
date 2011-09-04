@@ -686,16 +686,14 @@ public class AuthDB extends JavaPlugin {
     }
 
     void LoadYml(String type, CodeSource src) {
-        String languageMessages = "English";
-        String languageCommands = "English";
+        String language = "English";
         File LanguagesAll = new File(getDataFolder() + "/translations");
         if(!LanguagesAll.exists()) {
             if(LanguagesAll.mkdir()) {
-                Util.logging.Debug("Sucesfully created directory: "+LanguagesAll);
+                Util.logging.Debug("Sucesfully created directory: " + LanguagesAll);
             }
         }
-        boolean setCommands = false;
-        boolean setMessages = false;
+        boolean set = false;
         File[] directories;
         FileFilter fileFilter = new FileFilter() {
             public boolean accept(File file) {
@@ -722,11 +720,11 @@ public class AuthDB extends JavaPlugin {
 	                            DefaultFile(type + ".yml","translations/" + directory + "");
 	                        }
 	                        if (type.equals("commands") && (Config.language_commands).equalsIgnoreCase(directory))  {
-	                            setCommands = true;
-	                            languageCommands = directory;
+	                            set = true;
+	                            language = directory;
 	                        } else if (type.equals("messages") && (Config.language_messages).equalsIgnoreCase(directory))  {
-                                setMessages = true;
-                                languageMessages = directory;
+                                set = true;
+                                language = directory;
                             }
                     	}
                     }
@@ -740,26 +738,22 @@ public class AuthDB extends JavaPlugin {
         directories = LanguagesAll.listFiles(fileFilter);
         if(directories.length > 0) { Util.logging.Debug("Found " + directories.length + " directories for " + type); }
         else { Util.logging.error("Error! Could not find any directories for " + type); }
-        if (!setCommands) {
+        if (!set) {
             for (int z=0; z<directories.length; z++) {
-                if (Config.language_commands.equalsIgnoreCase(directories[z].getName()))  {
-                    setCommands = true;
-                    languageCommands = directories[z].getName();
-                }
-            }
-        } else if (!setMessages) {
-            for (int z=0; z<directories.length; z++) {
-                if (Config.language_messages.equalsIgnoreCase(directories[z].getName()))  {
-                    setMessages = true;
-                    languageMessages = directories[z].getName();
+                if (type.equalsIgnoreCase("commands") && Config.language_commands.equalsIgnoreCase(directories[z].getName()))  {
+                    set = true;
+                    language = directories[z].getName();
+                } else if (type.equalsIgnoreCase("messages") && Config.language_messages.equalsIgnoreCase(directories[z].getName()))  {
+                    set = true;
+                    language = directories[z].getName();
                 }
             }
         }
-        if (!setCommands) { Util.logging.Info("Could not find translation files for " + Config.language_commands + ", defaulting to " + languageCommands); }
-        else if (!setMessages) { Util.logging.Info("Could not find translation files for " + Config.language_messages + ", defaulting to " + languageMessages); }
-        else { Util.logging.Debug(type + " language set to English"); }
-        new Config(type, getDataFolder() + "/translations/" + languageCommands + "/", type + ".yml");
-        new Config(type, getDataFolder() + "/translations/" + languageMessages + "/", type + ".yml");
+        if (!set && type.equalsIgnoreCase("commands")) { Util.logging.Info("Could not find translation files for " + Config.language_commands + ", defaulting to " + language); }
+        else if (!set && type.equalsIgnoreCase("messages")) { Util.logging.Info("Could not find translation files for " + Config.language_messages + ", defaulting to " + language); }
+        else if (type.equalsIgnoreCase("commands")) { Util.logging.Info(type + " language set to " + Config.language_commands); }
+        else if (type.equalsIgnoreCase("messages")) { Util.logging.Info(type + " language set to " + Config.language_messages); }
+        new Config(type, getDataFolder() + "/translations/" + language + "/", type + ".yml");
     }
 
     public boolean isRegistered(String when, String player) {
