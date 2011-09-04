@@ -847,42 +847,62 @@ public class Util {
         String[] versionss = versionrange.split("\\-");
         String[] versionrange1= versionss[0].split("\\.");
         String[] versionrange2= versionss[1].split("\\.");
+        Util.logging.Debug("Config version: " + version);
+        Util.logging.Debug("Version range: " + versionrange);
+        Util.logging.Debug("Version range 1: " + versionss[0]);
+        Util.logging.Debug("Version range 2: " + versionss[1]);
         if (version.equals(versionss[0]) || version.equals(versionss[1])) {
+        	Util.logging.Debug("Version checking PASSED at first check.");
         	return true;
         }
         if (versionrange1.length == versions.length) {
             int a = Integer.parseInt(versionrange1[0]);
             int b = Integer.parseInt(versionrange2[0]);
             int c = Integer.parseInt(versions[0]);
+            Util.logging.Debug("Version checking: a = " + a + ", b = " + b + ", c = " + c);
             if (a <= c && b >= c) {
                 int d = b - c;
+                Util.logging.Debug("Version checking: d = " + d);
                 if (d > 0) {
+                	Util.logging.Debug("Version checking PASSED at second check.");
                     return true;
                 } else if (d == 0) {
                     int a2 = Integer.parseInt(versionrange1[1]);
                     int b2 = Integer.parseInt(versionrange2[1]);
                     int c2 = Integer.parseInt(versions[1]);
+                    Util.logging.Debug("Version checking: a2 = " + a2 + ", b2 = " + b2 + ", c2 = " + c2);
                     if (a2 <= c2 && b2 >= c2) {
-                        if (versionrange1.length == 2) { return true; }
-                        else if (versionrange1.length > 2) {
+                        if (versionrange1.length == 2) { 
+                        	Util.logging.Debug("Version checking PASSED at third check.");
+                        	return true; 
+                    	} else if (versionrange1.length > 2) {
                             int d2 = b2 - c2;
+                            Util.logging.Debug("Version checking: d2 = " + d2);
                             if (d2 > 0) {
+                            	Util.logging.Debug("Version checking PASSED at fourth check.");
                                 return true;
                             } else if (d2 == 0) {
                                 int a3 = Integer.parseInt(versionrange1[2]);
                                 int b3 = Integer.parseInt(versionrange2[2]);
                                 int c3 = Integer.parseInt(versions[2]);
-                                if (a3 <= c3 && b3 >= c3) {
-                                    if (versionrange1.length != 4) { return true; }
-                                    else if (versionrange1.length == 4) {
+                                Util.logging.Debug("Version checking: a3 = " + a3 + ", b3 = " + b3 + ", c3 = " + c3);
+                                if ((a3 <= c3 && b3 >= c3) || (b3 >= c3 && versionrange1.length != 4)) {
+                                    if (versionrange1.length != 4) { 
+                                    	Util.logging.Debug("Version checking PASSED at fifth check.");
+                                    	return true; 
+                                	} else if (versionrange1.length == 4) {
                                         int d3 = b3 - c3;
+                                        Util.logging.Debug("Version checking: d3 = " + d3);
                                         if (d3 > 0) {
+                                        	Util.logging.Debug("Version checking PASSED at sixth check.");
                                             return true;
                                         } else if (d3 == 0) {
                                             int a4 = Integer.parseInt(versionrange1[3]);
                                             int b4 = Integer.parseInt(versionrange2[3]);
                                             int c4 = Integer.parseInt(versions[3]);
+                                            Util.logging.Debug("Version checking: a4 = " + a4 + ", b4 = " + b4 + ", c4 = " + c4);
                                             if (a4 <= c4 && b4 >= c4) {
+                                            	Util.logging.Debug("Version checking PASSED at seventh check.");
                                                 return true;
                                             }
                                         }
@@ -894,6 +914,7 @@ public class Util {
                 }
             }
         }
+        Util.logging.Debug("Version checking DID NOT PASS.");
         return false;
     }
 
