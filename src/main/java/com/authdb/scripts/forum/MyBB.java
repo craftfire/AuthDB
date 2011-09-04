@@ -52,7 +52,7 @@ public class MyBB {
         ps.setString(13, ""); //pmfolders
         ps.setString(14, ""); //notepad
         ps.setString(15, ""); //usernotes
-        ps.setString(16, "5");//usergroup
+        ps.setString(16, "2");//usergroup
         Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
