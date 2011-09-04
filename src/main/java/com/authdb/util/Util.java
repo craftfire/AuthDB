@@ -641,7 +641,7 @@ public class Util {
 
                 }
             }
-            if (!caseSensitive) {
+            if (!caseSensitive && player != null) {
             	player = player.toLowerCase();
             }
             if (Config.hasForumBoard && type.equalsIgnoreCase("checkuser") && !Config.custom_enabled) {
