@@ -44,4 +44,11 @@ public class DatabaseManager {
             loggingManager.Debug("Could not find any database type to close! (mysql etc)....");
         }
     }
+    
+    public boolean isConnected() {
+    	if (getDatabaseType().equalsIgnoreCase("mysql")) {
+    		return PluginManager.mySQL.isConnected();
+    	}
+    	return false;
+    }
 }
