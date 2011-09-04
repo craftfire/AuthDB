@@ -347,6 +347,7 @@ public class Util {
                     usertable = "User";
                     usernamefield = "Name";
                     passwordfield = "Password";
+                    caseSensitive = true;
                     if(Vanilla.check() == 2) {
                         usertable = usertable.toLowerCase();
                     }
