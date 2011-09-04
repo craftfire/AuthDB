@@ -25,6 +25,8 @@ import com.authdb.util.Util;
 public class LoggingManager {
     PluginManager PluginManager = new PluginManager();
     String logFolder = "plugins/AuthDB/logs/";
+    private String latestQuery = "";
+    
     public static enum Type {
         error, debug, info, warning, servere;
     }
@@ -89,6 +91,7 @@ public class LoggingManager {
   }
 
     public void mySQL(String query) {
+    	latestQuery = query;
         Debug("Executing MySQL query: " + query);
     }
 
@@ -116,6 +119,7 @@ public class LoggingManager {
         logError("Table prefix: " + PluginManager.config.script_tableprefix);
         logError("Keep alive: " + PluginManager.config.database_keepalive);
         logError("MySQL connected: " + PluginManager.mySQL.isConnected());
+        logError("Latest query: " + latestQuery);
         Plugin[] plugins = PluginManager.plugin.getServer().getPluginManager().getPlugins();
         int counter = 0;
         StringBuffer pluginsList = new StringBuffer();
