@@ -779,22 +779,20 @@ public class Util {
         while (st.hasMoreTokens()) { array.add(st.nextToken() + ":"); }
         StringBuffer newcache = new StringBuffer();
         while (array.size() > i) {
-            if (array.get(i).equals("\"" + nummember + "\";s:") && nummember != null) {
-                String temp = array.get(i + 2);
+            if (array.get(i).equals("\"" + nummember + "\";i:") && nummember != null) {
+                String temp = array.get(i + 1);
                 temp = removeChar(temp, '"');
                 temp = removeChar(temp, ':');
                 temp = removeChar(temp, 's');
                 temp = removeChar(temp, ';');
                 temp = temp.trim();
                 int tempnum = Integer.parseInt(temp) + 1;
-                String templength = "" + tempnum;
-                if(lastvalue.equalsIgnoreCase(extrausername)) {
-                	temp = "\"" + tempnum + "\"" + ";}";
+                if(lastvalue.equalsIgnoreCase(nummember)) {
+                	temp = tempnum + ";}";
                 } else {
-                	temp = "\"" + tempnum + "\"" + ";s:";
+                	temp = tempnum + ";s:";
                 }
-                array.set(i + 1, templength.length() + ":");
-                array.set(i + 2, temp);
+                array.set(i + 1, temp);
             } else if (array.get(i).equals("\"" + newusername + "\";s:") && newusername != null) {
                 array.set(i + 1, player.length() + ":");
                 if(lastvalue.equalsIgnoreCase(newusername)) {
@@ -818,7 +816,7 @@ public class Util {
                 temp = temp.trim();
                 int tempnum = Integer.parseInt(temp) + 1;
                 String templength = "" + tempnum;
-                if(lastvalue.equalsIgnoreCase(extrausername)) {
+                if(lastvalue.equalsIgnoreCase(activemembers)) {
                 	temp = "\"" + tempnum + "\"" + ";}";
                 } else {
                 	temp = "\"" + tempnum + "\"" + ";s:";
