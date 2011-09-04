@@ -380,6 +380,7 @@ public class Util {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
