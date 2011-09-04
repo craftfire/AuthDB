@@ -314,12 +314,13 @@ public class Util {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (Joomla.check_hash(password, hash)) { return true; }
                     }
@@ -327,12 +328,13 @@ public class Util {
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     number = 2;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (Joomla.check_hash(password, hash)) { return true; }
                     }
@@ -575,6 +577,7 @@ public class Util {
                     usernamefield = "user_login";
                     passwordfield = "user_pass";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
