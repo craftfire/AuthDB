@@ -86,12 +86,12 @@ public class Vanilla {
 
                 int userid = MySQL.countitall(Config.script_tableprefix + usertable);
 
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`, `RoleID`)  VALUES (?, ?)", 1);
-                ps.setInt(1, userid); //UserID
-                ps.setInt(2, 3); //RoleID
-                Util.logging.mySQL(ps.toString());
-                ps.executeUpdate();
-                ps.close();
+                //ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`, `RoleID`)  VALUES (?, ?)", 1);
+                //ps.setInt(1, userid); //UserID
+                //ps.setInt(2, 3); //RoleID
+                //Util.logging.mySQL(ps.toString());
+                //ps.executeUpdate();
+                //ps.close();
 
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`, `RoleID`)  VALUES (?, ?)", 1);
                 ps.setInt(1, userid); //UserID
