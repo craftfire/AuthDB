@@ -38,7 +38,6 @@ public class Vanilla {
                 return 2;
             }
         } else { 
-            Config.script_tableprefix = "GDN_";
             extraCheck = 1;
             return 1;
         }
