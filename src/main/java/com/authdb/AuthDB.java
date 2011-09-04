@@ -348,7 +348,7 @@ public class AuthDB extends JavaPlugin {
             try { Util.craftFire.postInfo(getServer().getServerName(),getServer().getVersion(),pluginVersion,System.getProperty("os.name"),System.getProperty("os.version"),System.getProperty("os.arch"),System.getProperty("java.version"),thescript,theversion,Plugins.toString(),online,max,server.getPort()); }
             catch (IOException e1) {
                 Util.logging.Debug("Could not send usage stats to main server.");
-                }
+            }
         }
         for (Player p : getServer().getOnlinePlayers()) {
             EBean eBeanClass = EBean.checkPlayer(p, true);

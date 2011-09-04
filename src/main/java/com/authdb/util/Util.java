@@ -553,7 +553,6 @@ public class Util {
                     Config.hasForumBoard = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
-                        player = player.toLowerCase();
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password.toLowerCase(), null), storedPassword)) { return true; }
@@ -563,26 +562,8 @@ public class Util {
                         if (IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), hash)) { return true; }
                     }
 
-                } else if (checkVersionInRange(IPB.VersionRange2)) {
-                    saltfield = "members_pass_salt";
-                    usernamefield = "members_l_username";
-                    passwordfield = "members_pass_hash";
-                    Config.hasForumBoard = true;
-                    number = 2;
-                    if (type.equalsIgnoreCase("checkpassword")) {
-                        player = player.toLowerCase();
-                        EBean eBeanClass = EBean.find(player);
-                        String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
-                        EBean.checkPassword(player, hash);
-                        if (IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), hash)) { return true; }
-                    }
-
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                    player = player.toLowerCase();
                     IPB.adduser(number, player, email, password, ipAddress);
                     EBean.sync(player);
                      return true;
