@@ -27,19 +27,25 @@ public class Vanilla {
     
     public static int check() {
         if (extraCheck > 0) { return extraCheck; }
-        String check = MySQL.getQuery("SELECT * FROM `GDN_User` LIMIT 1");
-        if (check.equalsIgnoreCase("fail")) {
-            check = MySQL.getQuery("SELECT * FROM `gdn_user` LIMIT 1");
-            if(check.equalsIgnoreCase("fail")) {
-                extraCheck = 0;
-            } else { 
-                Config.script_tableprefix = "gdn_";
-                extraCheck = 2; 
-                return 2;
-            }
-        } else { 
-            extraCheck = 2;
-            return 2;
+        if (Config.script_tableprefix.equalsIgnoreCase("gdn_")) {
+	        String check = MySQL.getQuery("SELECT * FROM `GDN_User` LIMIT 1");
+	        if (check.equalsIgnoreCase("fail")) {
+	            check = MySQL.getQuery("SELECT * FROM `gdn_user` LIMIT 1");
+	            if(check.equalsIgnoreCase("fail")) {
+	                extraCheck = 0;
+	            } else { 
+	                Config.script_tableprefix = "gdn_";
+	                extraCheck = 2; 
+	                return 2;
+	            }
+	        } else { 
+	            Config.script_tableprefix = "GDN_";
+	            extraCheck = 1;
+	            return 1;
+	        }
+        } else {
+        	extraCheck = 2;
+        	return 2;
         }
         return extraCheck;
     }
