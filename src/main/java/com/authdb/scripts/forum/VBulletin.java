@@ -59,7 +59,7 @@ public class VBulletin {
 
             int userid = MySQL.countitall(Config.script_tableprefix + "user");
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
-            String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
+            String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null, "newuserid");
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
@@ -94,7 +94,7 @@ public class VBulletin {
 
             int userid = MySQL.countitall(Config.script_tableprefix + "user");
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
-            String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
+            String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null, "newuserid");
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();

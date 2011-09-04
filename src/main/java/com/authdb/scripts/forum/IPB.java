@@ -68,7 +68,7 @@ public class IPB {
             ps.executeUpdate();
             ps.close();
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "cache_store", "`cs_value`", "cs_key", "stats");
-            String newcache = Util.forumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
+            String newcache = Util.forumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo", "last_mem_id");
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "cache_store" + "` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
@@ -112,7 +112,7 @@ public class IPB {
             ps.executeUpdate();
             ps.close();
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "cache_store", "`cs_value`", "cs_key", "stats");
-            String newcache = Util.forumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
+            String newcache = Util.forumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo", "last_mem_id");
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "cache_store" + "` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
