@@ -847,6 +847,9 @@ public class Util {
         String[] versionss = versionrange.split("\\-");
         String[] versionrange1= versionss[0].split("\\.");
         String[] versionrange2= versionss[1].split("\\.");
+        if (version.equals(versionss[0]) || version.equals(versionss[1])) {
+        	return true;
+        }
         if (versionrange1.length == versions.length) {
             int a = Integer.parseInt(versionrange1[0]);
             int b = Integer.parseInt(versionrange2[0]);
