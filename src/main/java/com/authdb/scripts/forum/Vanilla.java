@@ -38,8 +38,8 @@ public class Vanilla {
                 return 2;
             }
         } else { 
-            extraCheck = 1;
-            return 1;
+            extraCheck = 2;
+            return 2;
         }
         return extraCheck;
     }
