@@ -772,7 +772,7 @@ public class Util {
         }
     }
 
-    public static String forumCache(String cache, String player, int userid, String nummember, String activemembers, String newusername, String newuserid, String extrausername) {
+    public static String forumCache(String cache, String player, int userid, String nummember, String activemembers, String newusername, String newuserid, String extrausername, String lastvalue) {
         StringTokenizer st = new StringTokenizer(cache, ":");
         int i = 0;
         List<String> array = new ArrayList<String>();
@@ -788,15 +788,27 @@ public class Util {
                 temp = temp.trim();
                 int tempnum = Integer.parseInt(temp) + 1;
                 String templength = "" + tempnum;
-                temp = "\"" + tempnum + "\"" + ";s";
+                if(lastvalue.equalsIgnoreCase(extrausername)) {
+                	temp = "\"" + tempnum + "\"" + ";}";
+                } else {
+                	temp = "\"" + tempnum + "\"" + ";s:";
+                }
                 array.set(i + 1, templength.length() + ":");
-                array.set(i + 2, temp + ":");
+                array.set(i + 2, temp);
             } else if (array.get(i).equals("\"" + newusername + "\";s:") && newusername != null) {
                 array.set(i + 1, player.length() + ":");
-                array.set(i + 2, "\"" + player + "\"" + ";s" + ":");
+                if(lastvalue.equalsIgnoreCase(newusername)) {
+                	array.set(i + 2, "\"" + player + "\"" + ";}");
+                } else {
+                	array.set(i + 2, "\"" + player + "\"" + ";s" + ":");
+                }
             } else if (array.get(i).equals("\"" + extrausername + "\";s:") && extrausername != null) {
                 array.set(i + 1, player.length() + ":");
-                array.set(i + 2, "\"" + player + "\"" + ";s" + ":");
+                if(lastvalue.equalsIgnoreCase(extrausername)) {
+                	array.set(i + 2, "\"" + player + "\"" + ";}");
+                } else {
+                	array.set(i + 2, "\"" + player + "\"" + ";s" + ":");
+                }
             } else if (array.get(i).equals("\"" + activemembers + "\";s:") && activemembers != null) {
                 String temp = array.get(i + 2);
                 temp = removeChar(temp, '"');
@@ -806,13 +818,21 @@ public class Util {
                 temp = temp.trim();
                 int tempnum = Integer.parseInt(temp) + 1;
                 String templength = "" + tempnum;
-                temp = "\"" + tempnum + "\"" + ";s";
+                if(lastvalue.equalsIgnoreCase(extrausername)) {
+                	temp = "\"" + tempnum + "\"" + ";}";
+                } else {
+                	temp = "\"" + tempnum + "\"" + ";s:";
+                }
                 array.set(i + 1, templength.length() + ":");
-                array.set(i + 2, temp + ":");
+                array.set(i + 2, temp);
             } else if (array.get(i).equals("\"" + newuserid + "\";s:") && newuserid != null) {
                 String dupe = "" + userid;
                 array.set(i + 1, dupe.length() + ":");
-                array.set(i + 2, "\"" + userid + "\"" + ";" + "}");
+                if(lastvalue.equalsIgnoreCase(newuserid)) {
+                	array.set(i + 2, "\"" + userid + "\"" + ";}");
+                } else {
+                	array.set(i + 2, "\"" + userid + "\"" + ";s:");
+                }
             }
             newcache.append(array.get(i));
             i++;

@@ -59,7 +59,7 @@ public class MyBB {
 
         int userid = MySQL.countitall(Config.script_tableprefix + "users");
         String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datacache", "`cache`", "title", "stats");
-        String newcache = Util.forumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null);
+        String newcache = Util.forumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null, "lastusername");
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datacache" + "` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
         Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
