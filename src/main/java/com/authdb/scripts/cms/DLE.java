@@ -45,6 +45,7 @@ public class DLE {
             ps.setString(8, ""); //signature
             ps.setString(9, ""); //favorites
             ps.setString(10, ""); //xfields
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
         }

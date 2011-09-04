@@ -66,20 +66,25 @@ public class SMF {
         ps.setString(22, ""); //secretQuestion
         ps.setString(23, ""); //additionalGroups
         ps.setString(24, salt); //passwordSalt
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
         userid = MySQL.countitall(Config.script_tableprefix + "members");
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = value + 1 WHERE `variable` = 'totalMembers'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
     } else if (checkid == 2) {
@@ -120,20 +125,25 @@ public class SMF {
         ps.setString(24, ""); //openid_uri
         ps.setString(25, ""); //ignore_boards
         ps.setString(26, salt); //password_salt
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
         userid = MySQL.countitall(Config.script_tableprefix + "members");
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + player + "' WHERE `variable` = 'latestRealName'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + userid + "' WHERE `variable` = 'latestMember'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = '" + timestamp + "' WHERE `variable` = 'memberlist_updated'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "settings" + "` SET `value` = value + 1 WHERE `variable` = 'totalMembers'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
     }

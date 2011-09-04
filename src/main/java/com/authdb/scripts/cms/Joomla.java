@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.Random;
 
 import com.authdb.util.Config;
+import com.authdb.util.Util;
 import com.authdb.util.encryption.Encryption;
 import com.authdb.util.databases.MySQL;
 
@@ -46,6 +47,7 @@ public class Joomla {
         ps.setString(9, passworddate); //lastvisitDate
         //fake:
         ps.setString(10, ""); //params
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -55,6 +57,7 @@ public class Joomla {
         ps.setString(1, "users"); //section_value
         ps.setInt(2, userid); //value
         ps.setString(3, player); //name
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -62,6 +65,7 @@ public class Joomla {
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "core_acl_groups_aro_map" + "` (`group_id`, `aro_id`)  VALUES (?, ?)", 1);
         ps.setInt(1, 18); //group_id
         ps.setInt(2, aroid); //aro_id
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
     } else if (checkid == 2) {
@@ -81,6 +85,7 @@ public class Joomla {
         ps.setString(8, passworddate); //lastvisitDate
         //fake:
         ps.setString(9, ""); //params
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -89,6 +94,7 @@ public class Joomla {
         ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_usergroup_map" + "` (`user_id`, `group_id`)  VALUES (?, ?)", 1);
         ps.setInt(1, userid); //user_id
         ps.setInt(2, 2); //group_id
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
     }

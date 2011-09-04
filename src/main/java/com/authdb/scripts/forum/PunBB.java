@@ -47,6 +47,7 @@ public class PunBB {
         ps.setString(7, ipAddress); //registration_ip
         ps.setLong(8, timestamp); //last_visit
         ///
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 

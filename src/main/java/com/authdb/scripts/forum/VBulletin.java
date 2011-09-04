@@ -52,6 +52,7 @@ public class VBulletin {
             ps.setLong(11, Util.ip2Long(ipAddress)); //ipaddress
             ps.setString(12, salt); //salt
             ps.setString(13, player); //username
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
 
@@ -60,6 +61,7 @@ public class VBulletin {
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
             String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
           }
@@ -86,6 +88,7 @@ public class VBulletin {
             ps.setString(12, salt); //salt
             ps.setString(13, player); //username
             ps.setString(14, "Junior Member"); //usertitle
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
 
@@ -93,6 +96,7 @@ public class VBulletin {
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
             String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null);
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
           }

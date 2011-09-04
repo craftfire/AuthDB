@@ -53,6 +53,7 @@ public class MyBB {
         ps.setString(14, ""); //notepad
         ps.setString(15, ""); //usernotes
         ps.setString(16, "5");//usergroup
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -60,6 +61,7 @@ public class MyBB {
         String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
         String newcache = Util.forumCache(oldcache, player, userid, "numusers", null, "lastusername", "lastuid", null);
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datacache" + "` SET `cache` = '" + newcache + "' WHERE `title` = 'stats'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         }

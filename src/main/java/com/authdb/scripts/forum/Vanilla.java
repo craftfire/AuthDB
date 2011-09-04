@@ -75,6 +75,7 @@ public class Vanilla {
                 ps.setString(10, realdate); //DateLastActive
                 ps.setString(11, realdate); //DateInserted
                 ps.setString(12, realdate); //DateUpdated
+                Util.logging.mySQL(ps.toString());
                 ps.executeUpdate();
                 ps.close();
 
@@ -83,12 +84,14 @@ public class Vanilla {
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`, `RoleID`)  VALUES (?, ?)", 1);
                 ps.setInt(1, userid); //UserID
                 ps.setInt(2, 3); //RoleID
+                Util.logging.mySQL(ps.toString());
                 ps.executeUpdate();
                 ps.close();
 
                 ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + roletable + "` (`UserID`, `RoleID`)  VALUES (?, ?)", 1);
                 ps.setInt(1, userid); //UserID
                 ps.setInt(2, 8); //RoleID
+                Util.logging.mySQL(ps.toString());
                 ps.executeUpdate();
                 ps.close();
 

@@ -54,6 +54,7 @@ public class XenForo {
         ps.setLong(10, timestamp); //register_date
         ps.setLong(11, timestamp); //last_activity
         ///
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -63,6 +64,7 @@ public class XenForo {
         ps.setInt(1, userid); //user_id
         ps.setString(2, "members"); //allow_post_profile
         ps.setString(3, "members"); //allow_send_personal_conversation
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -70,6 +72,7 @@ public class XenForo {
         ps.setInt(1, userid); //user_id
         ps.setString(2, "watch_email"); //default_watch_state
         ps.setString(3, ""); //alert_optout
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -85,6 +88,7 @@ public class XenForo {
         ps.setBlob(6, bIn1, bArr1.length); //identities
         ps.setString(7, ""); //csrf_token - dupe
         ps.setString(8, ""); //about - dupe
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -96,6 +100,7 @@ public class XenForo {
         ps.setString(2, "XenForo_Authentication_Core"); //scheme_class
         ps.setBlob(3, bIn, bArr.length);
         ps.setString(4, ""); //remember_key
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
     }

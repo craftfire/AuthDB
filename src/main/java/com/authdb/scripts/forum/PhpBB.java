@@ -64,6 +64,7 @@ public class PhpBB {
         ps.setString(16, ""); //user_interests
         ///
         ps.setString(17, ipAddress); //user_ip
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -74,6 +75,7 @@ public class PhpBB {
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.setInt(4, 0);
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -82,15 +84,19 @@ public class PhpBB {
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.setInt(4, 0);
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + userid + "' WHERE `config_name` = 'newest_user_id'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = '" + player + "' WHERE `config_name` = 'newest_username'");
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
+        Util.logging.mySQL(ps.toString());
         ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "config" + "` SET `config_value` = config_value + 1 WHERE `config_name` = 'num_users'");
         ps.executeUpdate();
         ps.close();
@@ -123,6 +129,7 @@ public class PhpBB {
         ps.setString(6, email); //user_email
         ps.setInt(7, userid); //user_id
         ///
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
 
@@ -133,6 +140,7 @@ public class PhpBB {
         ps.setInt(2, userid);
         ps.setInt(3, 0);
         ps.executeUpdate();
+        Util.logging.mySQL(ps.toString());
         ps.close();
         stmt.close();
         /*

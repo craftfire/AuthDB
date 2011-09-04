@@ -40,6 +40,7 @@ public class WordPress {
             ps.setString(5, realdate); //user_registered
             ps.setString(6, player); //display_name
             ps.executeUpdate();
+            Util.logging.mySQL(ps.toString());
             ps.close();
             int userid = MySQL.countitall(Config.script_tableprefix + "users");
             
@@ -50,6 +51,7 @@ public class WordPress {
                 ps.setInt(1, userid); //user_id
                 ps.setString(2, fields[i]); //meta_key
                 ps.setString(3, values[i]); //meta_value
+                Util.logging.mySQL(ps.toString());
                 ps.executeUpdate();
                 ps.close();
             }

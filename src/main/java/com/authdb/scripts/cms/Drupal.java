@@ -40,6 +40,7 @@ public class Drupal {
         ps.setLong(6, timestamp); //login
         ps.setInt(7, 1); //status
         ps.setString(8, email); //init
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
     }
@@ -56,6 +57,7 @@ public class Drupal {
         ps.setLong(5, timestamp); //login
         ps.setInt(6, 1); //status
         ps.setString(7, email); //init
+        Util.logging.mySQL(ps.toString());
         ps.executeUpdate();
         ps.close();
     }

@@ -52,21 +52,25 @@ public class IPB {
             ps.setString(13, player.toLowerCase()); //members_l_username
             ps.setString(14, hash); //members_pass_hash
             ps.setString(15, salt); //members_pass_salt
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
 
             int userid = MySQL.countitall(Config.script_tableprefix + "members");
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "pfields_content" + "` (`member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //member_id
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "profile_portal" + "` (`pp_member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //pp_member_id
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "cache_store", "`cs_value`", "cs_key", "stats");
             String newcache = Util.forumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "cache_store" + "` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
         } else if (checkid == 2) {
@@ -92,21 +96,25 @@ public class IPB {
             ps.setString(13, player.toLowerCase()); //members_l_username
             ps.setString(14, hash); //members_pass_hash
             ps.setString(15, salt); //members_pass_salt
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
 
             int userid = MySQL.countitall(Config.script_tableprefix + "members");
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "pfields_content" + "` (`member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //member_id
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "profile_portal" + "` (`pp_member_id`)  VALUES (?)", 1);
             ps.setInt(1, userid); //pp_member_id
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
             String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "cache_store", "`cs_value`", "cs_key", "stats");
             String newcache = Util.forumCache(oldcache, player, userid, "mem_count", null, "last_mem_name", "last_mem_id", "last_mem_name_seo");
             ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "cache_store" + "` SET `cs_value` = '" + newcache + "' WHERE `cs_key` = 'stats'");
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
         }
