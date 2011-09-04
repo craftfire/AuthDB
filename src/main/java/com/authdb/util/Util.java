@@ -63,9 +63,7 @@ public class Util {
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
     String email, String ipAddress) throws SQLException {
-        if(player != null && (type.equalsIgnoreCase("checkpassword") || type.equalsIgnoreCase("syncpassword") || type.equalsIgnoreCase("syncsalt"))) {
-            player = player.toLowerCase();
-        }
+        boolean caseSensitive = false;
         if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
             EBean eBeanClass = EBean.checkPlayer(player, true);
             if (type.equalsIgnoreCase("checkuser")) {
@@ -138,7 +136,7 @@ public class Util {
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && PhpBB.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player);
+                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
                         if (PhpBB.check_hash(password, hash)) { return true; }
                     }
@@ -165,7 +163,7 @@ public class Util {
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && PhpBB.check_hash(password, storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player);
+                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
                         if (PhpBB.check_hash(password, hash)) { return true; }
                     }
@@ -182,6 +180,7 @@ public class Util {
                     passwordfield = "passwd";
                     saltfield = "passwordSalt";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     bans = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
@@ -197,6 +196,7 @@ public class Util {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     bans = true;
                     number = 2;
                     if (type.equalsIgnoreCase("checkpassword")) {
@@ -228,7 +228,7 @@ public class Util {
                         if (storedPassword != null && MyBB.check_hash(MyBB.hash("find", player, password, ""), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (MyBB.check_hash(MyBB.hash("find", player, password, ""), hash)) { return true; }
+                        if (MyBB.check_hash(MyBB.hash("find", player.toLowerCase(), password, ""), hash)) { return true; }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -318,7 +318,7 @@ public class Util {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
                         if (Joomla.check_hash(password, hash)) { return true; }
                     }
@@ -331,7 +331,7 @@ public class Util {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
                         if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
                         if (Joomla.check_hash(password, hash)) { return true; }
                     }
@@ -399,6 +399,7 @@ public class Util {
                     String userid = MySQL.getfromtable(Config.script_tableprefix + usertable, "`user_id`", "username", player);
                     usernamefield = "username";
                     passwordfield = "password";
+                    caseSensitive = true;
                     Config.hasForumBoard = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
@@ -501,6 +502,7 @@ public class Util {
                     usernamefield = "user_login";
                     passwordfield = "user_pass";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
@@ -551,11 +553,11 @@ public class Util {
                         player = player.toLowerCase();
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password, null), storedPassword)) { return true; }
+                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password.toLowerCase(), null), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player);
+                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
-                        if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
+                        if (IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), hash)) { return true; }
                     }
 
                 } else if (checkVersionInRange(IPB.VersionRange2)) {
@@ -568,11 +570,11 @@ public class Util {
                         player = player.toLowerCase();
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password, null), storedPassword)) { return true; }
+                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player);
+                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
-                        if (IPB.check_hash(IPB.hash("find", player, password, null), hash)) { return true; }
+                        if (IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), hash)) { return true; }
                     }
 
                 }
@@ -638,6 +640,9 @@ public class Util {
                             "|-----------------------------------------------------------------------------|");
 
                 }
+            }
+            if (!caseSensitive) {
+            	player = player.toLowerCase();
             }
             if (Config.hasForumBoard && type.equalsIgnoreCase("checkuser") && !Config.custom_enabled) {
                 //EBean eBeanClass = EBean.find(player, Column.registered, "true");
