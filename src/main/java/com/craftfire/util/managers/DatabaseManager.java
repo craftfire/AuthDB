@@ -45,10 +45,4 @@ public class DatabaseManager {
         }
     }
     
-    public boolean isConnected() {
-    	if (getDatabaseType().equalsIgnoreCase("mysql")) {
-    		return PluginManager.mySQL.isConnected();
-    	}
-    	return false;
-    }
 }

@@ -24,7 +24,6 @@ import com.authdb.util.Util;
 
 public class LoggingManager {
     PluginManager PluginManager = new PluginManager();
-    DatabaseManager databaseManager = new DatabaseManager();
     String logFolder = "plugins/AuthDB/logs/";
     public static enum Type {
         error, debug, info, warning, servere;
@@ -116,7 +115,7 @@ public class LoggingManager {
         logError("Script version: " + PluginManager.config.script_version);
         logError("Table prefix: " + PluginManager.config.script_tableprefix);
         logError("Keep alive: " + PluginManager.config.database_keepalive);
-        logError("MySQL connected: " + databaseManager.isConnected());
+        logError("MySQL connected: " + PluginManager.mySQL.isConnected());
         Plugin[] plugins = PluginManager.plugin.getServer().getPluginManager().getPlugins();
         int counter = 0;
         StringBuffer pluginsList = new StringBuffer();
