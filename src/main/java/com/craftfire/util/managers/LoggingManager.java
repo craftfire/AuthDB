@@ -17,6 +17,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bukkit.plugin.Plugin;
+
 import com.authdb.util.Config;
 import com.authdb.util.Util;
 
@@ -109,6 +111,14 @@ public class LoggingManager {
         logError("File name: " + file);
         logError("Function name: " + function);
         logError("Error line: " + linenumber);
+        Plugin[] plugins = PluginManager.plugin.getServer().getPluginManager().getPlugins();
+        int counter = 0;
+        StringBuffer pluginsList = new StringBuffer();
+        while (plugins.length > counter) {
+            pluginsList.append(plugins[counter].getDescription().getName() + " " + plugins[counter].getDescription().getVersion() + ", ");
+            counter++;
+        }
+        logError("Plugins: " + pluginsList.toString());
         logError("--------------------------- STACKTRACE START ---------------------------");
         for (int i = 0; i < stack.length; i++) {
         	logError(stack[i].toString());
