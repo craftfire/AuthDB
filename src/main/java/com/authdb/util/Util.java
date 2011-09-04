@@ -221,6 +221,7 @@ public class Util {
                     passwordfield = "password";
                     Config.hasForumBoard = true;
                     bans = true;
+                    caseSensitive = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
@@ -228,7 +229,7 @@ public class Util {
                         if (storedPassword != null && MyBB.check_hash(MyBB.hash("find", player, password, ""), storedPassword)) { return true; }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (MyBB.check_hash(MyBB.hash("find", player.toLowerCase(), password, ""), hash)) { return true; }
+                        if (MyBB.check_hash(MyBB.hash("find", player, password, ""), hash)) { return true; }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
