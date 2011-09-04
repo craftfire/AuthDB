@@ -69,37 +69,37 @@ public class VBulletin {
               String salt = Encryption.hash(30, "none", 33, 126);
               String passwordhashed = hash("create", player, password, salt);
               String passworddate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date (timestamp*1000));
-          //    int userid;
+              //    int userid;
               ///
               PreparedStatement ps;
               //
               ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user" + "` (`usergroupid`, `password`, `passworddate`, `email`, `showvbcode`, `joindate`, `lastvisit`, `lastactivity`, `reputationlevelid`, `options`, `ipaddress`, `salt`, `username`, `usertitle`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
-            ps.setString(1, "2"); //usergroupid
+              ps.setString(1, "2"); //usergroupid
               ps.setString(2, passwordhashed); // password
-            ps.setString(3, passworddate); //passworddate
-            ps.setString(4, email); //email
+              ps.setString(3, passworddate); //passworddate
+              ps.setString(4, email); //email
               ps.setString(5, "1"); //showvbcode
               ps.setLong(6, timestamp); //joindate
               ps.setLong(7, timestamp); //lastvisit
               ps.setLong(8, timestamp); //lastactivity
               ps.setString(9, "5"); //reputationlevelid
-            ps.setString(10, "45091927"); //options
-            ps.setString(11, ipAddress); //ipaddress
-            ps.setString(12, salt); //salt
-            ps.setString(13, player); //username
-            ps.setString(14, "Junior Member"); //usertitle
-            Util.logging.mySQL(ps.toString());
-            ps.executeUpdate();
-            ps.close();
+              ps.setString(10, "45091927"); //options
+              ps.setString(11, ipAddress); //ipaddress
+              ps.setString(12, salt); //salt
+              ps.setString(13, player); //username
+              ps.setString(14, "Junior Member"); //usertitle
+              Util.logging.mySQL(ps.toString());
+              ps.executeUpdate();
+              ps.close();
 
-            int userid = MySQL.countitall(Config.script_tableprefix + "user");
-            String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
-            String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null, "newuserid");
-            ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
-            Util.logging.mySQL(ps.toString());
-            ps.executeUpdate();
-            ps.close();
-          }
+              int userid = MySQL.countitall(Config.script_tableprefix + "user");
+              String oldcache =  MySQL.getfromtable(Config.script_tableprefix + "datastore", "`data`", "title", "userstats");
+              String newcache = Util.forumCache(oldcache, player, userid, "numbermembers", "activemembers", "newusername", "newuserid", null, "newuserid");
+              ps = MySQL.mysql.prepareStatement("UPDATE `" + Config.script_tableprefix + "datastore" + "` SET `data` = '" + newcache + "' WHERE `title` = 'userstats'");
+              Util.logging.mySQL(ps.toString());
+              ps.executeUpdate();
+              ps.close();
+          } 
     }
 
     public static String hash(String action, String player, String password, String thesalt) throws SQLException {
