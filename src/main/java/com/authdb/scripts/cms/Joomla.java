@@ -100,10 +100,9 @@ public class Joomla {
     }
 
     public static boolean check_hash(String passwd, String dbEntry) {
-        if (passwd == null || dbEntry == null || dbEntry.length() == 0) {
-            throw new IllegalArgumentException();
-            String[] arr = dbEntry.split(":", 2);
-        }
+        if (passwd == null || dbEntry == null || dbEntry.length() == 0)
+        throw new IllegalArgumentException();
+        String[] arr = dbEntry.split(":", 2);
         if (arr.length == 2) {
             // new format as {HASH}:{SALT}
             String cryptpass = arr[0];
