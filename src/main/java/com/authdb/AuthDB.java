@@ -377,8 +377,8 @@ public class AuthDB extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args)  {
         if (sender instanceof Player) {
             String command = cmd.getName();
-            if(args.length > 0) {
-                for(int i=0; i<args.length; i++) {
+            if (args.length > 0) {
+                for (int i=0; i<args.length; i++) {
                     command += " " + args[i];
                 }
             }
@@ -424,7 +424,7 @@ public class AuthDB extends JavaPlugin {
                     return true;
                 }
             } else if (command.startsWith(commandString(Config.commands_admin_logout, true)) || command.startsWith(commandString(Config.aliases_admin_logout, true))) {
-                if(ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
+                if (ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
                     String[] temp = commandString(Config.commands_admin_logout, true).split(" ");
                     if (args.length == temp.length) {
                         String PlayerName = args[temp.length - 1];
@@ -451,7 +451,7 @@ public class AuthDB extends JavaPlugin {
                     return true;
                 }
             } else if (command.startsWith(commandString(Config.commands_admin_login, true)) || command.startsWith(commandString(Config.aliases_admin_login, true))) {
-                if(ZPermissions.isAllowed(player, Permission.command_admin_login)) {
+                if (ZPermissions.isAllowed(player, Permission.command_admin_login)) {
                     String[] temp = commandString(Config.commands_admin_login, true).split(" ");
                     if (args.length == temp.length) {
                         String PlayerName = args[temp.length - 1];
@@ -554,7 +554,7 @@ public class AuthDB extends JavaPlugin {
                 EBean eBeanClass = null;
                 while ((strLine = br.readLine()) != null) {
                     split = strLine.split(":");
-                    if(split.length == 2) {
+                    if (split.length == 2) {
                         count++;
                         Util.logging.Debug("Found linked name: " + split[0] + " linked with name: " + split[1]);
                         eBeanClass = EBean.checkPlayer(split[0], false);
@@ -563,7 +563,7 @@ public class AuthDB extends JavaPlugin {
                     }
                 }
                 in.close();
-                if(count > 0) {
+                if (count > 0) {
                     Util.logging.Debug("Successfully imported " + count + " linked names.");
                 }
             } catch (Exception e) {
@@ -651,7 +651,7 @@ public class AuthDB extends JavaPlugin {
         if (!Util.checkFilter("password",password)) {
             Messages.sendMessage(Message.filter_password, theplayer, null);
         } else {
-            if(Util.checkScript("adduser", Config.script_name, player, password, email, ipAddress)) {
+            if (Util.checkScript("adduser", Config.script_name, player, password, email, ipAddress)) {
                 Util.logging.Debug("Registered player: " + theplayer.getName());
             } else {
                 Util.logging.Debug("Failed registring player: " + theplayer.getName());
@@ -688,7 +688,7 @@ public class AuthDB extends JavaPlugin {
         String language = "English";
         File LanguagesAll = new File(getDataFolder() + "/translations");
         if(!LanguagesAll.exists()) {
-            if(LanguagesAll.mkdir()) {
+            if (LanguagesAll.mkdir()) {
                 Util.logging.Debug("Sucesfully created directory: " + LanguagesAll);
             }
         }
@@ -711,7 +711,7 @@ public class AuthDB extends JavaPlugin {
                     if (directory.startsWith("files/translations/") && directory.endsWith(".yml") == false)  {
                         directory = directory.replace("files/translations/", "");
                         directory = directory.replace("/", "");
-                        if(directory.equals("") == false) {
+                        if (directory.equals("") == false) {
                             Util.logging.Debug("Directory: "+directory);
                             File f = new File(getDataFolder() + "/translations/" + directory + "/" + type + ".yml");
                             if (!f.exists()) {
@@ -735,7 +735,7 @@ public class AuthDB extends JavaPlugin {
         }
 
         directories = LanguagesAll.listFiles(fileFilter);
-        if(directories.length > 0) { Util.logging.Debug("Found " + directories.length + " directories for " + type); }
+        if (directories.length > 0) { Util.logging.Debug("Found " + directories.length + " directories for " + type); }
         else { Util.logging.error("Error! Could not find any directories for " + type); }
         if (!set) {
             for (int z=0; z<directories.length; z++) {
@@ -761,7 +761,7 @@ public class AuthDB extends JavaPlugin {
         //Util.logging.Debug("Checking if player " + player + " is registered.");
         player = Util.checkOtherName(player);
         EBean eBeanClass = EBean.checkPlayer(player, true);
-        if(eBeanClass.getRegistered().equalsIgnoreCase("true")) {
+        if (eBeanClass.getRegistered().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
                 if (!Config.database_keepalive) { Util.databaseManager.connect(); }
                 Config.hasForumBoard = false;
@@ -872,7 +872,7 @@ public class AuthDB extends JavaPlugin {
             File actual = new File(getDataFolder() + "/" + folder + "/", name);
             File direc = new File(getDataFolder() + "/" + folder + "/", "");
             if (!direc.exists()) {
-                if(direc.mkdir()) {
+                if (direc.mkdir()) {
                     Util.logging.Debug("Sucesfully created directory: "+direc);
                 }
             }

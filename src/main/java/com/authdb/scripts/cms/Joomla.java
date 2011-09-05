@@ -100,20 +100,21 @@ public class Joomla {
     }
 
     public static boolean check_hash(String passwd, String dbEntry) {
-        if (passwd == null || dbEntry == null || dbEntry.length() == 0)
-        throw new IllegalArgumentException();
-        String[] arr = dbEntry.split(":", 2);
-        if (arr.length == 2) {
-        // new format as {HASH}:{SALT}
-        String cryptpass = arr[0];
-        String salt = arr[1];
+        if (passwd == null || dbEntry == null || dbEntry.length() == 0) {
+            throw new IllegalArgumentException();
+            String[] arr = dbEntry.split(":", 2);
+            if (arr.length == 2) {
+                // new format as {HASH}:{SALT}
+                String cryptpass = arr[0];
+                String salt = arr[1];
 
-        return Encryption.md5(passwd + salt).equals(cryptpass);
-        } else {
-        // old format as {HASH} just like PHPbb and many other apps
-        String cryptpass = dbEntry;
+                return Encryption.md5(passwd + salt).equals(cryptpass);
+            } else {
+                // old format as {HASH} just like PHPbb and many other apps
+                String cryptpass = dbEntry;
 
-        return Encryption.md5(passwd).equals(cryptpass);
+                return Encryption.md5(passwd).equals(cryptpass);
+            }
         }
     }
 
@@ -121,13 +122,14 @@ public class Joomla {
 
     public static String hash(String username, String passwd) {
         StringBuffer saltBuf = new StringBuffer();
-        if (_rnd == null) _rnd = new SecureRandom();
-        int i;
-        for (i = 0; i < 32; i++) {
-        saltBuf.append(Integer.toString(_rnd.nextInt(36), 36));
-        }
-        String salt = saltBuf.toString();
+        if (_rnd == null) _rnd = new SecureRandom(); {
+            int i;
+            for (i = 0; i < 32; i++) {
+                saltBuf.append(Integer.toString(_rnd.nextInt(36), 36));
+            }
+            String salt = saltBuf.toString();
 
-        return Encryption.md5(passwd + salt) + ":" + salt;
+            return Encryption.md5(passwd + salt) + ":" + salt;
+        }
     }
 }

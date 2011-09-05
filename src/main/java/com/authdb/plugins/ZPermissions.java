@@ -51,28 +51,28 @@ public class ZPermissions {
         if (hasPermissionsBukkit || hasbPermissions) {
             if (player.hasPermission(permission.permission)) {
                 return true;
-            } else if(player.hasPermission(pluginName + ".*")) {
+            } else if (player.hasPermission(pluginName + ".*")) {
                 return true;
             } else if (permission.permission.startsWith(adminPermissions)) {
-                if(player.hasPermission(adminPermissions + "*")) {
+                if (player.hasPermission(adminPermissions + "*")) {
                     return true;
                 }
             } else if (permission.permission.startsWith(userPermissions)) {
-                if(player.hasPermission(userPermissions + "*")) {
+                if (player.hasPermission(userPermissions + "*")) {
                     return true;
                 }
             }
         } else if (hasPlugin) {
             if (permissionsHandler.has(player, permission.permission)) {
                 return true;
-            } else if(permissionsHandler.has(player, pluginName + ".*")) {
+            } else if (permissionsHandler.has(player, pluginName + ".*")) {
                 return true;
             } else if (permission.permission.startsWith(adminPermissions)) {
-                if(permissionsHandler.has(player, adminPermissions + "*")) {
+                if (permissionsHandler.has(player, adminPermissions + "*")) {
                     return true;
                 }
             } else if (permission.permission.startsWith(userPermissions)) {
-                if(permissionsHandler.has(player, userPermissions + "*")) {
+                if (permissionsHandler.has(player, userPermissions + "*")) {
                     return true;
                 }
             }
@@ -97,28 +97,28 @@ public class ZPermissions {
         if (hasPermissionsBukkit || hasbPermissions) {
             if (player.hasPermission(permission)) {
                 return true;
-            } else if(player.hasPermission(pluginName + ".*")) {
+            } else if (player.hasPermission(pluginName + ".*")) {
                     return true;
             } else if (permission.startsWith(adminPermissions)) {
-                if(player.hasPermission(adminPermissions + "*")) {
+                if (player.hasPermission(adminPermissions + "*")) {
                     return true;
                 }
             } else if (permission.startsWith(userPermissions)) {
-                if(player.hasPermission(userPermissions + "*")) {
+                if (player.hasPermission(userPermissions + "*")) {
                     return true;
                 }
             }
         } else if (hasPlugin) {
             if (permissionsHandler.has(player, permission)) {
                 return true;
-            } else if(permissionsHandler.has(player, pluginName + ".*")) {
+            } else if (permissionsHandler.has(player, pluginName + ".*")) {
                 return true;
             } else if (permission.startsWith(adminPermissions)) {
-                if(permissionsHandler.has(player, adminPermissions + "*")) {
+                if (permissionsHandler.has(player, adminPermissions + "*")) {
                     return true;
                 }
             } else if (permission.startsWith(userPermissions)) {
-                if(permissionsHandler.has(player, userPermissions + "*")) {
+                if (permissionsHandler.has(player, userPermissions + "*")) {
                     return true;
                 }
             }

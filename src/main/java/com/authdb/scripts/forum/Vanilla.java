@@ -30,7 +30,7 @@ public class Vanilla {
             String check = MySQL.getQuery("SELECT * FROM `GDN_User` LIMIT 1");
             if (check.equalsIgnoreCase("fail")) {
                 check = MySQL.getQuery("SELECT * FROM `gdn_user` LIMIT 1");
-                if(check.equalsIgnoreCase("fail")) {
+                if (check.equalsIgnoreCase("fail")) {
                     extraCheck = 0;
                 } else {
                     Config.script_tableprefix = "gdn_";

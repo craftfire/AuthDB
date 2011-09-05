@@ -58,7 +58,7 @@ public class EBean {
             eBeanClass = new EBean();
             eBeanClass.setPlayername(player);
             eBeanClass.setRegistered("false");
-            if(save) { save(eBeanClass); }
+            if (save) { save(eBeanClass); }
             sync(player);
         }
         return eBeanClass;
@@ -70,7 +70,7 @@ public class EBean {
             eBeanClass = new EBean();
             eBeanClass.setPlayer(player);
             eBeanClass.setRegistered("false");
-            if(save) { save(eBeanClass); }
+            if (save) { save(eBeanClass); }
             sync(player);
         }
         return eBeanClass;
@@ -269,7 +269,7 @@ public class EBean {
     }
 
     public void setReloadtime(long reloadtime) {
-        if(reloadtime != 0) {
+        if (reloadtime != 0) {
             this.reloadtime = reloadtime;
         }
     }
@@ -335,7 +335,7 @@ public class EBean {
     }
 
     public void setTimeoutid(int timeoutid) {
-        if(timeoutid != 0) {
+        if (timeoutid != 0) {
             this.timeoutid = timeoutid;
         }
     }

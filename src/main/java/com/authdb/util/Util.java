@@ -67,7 +67,7 @@ public class Util {
         if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
             EBean eBeanClass = EBean.checkPlayer(player, true);
             if (type.equalsIgnoreCase("checkuser")) {
-                if(eBeanClass.getRegistered().equalsIgnoreCase("true")) {
+                if (eBeanClass.getRegistered().equalsIgnoreCase("true")) {
                     return true;
                 }
                 return false;
@@ -84,7 +84,7 @@ public class Util {
                 eBeanClass.setRegistered("true");
                 eBeanClass.setIp(ipAddress);
             } else if (type.equalsIgnoreCase("numusers")) {
-                int amount = EBean.getUsers(); 
+                int amount = EBean.getUsers();
                 logging.Info(amount + " user registrations in database");
             }
         } else if (Config.database_ison) {
@@ -280,10 +280,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && VBulletin.check_hash(VBulletin.hash("find", player, password, ""), storedPassword)) { return true; }
+                        if (storedPassword != null && VBulletin.check_hash(VBulletin.hash("find", player, password, ""), storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (VBulletin.check_hash(VBulletin.hash("find", player, password, ""), hash)) { return true; }
+                        if (VBulletin.check_hash(VBulletin.hash("find", player, password, ""), hash)) {
+                            return true;
+                        }
                     }
                 } else if (checkVersionInRange(VBulletin.VersionRange2)) {
                     usernamefield = "username";
@@ -295,10 +299,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && VBulletin.check_hash(VBulletin.hash("find", player, password, ""), storedPassword)) { return true; }
+                        if (storedPassword != null && VBulletin.check_hash(VBulletin.hash("find", player, password, ""), storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (VBulletin.check_hash(VBulletin.hash("find", player, password, ""), hash)) { return true; }
+                        if (VBulletin.check_hash(VBulletin.hash("find", player, password, ""), hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -316,10 +324,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && Encryption.md5(password).equals(storedPassword)) { return true; }
+                        if (storedPassword != null && Encryption.md5(password).equals(storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (Encryption.md5(password).equals(hash)) { return true; }
+                        if (Encryption.md5(password).equals(hash)) {
+                            return true;
+                        }
                     }
                 } else if (checkVersionInRange(Drupal.VersionRange2)) {
                     usernamefield = "name";
@@ -329,10 +341,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && storedPassword.equals(Drupal.user_check_password(password, storedPassword))) { return true; }
+                        if (storedPassword != null && storedPassword.equals(Drupal.user_check_password(password, storedPassword))) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (hash.equals(Drupal.user_check_password(password, hash))) { return true; }
+                        if (hash.equals(Drupal.user_check_password(password, hash))) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -351,10 +367,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && Joomla.check_hash(password, storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (Joomla.check_hash(password, hash)) { return true; }
+                        if (Joomla.check_hash(password, hash)) {
+                            return true;
+                        }
                     }
                 } else if (checkVersionInRange(Joomla.VersionRange2)) {
                     usernamefield = "username";
@@ -365,10 +385,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && Joomla.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && Joomla.check_hash(password, storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (Joomla.check_hash(password, hash)) { return true; }
+                        if (Joomla.check_hash(password, hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -382,7 +406,7 @@ public class Util {
                     usernamefield = "Name";
                     passwordfield = "Password";
                     caseSensitive = true;
-                    if(Vanilla.check() == 2) {
+                    if (Vanilla.check() == 2) {
                         usertable = usertable.toLowerCase();
                     }
                     Config.hasForumBoard = true;
@@ -390,10 +414,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && Vanilla.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && Vanilla.check_hash(password, storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (Vanilla.check_hash(password, hash)) { return true; }
+                        if (Vanilla.check_hash(password, hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -409,7 +437,7 @@ public class Util {
                 usertable = "users";
                 //bantable = "bans";
                 if (checkVersionInRange(PunBB.VersionRange)) {
-                //    bannamefield = "username";
+                    //bannamefield = "username";
                     saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
@@ -419,10 +447,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && PunBB.check_hash(PunBB.hash("find", player, password, ""), storedPassword)) { return true; }
+                        if (storedPassword != null && PunBB.check_hash(PunBB.hash("find", player, password, ""), storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (PunBB.check_hash(PunBB.hash("find", player, password, ""), hash)) { return true; }
+                        if (PunBB.check_hash(PunBB.hash("find", player, password, ""), hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -446,18 +478,18 @@ public class Util {
                             int chunkSize = 1024;
                             long blobLength = hash.length();
                             if (chunkSize > blobLength) {
-                            chunkSize = (int) blobLength;
+                                chunkSize = (int) blobLength;
                             }
                             char buffer[] = new char[chunkSize];
                             StringBuilder stringBuffer = new StringBuilder();
                             Reader reader = new InputStreamReader(hash.getBinaryStream());
-    
+
                             try {
                                 while ((offset = reader.read(buffer)) != -1) {
-                                stringBuffer.append(buffer, 0, offset);
+                                    stringBuffer.append(buffer, 0, offset);
                                 }
                             } catch (IOException e) {
-                                // TODO Auto-generated catch block
+                                // TODO: Auto-generated catch block
                                 logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                             }
                             String cache = stringBuffer.toString();
@@ -466,10 +498,14 @@ public class Util {
                             EBean eBeanClass = EBean.find(player);
                             String storedPassword = eBeanClass.getPassword();
                             String storedSalt = eBeanClass.getSalt();
-                            if (storedPassword != null && storedSalt != null && XenForo.check_hash(XenForo.hash(1, storedSalt, password), storedPassword)) { return true; }
+                            if (storedPassword != null && storedSalt != null && XenForo.check_hash(XenForo.hash(1, storedSalt, password), storedPassword)) {
+                                return true;
+                            }
                             EBean.checkSalt(player, thesalt);
                             EBean.checkPassword(player, thehash);
-                            if (XenForo.check_hash(XenForo.hash(1, thesalt, password), thehash)) { return true; }
+                            if (XenForo.check_hash(XenForo.hash(1, thesalt, password), thehash)) {
+                                return true;
+                            }
                         } else {
                             return false;
                         }
@@ -486,7 +522,7 @@ public class Util {
                     int chunkSize = 1024;
                     long blobLength = hash.length();
                     if (chunkSize > blobLength) {
-                    chunkSize = (int) blobLength;
+                        chunkSize = (int) blobLength;
                     }
                     char buffer[] = new char[chunkSize];
                     StringBuilder stringBuffer = new StringBuilder();
@@ -494,7 +530,7 @@ public class Util {
 
                     try {
                         while ((offset = reader.read(buffer)) != -1) {
-                        stringBuffer.append(buffer, 0, offset);
+                            stringBuffer.append(buffer, 0, offset);
                         }
                     } catch (IOException e) {
                         logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -518,10 +554,10 @@ public class Util {
 
                     try {
                         while ((offset = reader.read(buffer)) != -1) {
-                        stringBuffer.append(buffer, 0, offset);
+                            stringBuffer.append(buffer, 0, offset);
                         }
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
+                        // TODO: Auto-generated catch block
                         logging.StackTrace(e.getStackTrace(),
                         Thread.currentThread().getStackTrace()[1].getMethodName(),
                         Thread.currentThread().getStackTrace()[1].getLineNumber(),
@@ -544,11 +580,15 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && BBPress.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && BBPress.check_hash(password, storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (BBPress.check_hash(password, hash)) { return true; }
+                        if (BBPress.check_hash(password, hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -566,11 +606,15 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && DLE.check_hash(DLE.hash(password), storedPassword)) { return true; }
+                        if (storedPassword != null && DLE.check_hash(DLE.hash(password), storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (DLE.check_hash(DLE.hash(password), hash)) { return true; }
+                        if (DLE.check_hash(DLE.hash(password), hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -589,11 +633,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password.toLowerCase(), null), storedPassword)) { return true; }
-                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
+                        if (storedPassword != null && IPB.check_hash(IPB.hash("find", player, password.toLowerCase(), null), storedPassword)) {
+                            return true;
+                        }
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
-                        if (IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), hash)) { return true; }
+                        if (IPB.check_hash(IPB.hash("find", player.toLowerCase(), password, null), hash)) {
+                            return true;
+                        }
                     }
 
                 }
@@ -602,8 +649,7 @@ public class Util {
                     EBean.sync(player);
                      return true;
                 }
-            }
-            else if (script.equalsIgnoreCase(WordPress.Name) || script.equalsIgnoreCase(WordPress.ShortName)) {
+            } else if (script.equalsIgnoreCase(WordPress.Name) || script.equalsIgnoreCase(WordPress.ShortName)) {
                 usertable = "users";
                 if (checkVersionInRange(WordPress.VersionRange)) {
                     usernamefield = "user_login";
@@ -614,10 +660,14 @@ public class Util {
                     if (type.equalsIgnoreCase("checkpassword")) {
                         EBean eBeanClass = EBean.find(player);
                         String storedPassword = eBeanClass.getPassword();
-                        if (storedPassword != null && WordPress.check_hash(password, storedPassword)) { return true; }
+                        if (storedPassword != null && WordPress.check_hash(password, storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (WordPress.check_hash(password, hash)) { return true; }
+                        if (WordPress.check_hash(password, hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
@@ -625,8 +675,7 @@ public class Util {
                     EBean.sync(player);
                     return true;
                 }
-            }
-          /*  else if (script.equalsIgnoreCase(Config.Script11_name) || script.equalsIgnoreCase(Config.Script11_shortname)) {
+            } /* else if (script.equalsIgnoreCase(Config.Script11_name) || script.equalsIgnoreCase(Config.Script11_shortname)) {
                 usertable = "users";
                 if (checkVersionInRange(Config.Script11_versionrange)) {
                     usernamefield = "username";
@@ -647,16 +696,16 @@ public class Util {
                 if (!Config.custom_enabled) {
                     String tempVers = Config.script_version;
                     Config.script_version = scriptVersion();
-                    logging.Info("\n" +
-                            "|-----------------------------------------------------------------------------|\n" +
-                            "|--------------------------------AUTHDB WARNING-------------------------------|\n" +
-                            "|-----------------------------------------------------------------------------|\n" +
-                            "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION,                                 |\n" +
-                            "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK. |\n" +
-                            "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAVE BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |\n" +
-                            "| FOR A LIST OF SCRIPT VERSIONS,                                              |\n" +
-                            "| CHECK: http://wiki.bukkit.org/AuthDB#Scripts_Supported                      |\n" +
-                            "|-----------------------------------------------------------------------------|");
+                    logging.Info("\n"
+                        + "|-----------------------------------------------------------------------------|\n"
+                        + "|--------------------------------AUTHDB WARNING-------------------------------|\n"
+                        + "|-----------------------------------------------------------------------------|\n"
+                        + "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION,                                 |\n"
+                        + "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK. |\n"
+                        + "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAVE BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |\n"
+                        + "| FOR A LIST OF SCRIPT VERSIONS,                                              |\n"
+                        + "| CHECK: http://wiki.bukkit.org/AuthDB#Scripts_Supported                      |\n"
+                        + "|-----------------------------------------------------------------------------|");
 
                 }
             }
@@ -669,8 +718,7 @@ public class Util {
                 String check = MySQL.getfromtable(Config.script_tableprefix + usertable, "*", usernamefield, player);
                 if (check != "fail") { return true; }
                 return false;
-            }
-            /*else if (Config.hasForumBoard && type.equalsIgnoreCase("checkban") && !Config.custom_enabled && bantable != null) {
+            } /*else if (Config.hasForumBoard && type.equalsIgnoreCase("checkban") && !Config.custom_enabled && bantable != null) {
                 String check = MySQL.getfromtable(Config.script_tableprefix + bantable, "*", bannamefield, player);
                 if (check != "fail") { return true; }
             }*/ else if (Config.hasForumBoard && type.equalsIgnoreCase("numusers") && !Config.custom_enabled) {
@@ -698,19 +746,33 @@ public class Util {
 
     static String scriptVersion() {
         String script = Config.script_name;
-        if (script.equalsIgnoreCase(PhpBB.Name) || script.equalsIgnoreCase(PhpBB.ShortName)) { return split(PhpBB.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(SMF.Name) || script.equalsIgnoreCase(SMF.ShortName)) { return split(SMF.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(MyBB.Name) || script.equalsIgnoreCase(MyBB.ShortName)) { return split(MyBB.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(VBulletin.Name) || script.equalsIgnoreCase(VBulletin.ShortName)) { return split(VBulletin.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(Drupal.Name) || script.equalsIgnoreCase(Drupal.ShortName)) { return split(Drupal.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(Joomla.Name) || script.equalsIgnoreCase(Joomla.ShortName)) { return split(Joomla.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(Vanilla.Name) || script.equalsIgnoreCase(Vanilla.ShortName)) { return split(Vanilla.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(PunBB.Name) || script.equalsIgnoreCase(PunBB.ShortName)) { return split(PunBB.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(XenForo.Name) || script.equalsIgnoreCase(XenForo.ShortName)) { return split(XenForo.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(BBPress.Name) || script.equalsIgnoreCase(BBPress.ShortName)) { return split(BBPress.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(DLE.Name) || script.equalsIgnoreCase(DLE.ShortName)) { return split(DLE.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(IPB.Name) || script.equalsIgnoreCase(IPB.ShortName)) { return split(IPB.LatestVersionRange, "-")[1]; }
-        else if (script.equalsIgnoreCase(WordPress.Name) || script.equalsIgnoreCase(WordPress.ShortName)) { return split(WordPress.LatestVersionRange, "-")[1]; }
+        if (script.equalsIgnoreCase(PhpBB.Name) || script.equalsIgnoreCase(PhpBB.ShortName)) {
+            return split(PhpBB.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(SMF.Name) || script.equalsIgnoreCase(SMF.ShortName)) {
+            return split(SMF.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(MyBB.Name) || script.equalsIgnoreCase(MyBB.ShortName)) {
+            return split(MyBB.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(VBulletin.Name) || script.equalsIgnoreCase(VBulletin.ShortName)) {
+            return split(VBulletin.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(Drupal.Name) || script.equalsIgnoreCase(Drupal.ShortName)) {
+            return split(Drupal.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(Joomla.Name) || script.equalsIgnoreCase(Joomla.ShortName)) {
+            return split(Joomla.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(Vanilla.Name) || script.equalsIgnoreCase(Vanilla.ShortName)) {
+            return split(Vanilla.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(PunBB.Name) || script.equalsIgnoreCase(PunBB.ShortName)) {
+            return split(PunBB.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(XenForo.Name) || script.equalsIgnoreCase(XenForo.ShortName)) {
+            return split(XenForo.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(BBPress.Name) || script.equalsIgnoreCase(BBPress.ShortName)) {
+            return split(BBPress.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(DLE.Name) || script.equalsIgnoreCase(DLE.ShortName)) {
+            return split(DLE.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(IPB.Name) || script.equalsIgnoreCase(IPB.ShortName)) {
+            return split(IPB.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(WordPress.Name) || script.equalsIgnoreCase(WordPress.ShortName)) {
+            return split(WordPress.LatestVersionRange, "-")[1];
+        }
         return null;
     }
 
@@ -720,7 +782,9 @@ public class Util {
     }
 
     static void fillChatField(Player player, String text) {
-        for (int i = 0; i < 20; i++) { player.sendMessage(""); }
+        for (int i = 0; i < 20; i++) {
+            player.sendMessage("");
+        }
         player.sendMessage(text);
     }
 
@@ -758,8 +822,7 @@ public class Util {
                 if (Config.link_rename && !checkOtherName(player.getName()).equals(player.getName())) {
                     message = message.replaceAll(player.getName(), player.getDisplayName());
                     player.sendMessage(message);
-                }
-                else {
+                } else {
                     player.sendMessage(message);
                 }
             } }, delay);
@@ -769,7 +832,7 @@ public class Util {
     public static long timeStamp() {
         return System.currentTimeMillis()/1000;
     }
-    
+
     public static long timeMS() {
         return System.currentTimeMillis();
     }
@@ -778,9 +841,8 @@ public class Util {
         String check = "fail";
         if (ipAddress == null) {
             String userid = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + useridfield + "`", "" + usernamefield + "", username);
-              check = MySQL.getfromtable(Config.script_tableprefix + "" + bantable + "", "`" + banipfield + "`", "" + bannamefield + "", userid);
-        }
-        else {
+            check = MySQL.getfromtable(Config.script_tableprefix + "" + bantable + "", "`" + banipfield + "`", "" + bannamefield + "", userid);
+        } else {
             check = MySQL.getfromtable(Config.script_tableprefix + "" + bantable + "", "`" + banipfield + "`", "" + bannamefield + "", ipAddress);
         }
         if (check != "fail") {
@@ -805,7 +867,7 @@ public class Util {
                 temp = removeChar(temp, ';');
                 temp = temp.trim();
                 int tempnum = Integer.parseInt(temp) + 1;
-                if(lastvalue.equalsIgnoreCase(nummember)) {
+                if (lastvalue.equalsIgnoreCase(nummember)) {
                     temp = tempnum + ";}";
                 } else {
                     temp = tempnum + ";s:";
@@ -813,14 +875,14 @@ public class Util {
                 array.set(i + 1, temp);
             } else if (array.get(i).equals("\"" + newusername + "\";s:") && newusername != null) {
                 array.set(i + 1, player.length() + ":");
-                if(lastvalue.equalsIgnoreCase(newusername)) {
+                if (lastvalue.equalsIgnoreCase(newusername)) {
                     array.set(i + 2, "\"" + player + "\"" + ";}");
                 } else {
                     array.set(i + 2, "\"" + player + "\"" + ";s" + ":");
                 }
             } else if (array.get(i).equals("\"" + extrausername + "\";s:") && extrausername != null) {
                 array.set(i + 1, player.length() + ":");
-                if(lastvalue.equalsIgnoreCase(extrausername)) {
+                if (lastvalue.equalsIgnoreCase(extrausername)) {
                     array.set(i + 2, "\"" + player + "\"" + ";}");
                 } else {
                     array.set(i + 2, "\"" + player + "\"" + ";s" + ":");
@@ -834,7 +896,7 @@ public class Util {
                 temp = temp.trim();
                 int tempnum = Integer.parseInt(temp) + 1;
                 String templength = "" + tempnum;
-                if(lastvalue.equalsIgnoreCase(activemembers)) {
+                if (lastvalue.equalsIgnoreCase(activemembers)) {
                     temp = "\"" + tempnum + "\"" + ";}";
                 } else {
                     temp = "\"" + tempnum + "\"" + ";s:";
@@ -844,7 +906,7 @@ public class Util {
             } else if (array.get(i).equals("\"" + newuserid + "\";s:") && newuserid != null) {
                 String dupe = "" + userid;
                 array.set(i + 1, dupe.length() + ":");
-                if(lastvalue.equalsIgnoreCase(newuserid)) {
+                if (lastvalue.equalsIgnoreCase(newuserid)) {
                     array.set(i + 2, "\"" + userid + "\"" + ";}");
                 } else {
                     array.set(i + 2, "\"" + userid + "\"" + ";s:");
@@ -907,9 +969,9 @@ public class Util {
                     int c2 = Integer.parseInt(versions[1]);
                     Util.logging.Debug("Version checking: a2 = " + a2 + ", b2 = " + b2 + ", c2 = " + c2);
                     if (a2 <= c2 && b2 >= c2) {
-                        if (versionrange1.length == 2) { 
+                        if (versionrange1.length == 2) {
                             Util.logging.Debug("Version checking PASSED at third check.");
-                            return true; 
+                            return true;
                         } else if (versionrange1.length > 2) {
                             int d2 = b2 - c2;
                             Util.logging.Debug("Version checking: d2 = " + d2);
@@ -922,9 +984,9 @@ public class Util {
                                 int c3 = Integer.parseInt(versions[2]);
                                 Util.logging.Debug("Version checking: a3 = " + a3 + ", b3 = " + b3 + ", c3 = " + c3);
                                 if ((a3 <= c3 && b3 >= c3) || (b3 >= c3 && versionrange1.length != 4)) {
-                                    if (versionrange1.length != 4) { 
+                                    if (versionrange1.length != 4) {
                                         Util.logging.Debug("Version checking PASSED at fifth check.");
-                                        return true; 
+                                        return true;
                                     } else if (versionrange1.length == 4) {
                                         int d3 = b3 - c3;
                                         Util.logging.Debug("Version checking: d3 = " + d3);
@@ -957,10 +1019,15 @@ public class Util {
        logging.Debug("Launching function: toTicks(String time, String length) - " + time + ":" + length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt(length);
-        if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) { return lengthint * 1728000; }
-        else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) { return lengthint * 72000; }
-        else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) { return lengthint * 1200; }
-        else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) { return lengthint * 20; }
+        if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
+            return lengthint * 1728000;
+        } else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
+            return lengthint * 72000;
+        } else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
+            return lengthint * 1200;
+        } else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
+            return lengthint * 20;
+        }
         return 0;
     }
 
@@ -968,14 +1035,15 @@ public class Util {
         logging.Debug("Launching function: toSeconds(String time, String length) - " + time + ":" + length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt(length);
-        if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d"))
+        if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
             return lengthint * 86400;
-        else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h"))
+        } else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
             return lengthint * 3600;
-        else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m"))
+        } else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
             return lengthint * 60;
-        else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s"))
+        } else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
             return lengthint;
+        }
         return 0;
     }
 
@@ -985,14 +1053,15 @@ public class Util {
         String time = split[1].toLowerCase();
         int lengthint = Integer.parseInt(length);
         logging.Debug("Launching function: FullStringToSeconds(String time, String length) - " + time + ":" + length);
-        if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d"))
+        if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
             return lengthint * 1728000;
-        else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h"))
+        } else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
             return lengthint * 72000;
-        else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m"))
+        } else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
             return lengthint * 1200;
-        else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s"))
+        } else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
             return lengthint * 20;
+        }
         return 0;
     }
 
@@ -1004,14 +1073,11 @@ public class Util {
         logging.Debug("Launching function: StringToSeconds(String time, String length) - " + time + ":" + length);
         if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
             return lengthint * 86400;
-        }
-        else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
+        } else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
             return lengthint * 3600;
-        }
-        else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
+        } else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
             return lengthint * 60;
-        }
-        else if (time.equalsIgnoreCase("second") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
+        } else if (time.equalsIgnoreCase("second") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
             return lengthint;
         }
         return 0;
@@ -1019,23 +1085,28 @@ public class Util {
 
     public static String toLoginMethod(String method) {
         method = method.toLowerCase();
-        if (method.equalsIgnoreCase("prompt"))
+        if (method.equalsIgnoreCase("prompt")) {
             return method;
-        else
+        } else {
             return "normal";
+        }
     }
 
     public static boolean checkWhitelist(String whitelist, Player player) {
         String username = player.getName().toLowerCase();
         logging.Debug("Launching function: checkWhitelist(String whitelist, String username) - " + username);
         StringTokenizer st = null;
-        if (whitelist.equalsIgnoreCase("username")) { st = new StringTokenizer(Config.filter_whitelist, ", "); }
+        if (whitelist.equalsIgnoreCase("username")) {
+            st = new StringTokenizer(Config.filter_whitelist, ", ");
+        }
         while (st != null && st.hasMoreTokens()) {
             String whitelistname = st.nextToken().toLowerCase();
             logging.Debug("Whitelist: " + whitelistname);
             if (whitelistname.equals(username)) {
                 logging.Debug("Found user in whitelist: " + whitelistname);
-                if (whitelist.equalsIgnoreCase("username")) { Messages.sendMessage(Message.filter_whitelist, player, null); }
+                if (whitelist.equalsIgnoreCase("username")) {
+                    Messages.sendMessage(Message.filter_whitelist, player, null);
+                }
                 return true;
             }
         }
@@ -1053,7 +1124,9 @@ public class Util {
         logging.Debug("Launching function: IP2Long(String IP)");
         long f1, f2, f3, f4;
         String tokens[] = ip.split("\\.");
-        if (tokens.length != 4) { return -1; }
+        if (tokens.length != 4) {
+            return -1;
+        }
         try {
             f1 = Long.parseLong(tokens[0]) << 24;
             f2 = Long.parseLong(tokens[1]) << 16;
@@ -1090,8 +1163,7 @@ public class Util {
             }
             Config.has_badcharacters = false;
             return true;
-        }
-        else if (what.equalsIgnoreCase("password")) {
+        } else if (what.equalsIgnoreCase("password")) {
             logging.Debug("Launching function: checkFilter(String what, String string) - " + Config.filter_password);
             int lengtha = string.length();
             int lengthb = Config.filter_password.length();
@@ -1142,7 +1214,7 @@ public class Util {
         long start = Util.timeMS();
         logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
         String extra = "";
-        if(additional != null) {
+        if (additional != null) {
             extra = additional;
         }
         if (!Config.has_badcharacters && Config.database_ison && player != null && player.getName().length() > Integer.parseInt(Config.username_minimum) && player.getName().length() < Integer.parseInt(Config.username_maximum) && extra.equalsIgnoreCase("login") == false) {
@@ -1154,12 +1226,15 @@ public class Util {
             if (!Util.checkOtherName(player.getName()).equals(player.getName())) {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", checkOtherName(player.getName()));
             }
-        } else { string = string.replaceAll("&", Matcher.quoteReplacement("�"));  }
+        } else {
+            string = string.replaceAll("&", Matcher.quoteReplacement("�"));
+        }
         String email = "";
-        if(Config.custom_emailrequired) {
+        if (Config.custom_emailrequired) {
             email = "email";
         }
-        
+
+        // Replacement variables
         string = string.replaceAll("\\{USERMIN\\}", Config.username_minimum);
         string = string.replaceAll("\\{USERMAX\\}", Config.username_maximum);
         string = string.replaceAll("\\{PASSMIN\\}", Config.password_minimum);
@@ -1176,13 +1251,13 @@ public class Util {
         string = string.replaceAll("\\{N\\}", "\n");
         string = string.replaceAll("\\{n\\}", "\n");
 
-        //COMMANDS
+        // Commands
         string = string.replaceAll("\\{REGISTERCMD\\}", Config.commands_user_register + " (" + Config.aliases_user_register + ")");
         string = string.replaceAll("\\{LINKCMD\\}", Config.commands_user_link + " (" + Config.aliases_user_link + ")");
         string = string.replaceAll("\\{UNLINKCMD\\}", Config.commands_user_unlink + " (" + Config.aliases_user_unlink + ")");
         string = string.replaceAll("\\{LOGINCMD\\}", Config.commands_user_login + " (" + Config.aliases_user_login + ")");
-       
-        ///COLORS
+
+        // Uppercase colors
         string = string.replaceAll("\\{BLACK\\}", "§0");
         string = string.replaceAll("\\{DARKBLUE\\}", "§1");
         string = string.replaceAll("\\{DARKGREEN\\}", "§2");
@@ -1199,7 +1274,7 @@ public class Util {
         string = string.replaceAll("\\{PINK\\}", "§d");
         string = string.replaceAll("\\{YELLOW\\}", "§e");
         string = string.replaceAll("\\{WHITE\\}", "§f");
-        
+
         string = string.replaceAll("\\{BLACK\\}", "§0");
         string = string.replaceAll("\\{NAVY\\}", "§1");
         string = string.replaceAll("\\{GREEN\\}", "§2");
@@ -1217,7 +1292,7 @@ public class Util {
         string = string.replaceAll("\\{YELLOW\\}", "§e");
         string = string.replaceAll("\\{WHITE\\}", "§f");
 
-        ///colors
+        // Lowercase colors
         string = string.replaceAll("\\{black\\}", "§0");
         string = string.replaceAll("\\{darkblue\\}", "§1");
         string = string.replaceAll("\\{darkgreen\\}", "§2");
@@ -1234,7 +1309,7 @@ public class Util {
         string = string.replaceAll("\\{pink\\}", "§d");
         string = string.replaceAll("\\{yellow\\}", "§e");
         string = string.replaceAll("\\{white\\}", "§f");
-        
+
         string = string.replaceAll("\\{black\\}", "§0");
         string = string.replaceAll("\\{navy\\}", "§1");
         string = string.replaceAll("\\{green\\}", "§2");
@@ -1254,31 +1329,42 @@ public class Util {
 
         long stop = Util.timeMS();
         Util.logging.Debug("Took " + ((stop - start) / 1000) + " seconds (" + (stop - start) + "ms) to replace tags.");
-        
+
         return string;
     }
-    
+
     public static String replaceTime(String length, String time) {
         int lengthint = Integer.parseInt(length);
         if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
-            if(lengthint > 1) { return Messages.time_days; }
-            else { return Messages.time_day; }
-        }
-        else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
-            if(lengthint > 1) { return Messages.time_hours; }
-            else { return Messages.time_hour; }
-        }
-        else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
-            if(lengthint > 1) { return Messages.time_minutes; }
-            else { return Messages.time_minute; }
-        }
-        else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
-            if(lengthint > 1) { return Messages.time_seconds; }
-            else { return Messages.time_second; }
-        }
-        else if (time.equalsIgnoreCase("milliseconds") || time.equalsIgnoreCase("millisecond") || time.equalsIgnoreCase("milli") || time.equalsIgnoreCase("ms")) {
-            if(lengthint > 1) { return Messages.time_milliseconds; }
-            else { return Messages.time_millisecond; }
+            if (lengthint > 1) {
+                return Messages.time_days;
+            } else {
+                return Messages.time_day;
+            }
+        } else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
+            if (lengthint > 1) {
+                return Messages.time_hours;
+            } else {
+                return Messages.time_hour;
+            }
+        } else if (time.equalsIgnoreCase("minute") || time.equalsIgnoreCase("minutes") || time.equalsIgnoreCase("min") || time.equalsIgnoreCase("mins") || time.equalsIgnoreCase("m")) {
+            if (lengthint > 1) {
+                return Messages.time_minutes;
+            } else {
+                return Messages.time_minute;
+            }
+        } else if (time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("seconds") || time.equalsIgnoreCase("sec") || time.equalsIgnoreCase("s")) {
+            if (lengthint > 1) {
+                return Messages.time_seconds;
+            } else {
+                return Messages.time_second;
+            }
+        } else if (time.equalsIgnoreCase("milliseconds") || time.equalsIgnoreCase("millisecond") || time.equalsIgnoreCase("milli") || time.equalsIgnoreCase("ms")) {
+            if (lengthint > 1) {
+                return Messages.time_milliseconds;
+            } else {
+                return Messages.time_millisecond;
+            }
         }
         return time;
     }
@@ -1301,23 +1387,23 @@ public class Util {
         toremove = toremove.replace("?d", "");
         toremove = toremove.replace("?e", "");
         toremove = toremove.replace("?f", "");
-        
+
         long stop = Util.timeMS();
         Util.logging.Debug("Took " + ((stop - start) / 1000) + " seconds (" + (stop - start) + "ms) to replace colors.");
-        
+
         return toremove;
     }
 
     public static String removeChar(String s, char c) {
         logging.Debug("Launching function: removeChar(String s, char c)");
-      StringBuffer r = new StringBuffer(s.length());
-      r.setLength(s.length());
-      int current = 0;
-      for (int i = 0; i < s.length(); i++) {
-         char cur = s.charAt(i);
-         if (cur != c) r.setCharAt(current++, cur);
-      }
-      return r.toString();
+        StringBuffer r = new StringBuffer(s.length());
+        r.setLength(s.length());
+        int current = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char cur = s.charAt(i);
+            if (cur != c) r.setCharAt(current++, cur);
+        }
+        return r.toString();
     }
 
     public static String getRandomString(int length) {
@@ -1354,55 +1440,69 @@ public class Util {
     }
 
     public static String checkOtherName(String player) {
-         if (AuthDB.AuthDB_LinkedNames.containsKey(player)) {
-             return AuthDB.AuthDB_LinkedNames.get(player);
-         } else if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player)) {
-             AuthDB.AuthDB_LinkedNameCheck.put(player, "yes");
-             EBean eBeanClass = EBean.checkPlayer(player, true);
-             String linkedName = eBeanClass.getLinkedname();
-             if (linkedName != null && linkedName.equals("") == false) {
-                 AuthDB.AuthDB_LinkedNames.put(player, linkedName);
-                 return linkedName;
-             }
-         }
-         return player;
+        if (AuthDB.AuthDB_LinkedNames.containsKey(player)) {
+            return AuthDB.AuthDB_LinkedNames.get(player);
+        } else if (!AuthDB.AuthDB_LinkedNameCheck.containsKey(player)) {
+            AuthDB.AuthDB_LinkedNameCheck.put(player, "yes");
+            EBean eBeanClass = EBean.checkPlayer(player, true);
+            String linkedName = eBeanClass.getLinkedname();
+            if (linkedName != null && linkedName.equals("") == false) {
+                AuthDB.AuthDB_LinkedNames.put(player, linkedName);
+                return linkedName;
+            }
+        }
+        return player;
     }
 
- public static boolean checkIfLoggedIn(Player player) {
-     for (Player p : player.getServer().getOnlinePlayers()) {
-         if (p.getName().equals(player.getName()) && AuthDB.isAuthorized(p)) {
-             return true;
-         }
-     }
-     return false;
- }
+    public static boolean checkIfLoggedIn(Player player) {
+        for (Player p : player.getServer().getOnlinePlayers()) {
+            if (p.getName().equals(player.getName()) && AuthDB.isAuthorized(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static String getAction(String action) {
-        if (action.toLowerCase().equalsIgnoreCase("kick")) { return "kick"; }
-        else if (action.toLowerCase().equalsIgnoreCase("ban")) { return "ban"; }
-        else if (action.toLowerCase().equalsIgnoreCase("rename")) { return "rename"; }
+        if (action.toLowerCase().equalsIgnoreCase("kick")) {
+            return "kick";
+        } else if (action.toLowerCase().equalsIgnoreCase("ban")) {
+            return "ban";
+        } else if (action.toLowerCase().equalsIgnoreCase("rename")) {
+            return "rename";
+        }
         return "kick";
     }
 
 
     public static int hexToInt(char ch) {
-        if (ch >= '0' && ch <= '9') { return ch - '0'; }
+        if (ch >= '0' && ch <= '9') {
+            return ch - '0';
+        }
         ch = Character.toUpperCase(ch);
-        if (ch >= 'A' && ch <= 'F') { return ch - 'A' + 0xA; }
+        if (ch >= 'A' && ch <= 'F') {
+            return ch - 'A' + 0xA;
+        }
         throw new IllegalArgumentException("Not a hex character: " + ch);
     }
 
-     public static String hexToString(String str) {
-          char[] chars = str.toCharArray();
-          StringBuffer hex = new StringBuffer();
-          for (int i = 0; i < chars.length; i++) { hex.append(Integer.toHexString((int) chars[i])); }
-          return hex.toString();
-      }
+    public static String hexToString(String str) {
+        char[] chars = str.toCharArray();
+        StringBuffer hex = new StringBuffer();
+        for (int i = 0; i < chars.length; i++) {
+            hex.append(Integer.toHexString((int) chars[i]));
+        }
+        return hex.toString();
+    }
 
     public static String checkSessionStart (String string) {
-        if (string.equalsIgnoreCase("login")) { return "login"; }
-        else if (string.equalsIgnoreCase("logoff")) { return "logoff"; }
-        else { return "login"; }
+        if (string.equalsIgnoreCase("login")) {
+            return "login";
+        } else if (string.equalsIgnoreCase("logoff")) {
+            return "logoff";
+        } else {
+            return "login";
+        }
     }
 
     public static String convertToHex(byte[] data) {
@@ -1411,10 +1511,14 @@ public class Util {
             int halfbyte = (data[i] >>> 4) & 0x0F;
             int twoHalfs = 0;
             do {
-                if ((0 <= halfbyte) && (halfbyte <= 9)) { buf.append((char) ('0' + halfbyte)); }
-                else { buf.append((char) ('a' + (halfbyte - 10))); }
+                if ((0 <= halfbyte) && (halfbyte <= 9)) {
+                    buf.append((char) ('0' + halfbyte));
+                } else {
+                    buf.append((char) ('a' + (halfbyte - 10)));
+                }
                 halfbyte = data[i] & 0x0F;
-            } while (twoHalfs++< 1);
+            }
+            while (twoHalfs++< 1);
         }
         return buf.toString();
     }
@@ -1423,7 +1527,9 @@ public class Util {
         StringBuffer r = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {
             String x = Integer.toHexString(bytes[i] & 0xff);
-            if (x.length() < 2) { r.append("0"); }
+            if (x.length() < 2) {
+                r.append("0");
+            }
             r.append(x);
         }
         return r.toString();

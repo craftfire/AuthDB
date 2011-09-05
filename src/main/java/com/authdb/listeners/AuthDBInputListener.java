@@ -45,23 +45,23 @@ public class AuthDBInputListener extends InputListener {
 
     public void onKeyPressedEvent(KeyPressedEvent event) {
         final SpoutPlayer player = event.getPlayer();
-        if(this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
-            if(event.getKey().equals(Keyboard.KEY_RETURN)) {
+        if (this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
+            if (event.getKey().equals(Keyboard.KEY_RETURN)) {
                 InGameHUD screen = player.getMainScreen();
                 PopupScreen popup = screen.getActivePopup();
                 Button button = null;
                 for (Widget w : popup.getAttachedWidgets()) {
-                    if(w.getType().equals(WidgetType.Button)) {
+                    if (w.getType().equals(WidgetType.Button)) {
                         button = (Button)w;
                     }
                 }
 
-                if(button.getText().equalsIgnoreCase("login")) {
+                if (button.getText().equalsIgnoreCase("login")) {
                     UUID id = this.plugin.AuthDB_GUI_PasswordFieldIDs.get(player.getName());
                     Widget widget = popup.getWidget(id);
                     TextField textField = (TextField)widget;
                     String password = textField.getText();
-                    if(this.plugin.checkPassword(player.getName(), password)) {
+                    if (this.plugin.checkPassword(player.getName(), password)) {
                         for (Widget w : popup.getAttachedWidgets()) {
                             popup.removeWidget(w);
                         }
@@ -87,14 +87,14 @@ public class AuthDBInputListener extends InputListener {
                     }
                 }
             }
-            /* else if(event.getKey().equals(Keyboard.KEY_BACK)) {
+            /* else if (event.getKey().equals(Keyboard.KEY_BACK)) {
                 InGameHUD screen = player.getMainScreen();
                 PopupScreen popup = screen.getActivePopup();
                 UUID id = this.plugin.AuthDB_GUI_PasswordFieldIDs.get(player.getName());
                 Widget widget = popup.getWidget(id);
                 TextField textField = (TextField)widget;
                 String password = textField.getText();
-                if(this.plugin.AuthDB_GUI_TempPasswords.containsKey(player.getName())) {
+                if (this.plugin.AuthDB_GUI_TempPasswords.containsKey(player.getName())) {
 
                 } else {
                     this.plugin.AuthDB_GUI_TempPasswords.put(player.getName(), password);
@@ -109,7 +109,7 @@ public class AuthDBInputListener extends InputListener {
                     @Override
                     public void run() {
                         String password = textField.getText();
-                        if(AuthDB.AuthDB_GUI_TempPasswords.containsKey(player.getName())) {
+                        if (AuthDB.AuthDB_GUI_TempPasswords.containsKey(player.getName())) {
                             String temppass1 = password.replaceAll("\\*", "");
                             String temppass2 = AuthDB.AuthDB_GUI_TempPasswords.get(player.getName());
                             temppass2 += temppass1;

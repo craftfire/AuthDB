@@ -31,7 +31,7 @@ public class PlayerManager {
             } else {
                 EBean EBeanClass = EBean.checkPlayer(player.getName(), true);
                 sessionTime = EBeanClass.getSessiontime();
-                if(sessionTime != 0) {
+                if (sessionTime != 0) {
                     AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), sessionTime);
                 }
             }

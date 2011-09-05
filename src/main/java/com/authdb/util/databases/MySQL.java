@@ -51,8 +51,8 @@ public class MySQL {
     }
     
     public static boolean isConnected() {
-        if(Config.database_keepalive) {
-            if(isConnected) {
+        if (Config.database_keepalive) {
+            if (isConnected) {
                 return true;
             }
             return false;

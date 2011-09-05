@@ -14,8 +14,7 @@ public class GeneralUtil {
         dataname = dataname.toLowerCase();
         if (dataname.equalsIgnoreCase("mysql")) {
             return "com.mysql.jdbc.Driver";
-        }
-        else if (dataname.equalsIgnoreCase("ebean")) {
+        } else if (dataname.equalsIgnoreCase("ebean")) {
             return "ebean";
         }
 

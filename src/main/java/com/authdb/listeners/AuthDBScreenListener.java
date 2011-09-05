@@ -43,15 +43,15 @@ public class AuthDBScreenListener extends ScreenListener {
             return;
         }
         SpoutPlayer player = event.getPlayer();
-        if(this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
+        if (this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
             InGameHUD screen = player.getMainScreen();
             PopupScreen popup = screen.getActivePopup();
-            if(event.getButton().getText().equalsIgnoreCase("login")) {
+            if (event.getButton().getText().equalsIgnoreCase("login")) {
                 UUID id = this.plugin.AuthDB_GUI_PasswordFieldIDs.get(player.getName());
                 Widget widget = popup.getWidget(id);
                 TextField textField = (TextField)widget;
                 String password = textField.getText();
-                if(this.plugin.checkPassword(player.getName(), password)) {
+                if (this.plugin.checkPassword(player.getName(), password)) {
                     for (Widget w : popup.getAttachedWidgets()) {
                         popup.removeWidget(w);
                     }
@@ -85,7 +85,7 @@ public class AuthDBScreenListener extends ScreenListener {
         if (!AuthDB.isAuthorized(event.getPlayer())) {
             Util.logging.Debug("Player is not authed");
             if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt") && this.plugin.AuthDB_GUI_ScreenIDs.containsKey(event.getPlayer().getName())) {
-                if(event.getScreen().getId().equals(this.plugin.AuthDB_GUI_ScreenIDs.get(event.getPlayer().getName()))) {
+                if (event.getScreen().getId().equals(this.plugin.AuthDB_GUI_ScreenIDs.get(event.getPlayer().getName()))) {
                     Util.logging.Debug("Closing screen");
                     event.setCancelled(true);
                 }

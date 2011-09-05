@@ -32,9 +32,9 @@ public class ZSpout {
     private int height = 20;
 
     public boolean checkGUI(Player player) {
-        if(Config.hasSpout) {
+        if (Config.hasSpout) {
             SpoutPlayer spoutPlayer = (SpoutPlayer)player;
-            if(spoutPlayer.isSpoutCraftEnabled()) {
+            if (spoutPlayer.isSpoutCraftEnabled()) {
                 popGUI(spoutPlayer);
                 return true;
             }
@@ -86,9 +86,9 @@ public class ZSpout {
         }
         boolean set = false;
         for (Widget w : popup.getAttachedWidgets()) {
-            if(w.getType().equals(WidgetType.Label)) {
+            if (w.getType().equals(WidgetType.Label)) {
                 Label wrongPassword = (Label)w;
-                if(wrongPassword.getText().startsWith("Wrong password")) {
+                if (wrongPassword.getText().startsWith("Wrong password")) {
                     wrongPassword.setText("Wrong password, try again." + extra);
                     wrongPassword.setDirty(true);
                     set = true;

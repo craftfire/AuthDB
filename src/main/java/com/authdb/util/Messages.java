@@ -244,8 +244,8 @@ static AuthDB plugin = new AuthDB();
             AuthDB.server.broadcastMessage(Util.replaceStrings(AuthDB_message_database_failure, null, null));
         } else if (Config.database_ison) {
             if (type.equals(Message.register_welcome)) {
-                if(Config.authdb_enabled) {
-                    if(Config.link_enabled) {
+                if (Config.authdb_enabled) {
+                    if (Config.link_enabled) {
                         player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome + " " + AuthDB_message_link_welcome, player, null));
                     } else {
                         player.sendMessage(Util.replaceStrings(AuthDB_message_register_welcome, player, null));
@@ -284,7 +284,7 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_login_success, player, null));
             } else if (type.equals(Message.login_failure)) {
                 String temp = "0";
-                if(AuthDB.AuthDB_PasswordTries.containsKey(player.getName())) {
+                if (AuthDB.AuthDB_PasswordTries.containsKey(player.getName())) {
                     temp = AuthDB.AuthDB_PasswordTries.get(player.getName());
                 }
                 int tries = Integer.parseInt(temp) + 1;
@@ -387,7 +387,7 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.password_usage)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_password_usage, player, null));
             } else if (type.equals(Message.session_valid)) {
-                if(Config.hasBukkitContrib || Config.hasSpout) { player.sendMessage(""); }
+                if (Config.hasBukkitContrib || Config.hasSpout) { player.sendMessage(""); }
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid, player, null));
             } else if (type.equals(Message.session_protected)) {
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, "login"));

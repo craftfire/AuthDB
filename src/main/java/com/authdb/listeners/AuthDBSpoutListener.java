@@ -36,7 +36,7 @@ public class AuthDBSpoutListener extends SpoutListener {
         if (!AuthDB.isAuthorized(player) && this.plugin.isRegistered("join",player.getName())) {
             if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
                 ZSpout spout = new ZSpout();
-                if(spout.checkGUI(player)) {
+                if (spout.checkGUI(player)) {
                     Util.logging.Debug("User has Spout!");
                 }
             }

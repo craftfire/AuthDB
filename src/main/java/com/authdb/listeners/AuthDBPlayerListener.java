@@ -92,7 +92,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (plugin.isAuthorized(player) == false && (AuthDB.AuthDB_Timeouts.containsKey(player.getName()) || timeoutid != 0)) {
             eBeanClass.setTimeoutid(0);
             EBean.save(eBeanClass);
-            if(plugin.isRegistered("checkguest", player.getName())) {
+            if (plugin.isRegistered("checkguest", player.getName())) {
                 Messages.sendMessage(Message.login_timeout, player, null);
             } else {
                 Messages.sendMessage(Message.register_timeout, player, null);
@@ -180,7 +180,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 String result = reader.readLine();
                 reader.close();
                 allow = result.equalsIgnoreCase("YES");
-                if(allow) {
+                if (allow) {
                     Util.logging.Debug("Online mode is off but player '" + player.getName() + "' is authed with minecraft.net and does not have to login.");
                     sessionallow = true;
                 }
@@ -229,7 +229,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 Util.craftFirePlayer.clearArmorinventory(player);
                 Messages.sendMessage(Message.register_welcome, player, null);
             } else if (!Config.register_force) {
-                if(Config.register_enabled) {
+                if (Config.register_enabled) {
                     Messages.sendMessage(Message.register_welcome, player, null);
                 }
             } else {
@@ -253,7 +253,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             event.setQuitMessage(message);
         }
         Messages.sendMessage(Message.left_server, player, null);
-        if(this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
+        if (this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
             this.plugin.AuthDB_GUI_PasswordFieldIDs.remove(player.getName());
         }
         if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
@@ -297,7 +297,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                     Processes.Login(player);
                     Messages.sendMessage(Message.login_success, player, null);
                 } else {
-                    if(Config.authdb_enabled) {
+                    if (Config.authdb_enabled) {
                         Messages.sendMessage(Message.login_failure, player, null);
                     } else {
                         Messages.sendMessage(Message.login_offline, player, null);
@@ -396,7 +396,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                                 themail = split[2];
                             }
                             if (this.plugin.register(player, split[1], themail,Util.craftFirePlayer.getIP(player))) {
-                                if(Processes.Login(player)) {
+                                if (Processes.Login(player)) {
                                     Messages.sendMessage(Message.register_success, player, null);
                                 } else {
                                     Messages.sendMessage(Message.register_failure, player, null);
@@ -433,7 +433,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (!plugin.isAuthorized(event.getPlayer())) {
             Location test = new Location(event.getPlayer().getWorld(), event.getFrom().getX(), event.getFrom().getY() - 1, event.getFrom().getZ());
             if (test.getBlock().getTypeId() != 0 && !checkGuest(event.getPlayer(),Config.guests_movement)) {
-                if(this.plugin.AuthDB_JoinTime.containsKey(event.getPlayer().getName())) {
+                if (this.plugin.AuthDB_JoinTime.containsKey(event.getPlayer().getName())) {
                     if (Config.protection_freeze) {
                         long jointime = this.plugin.AuthDB_JoinTime.get(event.getPlayer().getName());
                         if (jointime + Config.protection_freeze_delay < Util.timeStamp()) {
