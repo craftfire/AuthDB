@@ -54,7 +54,7 @@ public class EBean {
 
     public static EBean checkPlayer(String player, boolean save) {
         EBean eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).findUnique();
-        if (eBeanClass == null)  {
+        if (eBeanClass == null) {
             eBeanClass = new EBean();
             eBeanClass.setPlayername(player);
             eBeanClass.setRegistered("false");
@@ -66,7 +66,7 @@ public class EBean {
 
     public static EBean checkPlayer(Player player, boolean save) {
         EBean eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).findUnique();
-        if (eBeanClass == null)  {
+        if (eBeanClass == null) {
             eBeanClass = new EBean();
             eBeanClass.setPlayer(player);
             eBeanClass.setRegistered("false");
@@ -86,7 +86,9 @@ public class EBean {
 
     public static void sync(String player) {
         try {
-            if (!Config.database_keepalive) { Util.databaseManager.connect(); }
+            if (!Config.database_keepalive) {
+                Util.databaseManager.connect();
+            }
             EBean eBeanClass = checkPlayer(player, true);
             String registered = eBeanClass.getRegistered();
             if (!Util.checkOtherName(player).equals(player)) {
@@ -109,9 +111,10 @@ public class EBean {
                 Util.checkScript("syncpassword", Config.script_name, Util.checkOtherName(player), null, null, null);
                 Util.checkScript("syncsalt", Config.script_name, Util.checkOtherName(player), null, null, null);
             }
-            if (!Config.database_keepalive) { Util.databaseManager.close(); }
-        }
-        catch (SQLException e) {
+            if (!Config.database_keepalive) {
+                Util.databaseManager.close();
+            }
+        } catch (SQLException e) {
             //Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
     }
@@ -154,7 +157,9 @@ public class EBean {
     
     public static int getUsers() {
         List<EBean> amount = AuthDB.database.find(EBean.class).findList();
-        if (amount.isEmpty()) { return 0; }
+        if (amount.isEmpty()) {
+            return 0;
+        }
         return amount.size();
     }
 
@@ -172,13 +177,13 @@ public class EBean {
 
     public static EBean find(Player player, Column column1, String value1) {
         EBean eBeanClass = checkPlayer(player, true);
-        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).findUnique();
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name, value1).findUnique();
         return eBeanClass;
     }
 
     public static boolean find(Player player, Column column1, String value1, Column column2, String value2) {
         EBean eBeanClass = checkPlayer(player, true);
-        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player.getName()).ieq(column1.name, value1).ieq(column2.name, value2).findUnique();
         if (eBeanClass != null) {
             return true;
         }
@@ -193,7 +198,7 @@ public class EBean {
 
     public static boolean find(String player, Column column1, String value1, Column column2, String value2) {
         EBean eBeanClass = checkPlayer(player, true);
-        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).ieq(column1.name,value1).ieq(column2.name,value2).findUnique();
+        eBeanClass = AuthDB.database.find(EBean.class).where().ieq("playername", player).ieq(column1.name, value1).ieq(column2.name, value2).findUnique();
         if (eBeanClass != null) {
             return true;
         }
@@ -218,7 +223,6 @@ public class EBean {
     private int timeoutid;
     private long reloadtime;
     private long sessiontime;
-
 
     public void setId(int id) {
         this.id = id;
@@ -265,7 +269,9 @@ public class EBean {
     }
 
     public void setReloadtime(long reloadtime) {
-        if(reloadtime != 0) { this.reloadtime = reloadtime; }
+        if(reloadtime != 0) {
+            this.reloadtime = reloadtime;
+        }
     }
 
     public String getPassword() {
@@ -329,7 +335,9 @@ public class EBean {
     }
 
     public void setTimeoutid(int timeoutid) {
-        if(timeoutid != 0) { this.timeoutid = timeoutid; }
+        if(timeoutid != 0) {
+            this.timeoutid = timeoutid;
+        }
     }
     
     public long getSessiontime() {

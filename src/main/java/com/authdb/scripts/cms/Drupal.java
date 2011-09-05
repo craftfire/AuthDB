@@ -224,9 +224,9 @@ public class Drupal {
 
         String type = real_hash.substring(0, 3), hash;
 
-        if (type.equals("$S$")) // A normal Drupal 7 password using sha512.
+        if (type.equals("$S$")) { // A normal Drupal 7 password using sha512.
             hash = password_crypt("sha512", password, real_hash);
-        } else if (type.equals("$H$") || type.equals("$P$")) // A PHPBB3 pass, or an imported password or from an earlier Drupal version.
+        } else if (type.equals("$H$") || type.equals("$P$")) { // A PHPBB3 pass, or an imported password or from an earlier Drupal version.
             hash = password_crypt("md5", password, real_hash);
         } else {
             return false;
