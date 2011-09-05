@@ -35,17 +35,17 @@ public class Joomla {
             PreparedStatement ps;
             //
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`, `username`, `email`, `password`, `usertype`, `block`, `gid`, `registerDate`, `lastvisitDate`, `params`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
-            ps.setString(1, player); //name
-            ps.setString(2, player); //username
-            ps.setString(3, email); //email
-            ps.setString(4, hash); //password
-            ps.setString(5, "Registered"); //usertype
-            ps.setInt(6, 0); //block
-            ps.setInt(7, 18); //gid
-            ps.setString(8, passworddate); //registerDate
-            ps.setString(9, passworddate); //lastvisitDate
-            //fake:
-            ps.setString(10, ""); //params
+            ps.setString(1, player); // name
+            ps.setString(2, player); // username
+            ps.setString(3, email); // email
+            ps.setString(4, hash); // password
+            ps.setString(5, "Registered"); // usertype
+            ps.setInt(6, 0); // block
+            ps.setInt(7, 18); // gid
+            ps.setString(8, passworddate); // registerDate
+            ps.setString(9, passworddate); // lastvisitDate
+            // fake:
+            ps.setString(10, ""); // params
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
@@ -53,17 +53,17 @@ public class Joomla {
             int userid = MySQL.countitall(Config.script_tableprefix + "users");
 
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "core_acl_aro" + "` (`section_value`, `value`, `name`)  VALUES (?, ?, ?)", 1);
-            ps.setString(1, "users"); //section_value
-            ps.setInt(2, userid); //value
-            ps.setString(3, player); //name
+            ps.setString(1, "users"); // section_value
+            ps.setInt(2, userid); // value
+            ps.setString(3, player); // name
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
 
             int aroid = MySQL.countitall(Config.script_tableprefix + "core_acl_aro");
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "core_acl_groups_aro_map" + "` (`group_id`, `aro_id`)  VALUES (?, ?)", 1);
-            ps.setInt(1, 18); //group_id
-            ps.setInt(2, aroid); //aro_id
+            ps.setInt(1, 18); // group_id
+            ps.setInt(2, aroid); // aro_id
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
@@ -74,16 +74,16 @@ public class Joomla {
             PreparedStatement ps;
             //
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`name`, `username`, `email`, `password`, `usertype`, `block`, `registerDate`, `lastvisitDate`, `params`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
-            ps.setString(1, player); //name
-            ps.setString(2, player); //username
-            ps.setString(3, email); //email
-            ps.setString(4, hash); //password
-            ps.setString(5, ""); //usertype
-            ps.setInt(6, 0); //block
-            ps.setString(7, passworddate); //registerDate
-            ps.setString(8, passworddate); //lastvisitDate
-            //fake:
-            ps.setString(9, ""); //params
+            ps.setString(1, player); // name
+            ps.setString(2, player); // username
+            ps.setString(3, email); // email
+            ps.setString(4, hash); // password
+            ps.setString(5, ""); // usertype
+            ps.setInt(6, 0); // block
+            ps.setString(7, passworddate); // registerDate
+            ps.setString(8, passworddate); // lastvisitDate
+            // fake:
+            ps.setString(9, ""); // params
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
@@ -91,8 +91,8 @@ public class Joomla {
             int userid = MySQL.countitall(Config.script_tableprefix + "users");
 
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "user_usergroup_map" + "` (`user_id`, `group_id`)  VALUES (?, ?)", 1);
-            ps.setInt(1, userid); //user_id
-            ps.setInt(2, 2); //group_id
+            ps.setInt(1, userid); // user_id
+            ps.setInt(2, 2); // group_id
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
@@ -103,18 +103,16 @@ public class Joomla {
         if (passwd == null || dbEntry == null || dbEntry.length() == 0) {
             throw new IllegalArgumentException();
             String[] arr = dbEntry.split(":", 2);
-            if (arr.length == 2) {
-                // new format as {HASH}:{SALT}
-                String cryptpass = arr[0];
-                String salt = arr[1];
-
-                return Encryption.md5(passwd + salt).equals(cryptpass);
-            } else {
-                // old format as {HASH} just like PHPbb and many other apps
-                String cryptpass = dbEntry;
-
-                return Encryption.md5(passwd).equals(cryptpass);
-            }
+        }
+        if (arr.length == 2) {
+            // new format as {HASH}:{SALT}
+            String cryptpass = arr[0];
+            String salt = arr[1];
+            return Encryption.md5(passwd + salt).equals(cryptpass);
+        } else {
+            // old format as {HASH} just like PHPbb and many other apps
+            String cryptpass = dbEntry;
+            return Encryption.md5(passwd).equals(cryptpass);
         }
     }
 
