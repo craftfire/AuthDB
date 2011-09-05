@@ -361,7 +361,9 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.filter_renamed)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_filter_renamed, player, null));
             } else if (type.equals(Message.filter_username)) {
+            	Config.has_badcharacters = true;
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_filter_username, player, null));
+                Config.has_badcharacters = false;
             } else if (type.equals(Message.filter_password)) {
                 if (Config.filter_action.equalsIgnoreCase("kick")) {
                     player.kickPlayer(Util.replaceStrings(AuthDB_message_filter_password, player, null));
