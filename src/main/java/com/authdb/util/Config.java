@@ -16,7 +16,6 @@ import org.bukkit.util.config.Configuration;
 //import com.ensifera.animosity.craftirc.CraftIRC;
 
 public class Config {
-    
     public static boolean database_ison, authdb_enabled = true;
     public static boolean has_badcharacters;
     public static boolean hasForumBoard,capitalization;
@@ -25,7 +24,7 @@ public class Config {
 
     public static boolean database_keepalive;
     public static String database_type, database_username,database_password,database_port,database_host,database_database,dbDb;
-    
+
     public static boolean autoupdate_enable,debug_enable,usagestats_enabled,logging_enabled;
     public static String language_commands, language_messages, logformat;
 
@@ -81,7 +80,7 @@ public class Config {
           template = new Configuration(new File(directory, filename));
           template.load();
             if (config.equalsIgnoreCase("basic")) {
-                
+
                 language_commands = getConfigString("plugin.language.commands", "English");
                 language_messages = getConfigString("plugin.language.messages", "English");
                 autoupdate_enable = getConfigBoolean("plugin.autoupdate", true);
@@ -104,9 +103,9 @@ public class Config {
                 script_tableprefix = getConfigString("script.tableprefix", "");
                 script_updatestatus = getConfigBoolean("script.updatestatus", true);
                 script_salt = getConfigString("script.salt", "");
-                
+
             } else if (config.equalsIgnoreCase("advanced")) {
-                
+
                 custom_enabled = getConfigBoolean("customdb.enabled", false);
                 custom_autocreate = getConfigBoolean("customdb.autocreate", true);
                 custom_emailrequired = getConfigBoolean("customdb.emailrequired", false);

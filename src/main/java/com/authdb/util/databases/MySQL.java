@@ -49,7 +49,7 @@ public class MySQL {
         isConnected = true;
         return true;
     }
-    
+
     public static boolean isConnected() {
         if (Config.database_keepalive) {
             if (isConnected) {
@@ -151,7 +151,7 @@ public class MySQL {
         stmt.executeUpdate(query);
         stmt.close();
     }
-    
+
     public static String getQuery(String query) {
         Util.logging.mySQL(query);
         String dupe = "fail";
@@ -165,7 +165,7 @@ public class MySQL {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             return "fail";
         }
         return dupe;

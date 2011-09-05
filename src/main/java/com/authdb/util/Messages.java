@@ -30,7 +30,7 @@ static AuthDB plugin = new AuthDB();
         //               database
         ///////////////////////////////////////////
         public static String AuthDB_message_database_failure;
-        
+
         ///////////////////////////////////////////
         //               reload
         ///////////////////////////////////////////
@@ -90,7 +90,7 @@ static AuthDB plugin = new AuthDB();
         //               session
         ///////////////////////////////////////////
         public static String AuthDB_message_session_valid, AuthDB_message_session_protected;
-        
+
         ///////////////////////////////////////////
         //               protection
         ///////////////////////////////////////////
@@ -204,7 +204,7 @@ static AuthDB plugin = new AuthDB();
             this.text = text;
         }
     }
-    
+
     public static void sendMessage(final Message type, final Player player, PlayerLoginEvent event, String extra) {
         long start = Util.timeMS();
         ZCraftIRC.sendMessage(type, player);
@@ -401,7 +401,7 @@ static AuthDB plugin = new AuthDB();
         } else {
             Messages.sendMessage(Message.database_failure, null, null);
         }
-        
+
         long stop = Util.timeMS();
         Util.logging.timeUsage(stop - start, "send a message");
     }

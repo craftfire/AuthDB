@@ -69,10 +69,10 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (Config.filter_action.equalsIgnoreCase("kick") || Config.filter_action.equalsIgnoreCase("rename")) {
             String name = player.getName();
             if (Util.checkFilter("username", name) == false && Util.checkWhitelist("username", player) == false) {
-                Util.logging.Debug("The player is not in the whitelist and has bad characters in his/her name");
-            }
-            if (Config.filter_action.equalsIgnoreCase("kick")) {
-                Messages.sendMessage(Message.filter_username, player, event);
+                Util.logging.Debug(name + " is not in the whitelist and has bad characters in his/her name.");
+	            if (Config.filter_action.equalsIgnoreCase("kick")) {
+	                Messages.sendMessage(Message.filter_username, player, event);
+	            }
             }
         }
         if (player.getName().length() < Integer.parseInt(Config.username_minimum)) {

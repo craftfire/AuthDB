@@ -1151,9 +1151,8 @@ public class Util {
                 int a = 0;
                 while (a < lengthb) {
                     thechar2 = Config.filter_username.charAt(a);
-                    //logging.Debug(i + "-" + thechar1 + ":" + a + "-" + thechar2);
                     if (thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') {
-                        logging.Debug("FOUND BAD CHARACTER!!: " + thechar2);
+                    	Util.logging.Info(string + " has bad characters in his/her name: " + thechar2);
                         Config.has_badcharacters = true;
                         return false;
                     }
@@ -1162,6 +1161,7 @@ public class Util {
                 i++;
             }
             Config.has_badcharacters = false;
+            Util.logging.Debug(string + " does not have bad characters in his/her name.");
             return true;
         } else if (what.equalsIgnoreCase("password")) {
             logging.Debug("Launching function: checkFilter(String what, String string) - " + Config.filter_password);
