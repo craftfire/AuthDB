@@ -55,8 +55,7 @@ public class AuthDBInputListener extends InputListener {
                         button = (Button)w;
                     }
                 }
-                
-                
+
                 if(button.getText().equalsIgnoreCase("login")) {
                     UUID id = this.plugin.AuthDB_GUI_PasswordFieldIDs.get(player.getName());
                     Widget widget = popup.getWidget(id);
@@ -87,7 +86,7 @@ public class AuthDBInputListener extends InputListener {
                         spout.wrongPassword(player, screen, popup);
                     }
                 }
-            } 
+            }
             /* else if(event.getKey().equals(Keyboard.KEY_BACK)) {
                 InGameHUD screen = player.getMainScreen();
                 PopupScreen popup = screen.getActivePopup();
@@ -96,7 +95,7 @@ public class AuthDBInputListener extends InputListener {
                 TextField textField = (TextField)widget;
                 String password = textField.getText();
                 if(this.plugin.AuthDB_GUI_TempPasswords.containsKey(player.getName())) {
-                    
+
                 } else {
                     this.plugin.AuthDB_GUI_TempPasswords.put(player.getName(), password);
                 }
@@ -130,5 +129,5 @@ public class AuthDBInputListener extends InputListener {
             }
             */
         }
-    }  
+    }
 }

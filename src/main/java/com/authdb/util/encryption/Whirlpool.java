@@ -1,22 +1,20 @@
 /**
  * The Whirlpool hashing function.
  *
- * <P>
- * <b>References</b>
+ * References
  *
- * <P>
  * The Whirlpool algorithm was developed by
- * <a href="mailto:pbarreto@scopus.com.br">Paulo S. L. M. Barreto</a> and
- * <a href="mailto:vincent.rijmen@cryptomathic.com">Vincent Rijmen</a>.
+ * Paulo S. L. M. Barretoand <pbarreto@scopus.com.br> and
+ * Vincent Rijmen <vincent.rijmen@cryptomathic.com>
  *
  * See
- *      P.S.L.M. Barreto, V. Rijmen,
- *      ``The Whirlpool hashing function,''
- *      First NESSIE workshop, 2000 (tweaked version, 2003),
- *      <https://www.cosic.esat.kuleuven.ac.be/nessie/workshop/submissions/whirlpool.zip>
+ *     P.S.L.M. Barreto, V. Rijmen,
+ *     The Whirlpool hashing function,
+ *     First NESSIE workshop, 2000 (tweaked version, 2003),
+ *     <https://www.cosic.esat.kuleuven.ac.be/nessie/workshop/submissions/whirlpool.zip>
  *
- * @author    Paulo S.L.M. Barreto
- * @author    Vincent Rijmen.
+ * @author Paulo S.L.M. Barreto
+ * @author Vincent Rijmen.
  *
  * @version 3.0 (2003.03.12)
  *
@@ -59,7 +57,6 @@ package com.authdb.util.encryption;
 import java.util.Arrays;
 
 class Whirlpool {
-
     /**
      * The message digest size (in bits)
      */
@@ -122,7 +119,7 @@ class Whirlpool {
              */
             C[0][x] =
                 (v1 << 56) | (v1 << 48) | (v4 << 40) | (v1 << 32) |
-                (v8 << 24) | (v5 << 16) | (v2 <<  8) | (v9      );
+                (v8 << 24) | (v5 << 16) | (v2 <<  8) | (v9);
             /*
              * build the remaining circulant tables C[t][x] = C[0][x] rotr t
              */
@@ -203,9 +200,9 @@ class Whirlpool {
     /**
      * The hashing state.
      */
-    protected long[] hash  = new long[8];
-    protected long[] K     = new long[8]; // the round key
-    protected long[] L     = new long[8];
+    protected long[] hash = new long[8];
+    protected long[] K = new long[8]; // the round key
+    protected long[] L = new long[8];
     protected long[] block = new long[8]; // mu(buffer)
     protected long[] state = new long[8]; // the cipher state
 
@@ -221,14 +218,14 @@ class Whirlpool {
          */
         for (int i = 0, j = 0; i < 8; i++, j += 8) {
             block[i] =
-                (((long)buffer[j    ]        ) << 56) ^
+                (((long)buffer[j]) << 56) ^
                 (((long)buffer[j + 1] & 0xffL) << 48) ^
                 (((long)buffer[j + 2] & 0xffL) << 40) ^
                 (((long)buffer[j + 3] & 0xffL) << 32) ^
                 (((long)buffer[j + 4] & 0xffL) << 24) ^
                 (((long)buffer[j + 5] & 0xffL) << 16) ^
                 (((long)buffer[j + 6] & 0xffL) <<  8) ^
-                (((long)buffer[j + 7] & 0xffL)      );
+                (((long)buffer[j + 7] & 0xffL));
         }
         /*
          * compute and apply K^0 to the cipher state:
@@ -249,7 +246,7 @@ class Whirlpool {
                     L[i] ^= C[t][(int)(K[(i - t) & 7] >>> s) & 0xff];
                 }
             }
-			System.arraycopy(L, 0, K, 0, 8);
+            System.arraycopy(L, 0, K, 0, 8);
             K[0] ^= rc[r];
             /*
              * apply the r-th round transformation:
@@ -260,7 +257,7 @@ class Whirlpool {
                     L[i] ^= C[t][(int)(state[(i - t) & 7] >>> s) & 0xff];
                 }
             }
-			System.arraycopy(L, 0, state, 0, 8);
+            System.arraycopy(L, 0, state, 0, 8);
         }
         /*
          * apply the Miyaguchi-Preneel compression function:
@@ -394,14 +391,14 @@ class Whirlpool {
         // return the completed message digest:
         for (int i = 0, j = 0; i < 8; i++, j += 8) {
             long h = hash[i];
-            digest[j    ] = (byte)(h >>> 56);
+            digest[j ] = (byte)(h >>> 56);
             digest[j + 1] = (byte)(h >>> 48);
             digest[j + 2] = (byte)(h >>> 40);
             digest[j + 3] = (byte)(h >>> 32);
             digest[j + 4] = (byte)(h >>> 24);
             digest[j + 5] = (byte)(h >>> 16);
             digest[j + 6] = (byte)(h >>>  8);
-            digest[j + 7] = (byte)(h       );
+            digest[j + 7] = (byte)(h);
         }
     }
 

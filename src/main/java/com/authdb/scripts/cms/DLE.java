@@ -20,10 +20,9 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
 public class DLE {
-
-    public static String Name = "datalife engine";
+    public static String Name = "datalifeengine";
     public static String ShortName = "dle";
-    public static String VersionRange = "9.2-9.2";
+    public static String VersionRange = "9.2-9.2"; // TODO: Check version 9.3 for changes and add support for.
     public static String LatestVersionRange = VersionRange;
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
@@ -33,18 +32,18 @@ public class DLE {
             //
             PreparedStatement ps;
             //
-            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`email`,`password`,`name`,`lastdate`,`reg_date`,`logged_ip`,`info`,`signature`,`favorites`,`xfields`)  VALUES (?,?,?,?,?,?,?,?,?,?)", 1);
-            ps.setString(1, email); //email
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "users" + "` (`email`, `password`, `name`, `lastdate`, `reg_date`, `logged_ip`, `info`, `signature`, `favorites`, `xfields`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 1);
+            ps.setString(1, email); // email
             ps.setString(2, hash); // password
-            ps.setString(3, player); //name
-            ps.setLong(4, timestamp); //lastdate
-            ps.setLong(5, timestamp); //reg_date
-            ps.setString(6, ipAddress); //logged_ip
-            //need to add these, it's complaining about not default is set.
-            ps.setString(7, ""); //info
-            ps.setString(8, ""); //signature
-            ps.setString(9, ""); //favorites
-            ps.setString(10, ""); //xfields
+            ps.setString(3, player); // name
+            ps.setLong(4, timestamp); // lastdate
+            ps.setLong(5, timestamp); // reg_date
+            ps.setString(6, ipAddress); // logged_ip
+            // TODO: Need to add these, it's complaining about default is not set.
+            ps.setString(7, ""); // info
+            ps.setString(8, ""); // signature
+            ps.setString(9, ""); // favorites
+            ps.setString(10, ""); // xfields
             Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
@@ -62,15 +61,15 @@ public class DLE {
         return "fail";
     }
 
-      public static boolean check_hash(String passwordhash, String hash) {
-          if (passwordhash.equals(hash)) {
-              return true;
-          } else {
-              return false;
-          }
-      }
+    public static boolean check_hash(String passwordhash, String hash) {
+        if (passwordhash.equals(hash)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-      public static String passwordHash(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-          return Encryption.md5(Encryption.md5(password));
-      }
+    public static String passwordHash(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        return Encryption.md5(Encryption.md5(password));
+    }
 }

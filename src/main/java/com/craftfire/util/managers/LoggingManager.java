@@ -26,7 +26,7 @@ public class LoggingManager {
     PluginManager PluginManager = new PluginManager();
     String logFolder = "plugins/AuthDB/logs/";
     private String latestQuery = "";
-    
+
     public static enum Type {
         error, debug, info, warning, servere;
     }
@@ -54,7 +54,7 @@ public class LoggingManager {
     }
     public void warning(String line, String pluginName) {
         PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
-   }
+    }
 
     public void Info(String line) {
             PluginManager.plugin.log.info("[" + PluginManager.plugin.pluginName + "] " + line);
@@ -65,33 +65,33 @@ public class LoggingManager {
     }
 
     public void advancedWarning(String line) {
-         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]\n" +
-        "|-----------------------------------------------------------------------------|\n" +
-        "|--------------------------------AUTHDB WARNING-------------------------------|\n" +
-        "|-----------------------------------------------------------------------------|\n" +
-        "| " + line.toUpperCase() + "\n" +
-        "|-----------------------------------------------------------------------------|");
+        PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]\n"
+        + "|-----------------------------------------------------------------------------|\n"
+        + "|--------------------------------AUTHDB WARNING-------------------------------|\n"
+        + "|-----------------------------------------------------------------------------|\n"
+        + "| " + line.toUpperCase() + "\n"
+        + "|-----------------------------------------------------------------------------|");
     }
 
     public void plainWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
-   }
+    }
 
     public void advancedWarning(String line, String pluginName) {
-        PluginManager.plugin.log.warning("[" + pluginName + "]\n" +
-       "|-----------------------------------------------------------------------------|\n" +
-       "|--------------------------------AUTHDB WARNING-------------------------------|\n" +
-       "|-----------------------------------------------------------------------------|\n" +
-       "| " + line.toUpperCase() + "\n" +
-       "|-----------------------------------------------------------------------------|");
-   }
+        PluginManager.plugin.log.warning("[" + pluginName + "]\n"
+        + "|-----------------------------------------------------------------------------|\n"
+        + "|--------------------------------AUTHDB WARNING-------------------------------|\n"
+        + "|-----------------------------------------------------------------------------|\n"
+        + "| " + line.toUpperCase() + "\n"
+        + "|-----------------------------------------------------------------------------|");
+    }
 
-   public void plainWarning(String line, String pluginName) {
-       PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
-  }
+    public void plainWarning(String line, String pluginName) {
+        PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
+    }
 
     public void mySQL(String query) {
-    	latestQuery = query;
+        latestQuery = query;
         Debug("Executing MySQL query: " + query);
     }
 
@@ -130,7 +130,7 @@ public class LoggingManager {
         logError("Plugins: " + pluginsList.toString());
         logError("--------------------------- STACKTRACE START ---------------------------");
         for (int i = 0; i < stack.length; i++) {
-        	logError(stack[i].toString());
+            logError(stack[i].toString());
         }
         logError("---------------------------- STACKTRACE END ----------------------------");
     }
@@ -163,7 +163,7 @@ public class LoggingManager {
 
     public void error(String error) {
         plainWarning(error);
-    	logError(error);
+        logError(error);
     }
 
     public void error(String error, String pluginName) {
@@ -204,7 +204,7 @@ public class LoggingManager {
                 try {
                     data.createNewFile();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
+                    // TODO: Auto-generated catch block
                     Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 }
             }
@@ -217,7 +217,7 @@ public class LoggingManager {
                 Out.write(StringFormat.format(TheDate) + " - " + line + "\n");
                 Out.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+                // TODO: Auto-generated catch block
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }

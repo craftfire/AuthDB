@@ -27,7 +27,7 @@ public class Processes {
         Util.craftFirePlayer.setInventoryFromStorage(player);
         Logout(player, false);
     }
-    
+
     public static boolean Logout(Player player, boolean storeInventory) {
         if (AuthDB.isAuthorized(player)) {
             if (AuthDB.AuthDB_AuthTime.containsKey(player.getName())) {
@@ -63,7 +63,7 @@ public class Processes {
                 Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
             }
             AuthDB.database.save(eBeanClass);
-            if(storeInventory) {
+            if (storeInventory) {
                 try {
                     if (Config.hasBackpack) {
                         BackpackPlayer BackpackPlayer = BackpackManager.getBackpackPlayer((Player)player);
@@ -119,7 +119,7 @@ public class Processes {
             eBeanClass.setLinkedname(name);
             AuthDB.database.save(eBeanClass);
             if (!AuthDB.AuthDB_LinkedNames.containsKey((player.getName()))) {
-                AuthDB.AuthDB_LinkedNames.put(player.getName(),name);
+                AuthDB.AuthDB_LinkedNames.put(player.getName(), name);
             }
             if (AuthDB.AuthDB_LinkedNameCheck.containsKey(player.getName())) {
                 AuthDB.AuthDB_LinkedNameCheck.remove(player.getName());

@@ -39,8 +39,9 @@ public class AuthDBScreenListener extends ScreenListener {
     }
 
     public void onButtonClick(ButtonClickEvent event) {
-        if(!event.getButton().isVisible())
+        if(!event.getButton().isVisible()) {
             return;
+        }
         SpoutPlayer player = event.getPlayer();
         if(this.plugin.AuthDB_GUI_PasswordFieldIDs.containsKey(player.getName())) {
             InGameHUD screen = player.getMainScreen();
@@ -78,7 +79,7 @@ public class AuthDBScreenListener extends ScreenListener {
             }
         }
     }
-    
+
     public void onScreenClose(ScreenCloseEvent event) {
         Util.logging.Debug("OnScreenEvent start");
         if (!AuthDB.isAuthorized(event.getPlayer())) {
@@ -92,5 +93,4 @@ public class AuthDBScreenListener extends ScreenListener {
         }
         Util.logging.Debug("OnScreenEvent end");
     }
-    
 }

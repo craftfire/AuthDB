@@ -28,10 +28,9 @@ import com.authdb.AuthDB;
 import com.authdb.util.Config;
 
 public class ZSpout {
-    
     private int width = 200;
     private int height = 20;
-    
+
     public boolean checkGUI(Player player) {
         if(Config.hasSpout) {
             SpoutPlayer spoutPlayer = (SpoutPlayer)player;
@@ -42,30 +41,30 @@ public class ZSpout {
         }
         return false;
     }
-    
+
     public void popGUI(SpoutPlayer spoutPlayer) {
         PopupScreen popup = new GenericPopup();
         InGameHUD screen = spoutPlayer.getMainScreen();
         screen.attachPopupScreen(popup);
         showGUI(screen, false);
-        
+
         Label pleaseLogin = new GenericLabel();
         pleaseLogin.setText("Please enter your password");
         int offset = 20;
         pleaseLogin.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2 + offset + 3).setY((screen.getHeight()-height)/2 - (offset*2));
         popup.attachWidget(AuthDB.plugin, pleaseLogin);
-        
+
         Button button = new GenericButton("Login");
         button.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2 + (offset / 2));
         popup.attachWidget(AuthDB.plugin, button);
-        
+
         TextField textField = new GenericTextField();
         textField.setHeight(height).setWidth(width).setX((screen.getWidth()-width)/2).setY((screen.getHeight()-height)/2-offset);
         AuthDB.AuthDB_GUI_PasswordFieldIDs.put(spoutPlayer.getName(), textField.getId());
         AuthDB.AuthDB_GUI_ScreenIDs.put(spoutPlayer.getName(), screen.getId());
         popup.attachWidget(AuthDB.plugin, textField);
     }
-    
+
     public void showGUI(InGameHUD screen, boolean show) {
         screen.getArmorBar().setVisible(show);
         screen.getArmorBar().setDirty(true);
@@ -78,7 +77,7 @@ public class ZSpout {
         screen.getHealthBar().setVisible(show);
         screen.getHealthBar().setDirty(true);
     }
-    
+
     public void wrongPassword(Player player, InGameHUD screen, PopupScreen popup) {
         String extra = "";
         if (Config.login_action.equalsIgnoreCase("kick")) {
@@ -89,15 +88,14 @@ public class ZSpout {
         for (Widget w : popup.getAttachedWidgets()) {
             if(w.getType().equals(WidgetType.Label)) {
                 Label wrongPassword = (Label)w;
-                if(wrongPassword.getText().startsWith("Wrong password"))
-                {
+                if(wrongPassword.getText().startsWith("Wrong password")) {
                     wrongPassword.setText("Wrong password, try again." + extra);
                     wrongPassword.setDirty(true);
                     set = true;
                     break;
                 }
             }
-        } 
+        }
         if (!set) {
             Label wrongPassword = new GenericLabel();
             wrongPassword.setText("Wrong password, try again." + extra);

@@ -59,7 +59,7 @@ public class EBean {
             eBeanClass.setPlayername(player);
             eBeanClass.setRegistered("false");
             if(save) { save(eBeanClass); }
-			sync(player);
+            sync(player);
         }
         return eBeanClass;
     }
@@ -71,7 +71,7 @@ public class EBean {
             eBeanClass.setPlayer(player);
             eBeanClass.setRegistered("false");
             if(save) { save(eBeanClass); }
-			sync(player);
+            sync(player);
         }
         return eBeanClass;
     }
@@ -94,9 +94,9 @@ public class EBean {
                 save(eBeanClass);
                 registered = "true";
             } else if (Util.checkScript("checkuser", Config.script_name, Util.checkOtherName(player), null, null, null)) {
-				eBeanClass.setRegistered("true");
-				save(eBeanClass);
-				registered = "true";
+                eBeanClass.setRegistered("true");
+                save(eBeanClass);
+                registered = "true";
             } else {
                 if (registered != null && registered.equalsIgnoreCase("true")) {
                     Util.logging.Debug("Registered value for " + player + " in persistence is different than in MySQL, syncing registered value from MySQL.");
@@ -104,7 +104,7 @@ public class EBean {
                     save(eBeanClass);
                     registered = "false";
                 }
-			}
+            }
             if (registered != null && registered.equalsIgnoreCase("true")) {
                 Util.checkScript("syncpassword", Config.script_name, Util.checkOtherName(player), null, null, null);
                 Util.checkScript("syncsalt", Config.script_name, Util.checkOtherName(player), null, null, null);

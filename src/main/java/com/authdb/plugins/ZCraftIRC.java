@@ -21,32 +21,32 @@ public class ZCraftIRC {
     public static void sendMessage(Message type,Player player) {
         if (AuthDB.craftircHandle != null && Config.CraftIRC_enabled == true) {
             if (type.equals(Message.database_failure)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.AuthDB_message_database_failure,player,""), Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.AuthDB_message_database_failure,player,""), Config.CraftIRC_tag);
             }
             if (type.equals(Message.register_welcome) || type.equals(Message.login_prompt) || type.equals(Message.login_normal)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_status_join,player,""), Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_status_join,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.left_server)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_status_quit,player,""), Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_status_quit,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.register_success)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_register_success,player,""), Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_register_success,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.register_failure)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_register_failure,player,""), Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_register_failure,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.register_exists)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_register_registered,player,""), Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_register_registered,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.password_success)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_password_success,player,""),Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_password_success,player,""),Config.CraftIRC_tag);
             } else if (type.equals(Message.password_failure)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_password_failure,player,""),Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_password_failure,player,""),Config.CraftIRC_tag);
             } else if (type.equals(Message.filter_renamed)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_renamed,player,""), Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_renamed,player,""), Config.CraftIRC_tag);
             } else if (type.equals(Message.filter_username)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_kicked,player,""),Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_kicked,player,""),Config.CraftIRC_tag);
             } else if (type.equals(Message.filter_whitelist)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_whitelist,player,""),Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + Util.replaceStrings(Messages.CraftIRC_message_filter_whitelist,player,""),Config.CraftIRC_tag);
             } else if (type.equals(Message.OnEnable)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + "%b%" + AuthDB.pluginName + " " + AuthDB.pluginVersion + "%b% has started successfully.", Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + "%b%" + AuthDB.pluginName + " " + AuthDB.pluginVersion + "%b% has started successfully.", Config.CraftIRC_tag);
             } else if (type.equals(Message.OnDisable)) {
-                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null,"") + " " + "%b%" + AuthDB.pluginName + " " + AuthDB.pluginVersion + "%b% has stopped successfully.", Config.CraftIRC_tag);
+                AuthDB.craftircHandle.sendMessageToTag(Util.replaceStrings(Config.CraftIRC_prefix, null, "") + " " + "%b%" + AuthDB.pluginName + " " + AuthDB.pluginVersion + "%b% has stopped successfully.", Config.CraftIRC_tag);
             }
         }
     }

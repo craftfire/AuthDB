@@ -48,9 +48,9 @@ public class AuthDBBlockListener extends BlockListener {
         }
     }*/
 
-    boolean checkGuest(Player player,boolean what) {
+    boolean checkGuest(Player player, boolean what) {
         if (what) {
-            if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
+            if (this.plugin.isRegistered("checkguest", player.getName()) == false || this.plugin.isRegistered("checkguest", Util.checkOtherName(player.getName())) == false) {
                 return true;
             }
         } else if (Config.protection_notify && !AuthDB.isAuthorized(player)) {
@@ -64,7 +64,7 @@ public class AuthDBBlockListener extends BlockListener {
                 }
             }
         } else {
-            if (Config.protection_notify && this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {  
+            if (Config.protection_notify && this.plugin.AuthDB_RemindLogin.containsKey(player.getName())) {
                 this.plugin.AuthDB_RemindLogin.remove(player.getName());
             }
         }

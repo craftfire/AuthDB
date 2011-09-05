@@ -36,6 +36,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.persistence.PersistenceException;
+import com.avaje.ebean.EbeanServer;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -68,8 +69,6 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
-
-import com.avaje.ebean.EbeanServer;
 
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.ensifera.animosity.craftirc.CraftIRC;
@@ -710,23 +709,23 @@ public class AuthDB extends JavaPlugin {
                 while ((ze = zip.getNextEntry()) != null) {
                     String directory = ze.getName();
                     if (directory.startsWith("files/translations/") && directory.endsWith(".yml") == false)  {
-                    	directory = directory.replace("files/translations/", "");
-                    	directory = directory.replace("/", "");
-                    	if(directory.equals("") == false) {
-                    		Util.logging.Debug("Directory: "+directory);
-	                        File f = new File(getDataFolder() + "/translations/" + directory + "/" + type + ".yml");
-	                        if (!f.exists()) {
-	                            Util.logging.Info(type + ".yml" + " could not be found in plugins/" + pluginName + "/translations/" + directory + "/! Creating " + type + ".yml");
-	                            DefaultFile(type + ".yml","translations/" + directory + "");
-	                        }
-	                        if (type.equals("commands") && (Config.language_commands).equalsIgnoreCase(directory))  {
-	                            set = true;
-	                            language = directory;
-	                        } else if (type.equals("messages") && (Config.language_messages).equalsIgnoreCase(directory))  {
+                        directory = directory.replace("files/translations/", "");
+                        directory = directory.replace("/", "");
+                        if(directory.equals("") == false) {
+                            Util.logging.Debug("Directory: "+directory);
+                            File f = new File(getDataFolder() + "/translations/" + directory + "/" + type + ".yml");
+                            if (!f.exists()) {
+                                Util.logging.Info(type + ".yml" + " could not be found in plugins/" + pluginName + "/translations/" + directory + "/! Creating " + type + ".yml");
+                                DefaultFile(type + ".yml","translations/" + directory + "");
+                            }
+                            if (type.equals("commands") && (Config.language_commands).equalsIgnoreCase(directory))  {
+                                set = true;
+                                language = directory;
+                            } else if (type.equals("messages") && (Config.language_messages).equalsIgnoreCase(directory))  {
                                 set = true;
                                 language = directory;
                             }
-                    	}
+                        }
                     }
                 }
                 zip.close();
@@ -909,8 +908,7 @@ public class AuthDB extends JavaPlugin {
                       Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                   }
                 }
-              }
             }
-          }
-
+        }
+    }
 }

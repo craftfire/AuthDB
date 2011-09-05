@@ -21,10 +21,13 @@ import com.authdb.util.Util;
 public class Encryption {
     public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         Whirlpool whirpool = new Whirlpool();
-        if (encryption.equalsIgnoreCase("md5")) return md5(toencrypt);
-        else if (encryption.equalsIgnoreCase("sha1")) return SHA1(toencrypt);
-        else if (encryption.equalsIgnoreCase("sha512")) return SHA512(toencrypt);
-        else if (encryption.equalsIgnoreCase("whirlpool") || encryption.equalsIgnoreCase("xauth")) {
+        if (encryption.equalsIgnoreCase("md5")) {
+            return md5(toencrypt);
+        } else if (encryption.equalsIgnoreCase("sha1")) {
+            return SHA1(toencrypt);
+        } else if (encryption.equalsIgnoreCase("sha512") || encryption.equalsIgnoreCase("sha2")) {
+            return SHA512(toencrypt);
+        } else if (encryption.equalsIgnoreCase("whirlpool") || encryption.equalsIgnoreCase("xauth")) {
             byte[] digest = new byte[Whirlpool.DIGESTBYTES];
             whirpool.NESSIEinit();
             whirpool.NESSIEadd(toencrypt);
@@ -32,7 +35,9 @@ public class Encryption {
             String done = Whirlpool.display(digest);
             return done;
         }
-        if (Config.debug_enable) Util.logging.Info("Could not find encryption method: " + Config.custom_encryption + ", using default: md5");
+        if (Config.debug_enable) {
+            Util.logging.Info("Could not find encryption method: " + Config.custom_encryption + ", using default: md5");
+        }
         Config.custom_encryption = "md5";
         return md5(toencrypt);
     }
@@ -61,11 +66,9 @@ public class Encryption {
             MessageDigest md5er = MessageDigest.getInstance("MD5");
             byte[] hash = md5er.digest(bytes);
             return Util.bytes2hex(hash);
-        }
-        catch (GeneralSecurityException e) {
+        } catch (GeneralSecurityException e) {
             throw new RuntimeException(e);
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
@@ -86,12 +89,12 @@ public class Encryption {
             byte byteData[] = md.digest();
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < byteData.length; i++) {
-             sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
             }
             StringBuffer hexString = new StringBuffer();
-            for (int i=0;i<byteData.length;i++) {
+            for (int i = 0; i < byteData.length; i++) {
                 String hex=Integer.toHexString(0xff & byteData[i]);
-                if (hex.length()==1) hexString.append('0'); {
+                if (hex.length() == 1) hexString.append('0'); {
                     hexString.append(hex);
                 }
             }
@@ -117,10 +120,10 @@ public class Encryption {
                     sb.append("0");
                 }
                 sb.append(hex);
-                }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
             }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
         return new String(sb);
     }
 

@@ -23,12 +23,12 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.MySQL;
 
 public class AuthDB_API {
-
     public boolean CheckBan(Player player) {
         try {
-            if (API.getScript("checkifbanned", player, null).equalsIgnoreCase("true")) { return true; }
-        }
-        catch (SQLException e) {
+            if (API.getScript("checkifbanned", player, null).equalsIgnoreCase("true")) {
+                return true;
+            }
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return false;
@@ -36,9 +36,10 @@ public class AuthDB_API {
 
     public boolean CheckBan(String IP) {
         try {
-            if (API.getScript("checkifbanned", null, IP).equalsIgnoreCase("true")) { return true; }
-        }
-        catch (SQLException e) {
+            if (API.getScript("checkifbanned", null, IP).equalsIgnoreCase("true")) {
+                return true;
+            }
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return false;
@@ -47,8 +48,7 @@ public class AuthDB_API {
     public String BanReason(Player player) {
         try {
             return API.getScript("banreason", player, null);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "noreason";
@@ -57,8 +57,7 @@ public class AuthDB_API {
     public String BanReason(String IP) {
         try {
             return API.getScript("banreason", null, IP);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "noreason";
@@ -67,13 +66,17 @@ public class AuthDB_API {
     public String BanUnixTimestamp(Player player) {
         try {
             String BanDate = API.getScript("bannedtodate", player, null);
-            if (BanDate.equalsIgnoreCase("nodate")) { return "nodate"; } 
-            else if (BanDate.equalsIgnoreCase("perma")) { return "perma"; }
+            if (BanDate.equalsIgnoreCase("nodate")) {
+                return "nodate";
+            } else if (BanDate.equalsIgnoreCase("perma")) {
+                return "perma";
+            }
             String delimiter = "\\,";
             String[] Split = BanDate.split(delimiter);
-            if (Split[1].equalsIgnoreCase("unix")) { return Split[0]; }
-        }
-        catch (SQLException e) {
+            if (Split[1].equalsIgnoreCase("unix")) {
+                return Split[0];
+            }
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "nodate";
@@ -82,8 +85,7 @@ public class AuthDB_API {
     public String GetGroup(Player player) {
         try {
             return API.getScript("getgroup", player, null);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "fail";
@@ -93,36 +95,50 @@ public class AuthDB_API {
         try {
             return MySQL.Unix_Timestamp();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
+            // TODO: Auto-generated catch block
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return "fail";
     }
-    
+
     public boolean banPlayer(Player player) {
         try {
-            if (API.getScript("banplayer", player, null).equalsIgnoreCase("true")) { return true; }
-        }
-        catch (SQLException e) {
+            if (API.getScript("banplayer", player, null).equalsIgnoreCase("true")) {
+                return true;
+            }
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return false;
     }
-    
+
     public boolean banIP(String ip) {
         try {
-            if (API.getScript("banip", null, ip).equalsIgnoreCase("true")) { return true; }
-        }
-        catch (SQLException e) {
+            if (API.getScript("banip", null, ip).equalsIgnoreCase("true")) {
+                return true;
+            }
+        } catch (SQLException e) {
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
         }
         return false;
     }
-    
-    public String getConfigPath() { return AuthDB.plugin.configFolder; }
-    public File getDataFolder() { return AuthDB.plugin.getDataFolder(); }
-    public String getCommandsLanguage() { return Config.language_commands; }
-    public String getMessagesLanguage() { return Config.language_messages; }
-    public boolean hasPermissions(Player player, String permission) { return ZPermissions.isAllowed(player, permission); }
-    public void noPermission(Player player) { Messages.sendMessage(Message.protection_denied, player, null); }
+
+    public String getConfigPath() {
+        return AuthDB.plugin.configFolder;
+    }
+    public File getDataFolder() {
+        return AuthDB.plugin.getDataFolder();
+    }
+    public String getCommandsLanguage() {
+        return Config.language_commands;
+    }
+    public String getMessagesLanguage() {
+        return Config.language_messages;
+    }
+    public boolean hasPermissions(Player player, String permission) {
+        return ZPermissions.isAllowed(player, permission);
+    }
+    public void noPermission(Player player) {
+        Messages.sendMessage(Message.protection_denied, player, null);
+    }
 }

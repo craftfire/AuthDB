@@ -60,7 +60,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             event.disallow(Result.KICK_OTHER, "You cannot join when the server has no database connection.");
             return;
         }
-        
+
         EBean.sync(player);
 
         if (Config.session_protect && Util.checkIfLoggedIn(player)) {
@@ -68,9 +68,10 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
         if (Config.filter_action.equalsIgnoreCase("kick") || Config.filter_action.equalsIgnoreCase("rename")) {
             String name = player.getName();
-            if (Util.checkFilter("username", name) == false && Util.checkWhitelist("username",player) == false) {
-            Util.logging.Debug("The player is not in the whitelist and has bad characters in his/her name");
-            if (Config.filter_action.equalsIgnoreCase("kick")) Messages.sendMessage(Message.filter_username, player, event);
+            if (Util.checkFilter("username", name) == false && Util.checkWhitelist("username", player) == false) {
+                Util.logging.Debug("The player is not in the whitelist and has bad characters in his/her name");
+            if (Config.filter_action.equalsIgnoreCase("kick")) {
+                Messages.sendMessage(Message.filter_username, player, event);
             }
         }
         if (player.getName().length() < Integer.parseInt(Config.username_minimum)) {
@@ -82,7 +83,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             Util.craftFirePlayer.renamePlayer(player,Util.checkOtherName(player.getName()));
         }
     }
-    
+
     public void checkTimeout(Player player) {
         Util.logging.Debug("Launching function: checkTimeout(Player player))");
         EBean eBeanClass = EBean.checkPlayer(player, true);
@@ -92,8 +93,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             EBean.save(eBeanClass);
             if(plugin.isRegistered("checkguest", player.getName())) {
                 Messages.sendMessage(Message.login_timeout, player, null);
-            }
-            else {
+            } else {
                 Messages.sendMessage(Message.register_timeout, player, null);
             }
         }
@@ -135,8 +135,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 if (Config.login_timeout > 0 && plugin.isRegistered("checkguest", player.getName())) {
                     Util.logging.Debug("Login timeout time is: " + Config.login_timeout + " ticks.");
                     time = Config.login_timeout;
-                }
-                else if (Config.register_timeout > 0 && !plugin.isRegistered("checkguest", player.getName())) {
+                } else if (Config.register_timeout > 0 && !plugin.isRegistered("checkguest", player.getName())) {
                     Util.logging.Debug("Register timeout time is: " + Config.register_timeout + " ticks.");
                     time = Config.register_timeout;
                 }
@@ -167,11 +166,11 @@ public class AuthDBPlayerListener extends PlayerListener {
             if (Config.session_enabled && ((eBeanClass.getReloadtime() + 30) >= Util.timeStamp())) {
                 sessionallow = true;
             }
-            
+
             if (Config.onlineMode && this.plugin.isRegistered("join", player.getName())) {
                 sessionallow = true;
             }
-            
+
             /*else if (!Config.onlineMode) {
                 Util.logging.Debug("Session id: " + Util.server.getSessionId());
                 boolean allow = false;
@@ -180,7 +179,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 String result = reader.readLine();
                 reader.close();
                 allow = result.equalsIgnoreCase("YES");
-                if(allow) { 
+                if(allow) {
                     Util.logging.Debug("Online mode is off but player '" + player.getName() + "' is authed with minecraft.net and does not have to login.");
                     sessionallow = true;
                 }
@@ -270,11 +269,14 @@ public class AuthDBPlayerListener extends PlayerListener {
 
         if (checkGuest(player,Config.guests_inventory) == false && this.plugin.isRegistered("quit",player.getName()) == false && this.plugin.isRegistered("quit",Util.checkOtherName(player.getName())) == false) {
             ItemStack[] theinv;
-			if (Config.hasBackpack) { theinv = new ItemStack[252]; }
-			else { theinv = new ItemStack[36]; }
+            if (Config.hasBackpack) {
+                theinv = new ItemStack[252];
+            } else {
+                theinv = new ItemStack[36];
+            }
             player.getInventory().setContents(theinv);
         }
-        
+
         Processes.Quit(player);
     }
 
@@ -424,7 +426,9 @@ public class AuthDBPlayerListener extends PlayerListener {
     }
 
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.isCancelled()) { return; }
+        if (event.isCancelled()) {
+            return;
+        }
         if (!plugin.isAuthorized(event.getPlayer())) {
             Location test = new Location(event.getPlayer().getWorld(), event.getFrom().getX(), event.getFrom().getY() - 1, event.getFrom().getZ());
             if (test.getBlock().getTypeId() != 0 && !checkGuest(event.getPlayer(),Config.guests_movement)) {
@@ -443,7 +447,9 @@ public class AuthDBPlayerListener extends PlayerListener {
     }
 
     public void onPlayerChat(PlayerChatEvent event) {
-        if (event.isCancelled()) { return; }
+        if (event.isCancelled()) {
+            return;
+        }
         if (!AuthDB.isAuthorized(event.getPlayer())) {
             Player player = event.getPlayer();
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
@@ -474,8 +480,8 @@ public class AuthDBPlayerListener extends PlayerListener {
                 } else if (!checkGuest(event.getPlayer(), Config.guests_chat)) {
                     event.setCancelled(true);
                 }
-            }
         }
+    }
 
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
@@ -497,8 +503,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (!plugin.isAuthorized(event.getPlayer())) {
             if (this.plugin.isRegistered("dropitem",event.getPlayer().getName()) || this.plugin.isRegistered("dropitem",Util.checkOtherName(event.getPlayer().getName()))) {
                 event.setCancelled(true);
-            }
-            else if (!checkGuest(event.getPlayer(),Config.guests_drop)) {
+            } else if (!checkGuest(event.getPlayer(),Config.guests_drop)) {
                 event.setCancelled(true);
             }
         }

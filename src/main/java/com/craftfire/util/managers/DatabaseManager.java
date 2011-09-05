@@ -32,7 +32,7 @@ public class DatabaseManager {
             loggingManager.Debug("Connecting to MySQL....");
             PluginManager.mySQL.connect();
         } else {
-            loggingManager.Debug("Could not find any database type to connect to! (mysql etc)....");
+            loggingManager.Debug("Could not find any database type to connect to! (mysql etc)...");
         }
     }
 
@@ -41,8 +41,7 @@ public class DatabaseManager {
             loggingManager.Debug("Closing MySQL connection....");
             PluginManager.mySQL.close();
         } else {
-            loggingManager.Debug("Could not find any database type to close! (mysql etc)....");
+            loggingManager.Debug("Could not find any database type to close! (mysql etc)...");
         }
     }
-    
 }

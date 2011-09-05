@@ -42,7 +42,9 @@ public class ZPermissions {
         command_admin_reload (adminPermissions+"reload");
 
         private String permission;
-        Permission(String permission) { this.permission = permission; }
+        Permission(String permission) {
+            this.permission = permission;
+        }
     }
 
     public static boolean isAllowed(Player player, Permission permission) {
@@ -90,7 +92,7 @@ public class ZPermissions {
         }
         return false;
     }
-    
+
     public static boolean isAllowed(Player player, String permission) {
         if (hasPermissionsBukkit || hasbPermissions) {
             if (player.hasPermission(permission)) {

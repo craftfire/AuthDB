@@ -19,49 +19,49 @@ import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Util;
 import com.authdb.util.databases.MySQL;
 
-  public class Custom {
-      public static void adduser(String player, String email, String password, String ipAddress) throws SQLException {
-          if (!Config.database_keepalive) { 
-              Util.databaseManager.connect();
-          }
-            PreparedStatement ps;
-            if (Config.custom_encryption != null) {
-                try {
-                    password = Encryption.encrypt(Config.custom_encryption, password);
-                } catch (NoSuchAlgorithmException e) {
-                    Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-                } catch (UnsupportedEncodingException e) {
-                    Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-                }
-            }
-            //
-            String query;
-            if (Config.custom_emailrequired) {
-                query = "INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (" + player + ", " + password + ", " + email + ")";
-                Util.logging.mySQL(query);
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (?,?,?)", 1);
-                ps.setString(1, player); //username
-                ps.setString(2, password); // password
-                ps.setString(3, email); // email
-                ps.executeUpdate();
-                ps.close();
-            } else {
-                query = "INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`)  VALUES ('" + player + "', '" + password + "')";
-                Util.logging.mySQL(query);
-                ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`)  VALUES (?,?)", 1);
-                ps.setString(1, player); //username
-                ps.setString(2, password); // password
-                ps.executeUpdate();
-                ps.close();
-            }
-            if (!Config.database_keepalive) { 
-                Util.databaseManager.close();
+public class Custom {
+    public static void adduser(String player, String email, String password, String ipAddress) throws SQLException {
+        if (!Config.database_keepalive) { 
+            Util.databaseManager.connect();
+        }
+        PreparedStatement ps;
+        if (Config.custom_encryption != null) {
+            try {
+                password = Encryption.encrypt(Config.custom_encryption, password);
+            } catch (NoSuchAlgorithmException e) {
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+            } catch (UnsupportedEncodingException e) {
+                Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
             }
         }
+        //
+        String query;
+        if (Config.custom_emailrequired) {
+            query = "INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (" + player + ", " + password + ", " + email + ")";
+            Util.logging.mySQL(query);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (?,?,?)", 1);
+            ps.setString(1, player); //username
+            ps.setString(2, password); // password
+            ps.setString(3, email); // email
+            ps.executeUpdate();
+            ps.close();
+        } else {
+            query = "INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`)  VALUES ('" + player + "', '" + password + "')";
+            Util.logging.mySQL(query);
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`)  VALUES (?,?)", 1);
+            ps.setString(1, player); //username
+            ps.setString(2, password); // password
+            ps.executeUpdate();
+            ps.close();
+        }
+        if (!Config.database_keepalive) { 
+            Util.databaseManager.close();
+        }
+    }
 
-      public static String hash(String player, String password) {
-            return password;
-          }
+    public static String hash(String player, String password) {
+        return password;
+    }
 
     public static boolean check_hash(String passwordhash, String hash) {
         try {
