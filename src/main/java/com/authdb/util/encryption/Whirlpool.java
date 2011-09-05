@@ -191,7 +191,7 @@ class Whirlpool {
          * map the buffer to a block:
          */
         for (int i = 0, j = 0; i < 8; i++, j += 8) {
-            block[i] = (((long)buffer[j]) << 56) ^ (((long)buffer[j + 1] & 0xffL) << 48) ^ (((long)buffer[j + 2] & 0xffL) << 40) ^ (((long)buffer[j + 3] & 0xffL) << 32) ^ (((long)buffer[j + 4] & 0xffL) << 24) ^ ((long)buffer[j + 5] & 0xffL) << 16) ^ (((long)buffer[j + 6] & 0xffL) <<  8) ^ (((long)buffer[j + 7] & 0xffL));
+            block[i] = (((long)buffer[j]) << 56) | (((long)buffer[j + 1] & 0xffL) << 48) | (((long)buffer[j + 2] & 0xffL) << 40) | (((long)buffer[j + 3] & 0xffL) << 32) | (((long)buffer[j + 4] & 0xffL) << 24) | ((long)buffer[j + 5] & 0xffL) << 16) | (((long)buffer[j + 6] & 0xffL) <<  8) | (((long)buffer[j + 7] & 0xffL));
         }
         /*
          * compute and apply K^0 to the cipher state:
