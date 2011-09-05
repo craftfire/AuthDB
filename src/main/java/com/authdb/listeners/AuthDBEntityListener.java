@@ -84,7 +84,7 @@ public class AuthDBEntityListener extends EntityListener {
             EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
             if ((e.getDamager() instanceof Player)) {
                 Player t = (Player)e.getDamager();
-                if (!checkGuest(t, Config.guests_mobdamage)) {
+                if (plugin.isAuthorized(t) == false && !checkGuest(t, Config.guests_mobdamage)) {
                     event.setCancelled(true);
                 }
             }
