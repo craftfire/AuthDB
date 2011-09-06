@@ -18,8 +18,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.player.AppearanceManager;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.authdb.util.databases.EBean;
 
@@ -28,6 +26,7 @@ public class PlayerManager {
     LoggingManager loggingManager = new LoggingManager();
 
     public void setInventoryFromStorage(Player player) {
+    	CraftFirePlayer craftFirePlayer = (CraftFirePlayer)player;
         ItemStack[] inv = getInventory(player);
         if (inv != null) {
             loggingManager.Debug("Sucessfully restored " + player.getName() + "'s inventory: " + inv);

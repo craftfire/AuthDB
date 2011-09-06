@@ -11,50 +11,27 @@ package com.craftfire.util.managers;
 
 import org.bukkit.entity.Player;
 
-public class CraftFirePlayer {
-    private String name;
-    private String linkedname;
-    private String password;
-    private String email;
-    private String ip;
+public abstract interface CraftFirePlayer extends Player {
 
-    public String getName() {
-        return this.name;
-    }
+    public abstract String getName();
+    
+    public abstract void setName(String name);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public abstract String getLinkedName();
 
-    public String getLinkedName() {
-        return this.linkedname;
-    }
+    public abstract void setLinkedName(String linkedname);
 
-    public void setLinkedName(String linkedname) {
-        this.linkedname = linkedname;
-    }
+    public abstract String getPassword();
 
-    public String getPassword() {
-        return this.password;
-    }
+    public abstract void setPassword(String password);
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public abstract String getEmail();
 
-    public String getEmail() {
-        return this.email;
-    }
+    public abstract void setEmail(String email);
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public abstract String getIP();
 
-    public String getIP() {
-        return this.ip;
-    }
-
-    public void setIP(Player player) {
-        this.ip = player.getAddress().getAddress().toString().substring(1);
-    }
+    public abstract void setIP(String IP);
+    
+    public abstract boolean isRegistred();
 }

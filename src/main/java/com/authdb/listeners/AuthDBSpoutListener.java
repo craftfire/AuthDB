@@ -12,15 +12,11 @@ package com.authdb.listeners;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
 import org.getspout.spoutapi.event.spout.SpoutListener;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.authdb.AuthDB;
 import com.authdb.plugins.ZSpout;
 import com.authdb.util.Config;
-import com.authdb.util.Messages;
 import com.authdb.util.Util;
-import com.authdb.util.Messages.Message;
-import com.craftfire.util.general.GeneralUtil;
 
 public class AuthDBSpoutListener extends SpoutListener {
     private final AuthDB plugin;

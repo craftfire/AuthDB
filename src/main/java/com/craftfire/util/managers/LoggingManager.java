@@ -19,7 +19,6 @@ import java.util.Date;
 
 import org.bukkit.plugin.Plugin;
 
-import com.authdb.util.Config;
 import com.authdb.util.Util;
 
 public class LoggingManager {

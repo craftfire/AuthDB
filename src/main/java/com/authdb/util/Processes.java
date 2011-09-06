@@ -11,10 +11,7 @@ package com.authdb.util;
 
 import java.io.IOException;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.afforess.backpack.BackpackManager;
 import com.afforess.backpack.BackpackPlayer;
 import com.authdb.AuthDB;

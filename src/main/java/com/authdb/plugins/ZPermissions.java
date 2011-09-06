@@ -12,8 +12,6 @@ package com.authdb.plugins;
 import org.bukkit.entity.Player;
 
 import com.authdb.AuthDB;
-import com.authdb.util.Config;
-import com.authdb.util.Util;
 
 import com.nijiko.permissions.PermissionHandler;
 

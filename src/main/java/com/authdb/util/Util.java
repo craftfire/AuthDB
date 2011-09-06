@@ -45,7 +45,6 @@ import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
 import com.authdb.util.encryption.Encryption;
-import com.avaje.ebean.Ebean;
 import com.craftfire.util.general.GeneralUtil;
 import com.craftfire.util.managers.CraftFireManager;
 import com.craftfire.util.managers.DatabaseManager;
