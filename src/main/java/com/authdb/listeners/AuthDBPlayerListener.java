@@ -35,6 +35,7 @@ import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.plugins.ZSpout;
 import com.authdb.util.Config;
 import com.authdb.util.encryption.Encryption;
+import com.authdb.util.managers.AuthDBPlayer;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
@@ -49,6 +50,7 @@ public class AuthDBPlayerListener extends PlayerListener {
     private final AuthDB plugin;
     boolean sessionallow;
     int Schedule;
+    AuthDBPlayer authDBplayer = new AuthDBPlayer();
 
     public AuthDBPlayerListener(AuthDB instance) {
         this.plugin = instance;
@@ -56,6 +58,7 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
+
         if (!MySQL.isConnected()) {
             event.disallow(Result.KICK_OTHER, "You cannot join when the server has no database connection.");
             return;

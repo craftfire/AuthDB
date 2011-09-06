@@ -26,7 +26,6 @@ public class PlayerManager {
     LoggingManager loggingManager = new LoggingManager();
 
     public void setInventoryFromStorage(Player player) {
-    	CraftFirePlayer craftFirePlayer = (CraftFirePlayer)player;
         ItemStack[] inv = getInventory(player);
         if (inv != null) {
             loggingManager.Debug("Sucessfully restored " + player.getName() + "'s inventory: " + inv);
