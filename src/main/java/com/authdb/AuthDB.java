@@ -400,8 +400,12 @@ public class AuthDB extends JavaPlugin {
                         if (AuthDB.AuthDB_Sessions.containsKey(check)) {
                             AuthDB_Sessions.remove(check);
                         }
-                        Messages.sendMessage(Message.login_normal, player, null);
                         Messages.sendMessage(Message.logout_success, player, null);
+                        if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
+                                 Messages.sendMessage(Message.login_prompt, player, null);
+                         } else {
+                             Messages.sendMessage(Message.login_normal, player, null);
+                         }
                         return true;
                     } else {
                         Messages.sendMessage(Message.logout_failure, player, null);
