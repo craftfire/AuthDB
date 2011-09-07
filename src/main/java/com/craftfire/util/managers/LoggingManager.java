@@ -113,9 +113,20 @@ public class LoggingManager {
         logError("File name: " + file);
         logError("Function name: " + function);
         logError("Error line: " + linenumber);
-        logError("Script: " + PluginManager.config.script_name);
-        logError("Script version: " + PluginManager.config.script_version);
-        logError("Table prefix: " + PluginManager.config.script_tableprefix);
+        logError("AuthDB version: " + PluginManager.plugin.pluginVersion);
+        if (PluginManager.config.custom_enabled) {
+        	logError("Custom table: " + PluginManager.config.custom_table);
+        	if(PluginManager.config.custom_emailrequired) {
+        		logError("Custom emailfield: " + PluginManager.config.custom_emailfield);
+        	}
+        	logError("Custom passfield: " + PluginManager.config.custom_passfield);
+        	logError("Custom userfield: " + PluginManager.config.custom_userfield);
+        	logError("Custom encryption: " + PluginManager.config.custom_encryption);
+        } else {
+	        logError("Script: " + PluginManager.config.script_name);
+	        logError("Script version: " + PluginManager.config.script_version);
+	        logError("Table prefix: " + PluginManager.config.script_tableprefix);
+        }
         logError("Keep alive: " + PluginManager.config.database_keepalive);
         logError("MySQL connected: " + PluginManager.mySQL.isConnected());
         logError("Latest query: " + latestQuery);

@@ -48,9 +48,9 @@ import com.afforess.backpack.BackpackPlayer;
 
 public class AuthDBPlayerListener extends PlayerListener {
     private final AuthDB plugin;
+    private int test = 0;
     boolean sessionallow;
     int Schedule;
-    AuthDBPlayer authDBplayer = new AuthDBPlayer();
 
     public AuthDBPlayerListener(AuthDB instance) {
         this.plugin = instance;
@@ -58,6 +58,11 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
+        AuthDBPlayer aPlayer = new AuthDBPlayer(event.getPlayer());
+        Util.logging.Debug("Email 1: " + aPlayer.getEmail());
+        aPlayer.setEmail("TESTING " + test);
+        test++;
+        Util.logging.Debug("Email 2: " + aPlayer.getEmail());
 
         if (!MySQL.isConnected()) {
             event.disallow(Result.KICK_OTHER, "You cannot join when the server has no database connection.");
@@ -454,6 +459,9 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (event.isCancelled()) {
             return;
         }
+        AuthDBPlayer aPlayer = new AuthDBPlayer(event.getPlayer());
+        Util.logging.Debug("Chat Name: " + aPlayer.getName());
+        Util.logging.Debug("Chat Email: " + aPlayer.getEmail());
         if (!AuthDB.isAuthorized(event.getPlayer())) {
             Player player = event.getPlayer();
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
