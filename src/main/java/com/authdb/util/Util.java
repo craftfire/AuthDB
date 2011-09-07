@@ -695,15 +695,15 @@ public class Util {
                 if (!Config.custom_enabled) {
                     String tempVers = Config.script_version;
                     Config.script_version = scriptVersion();
-                    logging.Info("\n"
-                        + "|-----------------------------------------------------------------------------|\n"
-                        + "|--------------------------------AUTHDB WARNING-------------------------------|\n"
-                        + "|-----------------------------------------------------------------------------|\n"
-                        + "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION!                                 |\n"
-                        + "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK. |\n"
-                        + "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAS BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |\n"
-                        + "| FOR A LIST OF SCRIPT VERSIONS,                                              |\n"
-                        + "| CHECK: http://wiki.bukkit.org/AuthDB#Scripts_Supported                      |\n"
+                    logging.Info(System.getProperty("line.separator")
+                        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+                        + "|--------------------------------AUTHDB WARNING-------------------------------|" + System.getProperty("line.separator")
+                        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+                        + "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION!                                 |" + System.getProperty("line.separator")
+                        + "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK. |" + System.getProperty("line.separator")
+                        + "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAS BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |" + System.getProperty("line.separator")
+                        + "| FOR A LIST OF SCRIPT VERSIONS,                                              |" + System.getProperty("line.separator")
+                        + "| CHECK: http://wiki.bukkit.org/AuthDB#Scripts_Supported                      |" + System.getProperty("line.separator")
                         + "|-----------------------------------------------------------------------------|");
 
                 }
@@ -1245,12 +1245,12 @@ public class Util {
         string = string.replaceAll("\\{USERBADCHARACTERS\\}", Matcher.quoteReplacement(Config.filter_username));
         string = string.replaceAll("\\{PASSBADCHARACTERS\\}", Matcher.quoteReplacement(Config.filter_password));
         string = string.replaceAll("\\{EMAILREQUIRED\\}", email);
-        string = string.replaceAll("\\{NEWLINE\\}", "\n");
-        string = string.replaceAll("\\{newline\\}", "\n");
-        string = string.replaceAll("\\{N\\}", "\n");
-        string = string.replaceAll("\\{n\\}", "\n");
-        string = string.replaceAll("\\{NL\\}", "\n");
-        string = string.replaceAll("\\{nl\\}", "\n");
+        string = string.replaceAll("\\{NEWLINE\\}", System.getProperty("line.separator"));
+        string = string.replaceAll("\\{newline\\}", System.getProperty("line.separator"));
+        string = string.replaceAll("\\{N\\}", System.getProperty("line.separator"));
+        string = string.replaceAll("\\{n\\}", System.getProperty("line.separator"));
+        string = string.replaceAll("\\{NL\\}", System.getProperty("line.separator"));
+        string = string.replaceAll("\\{nl\\}", System.getProperty("line.separator"));
         // Commands
         string = string.replaceAll("\\{REGISTERCMD\\}", Config.commands_user_register + " (" + Config.aliases_user_register + ")");
         string = string.replaceAll("\\{LINKCMD\\}", Config.commands_user_link + " (" + Config.aliases_user_link + ")");

@@ -13,6 +13,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +25,7 @@ import java.util.Date;
 import org.bukkit.plugin.Plugin;
 
 import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
 
 public class LoggingManager {
     PluginManager PluginManager = new PluginManager();
@@ -64,11 +70,11 @@ public class LoggingManager {
     }
 
     public void advancedWarning(String line) {
-        PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]\n"
-        + "|-----------------------------------------------------------------------------|\n"
-        + "|--------------------------------AUTHDB WARNING-------------------------------|\n"
-        + "|-----------------------------------------------------------------------------|\n"
-        + "| " + line.toUpperCase() + "\n"
+        PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]" + System.getProperty("line.separator")
+        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+        + "|--------------------------------AUTHDB WARNING-------------------------------|" + System.getProperty("line.separator")
+        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+        + "| " + line.toUpperCase() + System.getProperty("line.separator")
         + "|-----------------------------------------------------------------------------|");
     }
 
@@ -77,11 +83,11 @@ public class LoggingManager {
     }
 
     public void advancedWarning(String line, String pluginName) {
-        PluginManager.plugin.log.warning("[" + pluginName + "]\n"
-        + "|-----------------------------------------------------------------------------|\n"
-        + "|--------------------------------AUTHDB WARNING-------------------------------|\n"
-        + "|-----------------------------------------------------------------------------|\n"
-        + "| " + line.toUpperCase() + "\n"
+        PluginManager.plugin.log.warning("[" + pluginName + "]" + System.getProperty("line.separator")
+        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+        + "|--------------------------------AUTHDB WARNING-------------------------------|" + System.getProperty("line.separator")
+        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+        + "| " + line.toUpperCase() + System.getProperty("line.separator")
         + "|-----------------------------------------------------------------------------|");
     }
 
@@ -123,6 +129,26 @@ public class LoggingManager {
         	logError("Custom passfield: " + PluginManager.config.custom_passfield);
         	logError("Custom userfield: " + PluginManager.config.custom_userfield);
         	logError("Custom encryption: " + PluginManager.config.custom_encryption);
+        	logError("Custom table schema:");
+			Statement st;
+			try {
+				st = MySQL.mysql.createStatement();
+				String sql = "SELECT * FROM " + PluginManager.config.custom_table;
+				mySQL(sql);
+				ResultSet rs = st.executeQuery(sql);
+				ResultSetMetaData metaData = rs.getMetaData();
+				int rowCount = metaData.getColumnCount();
+				logError("Table Name : " + metaData.getTableName(2));
+				logError("Field \tsize\tDataType");
+				for (int i = 0; i < rowCount; i++) {
+					logError(metaData.getColumnName(i + 1) + " \t");
+					logError(metaData.getColumnDisplaySize(i + 1) + "\t");
+					logError(metaData.getColumnTypeName(i + 1));
+				}
+			} catch (SQLException e) {
+				logError("Failed while getting MySQL table schema.");
+			}
+        	
         } else {
 	        logError("Script: " + PluginManager.config.script_name);
 	        logError("Script version: " + PluginManager.config.script_version);
@@ -225,7 +251,7 @@ public class LoggingManager {
                 Date TheDate = new Date();
                 Writer = new FileWriter(logFolder + type.toString() + "/" + LogFormat.format(date) + "-" + type.toString() + ".log", true);
                 BufferedWriter Out = new BufferedWriter(Writer);
-                Out.write(StringFormat.format(TheDate) + " - " + line + "\n");
+                Out.write(StringFormat.format(TheDate) + " - " + line + System.getProperty("line.separator"));
                 Out.close();
             } catch (IOException e) {
                 // TODO: Auto-generated catch block
