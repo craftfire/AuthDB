@@ -64,10 +64,11 @@ public class AuthDBPlayerListener extends PlayerListener {
             return;
         }
 
-        EBean.sync(player);
-
         if (Config.session_protect && Util.checkIfLoggedIn(player)) {
             Messages.sendMessage(Message.session_protected, player, event);
+            return;
+        } else {
+            EBean.sync(player);
         }
         if (Config.filter_action.equalsIgnoreCase("kick") || Config.filter_action.equalsIgnoreCase("rename")) {
             String name = player.getName();
@@ -75,6 +76,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 Util.logging.Debug(name + " is not in the whitelist and has bad characters in his/her name.");
 	            if (Config.filter_action.equalsIgnoreCase("kick")) {
 	                Messages.sendMessage(Message.filter_username, player, event);
+	                return;
 	            }
             }
         }

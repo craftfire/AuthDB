@@ -148,7 +148,8 @@ public class EBean {
     public static void checkIP(String player, String IP) {
         EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getIp() == null || eBeanClass.getIp().equals(IP) == false) {
-            Util.logging.Debug("IP in persistence is different than the player's IP, syncing IP's.");
+            Util.logging.Debug("IP in persistence is different than the player's IP, removing session and syncing IP's .");
+            eBeanClass.setSessiontime(0);
             eBeanClass.setIp(IP);
             AuthDB.database.save(eBeanClass);
         }
