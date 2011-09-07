@@ -17,6 +17,7 @@ Core:
     failure: "AuthDB could not be reloaded!"
   register:
     welcome: "{YELLOW}Welcome {WHITE}{PLAYER}{YELLOW}! Please use {REGISTERCMD} password {EMAILREQUIRED}"
+#    processing: "{YELLOW}Processing registration..."
     success: "{BRIGHTGREEN}You have successfully registered! You are now logged in."
     failure: "{RED}Registration failed!"
     offline: "{RED}Database is unavailable. Registration is disabled!"
@@ -27,6 +28,7 @@ Core:
   login:
     normal: "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use {LOGINCMD} password"
     prompt: "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:"
+#    processing: "{YELLOW}Processing login..."
     success: "{BRIGHTGREEN}Password accepted. Welcome!"
     failure: "{RED}Password incorrect, please try again."
     offline: "{RED}Database is unavailable. Unable to verify password!"
@@ -39,6 +41,7 @@ Core:
     adminnotfound: "Could not find player, {PLAYER}! Please try again."
     usage: "{YELLOW}Correct usage is: {WHITE}{LOGINCMD} password"
   logout:
+#    processing: "{YELLOW}Attempting to logout..."
     success: "Successfully logged out!"
     failure: "You are not logged in!"
     admin: "You have been logged out by an admin."
@@ -47,7 +50,8 @@ Core:
     adminnotfound: "Could not find player, {PLAYER}! Please try again."
     usage: "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}"
   link:
-    welcome: "{N}or {LINKCMD} otherusername password"
+    welcome: "{NEWLINE}or {LINKCMD} otherusername password"
+#    processing: "{YELLOW}Attempting to link username..."
     success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
     failure: "{RED}Username linking failed!"
     exists: "{RED}You are already linked to a username!"
@@ -57,6 +61,7 @@ Core:
     renamed: "{YELLOW}{PLAYER} has been renamed to {DISPLAYNAME}."
     usage: "{YELLOW}Correct usage is: {WHITE}{LINKCMD} otherusername password"
   unlink:
+#    processing: "{YELLOW}Attempting to unlink username..."
     success: "{BRIGHTGREEN}Username unlinked successfully!"
     failure: "{RED}Username unlinking failed!"
     nonexist: "{RED}You do not have a linked username!"

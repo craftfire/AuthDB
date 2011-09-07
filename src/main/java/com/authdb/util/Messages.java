@@ -39,7 +39,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               register
         ///////////////////////////////////////////
-        public static String AuthDB_message_register_welcome, AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_offline, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout;
+        public static String AuthDB_message_register_welcome, AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_offline, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout, AuthDB_message_register_processing;
 
         ///////////////////////////////////////////
         //               unregister
@@ -49,22 +49,22 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               logout
         ///////////////////////////////////////////
-        public static String AuthDB_message_logout_success, AuthDB_message_logout_failure, AuthDB_message_logout_admin, AuthDB_message_logout_admin_success, AuthDB_message_logout_admin_failure, AuthDB_message_logout_admin_notfound, AuthDB_message_logout_usage;
+        public static String AuthDB_message_logout_success, AuthDB_message_logout_failure, AuthDB_message_logout_admin, AuthDB_message_logout_admin_success, AuthDB_message_logout_admin_failure, AuthDB_message_logout_admin_notfound, AuthDB_message_logout_usage, AuthDB_message_logout_processing;
 
         ///////////////////////////////////////////
         //               login
         ///////////////////////////////////////////
-        public static String AuthDB_message_login_normal, AuthDB_message_login_prompt, AuthDB_message_login_success, AuthDB_message_login_failure, AuthDB_message_login_offline, AuthDB_message_login_authorized, AuthDB_message_login_notregistered, AuthDB_message_login_timeout, AuthDB_message_login_admin, AuthDB_message_login_admin_success, AuthDB_message_login_admin_failure, AuthDB_message_login_admin_notfound, AuthDB_message_login_usage;
+        public static String AuthDB_message_login_normal, AuthDB_message_login_prompt, AuthDB_message_login_success, AuthDB_message_login_failure, AuthDB_message_login_offline, AuthDB_message_login_authorized, AuthDB_message_login_notregistered, AuthDB_message_login_timeout, AuthDB_message_login_admin, AuthDB_message_login_admin_success, AuthDB_message_login_admin_failure, AuthDB_message_login_admin_notfound, AuthDB_message_login_usage, AuthDB_message_login_processing;
 
         ///////////////////////////////////////////
         //               link
         ///////////////////////////////////////////
-        public static String AuthDB_message_link_welcome, AuthDB_message_link_success, AuthDB_message_link_failure, AuthDB_message_link_exists, AuthDB_message_link_usage, AuthDB_message_link_duplicate, AuthDB_message_link_registered, AuthDB_message_link_invaliduser, AuthDB_message_link_renamed;
+        public static String AuthDB_message_link_welcome, AuthDB_message_link_success, AuthDB_message_link_failure, AuthDB_message_link_exists, AuthDB_message_link_usage, AuthDB_message_link_duplicate, AuthDB_message_link_registered, AuthDB_message_link_invaliduser, AuthDB_message_link_renamed, AuthDB_message_link_processing;
 
         ///////////////////////////////////////////
         //               unlink
         ///////////////////////////////////////////
-        public static String AuthDB_message_unlink_success, AuthDB_message_unlink_failure, AuthDB_message_unlink_nonexist, AuthDB_message_unlink_usage, AuthDB_message_unlink_invaliduser, AuthDB_message_unlink_invalidpass, AuthDB_message_unlink_renamed;
+        public static String AuthDB_message_unlink_success, AuthDB_message_unlink_failure, AuthDB_message_unlink_nonexist, AuthDB_message_unlink_usage, AuthDB_message_unlink_invaliduser, AuthDB_message_unlink_invalidpass, AuthDB_message_unlink_renamed, AuthDB_message_unlink_processing;
 
         ///////////////////////////////////////////
         //               email
@@ -136,6 +136,7 @@ static AuthDB plugin = new AuthDB();
         register_disabled (AuthDB_message_register_disabled),
         register_timeout (AuthDB_message_register_timeout),
         register_usage (AuthDB_message_register_usage),
+        register_processing (AuthDB_message_register_processing),
         unregister_success (AuthDB_message_unregister_success),
         unregister_failure (AuthDB_message_unregister_failure),
         unregister_usage (AuthDB_message_unregister_usage),
@@ -152,6 +153,7 @@ static AuthDB plugin = new AuthDB();
         login_admin_failure (AuthDB_message_login_admin_failure),
         login_admin_notfound (AuthDB_message_login_admin_notfound),
         login_usage (AuthDB_message_login_usage),
+        login_processing (AuthDB_message_login_processing),
         logout_success (AuthDB_message_logout_success),
         logout_failure (AuthDB_message_logout_failure),
         logout_admin (AuthDB_message_logout_admin),
@@ -159,6 +161,7 @@ static AuthDB plugin = new AuthDB();
         logout_admin_failure (AuthDB_message_logout_admin_failure),
         logout_admin_notfound (AuthDB_message_logout_admin_notfound),
         logout_usage (AuthDB_message_logout_usage),
+        logout_processing (AuthDB_message_logout_processing),
         link_welcome (AuthDB_message_link_welcome),
         link_success (AuthDB_message_link_success),
         link_failure (AuthDB_message_link_failure),
@@ -168,6 +171,7 @@ static AuthDB plugin = new AuthDB();
         link_invaliduser (AuthDB_message_link_invaliduser),
         link_renamed (AuthDB_message_link_renamed),
         link_usage (AuthDB_message_link_usage),
+        link_processing (AuthDB_message_link_processing),
         unlink_success (AuthDB_message_unlink_success),
         unlink_failure (AuthDB_message_unlink_failure),
         unlink_nonexist (AuthDB_message_unlink_nonexist),
@@ -175,6 +179,7 @@ static AuthDB plugin = new AuthDB();
         unlink_invalidpass (AuthDB_message_unlink_invalidpass),
         unlink_renamed (AuthDB_message_unlink_renamed),
         unlink_usage (AuthDB_message_unlink_usage),
+        unlink_processing (AuthDB_message_unlink_processing),
         email_required (AuthDB_message_email_required),
         email_invalid (AuthDB_message_email_invalid),
         email_badcharacters (AuthDB_message_email_badcharacters),
@@ -397,6 +402,8 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_protection_denied, player, null));
             } else if (type.equals(Message.protection_notauthorized)) {
                 player.sendMessage(Util.replaceStrings(AuthDB_message_protection_notauthorized, player, null));
+            } else {
+            	player.sendMessage(Util.replaceStrings(type.text, player, null));
             }
         } else {
             Messages.sendMessage(Message.database_failure, null, null);

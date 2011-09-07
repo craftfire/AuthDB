@@ -228,18 +228,11 @@ public class Config {
                 Messages.AuthDB_message_register_disabled = Config.getConfigString("Core.register.disabled", "{RED}Registration not allowed!");
                 Messages.AuthDB_message_register_usage = Config.getConfigString("Core.register.usage", "{RED}Correct usage is: /register password email");
                 Messages.AuthDB_message_register_timeout = Config.getConfigString("Core.register.timeout", "Kicked because you failed to register within {REGISTERTIMEOUT}.");
+                Messages.AuthDB_message_register_processing = Config.getConfigString("Core.register.processing", "{YELLOW}Processing registration...");
 
                 Messages.AuthDB_message_unregister_success = Config.getConfigString("Core.unregister.success", "{BRIGHTGREEN}Unregistered successfully!");
                 Messages.AuthDB_message_unregister_failure = Config.getConfigString("Core.unregister.failure", "{RED}An error occurred while unregistering!");
                 Messages.AuthDB_message_unregister_usage = Config.getConfigString("Core.unregister.usage", "{RED}Correct usage is: /unregister password");
-
-                Messages.AuthDB_message_logout_success = Config.getConfigString("Core.logout.success", "Successfully logged out!");
-                Messages.AuthDB_message_logout_failure = Config.getConfigString("Core.logout.failure", "You are not logged in!");
-                Messages.AuthDB_message_logout_admin = Config.getConfigString("Core.logout.admin", "You have been logged out by an admin.");
-                Messages.AuthDB_message_logout_admin_success = Config.getConfigString("Core.logout.adminsuccess", "Successfully logged out player, {PLAYER}.");
-                Messages.AuthDB_message_logout_admin_failure = Config.getConfigString("Core.logout.adminfailure", "You cannot logout player, {PLAYER}! That player is not logged in");
-                Messages.AuthDB_message_logout_admin_notfound = Config.getConfigString("Core.logout.adminnotfound", "Could not find player, {PLAYER}! Please try again.");
-                Messages.AuthDB_message_logout_usage = Config.getConfigString("Core.logout.usage", "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}");
 
                 Messages.AuthDB_message_login_normal = Config.getConfigString("Core.login.normal", "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use /login password");
                 Messages.AuthDB_message_login_prompt = Config.getConfigString("Core.login.prompt", "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:");
@@ -254,6 +247,16 @@ public class Config {
                 Messages.AuthDB_message_login_admin_failure = Config.getConfigString("Core.login.adminfailure", "You cannot login player {PLAYER}! That player is already logged in.");
                 Messages.AuthDB_message_login_admin_notfound = Config.getConfigString("Core.login.adminnotfound", "Could not find player, {PLAYER}! Please try again.");
                 Messages.AuthDB_message_login_usage = Config.getConfigString("Core.login.usage", "{RED}Correct usage is: /login password");
+                Messages.AuthDB_message_login_processing = Config.getConfigString("Core.login.processing", "{YELLOW}Processing login...");
+                
+                Messages.AuthDB_message_logout_success = Config.getConfigString("Core.logout.success", "Successfully logged out!");
+                Messages.AuthDB_message_logout_failure = Config.getConfigString("Core.logout.failure", "You are not logged in!");
+                Messages.AuthDB_message_logout_admin = Config.getConfigString("Core.logout.admin", "You have been logged out by an admin.");
+                Messages.AuthDB_message_logout_admin_success = Config.getConfigString("Core.logout.adminsuccess", "Successfully logged out player, {PLAYER}.");
+                Messages.AuthDB_message_logout_admin_failure = Config.getConfigString("Core.logout.adminfailure", "You cannot logout player, {PLAYER}! That player is not logged in");
+                Messages.AuthDB_message_logout_admin_notfound = Config.getConfigString("Core.logout.adminnotfound", "Could not find player, {PLAYER}! Please try again.");
+                Messages.AuthDB_message_logout_usage = Config.getConfigString("Core.logout.usage", "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}");
+                Messages.AuthDB_message_logout_processing = Config.getConfigString("Core.logout.processing", "{YELLOW}Attempting to logout...");
 
                 Messages.AuthDB_message_link_welcome = (String)Config.getConfigString("Core.link.welcome", "or {LINKCMD} otherusername password");
                 Messages.AuthDB_message_link_success = Config.getConfigString("Core.link.success", "{BRIGHTGREEN}You have successfully linked!. You are now logged in");
@@ -264,6 +267,7 @@ public class Config {
                 Messages.AuthDB_message_link_invaliduser = Config.getConfigString("Core.link.invaliduser", "{RED}You cannot link with yourself!");
                 Messages.AuthDB_message_link_renamed = Config.getConfigString("Core.link.renamed", "{YELLOW}{PLAYER} has been renamed to {DISPLAYNAME}.");
                 Messages.AuthDB_message_link_usage = Config.getConfigString("Core.link.usage", "{RED}Correct usage is: /link otherusername password");
+                Messages.AuthDB_message_link_processing = Config.getConfigString("Core.link.processing", "{YELLOW}Attempting to link username...");
 
                 Messages.AuthDB_message_unlink_success = Config.getConfigString("Core.unlink.success", "{BRIGHTGREEN}You have successfully unlinked!");
                 Messages.AuthDB_message_unlink_failure = Config.getConfigString("Core.unlink.failure", "{RED}Error while unlinking!");
@@ -272,6 +276,8 @@ public class Config {
                 Messages.AuthDB_message_unlink_invalidpass = Config.getConfigString("Core.unlink.invalidpass", "{RED}Invalid linked password!");
                 Messages.AuthDB_message_unlink_renamed = Config.getConfigString("Core.unlink.renamed", "{YELLOW}{DISPLAYNAME} has been renamed to {PLAYER}.");
                 Messages.AuthDB_message_unlink_usage = Config.getConfigString("Core.unlink.usage", "{RED}Correct usage is: /unlink otherusername password");
+                Messages.AuthDB_message_unlink_processing = Config.getConfigString("Core.unlink.processing", "{YELLOW}Attempting to unlink username...");
+               
                 Messages.AuthDB_message_email_required = Config.getConfigString("Core.email.required", "{RED}Email required for registration!");
                 Messages.AuthDB_message_email_invalid = Config.getConfigString("Core.email.invalid", "{RED}Invalid email! Please try again!");
                 Messages.AuthDB_message_email_badcharacters = Config.getConfigString("Core.email.badcharacters", "{RED}Email contains bad characters! {BADCHARACTERS}!");
