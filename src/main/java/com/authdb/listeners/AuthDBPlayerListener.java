@@ -32,10 +32,8 @@ import org.bukkit.inventory.ItemStack;
 import com.authdb.AuthDB;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
-import com.authdb.plugins.ZSpout;
 import com.authdb.util.Config;
 import com.authdb.util.encryption.Encryption;
-import com.authdb.util.managers.AuthDBPlayer;
 import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
@@ -48,7 +46,6 @@ import com.afforess.backpack.BackpackPlayer;
 
 public class AuthDBPlayerListener extends PlayerListener {
     private final AuthDB plugin;
-    private int test = 0;
     boolean sessionallow;
     int Schedule;
 
