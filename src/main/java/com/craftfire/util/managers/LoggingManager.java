@@ -144,9 +144,7 @@ public class LoggingManager {
 				logError("Table Name : " + metaData.getTableName(2));
 				logError("Field \tsize\tDataType");
 				for (int i = 0; i < rowCount; i++) {
-					logError(metaData.getColumnName(i + 1) + " \t");
-					logError(metaData.getColumnDisplaySize(i + 1) + "\t");
-					logError(metaData.getColumnTypeName(i + 1));
+					logError(metaData.getColumnName(i + 1) + " \t" + metaData.getColumnDisplaySize(i + 1) + "\t" + metaData.getColumnTypeName(i + 1));
 				}
 			} catch (SQLException e) {
 				logError("Failed while getting MySQL table schema.");
