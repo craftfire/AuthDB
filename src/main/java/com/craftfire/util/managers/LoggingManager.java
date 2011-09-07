@@ -143,6 +143,7 @@ public class LoggingManager {
 				int rowCount = metaData.getColumnCount();
 				logError("Table Name : " + metaData.getTableName(2));
 				logError("Column\tType(size)");
+				metaData.get
 				for (int i = 0; i < rowCount; i++) {
 					logError(metaData.getColumnName(i + 1) + "\t" + metaData.getColumnTypeName(i + 1) + "(" + metaData.getColumnDisplaySize(i + 1) + ")");
 				}
