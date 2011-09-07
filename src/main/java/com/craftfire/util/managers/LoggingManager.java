@@ -115,6 +115,7 @@ public class LoggingManager {
         logError("Error line: " + linenumber);
         logError("AuthDB version: " + PluginManager.plugin.pluginVersion);
         if (PluginManager.config.custom_enabled) {
+        	logError("Script: Custom");
         	logError("Custom table: " + PluginManager.config.custom_table);
         	if(PluginManager.config.custom_emailrequired) {
         		logError("Custom emailfield: " + PluginManager.config.custom_emailfield);
