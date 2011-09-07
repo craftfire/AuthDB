@@ -22,7 +22,6 @@ import com.avaje.ebean.validation.NotNull;
 import com.authdb.AuthDB;
 import com.authdb.util.Config;
 import com.authdb.util.Util;
-import com.sun.istack.internal.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -209,32 +208,19 @@ public class EBean {
     private int id;
     @NotNull
     private String playername;
-    @Nullable
     private String linkedname;
-    @Nullable
     private String password;
-    @Nullable
     private String salt;
-    @Nullable
     private String ip;
-    @Nullable
     private String email;
     @Length(max = 600)
-    @Nullable
     private String inventory;
-    @Nullable
     private String equipment;
-    @Nullable
     private String activated;
-    @Nullable
     private String registered;
-    @Nullable
     private String authorized;
-    @Nullable
     private int timeoutid;
-    @Nullable
     private long reloadtime;
-    @Nullable
     private long sessiontime;
 
     public void setId(int id) {
