@@ -1456,7 +1456,7 @@ public class Util {
 
     public static boolean checkIfLoggedIn(Player player) {
         for (Player p : player.getServer().getOnlinePlayers()) {
-            if (p.getName().equals(player.getName()) && AuthDB.isAuthorized(p)) {
+            if (p.getName().equalsIgnoreCase(player.getName()) && AuthDB.isAuthorized(p)) {
                 return true;
             }
         }
