@@ -467,7 +467,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                                     Messages.sendMessage(Message.login_authorized, player, null);
                                 } else if (split.length > 1) {
                                     Messages.sendMessage(Message.login_prompt, player, null);
-                                } else if (this.plugin.checkPassword(player.getName(), split[0]) || this.plugin.checkPassword(Util.checkOtherName(player.getName()), split[0])) {
+                                } else if (this.plugin.checkPassword(Util.checkOtherName(player.getName()), split[0])) {
                                     Processes.Login(player);
                                     Messages.sendMessage(Message.login_success, player, null);
                                 } else {
