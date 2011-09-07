@@ -466,6 +466,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                     if (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.checkOtherName(event.getPlayer().getName()))) {
                         String[] split = event.getMessage().split(" ");
                         if (ZPermissions.isAllowed(player, Permission.command_login)) {
+                        	Messages.sendMessage(Message.login_processing, player, null);
                             if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.checkOtherName(player.getName()))) {
                                 if (AuthDB.isAuthorized(player)) {
                                     Messages.sendMessage(Message.login_authorized, player, null);
