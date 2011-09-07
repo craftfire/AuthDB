@@ -413,11 +413,13 @@ public class AuthDB extends JavaPlugin {
                 }
             } else if (command.startsWith(commandString(Config.commands_admin_logout, true)) || command.startsWith(commandString(Config.aliases_admin_logout, true))) {
                 if (ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
+                	Messages.sendMessage(Message.logout_processing, player, null);
                     String[] temp = commandString(Config.commands_admin_logout, true).split(" ");
                     if (args.length == temp.length) {
                         String PlayerName = args[temp.length - 1];
                         List<Player> players = sender.getServer().matchPlayer(PlayerName);
                         if (!players.isEmpty()) {
+                        	Messages.sendMessage(Message.logout_processing, players.get(0), null);
                             if (Processes.Logout(players.get(0), true)) {
                                 Messages.sendMessage(Message.logout_admin_success, player, null, players.get(0).getName());
                                 Messages.sendMessage(Message.logout_admin, players.get(0), null);
