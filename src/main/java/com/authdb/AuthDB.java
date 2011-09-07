@@ -69,17 +69,17 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.ensifera.animosity.craftirc.CraftIRC;
 
 public class AuthDB extends JavaPlugin {
-    //
+
     public String configFolder;
     public String logFolder;
-    //
+
     public static org.bukkit.Server server;
     public static AuthDB plugin;
     public static EbeanServer database;
     public PluginDescriptionFile pluginFile = getDescription();
     public static String pluginName, pluginVersion, pluginWebsite, pluginDescrption;
     public static CraftIRC craftircHandle;
-    //
+
     private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
     private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
@@ -143,14 +143,6 @@ public class AuthDB extends JavaPlugin {
         server = getServer();
         database = getDatabase();
         Plugin[] plugins = server.getPluginManager().getPlugins();
-        //logging.Debug(System.getProperty("java.version"));
-        /*logging.Debug(System.getProperty("java.io.tmpdir"));
-        Util.logging.Debug(System.getProperty("java.library.path"));
-        Util.logging.Debug(System.getProperty("java.class.path"));
-        Util.logging.Debug(System.getProperty("user.home"));
-        Util.logging.Debug(System.getProperty("user.dir"));
-        Util.logging.Debug(System.getProperty("user.name"));
-        Util.ErrorFile("HELLO"); */
         int counter = 0;
         StringBuffer Plugins = new StringBuffer();
         while (plugins.length > counter) {
@@ -303,7 +295,7 @@ public class AuthDB extends JavaPlugin {
                     PreparedStatement ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `" + Config.custom_table + "`");
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
-                        Util.logging.Info(rs.getInt("countit") + " user registrations in database");
+                        Util.logging.Info("Found " + rs.getInt("countit") + " user registrations in the database.");
                     }
                     ps.close();
                 } catch (SQLException e1) {
@@ -399,6 +391,7 @@ public class AuthDB extends JavaPlugin {
                 }
             } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_user_logout, true)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_user_logout, true))) {
                 if (ZPermissions.isAllowed(player, Permission.command_logout)) {
+                	Messages.sendMessage(Message.logout_processing, player, null);
                     if (Processes.Logout(player, true)) {
                         EBean eBeanClass = EBean.checkPlayer(player, true);
                         eBeanClass.setSessiontime(0);

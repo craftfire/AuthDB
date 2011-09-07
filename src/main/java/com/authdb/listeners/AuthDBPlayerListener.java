@@ -292,7 +292,8 @@ public class AuthDBPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         if (split[0].equalsIgnoreCase(Config.commands_user_login) || split[0].equalsIgnoreCase(Config.aliases_user_login)) {
             if (ZPermissions.isAllowed(player, Permission.command_login)) {
-                if (this.plugin.isRegistered("command",player.getName()) == false || this.plugin.isRegistered("command",Util.checkOtherName(player.getName())) == false) {
+            	Messages.sendMessage(Message.login_processing, player, null);
+                if (this.plugin.isRegistered("command",Util.checkOtherName(player.getName())) == false) {
                     Messages.sendMessage(Message.login_notregistered, player, null);
                 } else if (plugin.isAuthorized(player)) {
                     Messages.sendMessage(Message.login_authorized, player, null);
@@ -317,6 +318,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 if (ZPermissions.isAllowed(player, Permission.command_link)) {
                     if (split.length == 3) {
                         if (!player.getName().equals(split[1])) {
+                        	Messages.sendMessage(Message.link_processing, player, null);
                             if (this.plugin.isRegistered("link",player.getName()) == false) {
                                if (Util.checkOtherName(player.getName()).equals(player.getName())) {
                                    EBean eBeanClass = EBean.checkPlayer(split[1], true);
@@ -349,6 +351,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         } else if (split[0].equalsIgnoreCase(Config.commands_user_unlink) || split[0].equalsIgnoreCase(Config.aliases_user_unlink)) {
             if (Config.unlink_enabled) {
                 if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
+                	Messages.sendMessage(Message.unlink_processing, player, null);
                     if (split.length == 3) {
                         if (Util.checkOtherName(player.getName()).equals(player.getDisplayName())) {
                             EBean eBeanClass = EBean.checkPlayer(player, true);
@@ -376,6 +379,7 @@ public class AuthDBPlayerListener extends PlayerListener {
             }
         } else if (split[0].equalsIgnoreCase(Config.commands_user_register) || split[0].equalsIgnoreCase(Config.aliases_user_register)) {
             if (ZPermissions.isAllowed(player, Permission.command_register)) {
+            	Messages.sendMessage(Message.register_processing, player, null);
                 Boolean email = true;
                 if (Config.custom_enabled) {
                     email = Config.custom_emailrequired;
