@@ -120,6 +120,9 @@ public class LoggingManager {
         logError("Function name: " + function);
         logError("Error line: " + linenumber);
         logError("AuthDB version: " + PluginManager.plugin.pluginVersion);
+        logError("Keep alive: " + PluginManager.config.database_keepalive);
+        logError("MySQL connection: " + PluginManager.mySQL.isConnected());
+        logError("Latest query: " + latestQuery);
         if (PluginManager.config.custom_enabled) {
         	logError("Script: Custom");
         	logError("Custom table: " + PluginManager.config.custom_table);
@@ -154,9 +157,6 @@ public class LoggingManager {
 	        logError("Script version: " + PluginManager.config.script_version);
 	        logError("Table prefix: " + PluginManager.config.script_tableprefix);
         }
-        logError("Keep alive: " + PluginManager.config.database_keepalive);
-        logError("MySQL connection: " + PluginManager.mySQL.isConnected());
-        logError("Latest query: " + latestQuery);
         Plugin[] plugins = PluginManager.plugin.getServer().getPluginManager().getPlugins();
         int counter = 0;
         StringBuffer pluginsList = new StringBuffer();
