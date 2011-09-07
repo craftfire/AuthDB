@@ -37,20 +37,18 @@ public class Custom {
         //
         String query;
         if (Config.custom_emailrequired) {
-            query = "INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (" + player + ", " + password + ", " + email + ")";
-            Util.logging.mySQL(query);
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (?,?,?)", 1);
             ps.setString(1, player); //username
             ps.setString(2, password); // password
             ps.setString(3, email); // email
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
         } else {
-            query = "INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`)  VALUES ('" + player + "', '" + password + "')";
-            Util.logging.mySQL(query);
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`)  VALUES (?,?)", 1);
             ps.setString(1, player); //username
             ps.setString(2, password); // password
+            Util.logging.mySQL(ps.toString());
             ps.executeUpdate();
             ps.close();
         }
