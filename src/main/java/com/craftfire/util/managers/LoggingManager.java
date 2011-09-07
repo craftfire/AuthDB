@@ -129,7 +129,7 @@ public class LoggingManager {
 	        logError("Table prefix: " + PluginManager.config.script_tableprefix);
         }
         logError("Keep alive: " + PluginManager.config.database_keepalive);
-        logError("MySQL connected: " + PluginManager.mySQL.isConnected());
+        logError("MySQL connection: " + PluginManager.mySQL.isConnected());
         logError("Latest query: " + latestQuery);
         Plugin[] plugins = PluginManager.plugin.getServer().getPluginManager().getPlugins();
         int counter = 0;
