@@ -1,5 +1,5 @@
 name: AuthDB
-version: 2.3.1.${build.number}
+version: 2.3.3.${build.number}
 description: Script and custom database user authentication through MySQL.
 authors: [CraftFire, Contex, Wulfspider]
 website: http://www.authdb.com

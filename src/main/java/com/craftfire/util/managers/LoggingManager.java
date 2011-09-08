@@ -35,13 +35,26 @@ public class LoggingManager {
         error, debug, info, warning, servere;
     }
 
+    /**
+     * Prints debug messages if enabled to console and file.
+     *
+     * @param line is the line to be printed.
+     * @deprecated This method will removed in the near future and replaced with debug(String line, String pluginName).
+     */
+    @Deprecated
     public void Debug(String line) {
         if (PluginManager.config.debug_enable) {
             PluginManager.plugin.log.info("[" + PluginManager.plugin.pluginName + "] " + line);
             ToFile(Type.debug, "[" + PluginManager.plugin.pluginName + "] " + line, logFolder);
         }
     }
-
+    
+    /**
+     * Prints debug messages if enabled to console and file.
+     *
+     * @param line is the line to be printed.
+     * @param pluginName is the prefix of the messages, for example [pluginName] line.
+     */
     public void debug(String line, String pluginName) {
         if (PluginManager.config.debug_enable) {
             PluginManager.plugin.log.info("[" + pluginName + "] " + line);
@@ -49,25 +62,65 @@ public class LoggingManager {
         }
     }
 
+    /**
+     * Print to console with info level.
+     *
+     * @param line is the line to be printed.
+     * @param pluginName is the prefix of the messages, for example [pluginName] line.
+     */
     public void info(String line, String pluginName) {
         PluginManager.plugin.log.info("[" + pluginName + "] " + line);
     }
-
+    
+    /**
+     * Print to console with severe level.
+     *
+     * @param line is the line to be printed.
+     * @param pluginName is the prefix of the messages, for example [pluginName] line.
+     */
     public void severe(String line, String pluginName) {
         PluginManager.plugin.log.severe("[" + pluginName + "] " + line);
     }
+    
+    /**
+     * Print to console with warning level.
+     *
+     * @param line is the line to be printed.
+     * @param pluginName is the prefix of the messages, for example [pluginName] line.
+     */
     public void warning(String line, String pluginName) {
         PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
     }
 
+    /**
+     * Print to console with info level.
+     *
+     * @param line is the line to be printed.
+     * @deprecated This method will removed in the near future and replaced with info(String line, String pluginName).
+     */
+    @Deprecated
     public void Info(String line) {
             PluginManager.plugin.log.info("[" + PluginManager.plugin.pluginName + "] " + line);
     }
 
+    /**
+     * Print to console with severe level.
+     *
+     * @param line is the line to be printed.
+     * @deprecated This method will removed in the near future and replaced with severe(String line, String pluginName).
+     */
+    @Deprecated
     public void Severe(String line) {
             PluginManager.plugin.log.severe("[" + PluginManager.plugin.pluginName + "] " + line);
     }
 
+    /**
+     * Prints out a nice advanced warning into the console.
+     *
+     * @param line is the line to be printed.
+     * @deprecated This method will removed in the near future and replaced with advancedWarning(String line, String pluginName).
+     */
+    @Deprecated
     public void advancedWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]" + System.getProperty("line.separator")
         + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
@@ -77,10 +130,23 @@ public class LoggingManager {
         + "|-----------------------------------------------------------------------------|");
     }
 
+    /**
+     * Prints out a plain warning into the console.
+     *
+     * @param line is the line to be printed.
+     * @deprecated This method will removed in the near future and replaced with plainWarning(String line, String pluginName).
+     */
+    @Deprecated
     public void plainWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
     }
 
+    /**
+     * Prints out a nice advanced warning into the console.
+     *
+     * @param line is the line to be printed.
+     * @param pluginName is the prefix of the messages, for example [pluginName] line.
+     */
     public void advancedWarning(String line, String pluginName) {
         PluginManager.plugin.log.warning("[" + pluginName + "]" + System.getProperty("line.separator")
         + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
@@ -90,10 +156,21 @@ public class LoggingManager {
         + "|-----------------------------------------------------------------------------|");
     }
 
+    /**
+     * Prints out a plain warning into the console.
+     *
+     * @param line is the line to be printed.
+     * @param pluginName is the prefix of the messages, for example [pluginName] line.
+     */
     public void plainWarning(String line, String pluginName) {
         PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
     }
 
+    /**
+     * Send the MySQL query to debug.
+     *
+     * @param query is the query to be printed.
+     */
     public void mySQL(String query) {
         latestQuery = query;
         Debug("Executing MySQL query: " + query);
