@@ -23,7 +23,7 @@ public class Drupal {
     public static String VersionRange = "6.20-6.20";
     public static String VersionRange2 = "7.0-7.0";
     //public static String VersionRange3 = "8.0-8.0";
-    public static String LatestVersionRange = VersionRange2;
+    public static String LatestVersionRange = VersionRange;
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
         long timestamp = System.currentTimeMillis()/1000;
@@ -77,7 +77,6 @@ public class Drupal {
         int count = 6;
 
         if (random.length() < count) {
-
             for (int i = 0; i < count; i += 16) {
                 random_state = Encryption.SHA256(unique_id() + random_state);
                 random.append(Encryption.pack(Encryption.SHA256(random_state)));
