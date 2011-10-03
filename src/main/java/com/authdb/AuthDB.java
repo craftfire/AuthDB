@@ -206,13 +206,6 @@ public class AuthDB extends JavaPlugin {
           } else {
               Util.logging.Debug("Server is running without Backpack.");
           }
-          check = getServer().getPluginManager().getPlugin("BukkitContrib");
-          if (check != null) {
-              Config.hasBukkitContrib = true;
-              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
-          } else {
-              Util.logging.Debug("Server is running without BukkitContrib.");
-          }
           check = getServer().getPluginManager().getPlugin("Buildr");
           if (check != null) {
               Config.hasBuildr = true;

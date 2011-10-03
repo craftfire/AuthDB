@@ -104,11 +104,6 @@
             <version>dev-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org</groupId>
-            <artifactId>bukkitcontrib</artifactId>
-            <version>0.1.7</version>
-        </dependency>
-        <dependency>
             <groupId>com.platymuus.bukkit</groupId>
             <artifactId>permissions</artifactId>
             <version>1.0</version>
