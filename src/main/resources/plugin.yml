@@ -5,6 +5,7 @@ authors: [CraftFire, Contex, Wulfspider]
 website: http://www.authdb.com
 
 main: com.authdb.AuthDB
+load: startup
 database: true
 softdepend: [Spout]
 
