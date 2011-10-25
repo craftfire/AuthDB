@@ -289,6 +289,7 @@ public class Util {
                         }
                     }
                 } else if (checkVersionInRange(VBulletin.VersionRange2)) {
+                    saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.hasForumBoard = true;

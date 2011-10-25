@@ -460,11 +460,11 @@ public class AuthDBPlayerListener extends PlayerListener {
         if (!AuthDB.isAuthorized(event.getPlayer())) {
             Player player = event.getPlayer();
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
-                    if (this.plugin.isRegistered("chat",event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.checkOtherName(event.getPlayer().getName()))) {
+                    if (this.plugin.isRegistered("chat", event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.checkOtherName(event.getPlayer().getName()))) {
                         String[] split = event.getMessage().split(" ");
                         if (ZPermissions.isAllowed(player, Permission.command_login)) {
                         	Messages.sendMessage(Message.login_processing, player, null);
-                            if (this.plugin.isRegistered("chatprompt",player.getName()) || this.plugin.isRegistered("chatprompt",Util.checkOtherName(player.getName()))) {
+                            if (this.plugin.isRegistered("chatprompt", player.getName()) || this.plugin.isRegistered("chatprompt",Util.checkOtherName(player.getName()))) {
                                 if (AuthDB.isAuthorized(player)) {
                                     Messages.sendMessage(Message.login_authorized, player, null);
                                 } else if (split.length > 1) {
@@ -509,9 +509,9 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
-            if (this.plugin.isRegistered("dropitem",event.getPlayer().getName()) || this.plugin.isRegistered("dropitem",Util.checkOtherName(event.getPlayer().getName()))) {
+            if (this.plugin.isRegistered("dropitem", event.getPlayer().getName()) || this.plugin.isRegistered("dropitem",Util.checkOtherName(event.getPlayer().getName()))) {
                 event.setCancelled(true);
-            } else if (!checkGuest(event.getPlayer(),Config.guests_drop)) {
+            } else if (!checkGuest(event.getPlayer(), Config.guests_drop)) {
                 event.setCancelled(true);
             }
         }
@@ -526,7 +526,7 @@ public class AuthDBPlayerListener extends PlayerListener {
 
     boolean checkGuest(Player player,boolean what) {
         if (what) {
-            if (this.plugin.isRegistered("checkguest",player.getName()) == false || this.plugin.isRegistered("checkguest",Util.checkOtherName(player.getName())) == false) {
+            if (this.plugin.isRegistered("checkguest", player.getName()) == false || this.plugin.isRegistered("checkguest", Util.checkOtherName(player.getName())) == false) {
                 return true;
             }
         } else if (Config.protection_notify && !AuthDB.isAuthorized(player)) {
