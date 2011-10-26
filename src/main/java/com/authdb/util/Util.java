@@ -216,6 +216,7 @@ public class Util {
                 || checkVersionInRange("2.0.0-2.0.0")) {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
+                    saltfield = "password_salt";
                     Config.hasForumBoard = true;
                     caseSensitive = true;
                     bans = true;
@@ -625,9 +626,9 @@ public class Util {
             } else if (script.equalsIgnoreCase(IPB.Name) || script.equalsIgnoreCase(IPB.ShortName)) {
                 usertable = "members";
                 if (checkVersionInRange(IPB.VersionRange)) {
-                    saltfield = "members_pass_salt";
                     usernamefield = "members_l_username";
                     passwordfield = "members_pass_hash";
+                    saltfield = "members_pass_salt";
                     Config.hasForumBoard = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {

@@ -48,9 +48,6 @@
         <repository>
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
-            <releases>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
             <snapshots>
                 <updatePolicy>daily</updatePolicy>
             </snapshots>
@@ -62,9 +59,6 @@
         <repository>
             <id>spout-repo</id>
             <url>http://repo.getspout.org</url>
-            <releases>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
             <snapshots>
                 <updatePolicy>daily</updatePolicy>
             </snapshots>
@@ -79,22 +73,10 @@
             <artifactId>util</artifactId>
             <version>1.0.0</version>
         </dependency> -->
-        <!-- Debugging  -->
-        <!-- <dependency>
-            <groupId>fm.void.jetm</groupId>
-            <artifactId>jetm</artifactId>
-            <version>1.2.3</version>
-        </dependency> -->
         <!-- Bukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <!-- CraftBukkit -->
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- Third-party plugins -->
@@ -174,7 +156,6 @@
                 </includes>
             </resource>
         </resources>
-
         <!-- Build plugins -->
         <plugins>
             <!-- Compile plugin -->
