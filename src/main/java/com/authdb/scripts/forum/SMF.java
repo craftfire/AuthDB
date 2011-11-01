@@ -151,7 +151,7 @@ public class SMF {
     public static String hash(int checkid, String player, String password) {
         if (checkid == 1) {
             try {
-                String temp = player + password;
+                String temp = player.toLowerCase() + password;
                 return Encryption.SHA1(temp);
             } catch (NoSuchAlgorithmException e) {
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -160,7 +160,7 @@ public class SMF {
             }
         } else if (checkid == 2) {
             try {
-                String temp = player + password;
+                String temp = player.toLowerCase() + password;
                 return Encryption.SHA1(temp);
             } catch (NoSuchAlgorithmException e) {
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
