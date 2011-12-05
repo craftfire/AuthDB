@@ -159,7 +159,7 @@ public class AuthDBPlayerListener extends PlayerListener {
                 }
             }
             if (Config.custom_enabled && (Config.custom_encryption.equals("") || Config.custom_encryption == null)) {
-                player.sendMessage("�4WARNING: Password is NOT encrypted, but stored in plain text. Your data might be at risk.");
+                player.sendMessage(Color.red + "WARNING: Password is NOT encrypted, but stored in plain text. Your data might be at risk.");
             }
             if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
                 player.setHealth(20);
