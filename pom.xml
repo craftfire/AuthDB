@@ -18,6 +18,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bukkit.version>1.0.1-R2-SNAPSHOT</bukkit.version>
     </properties>
 
     <!-- License -->
@@ -26,7 +27,7 @@
             <name>Creative Commons CC BY-NC-ND 3.0</name>
             <url>http://creativecommons.org/licenses/by-nc-nd/3.0/</url>
             <distribution>repo</distribution>
-            <comments>This license only allows others to download your works and share them with others as long as they credit you, but they can�t change them in any way or use them commercially.</comments>
+            <comments>This license only allows others to download your works and share them with others as long as they credit you, but they can't change them in any way or use them commercially.</comments>
         </license>
     </licenses>
 
@@ -48,47 +49,30 @@
         <repository>
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
-            <snapshots>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>craftfire-dbrepo</id>
-            <url>http://db.craftfire.com/repo</url>
-        </repository>
-        <repository>
-            <id>spout-repo</id>
-            <url>http://repo.getspout.org</url>
-            <snapshots>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
         </repository>
     </repositories>
 
     <!-- Dependencies -->
     <dependencies>
-        <!-- Required component -->
         <!-- <dependency>
             <groupId>com.craftfire</groupId>
-            <artifactId>util</artifactId>
+            <artifactId>commons</artifactId>
             <version>1.0.0</version>
         </dependency> -->
-        <!-- Bukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${bukkit.version}</version>
         </dependency>
-        <!-- Third-party plugins -->
         <dependency>
             <groupId>org.getspout</groupId>
-            <artifactId>spoutapi</artifactId>
+            <artifactId>spoutpluginapi</artifactId>
             <version>dev-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.platymuus.bukkit</groupId>
             <artifactId>permissions</artifactId>
-            <version>1.0</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>com.nijikokun.bukkit</groupId>
@@ -98,27 +82,13 @@
         <dependency>
             <groupId>com.ensifera.animosity</groupId>
             <artifactId>craftirc</artifactId>
-            <version>2.12</version>
-        </dependency>
-        <dependency>
-            <groupId>com.afforess</groupId>
-            <artifactId>minecartmaniacore</artifactId>
-            <version>1.2.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.afforess</groupId>
-            <artifactId>backpack</artifactId>
-            <version>2.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>me.simplex</groupId>
-            <artifactId>buildr</artifactId>
-            <version>0.6</version>
+            <version>2.13</version>
         </dependency>
     </dependencies>
 
     <!-- Build -->
     <build>
+        <defaultGoal>clean</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <!-- Resources -->
         <resources>
@@ -140,7 +110,7 @@
             </resource>
             <resource>
                 <targetPath>files/config</targetPath>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <directory>${basedir}/src/main/resources/config</directory>
                 <includes>
                     <include>*</include>
@@ -148,7 +118,7 @@
             </resource>
             <resource>
                 <targetPath>files/translations</targetPath>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <directory>${basedir}/src/main/resources/translations</directory>
                 <includes>
                     <include>*</include>
@@ -172,7 +142,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Class-Path>../lib/mysql.jar ../mysql.jar ../lib/mysql-connector-java-bin.jar ../mysql-connector-java-bin.jar ../lib/mysql-connector-java-5.1.14-bin.jar ../mysql-connector-java-5.1.14-bin.jar ../lib/mysql-connector-java-5.1.15-bin.jar ../mysql-connector-java-5.1.15-bin.jar ../lib/mysql-connector-java-5.1.16-bin.jar ../mysql-connector-java-5.1.16-bin.jar ../lib/mysql-connector-java-5.1.17-bin.jar ../mysql-connector-java-5.1.17-bin.jar</Class-Path>
+                            <Class-Path>../lib/mysql.jar ../mysql.jar ../lib/mysql-connector-java-bin.jar ../mysql-connector-java-bin.jar ../lib/mysql-connector-java-5.1.14-bin.jar ../mysql-connector-java-5.1.14-bin.jar ../lib/mysql-connector-java-5.1.15-bin.jar ../mysql-connector-java-5.1.15-bin.jar ../lib/mysql-connector-java-5.1.16-bin.jar ../mysql-connector-java-5.1.16-bin.jar ../lib/mysql-connector-java-5.1.17-bin.jar ../mysql-connector-java-5.1.17-bin.jar ../lib/mysql-connector-java-5.1.18-bin.jar ../mysql-connector-java-5.1.18-bin.jar</Class-Path>/
                         </manifestEntries>
                     </archive>
                 </configuration>
