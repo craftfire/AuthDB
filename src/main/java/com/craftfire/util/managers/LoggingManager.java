@@ -1,12 +1,19 @@
-/**
-(C) Copyright 2011 CraftFire <dev@craftfire.com>
-Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
-or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-**/
-
+/*
+ * This file is part of AuthDB <http://www.authdb.com/>.
+ *
+ * AuthDB is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AuthDB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.craftfire.util.managers;
 
 import java.io.BufferedWriter;
@@ -48,7 +55,7 @@ public class LoggingManager {
             ToFile(Type.debug, "[" + PluginManager.plugin.pluginName + "] " + line, logFolder);
         }
     }
-    
+
     /**
      * Prints debug messages if enabled to console and file.
      *
@@ -71,7 +78,7 @@ public class LoggingManager {
     public void info(String line, String pluginName) {
         PluginManager.plugin.log.info("[" + pluginName + "] " + line);
     }
-    
+
     /**
      * Print to console with severe level.
      *
@@ -81,7 +88,7 @@ public class LoggingManager {
     public void severe(String line, String pluginName) {
         PluginManager.plugin.log.severe("[" + pluginName + "] " + line);
     }
-    
+
     /**
      * Print to console with warning level.
      *
@@ -200,36 +207,35 @@ public class LoggingManager {
         logError("MySQL connection: " + PluginManager.mySQL.isConnected());
         logError("Latest query: " + latestQuery);
         if (PluginManager.config.custom_enabled) {
-        	logError("Script: Custom");
-        	logError("Custom table: " + PluginManager.config.custom_table);
-        	if(PluginManager.config.custom_emailrequired) {
-        		logError("Custom emailfield: " + PluginManager.config.custom_emailfield);
-        	}
-        	logError("Custom passfield: " + PluginManager.config.custom_passfield);
-        	logError("Custom userfield: " + PluginManager.config.custom_userfield);
-        	logError("Custom encryption: " + PluginManager.config.custom_encryption);
-        	logError("Custom table schema:");
-			Statement st;
-			try {
-				st = MySQL.mysql.createStatement();
-				String sql = "SELECT * FROM " + PluginManager.config.custom_table;
-				mySQL(sql);
-				ResultSet rs = st.executeQuery(sql);
-				ResultSetMetaData metaData = rs.getMetaData();
-				int rowCount = metaData.getColumnCount();
-				logError("Table Name : " + metaData.getTableName(2));
-				logError("Column\tType(size)");
-				for (int i = 0; i < rowCount; i++) {
-					logError(metaData.getColumnName(i + 1) + "\t" + metaData.getColumnTypeName(i + 1) + "(" + metaData.getColumnDisplaySize(i + 1) + ")");
-				}
-			} catch (SQLException e) {
-				logError("Failed while getting MySQL table schema.");
-			}
-        	
+            logError("Script: Custom");
+            logError("Custom table: " + PluginManager.config.custom_table);
+            if(PluginManager.config.custom_emailrequired) {
+                logError("Custom emailfield: " + PluginManager.config.custom_emailfield);
+            }
+            logError("Custom passfield: " + PluginManager.config.custom_passfield);
+            logError("Custom userfield: " + PluginManager.config.custom_userfield);
+            logError("Custom encryption: " + PluginManager.config.custom_encryption);
+            logError("Custom table schema:");
+            Statement st;
+            try {
+                st = MySQL.mysql.createStatement();
+                String sql = "SELECT * FROM " + PluginManager.config.custom_table;
+                mySQL(sql);
+                ResultSet rs = st.executeQuery(sql);
+                ResultSetMetaData metaData = rs.getMetaData();
+                int rowCount = metaData.getColumnCount();
+                logError("Table Name : " + metaData.getTableName(2));
+                logError("Column\tType(size)");
+                for (int i = 0; i < rowCount; i++) {
+                    logError(metaData.getColumnName(i + 1) + "\t" + metaData.getColumnTypeName(i + 1) + "(" + metaData.getColumnDisplaySize(i + 1) + ")");
+                }
+            } catch (SQLException e) {
+                logError("Failed while getting MySQL table schema.");
+            }
         } else {
-	        logError("Script: " + PluginManager.config.script_name);
-	        logError("Script version: " + PluginManager.config.script_version);
-	        logError("Table prefix: " + PluginManager.config.script_tableprefix);
+            logError("Script: " + PluginManager.config.script_name);
+            logError("Script version: " + PluginManager.config.script_version);
+            logError("Table prefix: " + PluginManager.config.script_tableprefix);
         }
         Plugin[] plugins = PluginManager.plugin.getServer().getPluginManager().getPlugins();
         int counter = 0;

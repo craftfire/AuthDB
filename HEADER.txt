@@ -14,17 +14,3 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.craftfire.util.general;
-
-public class GeneralUtil {
-    public String toDriver(String dataname) {
-        dataname = dataname.toLowerCase();
-        if (dataname.equalsIgnoreCase("mysql")) {
-            return "com.mysql.jdbc.Driver";
-        } else if (dataname.equalsIgnoreCase("ebean")) {
-            return "ebean";
-        }
-
-        return "com.mysql.jdbc.Driver";
-    }
-}

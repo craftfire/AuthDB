@@ -1,8 +1,8 @@
 <!--
-  Maven build file for AuthDB
+    Maven build file for AuthDB Legacy
 
-  Copyright (c) 2011 CraftFire <http://www.craftfire.com>
-  AuthDB is licensed under Creative Commons CC BY-NC-ND 3.0
+    Copyright (c) 2011-2012 CraftFire <http://www.craftfire.com>
+    AuthDB Legacy is licensed under GNU LESSER GENERAL PUBLIC LICENSE Version 3.
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -12,22 +12,22 @@
     <groupId>com.authdb</groupId>
     <artifactId>authdb</artifactId>
     <version>dev-SNAPSHOT</version>
-    <name>AuthDB</name>
+    <name>AuthDB Legacy</name>
     <url>http://www.authdb.com</url>
     <description>Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bukkit.version>1.0.1-R2-SNAPSHOT</bukkit.version>
+        <bukkit.version>1.1-R4-SNAPSHOT</bukkit.version>
+        <build.number>Unknown</build.number>
     </properties>
 
     <!-- License -->
     <licenses>
         <license>
-            <name>Creative Commons CC BY-NC-ND 3.0</name>
-            <url>http://creativecommons.org/licenses/by-nc-nd/3.0/</url>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE Version 3</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
             <distribution>repo</distribution>
-            <comments>This license only allows others to download your works and share them with others as long as they credit you, but they can't change them in any way or use them commercially.</comments>
         </license>
     </licenses>
 
@@ -54,29 +54,19 @@
 
     <!-- Dependencies -->
     <dependencies>
-        <!-- <dependency>
-            <groupId>com.craftfire</groupId>
-            <artifactId>commons</artifactId>
-            <version>1.0.0</version>
-        </dependency> -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>${bukkit.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.getspout</groupId>
-            <artifactId>spoutpluginapi</artifactId>
-            <version>dev-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.platymuus.bukkit</groupId>
-            <artifactId>permissions</artifactId>
-            <version>1.2</version>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit-permissions</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.nijikokun.bukkit</groupId>
-            <artifactId>permissions</artifactId>
+            <artifactId>Permissions</artifactId>
             <version>3.1.6</version>
         </dependency>
         <dependency>

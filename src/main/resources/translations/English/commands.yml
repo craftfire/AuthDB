@@ -1,23 +1,23 @@
 Core:
-  commands:
-    user:
-      register: "/register"
-      link: "/link"
-      unlink: "/unlink"
-      login: "/login"
-      logout: "/logout"
-    admin:
-      login: "/authdb login"
-      logout: "/authdb logout"
-      reload: "/authdb reload"
-  aliases:
-    user:
-      register: "/reg"
-      link: "/lk"
-      unlink: "/ul"
-      login: "/li"
-      logout: "/lo"
-    admin:
-      login: "/ali"
-      logout: "/alo"
-      reload: "/ar"
+    commands:
+        user:
+            register: "/register"
+            link: "/link"
+            unlink: "/unlink"
+            login: "/login"
+            logout: "/logout"
+        admin:
+            login: "/authdb login"
+            logout: "/authdb logout"
+            reload: "/authdb reload"
+    aliases:
+        user:
+            register: "/reg"
+            link: "/lk"
+            unlink: "/ul"
+            login: "/li"
+            logout: "/lo"
+        admin:
+            login: "/ali"
+            logout: "/alo"
+            reload: "/ar"

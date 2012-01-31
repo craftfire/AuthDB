@@ -1,24 +1,33 @@
-/**
-(C) Copyright 2011 CraftFire <dev@craftfire.com>
-Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
-or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-**/
-
+/*
+ * This file is part of AuthDB <http://www.authdb.com/>.
+ *
+ * AuthDB is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AuthDB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.craftfire.util.managers;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 
-import org.getspout.spoutapi.SpoutManager;
-
+import com.authdb.util.Util;
 import com.authdb.util.databases.EBean;
 
 public class PlayerManager {
@@ -28,12 +37,12 @@ public class PlayerManager {
     public void setInventoryFromStorage(Player player) {
         ItemStack[] inv = getInventory(player);
         if (inv != null) {
-            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s inventory: " + inv);
+            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s inventory: " + inv.toString());
             player.getInventory().setContents(inv);
         }
         inv = getArmorInventory(player);
         if (inv != null) {
-            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s armor inventory: " + inv);
+            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s armor inventory: " + inv.toString());
             player.getInventory().setArmorContents(inv);
         }
     }
@@ -43,23 +52,43 @@ public class PlayerManager {
         StringBuffer armorinv = new StringBuffer();
         for (short i = 0; i < inventory.length; i = (short)(i + 1)) {
             if (inventory[i] != null) {
-                inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "0" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ",");
+                StringBuffer enchantment = new StringBuffer();
+                Iterator<Entry<Enchantment, Integer>> enchantments = inventory[i].getEnchantments().entrySet().iterator();
+                while (enchantments.hasNext()) {
+                    Entry<Enchantment, Integer> key = enchantments.next();
+                    Enchantment enc = key.getKey();
+                    enchantment.append(enc.getId() + "=" + inventory[i].getEnchantmentLevel(enc) + "-");
+                }
+                if(enchantment.length() == 0) {
+                    enchantment.append("0");
+                }
+                inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "0" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ":" + enchantment + ",");
             } else {
-                inv.append("0:0:0:0,");
+                inv.append("0:0:0:0:0,");
             }
         }
 
-        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s inventory: " + inv);
+        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s inventory: " + inv.toString());
 
         for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
             if (armorinventory[i] != null) {
-                armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "0" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ",");
+                String enchantment = "";
+                Iterator<Entry<Enchantment, Integer>> enchantments = armorinventory[i].getEnchantments().entrySet().iterator();
+                while (enchantments.hasNext()) {
+                    Entry<Enchantment, Integer> key = enchantments.next();
+                    Enchantment enc = key.getKey();
+                    enchantment += enc.getId() + "=" + armorinventory[i].getEnchantmentLevel(enc) + "-";
+                }
+                if(enchantment.isEmpty()) {
+                    enchantment = "0";
+                }
+                armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "0" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ":" + enchantment + ",");
             } else {
-                armorinv.append("0:0:0:0,");
+                armorinv.append("0:0:0:0:0,");
             }
         }
 
-        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s armor inventory: " + armorinv);
+        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s armor inventory: " + armorinv.toString());
 
         EBean eBeanClass = EBean.find(player);
         eBeanClass.setInventory(inv.toString());
@@ -74,15 +103,11 @@ public class PlayerManager {
             if (data != "" && data != null) {
                 String[] inv = pluginManager.util.split(data, ",");
                 ItemStack[] inventory;
-                if (pluginManager.config.hasBackpack) {
-                    inventory = new ItemStack[252];
-                } else {
-                    inventory = new ItemStack[36];
-                }
+                inventory = new ItemStack[36];
                 for (int i=0; i<inv.length; i++) {
                     String line = inv[i];
                     String[] split = line.split(":");
-                    if (split.length == 4) {
+                    if (split.length == 5) {
                         int type = Integer.valueOf(split[0]).intValue();
                         inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
                         short dur = Short.valueOf(split[3]).shortValue();
@@ -100,6 +125,15 @@ public class PlayerManager {
                             inventory[i].setData(new MaterialData(type, dd));
                         } else {
                             inventory[i].setData(mat.getNewData(dd));
+                        }
+                        if (!split[4].equals("0")) {
+                            String[] enchatments = split[4].split("-");
+                            for (int a=0; a<enchatments.length; a++) {
+                                String[] enchOptions = enchatments[a].split("=");
+                                Enchantment ench = Enchantment.getById(Integer.parseInt(enchOptions[0]));
+                                int level = Integer.parseInt(enchOptions[1]);
+                                inventory[i].addEnchantment(ench, level);
+                            }
                         }
                     }
                 }
@@ -121,7 +155,7 @@ public class PlayerManager {
                 for (int i=0; i<inv.length; i++) {
                     String line = inv[i];
                     String[] split = line.split(":");
-                    if (split.length == 4) {
+                    if (split.length == 5) {
                         int type = Integer.valueOf(split[0]).intValue();
                         inventory[i] = new ItemStack(type, Integer.valueOf(split[1]).intValue());
                         short dur = Short.valueOf(split[3]).shortValue();
@@ -139,6 +173,15 @@ public class PlayerManager {
                             inventory[i].setData(new MaterialData(type, dd));
                         } else {
                             inventory[i].setData(mat.getNewData(dd));
+                        }
+                        if (!split[4].equals("0")) {
+                            String[] enchatments = split[4].split("-");
+                            for (int a=0; a<enchatments.length; a++) {
+                                String[] enchOptions = enchatments[a].split("=");
+                                Enchantment ench = Enchantment.getById(Integer.parseInt(enchOptions[0]));
+                                int level = Integer.parseInt(enchOptions[1]);
+                                inventory[i].addEnchantment(ench, level);
+                            }
                         }
                     }
                 }
@@ -159,13 +202,14 @@ public class PlayerManager {
     }
 
     public void renamePlayer(Player player, String name) {
-        if(pluginManager.config.hasSpout) {
-            SpoutManager.getAppearanceManager().setGlobalTitle(player, name);
-        }
         player.setDisplayName(name);
     }
 
     public String getIP(Player player) {
-        return player.getAddress().getAddress().toString().substring(1);
+        if(player.getAddress() != null) {
+            return player.getAddress().getAddress().toString().substring(1);
+        } else {
+            return "";
+        }
     }
 }

@@ -1,6 +1,6 @@
 name: AuthDB
 version: 2.3.3.${build.number}
-description: Script and custom database user authentication through MySQL.
+description: Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.
 authors: [CraftFire, Contex, Wulfspider]
 website: http://www.authdb.com
 
@@ -10,123 +10,123 @@ database: true
 softdepend: [Spout]
 
 commands:
-  register:
-    aliases: reg
-    description: Register for an account.
-    permission: authdb.command.user.register
-    usage: /<command> password email
-  login:
-    aliases: li
-    description: Login to your account.
-    permission: authdb.command.user.login
-    usage: /<command> password
-  logout:
-    aliases: lo
-    description: Logout of your account.
-    permission: authdb.command.user.logout
-    usage: /<command>
-  link:
-    aliases: lk
-    description: Links you to another account.
-    permission: authdb.command.user.link
-    usage: /<command> username password
-  unlink:
-    aliases: ul
-    description: Unlinks you from the other account.
-    permission: authdb.command.user.unlink
-    usage: /<command> username password
-#  setspawn:
-#    description: Set spawn locations for guest and registered player groups.
-#    permission: authdb.command.user.setspawn
-#    usage: /<command>
-  authdb:
-    aliases: db
-    description: Commands to reload, show version, and login or logout other players.
-    usage: |
-      /<command> login player
-      /<command> logout player
-      /<command> reload
-      /<command> version
+    register:
+        aliases: reg
+        description: Register for an account.
+        permission: authdb.command.user.register
+        usage: /<command> password email
+    login:
+        aliases: li
+        description: Login to your account.
+        permission: authdb.command.user.login
+        usage: /<command> password
+    logout:
+        aliases: lo
+        description: Logout of your account.
+        permission: authdb.command.user.logout
+        usage: /<command>
+    link:
+        aliases: lk
+        description: Links you to another account.
+        permission: authdb.command.user.link
+        usage: /<command> username password
+    unlink:
+        aliases: ul
+        description: Unlinks you from the other account.
+        permission: authdb.command.user.unlink
+        usage: /<command> username password
+#    setspawn:
+#        description: Set spawn locations for guest and registered player groups.
+#        permission: authdb.command.user.setspawn
+#        usage: /<command>
+    authdb:
+        aliases: db
+        description: Commands to reload, show version, and login or logout other players.
+        usage: |
+            /<command> login player
+            /<command> logout player
+            /<command> reload
+            /<command> version
 
 permissions:
-  authdb.*:
-    description: Give player permission to ALL commands.
-    children:
-      authdb.command.user.register: true
-#      authdb.command.user.unregister: true
-      authdb.command.user.login: true
-      authdb.command.user.logout: true
-      authdb.command.user.link: true
-      authdb.command.user.unlink: true
-#      authdb.command.user.password: true
-#      authdb.command.user.email: true
-#      authdb.command.user.users: true
-      authdb.command.admin.login: true
-      authdb.command.admin.logout: true
-#      authdb.command.admin.password: true
-#      authdb.command.admin.email: true
-      authdb.command.admin.reload: true
-  authdb.command.user.*:
-    description: Give player permission to all regular user commands.
-    children:
-      authdb.command.user.register: true
-#      authdb.command.user.unregister: true
-      authdb.command.user.login: true
-      authdb.command.user.logout: true
-      authdb.command.user.link: true
-      authdb.command.user.unlink: true
-#      authdb.command.user.password: true
-#      authdb.command.user.email: true
-#      authdb.command.user.users: true
-  authdb.command.user.register:
-    description: Give player permission to register.
-    default: true
-#  authdb.command.user.unregister:
-#    description: Give player permission to unregister.
-#    default: true
-  authdb.command.user.login:
-    description: Give player permission to login.
-    default: true
-  authdb.command.user.logout:
-    description: Give player permission to logout.
-    default: true
-  authdb.command.user.link:
-    description: Give player permission to link to an account.
-    default: true
-  authdb.command.user.unlink:
-    description: Give player permission to unlink from an account.
-    default: true
-#  authdb.command.user.password:
-#    description: Give player permission to change their password.
-#    default: true
-#  authdb.command.user.email:
-#    description: Give player permission to change their email.
-#    default: true
-#  authdb.command.user.users:
-#    description: Give player permission to check the number of registered users.
-#    default: true
-#  authdb.command.admin.unregister:
-#    default: op
-  authdb.command.admin.*:
-    description: Give player permission to all admin commands.
-    children:
-      authdb.command.admin.login: true
-      authdb.command.admin.logout: true
-#      authdb.command.admin.password: true
-#      authdb.command.admin.email: true
-      authdb.command.admin.reload: true
-  authdb.command.admin.login:
-    description: Give player permission to login a specified player.
-    default: op
-  authdb.command.admin.logout:
-    description: Give player permission to logout a specified player.
-    default: op
-#  authdb.command.admin.password:
-#    description: Give player permission to change a player's password.
-#    default: op
-#  authdb.command.admin.email:
-#    description: Give player permission to change a player's email.
-#    default: op
-  authdb.command.admin.reload:
-    description: Give player permission to reload the config, commands, and messages.
-    default: op
+    authdb.*:
+        description: Give player permission to ALL commands.
+        children:
+            authdb.command.user.register: true
+#            authdb.command.user.unregister: true
+            authdb.command.user.login: true
+            authdb.command.user.logout: true
+            authdb.command.user.link: true
+            authdb.command.user.unlink: true
+#            authdb.command.user.password: true
+#            authdb.command.user.email: true
+#            authdb.command.user.users: true
+            authdb.command.admin.login: true
+            authdb.command.admin.logout: true
+#            authdb.command.admin.password: true
+#            authdb.command.admin.email: true
+            authdb.command.admin.reload: true
+    authdb.command.user.*:
+        description: Give player permission to all regular user commands.
+        children:
+            authdb.command.user.register: true
+#            authdb.command.user.unregister: true
+            authdb.command.user.login: true
+            authdb.command.user.logout: true
+            authdb.command.user.link: true
+            authdb.command.user.unlink: true
+#            authdb.command.user.password: true
+#            authdb.command.user.email: true
+#            authdb.command.user.users: true
+    authdb.command.user.register:
+        description: Give player permission to register.
+        default: true
+#    authdb.command.user.unregister:
+#        description: Give player permission to unregister.
+#        default: true
+    authdb.command.user.login:
+        description: Give player permission to login.
+        default: true
+    authdb.command.user.logout:
+        description: Give player permission to logout.
+        default: true
+    authdb.command.user.link:
+        description: Give player permission to link to an account.
+        default: true
+    authdb.command.user.unlink:
+        description: Give player permission to unlink from an account.
+        default: true
+#    authdb.command.user.password:
+#        description: Give player permission to change their password.
+#        default: true
+#    authdb.command.user.email:
+#        description: Give player permission to change their email.
+#        default: true
+#    authdb.command.user.users:
+#        description: Give player permission to check the number of registered users.
+#        default: true
+#    authdb.command.admin.unregister:
+#        default: op
+    authdb.command.admin.*:
+        description: Give player permission to all admin commands.
+        children:
+            authdb.command.admin.login: true
+            authdb.command.admin.logout: true
+#            authdb.command.admin.password: true
+#            authdb.command.admin.email: true
+            authdb.command.admin.reload: true
+    authdb.command.admin.login:
+        description: Give player permission to login a specified player.
+        default: op
+    authdb.command.admin.logout:
+        description: Give player permission to logout a specified player.
+        default: op
+#    authdb.command.admin.password:
+#        description: Give player permission to change a player's password.
+#        default: op
+#    authdb.command.admin.email:
+#        description: Give player permission to change a player's email.
+#        default: op
+    authdb.command.admin.reload:
+        description: Give player permission to reload the config, commands, and messages.
+        default: op

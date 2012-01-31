@@ -1,66 +1,66 @@
 customdb:
-  enabled: false                                   # Enable/disable custom database support. Leave this disabled if using a script such as phpBB.
-  autocreate: true                                 # Enable/disable automatic creation of the database tables and columns for a custom database.
-  table: authdb_users                              # Table name to use for your custom database.
-  userfield: username                              # Field/column name to use for storing user names.
-  passfield: password                              # Field/column name to use for storing user passwords.
-  emailfield: email                                # Field/column name to use for storing user email addresses. Leave blank to disable email requirement.
-  emailrequired: false                             # Enable/disable registration email requirement.
-  encryption: md5                                  # Encription type to use for password hashing. Options are MD5, SHA1, and SHA512.
-#  saltfield: salt                                  # NOT IMPLEMENTED YET! Field/column name to use for storing the passwordsalt.
-#  hashformat: "{PASSWORD}{SALT}{NAME}"             # NOT IMPLEMENTED YET! Format/layout to use for the password hash.
+    enabled: false                                   # Enable/disable custom database support. Leave this disabled if using a script such as phpBB.
+    autocreate: true                                 # Enable/disable automatic creation of the database tables and columns for a custom database.
+    table: authdb_users                              # Table name to use for your custom database.
+    userfield: username                              # Field/column name to use for storing user names.
+    passfield: password                              # Field/column name to use for storing user passwords.
+    emailfield: email                                # Field/column name to use for storing user email addresses. Leave blank to disable email requirement.
+    emailrequired: false                             # Enable/disable registration email requirement.
+    encryption: md5                                  # Encription type to use for password hashing. Options are MD5, SHA1, and SHA512.
+#    saltfield: salt                                  # NOT IMPLEMENTED YET! Field/column name to use for storing the passwordsalt.
+#    hashformat: "{PASSWORD}{SALT}{NAME}"             # NOT IMPLEMENTED YET! Format/layout to use for the password hash.
 register:
-  enabled: true                                    # Enable/disable allowing users to register.
-  force: true                                      # Enable/disable forcing users to register.
-  delay: 4 seconds                                 # Amount of time before register message is shown to player.
-  timeout: 3 minutes                               # Amount of time a player has to register before the configured action is taken.
+    enabled: true                                    # Enable/disable allowing users to register.
+    force: true                                      # Enable/disable forcing users to register.
+    delay: 4 seconds                                 # Amount of time before register message is shown to player.
+    timeout: 3 minutes                               # Amount of time a player has to register before the configured action is taken.
 login:
-#  enabled: true                                    # NOT IMPLEMENTED YET! Enable/disable players being able to login.
-  method: prompt                                   # Login method to use. Options are normal and prompt.
-  delay: 4 seconds                                 # Amount of time before login message is shown to player.
-  timeout: 3 minutes                               # Amount of time a player has to login before the configured action is taken.
-  tries: 3                                         # Number of allowed incorrect password tries.
-  action: kick                                     # Action to perform when a maximum number of password tries is reached. Currently only option is kick.
+#    enabled: true                                    # NOT IMPLEMENTED YET! Enable/disable players being able to login.
+    method: prompt                                   # Login method to use. Options are normal and prompt.
+    delay: 4 seconds                                 # Amount of time before login message is shown to player.
+    timeout: 3 minutes                               # Amount of time a player has to login before the configured action is taken.
+    tries: 3                                         # Number of allowed incorrect password tries.
+    action: kick                                     # Action to perform when a maximum number of password tries is reached. Currently only option is kick.
 link:
-  enabled: true                                    # Enable/disable username linking.
-  rename: true                                     # Enable/disable renaming users to linked name on link.
+    enabled: true                                    # Enable/disable username linking.
+    rename: true                                     # Enable/disable renaming users to linked name on link.
 unlink:
-  enabled: true                                    # Enable/disable username unlinking.
-  rename: true                                     # Enable/disable renaming users to original name on unlink.
+    enabled: true                                    # Enable/disable username unlinking.
+    rename: true                                     # Enable/disable renaming users to original name on unlink.
 username:
-  minimum: 3                                       # Minimum number of characters a username can be.
-  maximum: 16                                      # Maximum number of characters a username can be.
+    minimum: 3                                       # Minimum number of characters a username can be.
+    maximum: 16                                      # Maximum number of characters a username can be.
 password:
-  minimum: 6                                       # Minimum number of characters a password can be.
-  maximum: 16                                      # Maximum number of characters a password can be.
+    minimum: 6                                       # Minimum number of characters a password can be.
+    maximum: 16                                      # Maximum number of characters a password can be.
 session:
-  enabled: true                                    # Enable/disable player sessions.
-  start: login                                     # When to start the player's session. Options are login and logoff.
-  length: 1 hour                                   # Length of the player's session. Can be any number of seconds, minutes, hours, or days.
-  protect: true                                    # Enable/disable protecting player from being logged out from another location.
+    enabled: true                                    # Enable/disable player sessions. Ignored if online-mode: true in server.properties.
+    start: login                                     # When to start the player's session. Options are login and logoff.
+    length: 1 hour                                   # Length of the player's session. Can be any number of seconds, minutes, hours, or days.
+    protect: true                                    # Enable/disable protecting player from being logged out from another location.
 guest:
-  commands: false                                  # Enable/disable guest commands.
-  chat: false                                      # Enable/disable guest chat.
-  building: false                                  # Enable/disable guest building.
-  destruction: false                               # Enable/disable guest destruction.
-  movement: false                                  # Enable/disable guest movement.
-  interactions: false                              # Enable/disable guest interactions with objects.
-  inventory: false                                 # Enable/disable guest inventory usage.
-  drop: false                                      # Enable/disable guest being able to drop items.
-  pickup: false                                    # Enable/disable guest being able to pickup items.
-  health: false                                    # Enable/disable guest getting hurt.
-  pvp: false                                       # Enable/disable guest hurting players.
-  mobtargeting: false                              # Enable/disable mobs targeting guest.
-  mobdamage: false                                 # Enable/disable mob damage from guest.
+    commands: false                                  # Enable/disable guest commands.
+    chat: false                                      # Enable/disable guest chat.
+    building: false                                  # Enable/disable guest building.
+    destruction: false                               # Enable/disable guest destruction.
+    movement: false                                  # Enable/disable guest movement.
+    interactions: false                              # Enable/disable guest interactions with objects.
+    inventory: false                                 # Enable/disable guest inventory usage.
+    drop: false                                      # Enable/disable guest being able to drop items.
+    pickup: false                                    # Enable/disable guest being able to pickup items.
+    health: false                                    # Enable/disable guest getting hurt.
+    pvp: false                                       # Enable/disable guest hurting players.
+    mobtargeting: false                              # Enable/disable mobs targeting guest.
+    mobdamage: false                                 # Enable/disable mob damage from guest.
 protection:
-  freeze:
-    enabled: true                                  # Enable/disable freezing players on join to prevent movement.
-    delay: 2 seconds                               # Amount of time before players are frozen and unable to move.
-  notify:
-    enabled: true                                  # Enable/disable protection message being sent to player.
-    delay: 3 seconds                               # Amount of time before protection message can be sent to player again.
+    freeze:
+        enabled: true                                # Enable/disable freezing players on join to prevent movement.
+        delay: 2 seconds                             # Amount of time before players are frozen and unable to move.
+    notify:
+        enabled: true                                # Enable/disable protection message being sent to player.
+        delay: 3 seconds                             # Amount of time before protection message can be sent to player again.
 filter:
-  action: kick                                     # Action to perform when a username matches the filter. Options are kick and rename.
-  username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "    # Characters and symbols to check for in usernames. We recommend leaving this as is.
-  password: "$&\\\""                               # Characters and symbols to check for in passwords. We recommend leaving this as is.
-  whitelist: Contex,Wulfspider                     # Usernames to exclude from username and password filtering.
+    action: kick                                     # Action to perform when a username matches the filter. Options are kick and rename.
+    username: "`~!@#$%^&*()-=+{[]}|\\:;\"<,>.?/ "    # Characters and symbols to check for in usernames. We recommend leaving this as is.
+    password: "$&\\\""                               # Characters and symbols to check for in passwords. We recommend leaving this as is.
+    whitelist: Contex,Wulfspider                     # Usernames to exclude from username and password filtering.

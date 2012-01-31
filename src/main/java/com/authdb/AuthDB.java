@@ -1,12 +1,19 @@
-/**
-(C) Copyright 2011 CraftFire <dev@craftfire.com>
-Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
-or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-**/
-
+/*
+ * This file is part of AuthDB <http://www.authdb.com/>.
+ *
+ * AuthDB is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AuthDB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.authdb;
 
 import java.io.BufferedReader;
@@ -41,7 +48,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -49,11 +55,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
-import com.authdb.listeners.AuthDBInputListener;
 import com.authdb.listeners.AuthDBPlayerListener;
-import com.authdb.listeners.AuthDBScreenListener;
-import com.authdb.listeners.AuthDBSpoutListener;
-import com.authdb.plugins.ZCraftIRC;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.util.Config;
@@ -83,9 +85,6 @@ public class AuthDB extends JavaPlugin {
     private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
     private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
     private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
-    private AuthDBSpoutListener spoutListener;
-    private AuthDBScreenListener screenListener;
-    private AuthDBInputListener inputListener;
     public static List<String> authorizedNames = new ArrayList<String>();
     public static HashMap<String, Integer> AuthDB_Timeouts = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_Sessions = new HashMap<String, Long>();
@@ -114,10 +113,6 @@ public class AuthDB extends JavaPlugin {
             Processes.Logout(p, false);
         }
         Util.logging.Info(pluginVersion + " has been disabled");
-        Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
-        if ((checkCraftIRC != null) && (checkCraftIRC.isEnabled()) && (Config.CraftIRC_enabled == true)) {
-            ZCraftIRC.sendMessage(Message.OnDisable, null);
-        }
         authorizedNames.clear();
         AuthDB_AuthTime.clear();
         AuthDB_GUI_ScreenIDs.clear();
@@ -183,21 +178,6 @@ public class AuthDB extends JavaPlugin {
         LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
         setupDatabase();
         checkOldFiles();
-          final Plugin checkCraftIRC = getServer().getPluginManager().getPlugin("CraftIRC");
-          CheckPermissions();
-          if ((checkCraftIRC != null) && (Config.CraftIRC_enabled == true)) {
-              craftircHandle = ((CraftIRC)checkCraftIRC);
-              Util.logging.Info("Found supported plugin: " + checkCraftIRC.getDescription().getName());
-              this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-              @Override
-              public void run() {
-                  if (checkCraftIRC.isEnabled()) {
-                      ZCraftIRC.sendMessage(Message.OnEnable, null); }
-                  }
-              }, 100);
-          } else {
-              Util.logging.Debug("Server is running without CraftIRC.");
-          }
           PluginManager pm = getServer().getPluginManager();
           Plugin check = getServer().getPluginManager().getPlugin("Backpack");
           if (check != null) {
@@ -235,10 +215,10 @@ public class AuthDB extends JavaPlugin {
               Util.logging.Debug("Server is running without Spout.");
           }
           */
-        pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Priority.Low, this);
+        pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Event.Priority.Lowest, this);
         pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Low, this);
@@ -384,7 +364,7 @@ public class AuthDB extends JavaPlugin {
                 }
             } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_user_logout, true)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_user_logout, true))) {
                 if (ZPermissions.isAllowed(player, Permission.command_logout)) {
-                	Messages.sendMessage(Message.logout_processing, player, null);
+                    Messages.sendMessage(Message.logout_processing, player, null);
                     if (Processes.Logout(player, true)) {
                         EBean eBeanClass = EBean.checkPlayer(player, true);
                         eBeanClass.setSessiontime(0);
@@ -410,13 +390,13 @@ public class AuthDB extends JavaPlugin {
                 }
             } else if (command.startsWith(commandString(Config.commands_admin_logout, true)) || command.startsWith(commandString(Config.aliases_admin_logout, true))) {
                 if (ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
-                	Messages.sendMessage(Message.logout_processing, player, null);
+                    Messages.sendMessage(Message.logout_processing, player, null);
                     String[] temp = commandString(Config.commands_admin_logout, true).split(" ");
                     if (args.length == temp.length) {
                         String PlayerName = args[temp.length - 1];
                         List<Player> players = sender.getServer().matchPlayer(PlayerName);
                         if (!players.isEmpty()) {
-                        	Messages.sendMessage(Message.logout_processing, players.get(0), null);
+                            Messages.sendMessage(Message.logout_processing, players.get(0), null);
                             if (Processes.Logout(players.get(0), true)) {
                                 Messages.sendMessage(Message.logout_admin_success, player, null, players.get(0).getName());
                                 Messages.sendMessage(Message.logout_admin, players.get(0), null);

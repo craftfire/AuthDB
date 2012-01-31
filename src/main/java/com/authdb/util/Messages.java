@@ -1,12 +1,19 @@
-/**
-(C) Copyright 2011 CraftFire <dev@craftfire.com>
-Contex <contex@craftfire.com>, Wulfspider <wulfspider@craftfire.com>
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/
-or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-**/
-
+/*
+ * This file is part of AuthDB <http://www.authdb.com/>.
+ *
+ * AuthDB is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AuthDB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.authdb.util;
 
 import org.bukkit.entity.Player;
@@ -14,7 +21,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import com.authdb.AuthDB;
-import com.authdb.plugins.ZCraftIRC;
 
 public class Messages {
 static AuthDB plugin = new AuthDB();
@@ -212,7 +218,6 @@ static AuthDB plugin = new AuthDB();
 
     public static void sendMessage(final Message type, final Player player, PlayerLoginEvent event, String extra) {
         long start = Util.timeMS();
-        ZCraftIRC.sendMessage(type, player);
         if (type.equals(Message.login_admin_success)) {
             String message = AuthDB_message_login_admin_success;
             message = message.replaceAll("\\{PLAYER\\}", extra);
@@ -244,7 +249,6 @@ static AuthDB plugin = new AuthDB();
 
     public static void sendMessage(final Message type, final Player player, PlayerLoginEvent event) {
         long start = Util.timeMS();
-        ZCraftIRC.sendMessage(type, player);
         if (type.equals(Message.database_failure)) {
             AuthDB.server.broadcastMessage(Util.replaceStrings(AuthDB_message_database_failure, null, null));
         } else if (Config.database_ison) {
@@ -277,7 +281,7 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.link_renamed)) {
                 player.getServer().broadcastMessage(Util.replaceStrings(AuthDB_message_link_renamed, player, null));
             } else if (type.equals(Message.filter_username)) {
-            	Config.has_badcharacters = true;
+                Config.has_badcharacters = true;
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_filter_username, player, null));
                 Config.has_badcharacters = false;
             } else if (type.equals(Message.filter_password)) {
@@ -295,8 +299,12 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid, player, null));
             } else if (type.equals(Message.session_protected)) {
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, "login"));
-            }  else {
-            	player.sendMessage(Util.replaceStrings(type.text, player, null));
+            } else if (type.equals(Message.login_timeout)) {
+                player.kickPlayer(Util.replaceStrings(AuthDB_message_login_timeout, player, null));
+            } else if (type.equals(Message.register_timeout)) {
+                player.kickPlayer(Util.replaceStrings(AuthDB_message_register_timeout, player, null));
+            } else {
+                player.sendMessage(Util.replaceStrings(type.text, player, null));
             }
         } else {
             Messages.sendMessage(Message.database_failure, null, null);
