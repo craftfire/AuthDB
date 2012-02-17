@@ -388,13 +388,14 @@ public class AuthDBPlayerListener extends PlayerListener {
                             } else {
                                 themail = split[2];
                             }
-                            if (this.plugin.register(player, split[1], themail,Util.craftFirePlayer.getIP(player))) {
-                                if (Processes.Login(player)) {
-                                    Messages.sendMessage(Message.register_success, player, null);
-                                } else {
+                            if (this.plugin.register(player, split[1], themail, Util.craftFirePlayer.getIP(player))) {
+                                //if (Processes.Login(player)) {
+                            	Processes.Login(player);
+                                Messages.sendMessage(Message.register_success, player, null);
+                               /* } else {
                                     Messages.sendMessage(Message.register_failure, player, null);
                                     Util.logging.Debug("Registering user failed!");
-                                }
+                                }*/
                             }
                         }
                     } catch (IOException e) {

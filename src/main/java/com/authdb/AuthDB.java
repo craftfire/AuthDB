@@ -424,14 +424,14 @@ public class AuthDB extends JavaPlugin {
                         String PlayerName = args[temp.length - 1];
                         List<Player> players = sender.getServer().matchPlayer(PlayerName);
                         if (!players.isEmpty()) {
-                            if (Processes.Login(players.get(0))) {
-                                Messages.sendMessage(Message.login_admin_success, player, null, players.get(0).getName());
-                                Messages.sendMessage(Message.login_admin, players.get(0), null);
-                                return true;
-                            } else {
+                            Processes.Login(players.get(0));
+                            Messages.sendMessage(Message.login_admin_success, player, null, players.get(0).getName());
+                            Messages.sendMessage(Message.login_admin, players.get(0), null);
+                            return true;
+                           /* } else {
                                 Messages.sendMessage(Message.login_admin_failure, player, null, players.get(0).getName());
                                 return true;
-                            }
+                            }*/
                         }
                         Messages.sendMessage(Message.login_admin_notfound, player, null, PlayerName);
                         return true;
