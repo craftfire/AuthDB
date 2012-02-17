@@ -113,25 +113,19 @@ public class Encryption {
     }
 
     public static String SHA512(String text) {
-        StringBuffer sb = new StringBuffer();
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
-            messageDigest.update(text.getBytes("UTF-8"));
-            byte[] digestBytes = messageDigest.digest();
-
-            String hex = null;
-
-            for (int i = 0; i < digestBytes.length; i++) {
-                hex = Integer.toHexString(0xFF & digestBytes[i]);
-                if (hex.length() < 2) {
-                    sb.append("0");
-                }
-                sb.append(hex);
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        return new String(sb);
+    	byte[] sha1hash = new byte[40];
+    	try {
+    		MessageDigest md = MessageDigest.getInstance("SHA-512");
+			md.update(text.getBytes("UTF-8"), 0, text.length());
+			sha1hash = md.digest();
+    	} catch (NoSuchAlgorithmException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+         return convertToHex(sha1hash);
     }
 
     public static String pack(String hex) {
@@ -141,6 +135,23 @@ public class Encryption {
             char c2 = hex.charAt(i + 1);
             char packed = (char) (Util.hexToInt(c1) * 16 + Util.hexToInt(c2));
             buf.append(packed);
+        }
+        return buf.toString();
+    }
+    
+    private static String convertToHex(byte[] data)  {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < data.length; i++) {
+            int halfbyte = (data[i] >>> 4) & 0x0F;
+            int two_halfs = 0;
+            do {
+                if ((0 <= halfbyte) && (halfbyte <= 9))
+                    buf.append((char) ('0' + halfbyte));
+                else
+                    buf.append((char) ('a' + (halfbyte - 10)));
+                halfbyte = data[i] & 0x0F;
+            }
+            while(two_halfs++ < 1);
         }
         return buf.toString();
     }
