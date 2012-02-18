@@ -367,8 +367,10 @@ public class AuthDBPlayerListener extends PlayerListener {
                 Boolean email = true;
                 if (Config.custom_enabled) {
                     email = Config.custom_emailrequired;
+                    if (Config.custom_emailfield == null || Config.custom_emailfield == "") { 
+                		email = false;
+                	}
                 }
-                if (Config.custom_emailfield == null || Config.custom_emailfield == "") { email = false; }
                 if (!Config.register_enabled) {
                     Messages.sendMessage(Message.register_disabled, player, null);
                 } else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.checkOtherName(player.getName()))) {

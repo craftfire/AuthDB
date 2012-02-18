@@ -294,7 +294,7 @@ public class AuthDB extends JavaPlugin {
         }
         Util.logging.Info("developed by CraftFire <dev@craftfire.com>");
 
-        String thescript = "",theversion = "";
+        String thescript = "", theversion = "";
         if (Config.custom_enabled) {
             thescript = "custom";
         } else {

@@ -21,6 +21,7 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.UUID;
 
 import com.authdb.util.Config;
 import com.authdb.util.Util;
@@ -34,13 +35,13 @@ public class Encryption {
             return SHA1(toencrypt);
         } else if (encryption.equalsIgnoreCase("sha512") || encryption.equalsIgnoreCase("sha2")) {
             return SHA512(toencrypt);
-        } else if (encryption.equalsIgnoreCase("whirlpool") || encryption.equalsIgnoreCase("xauth")) {
-            byte[] digest = new byte[Whirlpool.DIGESTBYTES];
-            whirpool.NESSIEinit();
-            whirpool.NESSIEadd(toencrypt);
-            whirpool.NESSIEfinalize(digest);
-            String done = Whirlpool.display(digest);
-            return done;
+        } else if (encryption.equalsIgnoreCase("whirlpool")) {
+            return whirlpool(toencrypt);
+        } else if (encryption.equalsIgnoreCase("xauth")) {
+        	String salt = whirlpool(UUID.randomUUID().toString()).substring(0, 12);
+    		String hash = whirlpool(salt + toencrypt);
+    		int saltPos = (toencrypt.length() >= hash.length() ? hash.length() - 1 : toencrypt.length());
+    		return hash.substring(0, saltPos) + salt + hash.substring(saltPos);
         }
         if (Config.debug_enable) {
             Util.logging.Info("Could not find encryption method: " + Config.custom_encryption + ", using default: md5");
@@ -66,6 +67,16 @@ public class Encryption {
             return sb.toString();
         }
     }
+    
+	public static String whirlpool(String toencrypt) {
+		Whirlpool w = new Whirlpool();
+		byte[] digest = new byte[Whirlpool.DIGESTBYTES];
+		w.NESSIEinit();
+		w.NESSIEadd(toencrypt);
+		w.NESSIEfinalize(digest);
+		return Whirlpool.display(digest);
+	}
+
 
     public static String md5(String data) {
         try {

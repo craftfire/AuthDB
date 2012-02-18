@@ -43,7 +43,7 @@ public class Custom {
         }
         //
         String query;
-        if (Config.custom_emailrequired) {
+        if (Config.custom_emailrequired && Config.custom_emailfield != "" && Config.custom_emailfield != null) {
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.custom_table + "` (`" + Config.custom_userfield + "`,`" + Config.custom_passfield + "`,`" + Config.custom_emailfield + "`)  VALUES (?,?,?)", 1);
             ps.setString(1, player); //username
             ps.setString(2, password); // password

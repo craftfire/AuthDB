@@ -100,7 +100,7 @@ public class Util {
             int number = 0;
             if (Config.custom_enabled) {
                 if (type.equalsIgnoreCase("checkuser")) {
-                    String check = MySQL.getfromtable(Config.custom_table, "*", Config.custom_userfield, player);
+                    String check = MySQL.getfromtable(Config.custom_table, Config.custom_userfield, Config.custom_userfield, player);
                     if (check != "fail") {
                         Config.hasForumBoard = true;
                         return true;
@@ -723,7 +723,7 @@ public class Util {
             if (Config.hasForumBoard && type.equalsIgnoreCase("checkuser") && !Config.custom_enabled) {
                 //EBean eBeanClass = EBean.find(player, Column.registered, "true");
                 //if (eBeanClass != null) { return true; }
-                String check = MySQL.getfromtable(Config.script_tableprefix + usertable, "*", usernamefield, player);
+                String check = MySQL.getfromtable(Config.script_tableprefix + usertable, usernamefield, usernamefield, player);
                 if (check != "fail") { return true; }
                 return false;
             } /*else if (Config.hasForumBoard && type.equalsIgnoreCase("checkban") && !Config.custom_enabled && bantable != null) {
