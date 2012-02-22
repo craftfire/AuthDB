@@ -22,12 +22,14 @@ import java.sql.SQLException;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -48,7 +50,7 @@ import com.authdb.util.Processes;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
 
-public class AuthDBPlayerListener extends PlayerListener {
+public class AuthDBPlayerListener implements Listener {
     private final AuthDB plugin;
     boolean sessionallow;
     int Schedule;
@@ -57,6 +59,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         this.plugin = instance;
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
 
@@ -106,6 +109,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
@@ -239,6 +243,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (Config.link_rename && !Util.checkOtherName(player.getName()).equals(player.getName())) {
@@ -270,6 +275,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         Processes.Quit(player);
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         long start = Util.timeMS();
         String[] split = event.getMessage().split(" ");
@@ -422,6 +428,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         Util.logging.timeUsage(stop - start, "process a command");
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.isCancelled()) {
             return;
@@ -443,6 +450,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerChat(PlayerChatEvent event) {
         if (event.isCancelled()) {
             return;
@@ -481,6 +489,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
             if (!checkGuest(event.getPlayer(),Config.guests_pickup)) {
@@ -489,6 +498,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
             if (!checkGuest(event.getPlayer(),Config.guests_interact)) {
@@ -497,6 +507,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (!plugin.isAuthorized(event.getPlayer())) {
             if (this.plugin.isRegistered("dropitem", event.getPlayer().getName()) || this.plugin.isRegistered("dropitem",Util.checkOtherName(event.getPlayer().getName()))) {
@@ -507,6 +518,7 @@ public class AuthDBPlayerListener extends PlayerListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
             event.getPlayer().setHealth(20);

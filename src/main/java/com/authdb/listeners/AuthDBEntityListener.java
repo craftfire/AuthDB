@@ -19,9 +19,11 @@ package com.authdb.listeners;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.authdb.AuthDB;
@@ -30,13 +32,14 @@ import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 
-public class AuthDBEntityListener extends EntityListener {
+public class AuthDBEntityListener implements Listener {
     private final AuthDB plugin;
 
     public AuthDBEntityListener(AuthDB instance) {
        this.plugin = instance;
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityTarget(EntityTargetEvent event) {
         if ((event.getTarget() instanceof Player)) {
             Player player = (Player)event.getTarget();
@@ -49,6 +52,7 @@ public class AuthDBEntityListener extends EntityListener {
         }
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player p = (Player)event.getEntity();

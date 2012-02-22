@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +47,8 @@ import com.avaje.ebean.EbeanServer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
@@ -81,10 +84,6 @@ public class AuthDB extends JavaPlugin {
     public PluginDescriptionFile pluginFile = getDescription();
     public static String pluginName, pluginVersion, pluginWebsite, pluginDescrption;
     public static CraftIRC craftircHandle;
-
-    private final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
-    private final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
-    private final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
     public static List<String> authorizedNames = new ArrayList<String>();
     public static HashMap<String, Integer> AuthDB_Timeouts = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_Sessions = new HashMap<String, Long>();
@@ -102,6 +101,9 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, UUID> AuthDB_GUI_ErrorFieldIDs = new HashMap<String, UUID>();
     public static HashMap<String, String> AuthDB_GUI_TempPasswords = new HashMap<String, String>();
     public static Logger log = Logger.getLogger("Minecraft");
+    
+    private FileConfiguration basicConfig = null, advancedConfig = null, pluginsConfig = null, messagesConfig = null, commandsConfig = null;
+    private File basicConfigurationFile = null, advancedConfigurationFile = null, pluginsConfigurationFile = null, messagesConfigurationFile = null, commandsConfigurationFile = null;
 
     public void onDisable() {
         for (Player p : getServer().getOnlinePlayers()) {
@@ -152,21 +154,21 @@ public class AuthDB extends JavaPlugin {
             Util.logging.Info("basic.yml could not be found in plugins/AuthDB/config/! Creating basic.yml!");
             DefaultFile("basic.yml", "config");
         }
-        new Config("basic", "plugins/" + pluginName + "/config/", "basic.yml");
+        new Config(this, "basic", "plugins/" + pluginName + "/config/", "basic.yml");
 
         f = new File("plugins/" + pluginName + "/config/advanced.yml");
         if (!f.exists()) {
             Util.logging.Info("advanced.yml could not be found in plugins/AuthDB/config/! Creating advanced.yml!");
             DefaultFile("advanced.yml", "config");
         }
-        new Config("advanced", "plugins/" + pluginName + "/config/", "advanced.yml");
+        new Config(this, "advanced", "plugins/" + pluginName + "/config/", "advanced.yml");
 
         f = new File("plugins/" + pluginName + "/config/plugins.yml");
         if (!f.exists()) {
             Util.logging.Info("plugins.yml could not be found in plugins/" + pluginName + "/config/! Creating plugins.yml!");
             DefaultFile("plugins.yml", "config");
         }
-        new Config("plugins", "plugins/" + pluginName + "/config/", "plugins.yml");
+        new Config(this, "plugins", "plugins/" + pluginName + "/config/", "plugins.yml");
 
         f = new File(getDataFolder() + "/config/customdb.sql");
         if (!f.exists()) {
@@ -178,28 +180,28 @@ public class AuthDB extends JavaPlugin {
         LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
         setupDatabase();
         checkOldFiles();
-          PluginManager pm = getServer().getPluginManager();
-          Plugin check = getServer().getPluginManager().getPlugin("Backpack");
-          if (check != null) {
-              Config.hasBackpack = true;
-              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
-          } else {
-              Util.logging.Debug("Server is running without Backpack.");
-          }
-          check = getServer().getPluginManager().getPlugin("Buildr");
-          if (check != null) {
-              Config.hasBuildr = true;
-              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
-          } else {
-              Util.logging.Debug("Server is running without Buildr.");
-          }
-          check = getServer().getPluginManager().getPlugin("bPermissions");
-          if (check != null) {
-              ZPermissions.hasbPermissions = true;
-              Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
-          } else {
-              Util.logging.Debug("Server is running without bPermissions.");
-          }
+        PluginManager pm = getServer().getPluginManager();
+        Plugin check = getServer().getPluginManager().getPlugin("Backpack");
+        if (check != null) {
+          Config.hasBackpack = true;
+          Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+        } else {
+          Util.logging.Debug("Server is running without Backpack.");
+        }
+        check = getServer().getPluginManager().getPlugin("Buildr");
+        if (check != null) {
+          Config.hasBuildr = true;
+          Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+        } else {
+          Util.logging.Debug("Server is running without Buildr.");
+        }
+        check = getServer().getPluginManager().getPlugin("bPermissions");
+        if (check != null) {
+          ZPermissions.hasbPermissions = true;
+          Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
+        } else {
+          Util.logging.Debug("Server is running without bPermissions.");
+        }
          /* SPOUT START
           * check = getServer().getPluginManager().getPlugin("Spout");
           if (check != null) {
@@ -215,22 +217,16 @@ public class AuthDB extends JavaPlugin {
               Util.logging.Debug("Server is running without Spout.");
           }
           */
-        pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener, Event.Priority.Lowest, this);
-        pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Lowest, this);
-        pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Lowest, this);
-        pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Event.Priority.Lowest, this);
-        pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_CHAT, this.playerListener, Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, this.playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, this.playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_KICK, this.playerListener, Event.Priority.Lowest, this);
-        pm.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_DAMAGE, this.blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_TARGET, this.entityListener, Event.Priority.Normal, this);
+          
+          
+		final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
+		pm.registerEvents(playerListener, this);
+		
+		final AuthDBEntityListener entityListener = new AuthDBEntityListener(this);
+		pm.registerEvents(entityListener, this);
+		
+		final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
+		pm.registerEvents(blockListener, this);
 
         Config.onlineMode = getServer().getOnlineMode();
 
@@ -316,6 +312,150 @@ public class AuthDB extends JavaPlugin {
             }
         }
     }
+    
+    public void reloadCustomConfig(String config) {
+    	if(config.equalsIgnoreCase("basic")) {
+	        if (basicConfigurationFile == null) {
+	        	basicConfigurationFile = new File("plugins/" + pluginName + "/config/", "basic.yml");
+	        }
+	        basicConfig = YamlConfiguration.loadConfiguration(basicConfigurationFile);
+	        InputStream defConfigStream = getResource("/files/config/basic.yml");
+	        if (defConfigStream != null) {
+	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	            basicConfig.setDefaults(defConfig);
+	        }
+    	} else if(config.equalsIgnoreCase("advanced")) {
+    		if (advancedConfigurationFile == null) {
+            	advancedConfigurationFile = new File("plugins/" + pluginName + "/config/", "advanced.yml");
+            }
+	        advancedConfig = YamlConfiguration.loadConfiguration(advancedConfigurationFile);
+	        InputStream defConfigStream = getResource("/files/config/advanced.yml");
+	        if (defConfigStream != null) {
+	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	            advancedConfig.setDefaults(defConfig);
+	        }
+    	} else if(config.equalsIgnoreCase("plugins")) {
+	        if (pluginsConfigurationFile == null) {
+	        	pluginsConfigurationFile = new File("plugins/" + pluginName + "/config/", "plugins.yml");
+	        }
+	        pluginsConfig = YamlConfiguration.loadConfiguration(pluginsConfigurationFile);
+	        InputStream defConfigStream = getResource("/files/config/plugins.yml");
+	        if (defConfigStream != null) {
+	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	            pluginsConfig.setDefaults(defConfig);
+	        }
+    	} else if(config.equalsIgnoreCase("messages")) {
+	        if (messagesConfigurationFile == null) {
+	        	messagesConfigurationFile = new File("plugins/" + pluginName + "/translations/" + Config.language_messages + "/", "messages.yml");
+	        }
+	        messagesConfig = YamlConfiguration.loadConfiguration(messagesConfigurationFile);
+	        InputStream defConfigStream = getResource("/files/translations/" + Config.language_messages + "/messages.yml");
+	        if (defConfigStream != null) {
+	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	            messagesConfig.setDefaults(defConfig);
+	        }
+    	} else if(config.equalsIgnoreCase("commands")) {
+	        if (commandsConfigurationFile == null) {
+	        	commandsConfigurationFile = new File("plugins/" + pluginName + "/translations/" + Config.language_messages + "/", "commands.yml");
+	        }
+	        commandsConfig = YamlConfiguration.loadConfiguration(commandsConfigurationFile);
+	        InputStream defConfigStream = getResource("/files/translations/" + Config.language_messages + "/commands.yml");
+	        if (defConfigStream != null) {
+	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	            commandsConfig.setDefaults(defConfig);
+	        }
+    	}
+    }
+    
+    public FileConfiguration getBasicConfig() {
+        if (basicConfig == null) {
+            reloadCustomConfig("basic");
+        }
+        return basicConfig;
+    }
+    
+    public FileConfiguration getAdvancedConfig() {
+        if (advancedConfig == null) {
+            reloadCustomConfig("advanced");
+        }
+        return advancedConfig;
+    }
+    
+    public FileConfiguration getPluginsConfig() {
+        if (pluginsConfig == null) {
+            reloadCustomConfig("plugins");
+        }
+        return pluginsConfig;
+    }
+    
+    public FileConfiguration getMessagesConfig() {
+        if (messagesConfig == null) {
+            reloadCustomConfig("messages");
+        }
+        return messagesConfig;
+    }
+    
+    public FileConfiguration getCommandsConfig() {
+        if (commandsConfig == null) {
+            reloadCustomConfig("commands");
+        }
+        return commandsConfig;
+    }
+    
+    public void saveBasicConfig() {
+        if (basicConfig == null || basicConfigurationFile == null) {
+        	return;
+        }
+        try {
+        	basicConfig.save(basicConfigurationFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + basicConfigurationFile, ex);
+        }
+    }
+    
+    public void saveAdvancedConfig() {
+        if (advancedConfig == null || advancedConfigurationFile == null) {
+        	return;
+        }
+        try {
+        	advancedConfig.save(advancedConfigurationFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + advancedConfigurationFile, ex);
+        }
+    }
+    
+    public void savePluginsConfig() {
+        if (pluginsConfig == null || pluginsConfigurationFile == null) {
+        	return;
+        }
+        try {
+        	pluginsConfig.save(pluginsConfigurationFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + pluginsConfigurationFile, ex);
+        }
+    }
+    
+    public void saveMessagesConfig() {
+        if (messagesConfig == null || messagesConfigurationFile == null) {
+        	return;
+        }
+        try {
+        	messagesConfig.save(messagesConfigurationFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + messagesConfigurationFile, ex);
+        }
+    }
+    
+    public void saveCommandsConfig() {
+        if (commandsConfig == null || commandsConfigurationFile == null) {
+        	return;
+        }
+        try {
+        	commandsConfig.save(commandsConfigurationFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + commandsConfigurationFile, ex);
+        }
+    }
 
     public String commandString(String command, boolean check) {
        /*if (command.contains(" ")) {
@@ -352,7 +492,7 @@ public class AuthDB extends JavaPlugin {
                 return true;
             } else if (command.equalsIgnoreCase(commandString(Config.commands_admin_reload, true)) || command.equalsIgnoreCase(commandString(Config.aliases_admin_reload, true))) {
                 if (ZPermissions.isAllowed(player, Permission.command_admin_reload)) {
-                    new Config("config", "plugins/" + pluginName + "/config/", "config.yml");
+                    new Config(this, "config", "plugins/" + pluginName + "/config/", "basic.yml");
                     LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
                     LoadYml("messages", getClass().getProtectionDomain().getCodeSource());
                     Messages.sendMessage(Message.reload_success, player, null);
@@ -719,7 +859,7 @@ public class AuthDB extends JavaPlugin {
         else if (!set && type.equalsIgnoreCase("messages")) { Util.logging.Info("Could not find translation files for " + Config.language_messages + ", defaulting to " + language); }
         else if (type.equalsIgnoreCase("commands")) { Util.logging.Info(type + " language set to " + Config.language_commands); }
         else if (type.equalsIgnoreCase("messages")) { Util.logging.Info(type + " language set to " + Config.language_messages); }
-        new Config(type, getDataFolder() + "/translations/" + language + "/", type + ".yml");
+        new Config(this, type, getDataFolder() + "/translations/" + language + "/", type + ".yml");
     }
 
     public boolean isRegistered(String when, String player) {

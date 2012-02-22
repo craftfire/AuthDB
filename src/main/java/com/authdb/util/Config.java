@@ -16,9 +16,9 @@
  */
 package com.authdb.util;
 
-import java.io.File;
+import org.bukkit.configuration.file.FileConfiguration;
 
-import org.bukkit.util.config.Configuration;
+import com.authdb.AuthDB;
 
 //import com.ensifera.animosity.craftirc.CraftIRC;
 
@@ -81,13 +81,13 @@ public class Config {
     public static String aliases_user_register,aliases_user_link,aliases_user_unlink,aliases_user_login,aliases_user_logout;
     public static String aliases_admin_login, aliases_admin_logout, aliases_admin_reload;
 
-      public static Configuration template = null;
+    public static FileConfiguration configFile = null;
 
-      public Config(String config, String directory, String filename) {
-          template = new Configuration(new File(directory, filename));
-          template.load();
+      public Config(AuthDB plugin, String config, String directory, String filename) {
             if (config.equalsIgnoreCase("basic")) {
 
+            	configFile = plugin.getBasicConfig();
+            	
                 language_commands = getConfigString("plugin.language.commands", "English");
                 language_messages = getConfigString("plugin.language.messages", "English");
                 autoupdate_enable = getConfigBoolean("plugin.autoupdate", true);
@@ -113,6 +113,8 @@ public class Config {
 
             } else if (config.equalsIgnoreCase("advanced")) {
 
+            	configFile = plugin.getAdvancedConfig();
+            	
                 custom_enabled = getConfigBoolean("customdb.enabled", false);
                 custom_autocreate = getConfigBoolean("customdb.autocreate", true);
                 custom_emailrequired = getConfigBoolean("customdb.emailrequired", false);
@@ -194,6 +196,8 @@ public class Config {
                 filter_password = getConfigString("filter.password", "$&\"\\");
                 filter_whitelist= getConfigString("filter.whitelist", "");
             } else if (config.equalsIgnoreCase("plugins")) {
+            	
+            	configFile = plugin.getPluginsConfig();
 
                 CraftIRC_enabled = getConfigBoolean("CraftIRC.enabled", true);
                 CraftIRC_tag = getConfigString("CraftIRC.tag", "admin");
@@ -212,6 +216,8 @@ public class Config {
 
             } else if (config.equalsIgnoreCase("messages")) {
 
+            	configFile = plugin.getMessagesConfig();
+            	
                 Messages.time_millisecond = Config.getConfigString("Core.time.millisecond.", "millisecond");
                 Messages.time_milliseconds = Config.getConfigString("Core.time.milliseconds", "milliseconds");
                 Messages.time_second = Config.getConfigString("Core.time.second.", "second");
@@ -328,6 +334,9 @@ public class Config {
                 Messages.CraftIRC_message_filter_whitelist = Config.getConfigString("Plugins.CraftIRC.filter.whitelist", "{PLAYER} is on the on bad characters whitelist, bypassing restictions!");
 
             } else if (config.equalsIgnoreCase("commands")) {
+            	
+            	configFile = plugin.getCommandsConfig();
+            	
                 commands_user_register = Config.getConfigString("Core.commands.user.register", "/register");
                 commands_user_link = Config.getConfigString("Core.commands.user.link", "/link");
                 commands_user_unlink = Config.getConfigString("Core.commands.user.unlink", "/unlink");
@@ -349,22 +358,14 @@ public class Config {
       }
 
       public static String getConfigString(String key, String defaultvalue) {
-        return template.getString(key, defaultvalue);
+        return configFile.getString(key, defaultvalue);
       }
 
       public static boolean getConfigBoolean(String key, boolean defaultvalue) {
-        return template.getBoolean(key, defaultvalue);
-      }
-
-      public void deleteConfigValue(String key) {
-        template.removeProperty(key);
+        return configFile.getBoolean(key, defaultvalue);
       }
 
       public String raw(String key, String line) {
-        return template.getString(key, line);
-      }
-
-      public void save(String key, String line) {
-          template.setProperty(key, line);
+        return configFile.getString(key, line);
       }
 }

@@ -17,8 +17,10 @@
 package com.authdb.listeners;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.authdb.AuthDB;
@@ -27,19 +29,21 @@ import com.authdb.util.Messages;
 import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 
-public class AuthDBBlockListener extends BlockListener {
+public class AuthDBBlockListener implements Listener {
     private final AuthDB plugin;
 
     public AuthDBBlockListener(AuthDB instance) {
         plugin = instance;
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (!AuthDB.isAuthorized(event.getPlayer()) && !checkGuest(event.getPlayer(), Config.guests_build)) {
             event.setCancelled(true);
         }
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockDamage(BlockDamageEvent event) {
         if (!AuthDB.isAuthorized(event.getPlayer()) && !checkGuest(event.getPlayer(), Config.guests_destroy)) {
             event.setCancelled(true);

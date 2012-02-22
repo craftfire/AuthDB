@@ -28,7 +28,6 @@ import com.authdb.util.Util;
 
 public class Encryption {
     public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        Whirlpool whirpool = new Whirlpool();
         if (encryption.equalsIgnoreCase("md5")) {
             return md5(toencrypt);
         } else if (encryption.equalsIgnoreCase("sha1")) {
