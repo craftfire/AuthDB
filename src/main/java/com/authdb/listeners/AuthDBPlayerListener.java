@@ -167,7 +167,7 @@ public class AuthDBPlayerListener implements Listener {
                 }
             }
             if (Config.custom_enabled && (Config.custom_encryption.equals("") || Config.custom_encryption == null)) {
-                player.sendMessage("§4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT.");
+                player.sendMessage(Color.red + "WARNING: Password is NOT encrypted, but stored in plain text. Your data might be at risk.");
             }
             if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
                 player.setHealth(20);
@@ -200,7 +200,11 @@ public class AuthDBPlayerListener implements Listener {
                 long thetimestamp = System.currentTimeMillis()/1000;
                 this.plugin.AuthDB_AuthTime.put(player.getName(), thetimestamp);
                 Processes.Login(event.getPlayer());
-                Messages.sendMessage(Message.session_valid, player, null);
+                plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+                		Messages.sendMessage(Message.session_valid, player, null);
+			}
+                }, 1);
             } else if (this.plugin.isRegistered("join", player.getName())) {
                 Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
                 player.getInventory().clear();
@@ -216,10 +220,19 @@ public class AuthDBPlayerListener implements Listener {
                 } , 20);
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
                    //SPOUT START if(!Config.hasSpout) {
-                        Messages.sendMessage(Message.login_prompt, player, null);
+                   /* do this so that the login message appears at the end */
+                   plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				Messages.sendMessage(Message.login_prompt, player, null);
+			}
+                   }, 1);
                       //SPOUT START  }
                 } else {
-                    Messages.sendMessage(Message.login_normal, player, null);
+		   plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+                    		Messages.sendMessage(Message.login_normal, player, null);
+			}
+		   }, 1);
                 }
             } else if (Config.register_force) {
                 Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
@@ -237,9 +250,9 @@ public class AuthDBPlayerListener implements Listener {
             }
         } catch (IOException e) {
             Util.logging.Severe("[" + AuthDB.pluginName + "] Inventory file error:");
-            player.kickPlayer("Inventory protection kicked.");
+            player.kickPlayer("Kicked due to Inventory Protection");
             Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
-            player.sendMessage(Color.red + "Error happend, report to admins!");
+            player.sendMessage(Color.red + "An internal error occured. Please notify the administrators.");
         }
     }
 
