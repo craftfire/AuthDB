@@ -103,7 +103,8 @@ public class Config {
                 database_host =  getConfigString("database.host", "localhost");
                 database_database = getConfigString("database.name", "forum");
                 database_keepalive = getConfigBoolean("database.keepalive", false);
-                dbDb = "jdbc:mysql://" + database_host + ":" + database_port + "/" + database_database;
+                dbDb = "jdbc:mysql://" + database_host + ":" + database_port + "/" + database_database +
+                       "?jdbcCompliantTruncation=false";
 
                 script_name = getConfigString("script.name", "phpbb").toLowerCase();
                 script_version = getConfigString("script.version", "3.0.8");
