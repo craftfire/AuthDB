@@ -167,7 +167,7 @@ public class AuthDBPlayerListener implements Listener {
                 }
             }
             if (Config.custom_enabled && (Config.custom_encryption.equals("") || Config.custom_encryption == null)) {
-                player.sendMessage("ง4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT.");
+                player.sendMessage("ยง4YOUR PASSWORD WILL NOT BE ENCRYPTED, PLEASE BE ADWARE THAT THIS SERVER STORES THE PASSWORDS IN PLAINTEXT.");
             }
             if (event.getPlayer().getHealth() == 0 || event.getPlayer().getHealth() == -1) {
                 player.setHealth(20);

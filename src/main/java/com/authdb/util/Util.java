@@ -68,7 +68,7 @@ public class Util {
     public static ServerManager server = new ServerManager();
     static int schedule = 1;
     public static boolean checkScript(String type, String script, String player, String password,
-    String email, String ipAddress) throws SQLException {
+                                      String email, String ipAddress) throws SQLException {
         boolean caseSensitive = false;
         if (Util.databaseManager.getDatabaseType().equalsIgnoreCase("ebean")) {
             EBean eBeanClass = EBean.checkPlayer(player, true);
@@ -152,7 +152,7 @@ public class Util {
                             return true;
                         }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
+                                                         "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
                         if (PhpBB.check_hash(password, hash)) {
                             return true;
@@ -185,7 +185,7 @@ public class Util {
                             return true;
                         }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
+                                                         "`" + passwordfield + "`", "" + usernamefield + "", player.toLowerCase());
                         EBean.checkPassword(player, hash);
                         if (PhpBB.check_hash(password, hash)) {
                             return true;
@@ -193,9 +193,9 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                     PhpBB.adduser(number, player, email, password, ipAddress);
-                     EBean.sync(player);
-                     return true;
+                    PhpBB.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
                 }
             } else if (script.equalsIgnoreCase(SMF.Name) || script.equalsIgnoreCase(SMF.ShortName)) {
                 usertable = "members";
@@ -220,7 +220,7 @@ public class Util {
                         }
                     }
                 } else if (checkVersionInRange(SMF.VersionRange2) || checkVersionInRange("2.0-2.0")
-                || checkVersionInRange("2.0.0-2.0.0")) {
+                           || checkVersionInRange("2.0.0-2.0.0")) {
                     usernamefield = "member_name";
                     passwordfield = "passwd";
                     saltfield = "password_salt";
@@ -242,9 +242,9 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                     SMF.adduser(number, player, email, password, ipAddress);
-                     EBean.sync(player);
-                     return true;
+                    SMF.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
                 }
             } else if (script.equalsIgnoreCase(MyBB.Name) || script.equalsIgnoreCase(MyBB.ShortName)) {
                 usertable = "users";
@@ -270,9 +270,9 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                     MyBB.adduser(number, player, email, password, ipAddress);
-                     EBean.sync(player);
-                     return true;
+                    MyBB.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
                 }
             } else if (script.equalsIgnoreCase(VBulletin.Name) || script.equalsIgnoreCase(VBulletin.ShortName)) {
                 usertable = "user";
@@ -318,9 +318,9 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                     VBulletin.adduser(number, player, email, password, ipAddress);
-                     EBean.sync(player);
-                     return true;
+                    VBulletin.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
                 }
             } else if (script.equalsIgnoreCase(Drupal.Name) || script.equalsIgnoreCase(Drupal.ShortName)) {
                 usertable = "users";
@@ -360,9 +360,9 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                     Drupal.adduser(number, player, email, password, ipAddress);
-                     EBean.sync(player);
-                     return true;
+                    Drupal.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
                 }
             } else if (script.equalsIgnoreCase(Joomla.Name) || script.equalsIgnoreCase(Joomla.ShortName)) {
                 usertable = "users";
@@ -404,9 +404,9 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                     Joomla.adduser(number, player, email, password, ipAddress);
-                     EBean.sync(player);
-                     return true;
+                    Joomla.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
                 }
             } else if (script.equalsIgnoreCase(Vanilla.Name) || script.equalsIgnoreCase(Vanilla.ShortName)) {
                 if (checkVersionInRange(Vanilla.VersionRange)) {
@@ -554,7 +554,7 @@ public class Util {
                     int chunkSize = 1024;
                     long blobLength = hash.length();
                     if (chunkSize > blobLength) {
-                    chunkSize = (int) blobLength;
+                        chunkSize = (int) blobLength;
                     }
                     char buffer[] = new char[chunkSize];
                     StringBuilder stringBuffer = new StringBuilder();
@@ -567,10 +567,10 @@ public class Util {
                     } catch (IOException e) {
                         // TODO: Auto-generated catch block
                         logging.StackTrace(e.getStackTrace(),
-                        Thread.currentThread().getStackTrace()[1].getMethodName(),
-                        Thread.currentThread().getStackTrace()[1].getLineNumber(),
-                        Thread.currentThread().getStackTrace()[1].getClassName(),
-                        Thread.currentThread().getStackTrace()[1].getFileName());
+                                           Thread.currentThread().getStackTrace()[1].getMethodName(),
+                                           Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                                           Thread.currentThread().getStackTrace()[1].getClassName(),
+                                           Thread.currentThread().getStackTrace()[1].getFileName());
                     }
                     String cache = stringBuffer.toString();
                     String thesalt = forumCacheValue(cache, "salt");
@@ -592,7 +592,7 @@ public class Util {
                             return true;
                         }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player);
+                                                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (BBPress.check_hash(password, hash)) {
                             return true;
@@ -618,7 +618,7 @@ public class Util {
                             return true;
                         }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "",
-                        "`" + passwordfield + "`", "" + usernamefield + "", player);
+                                                         "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
                         if (DLE.check_hash(DLE.hash(password), hash)) {
                             return true;
@@ -655,7 +655,7 @@ public class Util {
                 if (type.equalsIgnoreCase("adduser")) {
                     IPB.adduser(number, player, email, password, ipAddress);
                     EBean.sync(player);
-                     return true;
+                    return true;
                 }
             } else if (script.equalsIgnoreCase(WordPress.Name) || script.equalsIgnoreCase(WordPress.ShortName)) {
                 usertable = "users";
@@ -705,15 +705,15 @@ public class Util {
                     String tempVers = Config.script_version;
                     Config.script_version = scriptVersion();
                     logging.Info(System.getProperty("line.separator")
-                        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
-                        + "|--------------------------------AUTHDB WARNING-------------------------------|" + System.getProperty("line.separator")
-                        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
-                        + "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION!                                 |" + System.getProperty("line.separator")
-                        + "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK. |" + System.getProperty("line.separator")
-                        + "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAS BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |" + System.getProperty("line.separator")
-                        + "| FOR A LIST OF SCRIPT VERSIONS,                                              |" + System.getProperty("line.separator")
-                        + "| CHECK: http://wiki.bukkit.org/AuthDB#Scripts_Supported                      |" + System.getProperty("line.separator")
-                        + "|-----------------------------------------------------------------------------|");
+                                 + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+                                 + "|--------------------------------AUTHDB WARNING-------------------------------|" + System.getProperty("line.separator")
+                                 + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
+                                 + "| COULD NOT FIND A COMPATIBLE SCRIPT VERSION!                                 |" + System.getProperty("line.separator")
+                                 + "| PLEASE CHECK YOUR SCRIPT VERSION AND TRY AGAIN. PLUGIN MAY OR MAY NOT WORK. |" + System.getProperty("line.separator")
+                                 + "| YOUR SCRIPT VERSION FOR " + Config.script_name + " HAS BEEN SET FROM " + tempVers + " TO " + Config.script_version + "             |" + System.getProperty("line.separator")
+                                 + "| FOR A LIST OF SCRIPT VERSIONS,                                              |" + System.getProperty("line.separator")
+                                 + "| CHECK: http://wiki.bukkit.org/AuthDB#Scripts_Supported                      |" + System.getProperty("line.separator")
+                                 + "|-----------------------------------------------------------------------------|");
 
                 }
             }
@@ -732,10 +732,10 @@ public class Util {
             }*/ else if (Config.hasForumBoard && type.equalsIgnoreCase("numusers") && !Config.custom_enabled) {
                 if (script.equalsIgnoreCase(PhpBB.Name) || script.equalsIgnoreCase(PhpBB.ShortName)) {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
-                     + Config.script_tableprefix + usertable + "` WHERE  `group_id` !=6");
+                                                                          + Config.script_tableprefix + usertable + "` WHERE  `group_id` !=6");
                 } else {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
-                     + Config.script_tableprefix + usertable + "`");
+                                                                          + Config.script_tableprefix + usertable + "`");
                 }
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) { logging.Info(rs.getInt("countit") + " user registrations in database"); }
@@ -800,40 +800,40 @@ public class Util {
         //if (Config.login_delay > 0 && !AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
         if (Config.login_delay > 0) {
             schedule = AuthDB.server.getScheduler().scheduleSyncDelayedTask(AuthDB.plugin, new Runnable() {
-            @Override
-            public void run() {
-                /*
-                if (AuthDB.isAuthorized(player) && AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
-                    AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
-                    AuthDB.AuthDB_SpamMessage.remove(player.getName());
-                    AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
-                } else {
-                    if (!AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessage.put(player.getName(), schedule); }
-                    if (!AuthDB.AuthDB_SpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessageTime.put(player.getName(), timeStamp()); }
-                    if ((AuthDB.AuthDB_SpamMessageTime.get(player.getName()) + show) <= timeStamp()) {
+                @Override
+                public void run() {
+                    /*
+                    if (AuthDB.isAuthorized(player) && AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
                         AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
                         AuthDB.AuthDB_SpamMessage.remove(player.getName());
                         AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
+                    } else {
+                        if (!AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessage.put(player.getName(), schedule); }
+                        if (!AuthDB.AuthDB_SpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessageTime.put(player.getName(), timeStamp()); }
+                        if ((AuthDB.AuthDB_SpamMessageTime.get(player.getName()) + show) <= timeStamp()) {
+                            AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
+                            AuthDB.AuthDB_SpamMessage.remove(player.getName());
+                            AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
+                        }
+                        String message = replaceStrings(text, player, null);
+                        if (Config.link_rename && !checkOtherName(player.getName()).equals(player.getName())) {
+                            message = message.replaceAll(player.getName(), player.getDisplayName());
+                            player.sendMessage(message);
+                        }
+                        else {
+                            player.sendMessage(message);
+                        }
+                        fillChatField(player, message);
                     }
+                    */
                     String message = replaceStrings(text, player, null);
                     if (Config.link_rename && !checkOtherName(player.getName()).equals(player.getName())) {
                         message = message.replaceAll(player.getName(), player.getDisplayName());
                         player.sendMessage(message);
-                    }
-                    else {
+                    } else {
                         player.sendMessage(message);
                     }
-                    fillChatField(player, message);
-                }
-                */
-                String message = replaceStrings(text, player, null);
-                if (Config.link_rename && !checkOtherName(player.getName()).equals(player.getName())) {
-                    message = message.replaceAll(player.getName(), player.getDisplayName());
-                    player.sendMessage(message);
-                } else {
-                    player.sendMessage(message);
-                }
-            } }, delay);
+                } }, delay);
         }
     }
 
@@ -1024,7 +1024,7 @@ public class Util {
     }
 
     public static int toTicks(String time, String length) {
-       logging.Debug("Launching function: toTicks(String time, String length) - " + time + ":" + length);
+        logging.Debug("Launching function: toTicks(String time, String length) - " + time + ":" + length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt(length);
         if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
@@ -1124,7 +1124,7 @@ public class Util {
     public static void checkIdle(Player player) {
         logging.Debug("Launching function: CheckIdle(Player player)");
         if (!AuthDB.isAuthorized(player)) {
-             Messages.sendMessage(Message.kickPlayerIdleLoginMessage, player, null);
+            Messages.sendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
     }
 
@@ -1230,12 +1230,12 @@ public class Util {
             string = string.replaceAll("\\{PLAYER\\}", player.getName());
             string = string.replaceAll("\\{NEWPLAYER\\}", "");
             string = string.replaceAll("\\{PLAYERNEW\\}", "");
-            string = string.replaceAll("&", "§");
+            string = string.replaceAll("&", "Â§");
             if (!Util.checkOtherName(player.getName()).equals(player.getName())) {
                 string = string.replaceAll("\\{DISPLAYNAME\\}", checkOtherName(player.getName()));
             }
         } else {
-            string = string.replaceAll("&", Matcher.quoteReplacement("�"));
+            string = string.replaceAll("&", Matcher.quoteReplacement("Â§"));
         }
         String email = "";
         if (Config.custom_emailrequired) {
@@ -1267,74 +1267,74 @@ public class Util {
         string = string.replaceAll("\\{LOGINCMD\\}", Config.commands_user_login + " (" + Config.aliases_user_login + ")");
 
         // Uppercase colors
-        string = string.replaceAll("\\{BLACK\\}", "§0");
-        string = string.replaceAll("\\{DARKBLUE\\}", "§1");
-        string = string.replaceAll("\\{DARKGREEN\\}", "§2");
-        string = string.replaceAll("\\{DARKTEAL\\}", "§3");
-        string = string.replaceAll("\\{DARKRED\\}", "§4");
-        string = string.replaceAll("\\{PURPLE\\}", "§5");
-        string = string.replaceAll("\\{GOLD\\}", "§6");
-        string = string.replaceAll("\\{GRAY\\}", "§7");
-        string = string.replaceAll("\\{DARKGRAY\\}", "§8");
-        string = string.replaceAll("\\{BLUE\\}", "§9");
-        string = string.replaceAll("\\{BRIGHTGREEN\\}", "§a");
-        string = string.replaceAll("\\{TEAL\\}", "§b");
-        string = string.replaceAll("\\{RED\\}", "§c");
-        string = string.replaceAll("\\{PINK\\}", "§d");
-        string = string.replaceAll("\\{YELLOW\\}", "§e");
-        string = string.replaceAll("\\{WHITE\\}", "§f");
+        string = string.replaceAll("\\{BLACK\\}", "Â§0");
+        string = string.replaceAll("\\{DARKBLUE\\}", "Â§1");
+        string = string.replaceAll("\\{DARKGREEN\\}", "Â§2");
+        string = string.replaceAll("\\{DARKTEAL\\}", "Â§3");
+        string = string.replaceAll("\\{DARKRED\\}", "Â§4");
+        string = string.replaceAll("\\{PURPLE\\}", "Â§5");
+        string = string.replaceAll("\\{GOLD\\}", "Â§6");
+        string = string.replaceAll("\\{GRAY\\}", "Â§7");
+        string = string.replaceAll("\\{DARKGRAY\\}", "Â§8");
+        string = string.replaceAll("\\{BLUE\\}", "Â§9");
+        string = string.replaceAll("\\{BRIGHTGREEN\\}", "Â§a");
+        string = string.replaceAll("\\{TEAL\\}", "Â§b");
+        string = string.replaceAll("\\{RED\\}", "Â§c");
+        string = string.replaceAll("\\{PINK\\}", "Â§d");
+        string = string.replaceAll("\\{YELLOW\\}", "Â§e");
+        string = string.replaceAll("\\{WHITE\\}", "Â§f");
 
-        string = string.replaceAll("\\{BLACK\\}", "§0");
-        string = string.replaceAll("\\{NAVY\\}", "§1");
-        string = string.replaceAll("\\{GREEN\\}", "§2");
-        string = string.replaceAll("\\{BLUE\\}", "§3");
-        string = string.replaceAll("\\{RED\\}", "§4");
-        string = string.replaceAll("\\{PURPLE\\}", "§5");
-        string = string.replaceAll("\\{GOLD\\}", "§6");
-        string = string.replaceAll("\\{LIGHTGRAY\\}", "§7");
-        string = string.replaceAll("\\{GRAY\\}", "§8");
-        string = string.replaceAll("\\{DARKPURPLE\\}", "§9");
-        string = string.replaceAll("\\{LIGHTGREEN\\}", "§a");
-        string = string.replaceAll("\\{LIGHTBLUE\\}", "§b");
-        string = string.replaceAll("\\{ROSE\\}", "§c");
-        string = string.replaceAll("\\{LIGHTPURPLE\\}", "§d");
-        string = string.replaceAll("\\{YELLOW\\}", "§e");
-        string = string.replaceAll("\\{WHITE\\}", "§f");
+        string = string.replaceAll("\\{BLACK\\}", "Â§0");
+        string = string.replaceAll("\\{NAVY\\}", "Â§1");
+        string = string.replaceAll("\\{GREEN\\}", "Â§2");
+        string = string.replaceAll("\\{BLUE\\}", "Â§3");
+        string = string.replaceAll("\\{RED\\}", "Â§4");
+        string = string.replaceAll("\\{PURPLE\\}", "Â§5");
+        string = string.replaceAll("\\{GOLD\\}", "Â§6");
+        string = string.replaceAll("\\{LIGHTGRAY\\}", "Â§7");
+        string = string.replaceAll("\\{GRAY\\}", "Â§8");
+        string = string.replaceAll("\\{DARKPURPLE\\}", "Â§9");
+        string = string.replaceAll("\\{LIGHTGREEN\\}", "Â§a");
+        string = string.replaceAll("\\{LIGHTBLUE\\}", "Â§b");
+        string = string.replaceAll("\\{ROSE\\}", "Â§c");
+        string = string.replaceAll("\\{LIGHTPURPLE\\}", "Â§d");
+        string = string.replaceAll("\\{YELLOW\\}", "Â§e");
+        string = string.replaceAll("\\{WHITE\\}", "Â§f");
 
         // Lowercase colors
-        string = string.replaceAll("\\{black\\}", "§0");
-        string = string.replaceAll("\\{darkblue\\}", "§1");
-        string = string.replaceAll("\\{darkgreen\\}", "§2");
-        string = string.replaceAll("\\{darkteal\\}", "§3");
-        string = string.replaceAll("\\{darkred\\}", "§4");
-        string = string.replaceAll("\\{purple\\}", "§5");
-        string = string.replaceAll("\\{gold\\}", "§6");
-        string = string.replaceAll("\\{gray\\}", "§7");
-        string = string.replaceAll("\\{darkgray\\}", "§8");
-        string = string.replaceAll("\\{blue\\}", "§9");
-        string = string.replaceAll("\\{brightgreen\\}", "§a");
-        string = string.replaceAll("\\{teal\\}", "§b");
-        string = string.replaceAll("\\{red\\}", "§c");
-        string = string.replaceAll("\\{pink\\}", "§d");
-        string = string.replaceAll("\\{yellow\\}", "§e");
-        string = string.replaceAll("\\{white\\}", "§f");
+        string = string.replaceAll("\\{black\\}", "Â§0");
+        string = string.replaceAll("\\{darkblue\\}", "Â§1");
+        string = string.replaceAll("\\{darkgreen\\}", "Â§2");
+        string = string.replaceAll("\\{darkteal\\}", "Â§3");
+        string = string.replaceAll("\\{darkred\\}", "Â§4");
+        string = string.replaceAll("\\{purple\\}", "Â§5");
+        string = string.replaceAll("\\{gold\\}", "Â§6");
+        string = string.replaceAll("\\{gray\\}", "Â§7");
+        string = string.replaceAll("\\{darkgray\\}", "Â§8");
+        string = string.replaceAll("\\{blue\\}", "Â§9");
+        string = string.replaceAll("\\{brightgreen\\}", "Â§a");
+        string = string.replaceAll("\\{teal\\}", "Â§b");
+        string = string.replaceAll("\\{red\\}", "Â§c");
+        string = string.replaceAll("\\{pink\\}", "Â§d");
+        string = string.replaceAll("\\{yellow\\}", "Â§e");
+        string = string.replaceAll("\\{white\\}", "Â§f");
 
-        string = string.replaceAll("\\{black\\}", "§0");
-        string = string.replaceAll("\\{navy\\}", "§1");
-        string = string.replaceAll("\\{green\\}", "§2");
-        string = string.replaceAll("\\{blue\\}", "§3");
-        string = string.replaceAll("\\{red\\}", "§4");
-        string = string.replaceAll("\\{purple\\}", "§5");
-        string = string.replaceAll("\\{gold\\}", "§6");
-        string = string.replaceAll("\\{lightgray\\}", "§7");
-        string = string.replaceAll("\\{gray\\}", "§8");
-        string = string.replaceAll("\\{darkpurple\\}", "§9");
-        string = string.replaceAll("\\{lightgreen\\}", "§a");
-        string = string.replaceAll("\\{lightblue\\}", "§b");
-        string = string.replaceAll("\\{rose\\}", "§c");
-        string = string.replaceAll("\\{lightpurple\\}", "§d");
-        string = string.replaceAll("\\{yellow\\}", "§e");
-        string = string.replaceAll("\\{white\\}", "§f");
+        string = string.replaceAll("\\{black\\}", "Â§0");
+        string = string.replaceAll("\\{navy\\}", "Â§1");
+        string = string.replaceAll("\\{green\\}", "Â§2");
+        string = string.replaceAll("\\{blue\\}", "Â§3");
+        string = string.replaceAll("\\{red\\}", "Â§4");
+        string = string.replaceAll("\\{purple\\}", "Â§5");
+        string = string.replaceAll("\\{gold\\}", "Â§6");
+        string = string.replaceAll("\\{lightgray\\}", "Â§7");
+        string = string.replaceAll("\\{gray\\}", "Â§8");
+        string = string.replaceAll("\\{darkpurple\\}", "Â§9");
+        string = string.replaceAll("\\{lightgreen\\}", "Â§a");
+        string = string.replaceAll("\\{lightblue\\}", "Â§b");
+        string = string.replaceAll("\\{rose\\}", "Â§c");
+        string = string.replaceAll("\\{lightpurple\\}", "Â§d");
+        string = string.replaceAll("\\{yellow\\}", "Â§e");
+        string = string.replaceAll("\\{white\\}", "Â§f");
 
         long stop = Util.timeMS();
         Util.logging.Debug("Took " + ((stop - start) / 1000) + " seconds (" + (stop - start) + "ms) to replace tags.");
