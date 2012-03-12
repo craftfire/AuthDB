@@ -16,14 +16,14 @@
  */
 package com.authdb.util;
 
-import java.io.IOException;
-
-import org.bukkit.entity.Player;
 import com.authdb.AuthDB;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.encryption.Encryption;
 import com.authdb.util.threads.LoginThread;
+import org.bukkit.entity.Player;
+
+import java.io.IOException;
 
 public class Processes {
     public static void Quit(Player player) {
@@ -84,7 +84,7 @@ public class Processes {
 
     public static void Login(Player player) {
     	LoginThread l = new LoginThread(player);
-    	l.start();
+    	l.run();
     }
 
     public static boolean Link(Player player, String name) {

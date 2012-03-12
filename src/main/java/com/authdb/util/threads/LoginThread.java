@@ -8,7 +8,7 @@ import com.authdb.util.Util;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.encryption.Encryption;
 
-public class LoginThread extends Thread {
+public class LoginThread implements Runnable {
 	
     private Player player;
     

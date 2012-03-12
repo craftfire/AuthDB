@@ -16,25 +16,16 @@
  */
 package com.authdb.util.databases;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotNull;
-
 import com.authdb.AuthDB;
-import com.authdb.util.Config;
 import com.authdb.util.Util;
 import com.authdb.util.threads.SyncThread;
-
+import com.avaje.ebean.validation.Length;
+import com.avaje.ebean.validation.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity()
 @Table(name = "authdb_users")
@@ -95,7 +86,7 @@ public class EBean {
 
     public static void sync(String player) {
     	SyncThread s = new SyncThread(player);
-    	s.start();
+    	s.run();
     }
     
     public static void checkSessiontime(String player, long sessiontime) {
