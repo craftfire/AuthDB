@@ -1,5 +1,5 @@
 name: AuthDB
-version: 2.3.5.${build.number}
+version: 2.3.6.${build.number}
 description: Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.
 authors: [CraftFire, Contex, Wulfspider]
 website: http://www.authdb.com
