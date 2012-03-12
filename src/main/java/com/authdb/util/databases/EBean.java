@@ -17,14 +17,15 @@
 package com.authdb.util.databases;
 
 import com.authdb.AuthDB;
+import com.authdb.util.Config;
 import com.authdb.util.Util;
-import com.authdb.util.threads.SyncThread;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.persistence.*;
+import java.sql.SQLException;
 import java.util.List;
 
 @Entity()
@@ -85,8 +86,39 @@ public class EBean {
     }
 
     public static void sync(String player) {
-    	SyncThread s = new SyncThread(player);
-    	s.run();
+        try {
+            Util.logging.Debug("Running Sync thread for user: " + player);
+            if (!Config.database_keepalive) {
+                Util.databaseManager.connect();
+            }
+            EBean eBeanClass = EBean.checkPlayer(player, true);
+            String registered = eBeanClass.getRegistered();
+            if (!Util.checkOtherName(player).equals(player)) {
+                eBeanClass.setRegistered("true");
+                eBeanClass.save(eBeanClass);
+                registered = "true";
+            } else if (Util.checkScript("checkuser", Config.script_name, Util.checkOtherName(player), null, null, null)) {
+                eBeanClass.setRegistered("true");
+                eBeanClass.save(eBeanClass);
+                registered = "true";
+            } else {
+                if (registered != null && registered.equalsIgnoreCase("true")) {
+                    Util.logging.Debug("Registered value for " + player + " in persistence is different than in MySQL, syncing registered value from MySQL.");
+                    eBeanClass.setRegistered("false");
+                    eBeanClass.save(eBeanClass);
+                    registered = "false";
+                }
+            }
+            if (registered != null && registered.equalsIgnoreCase("true")) {
+                Util.checkScript("syncpassword", Config.script_name, Util.checkOtherName(player), null, null, null);
+                Util.checkScript("syncsalt", Config.script_name, Util.checkOtherName(player), null, null, null);
+            }
+            if (!Config.database_keepalive) {
+                Util.databaseManager.close();
+            }
+        } catch (SQLException e) {
+            //Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
+        }
     }
     
     public static void checkSessiontime(String player, long sessiontime) {

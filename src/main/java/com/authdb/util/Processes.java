@@ -20,7 +20,6 @@ import com.authdb.AuthDB;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.encryption.Encryption;
-import com.authdb.util.threads.LoginThread;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -83,8 +82,29 @@ public class Processes {
     }
 
     public static void Login(Player player) {
-    	LoginThread l = new LoginThread(player);
-    	l.run();
+        if (!AuthDB.isAuthorized(player)) {
+            long timestamp = Util.timeStamp();
+            if (!AuthDB.AuthDB_AuthTime.containsKey(player.getName())) {
+                AuthDB.AuthDB_AuthTime.put(player.getName(), timestamp);
+            }
+            AuthDB.authorizedNames.add(player.getName());
+            AuthDB.AuthDB_PasswordTries.put(player.getName(), "0");
+            EBean eBeanClass = EBean.checkPlayer(player, true);
+            eBeanClass.setAuthorized("true");
+            eBeanClass.setRegistered("true");
+            if (!AuthDB.AuthDB_Authed.containsKey(Encryption.md5(player.getName()))) {
+                AuthDB.AuthDB_Authed.put(Encryption.md5(player.getName()), "yes");
+            }
+            if (Config.session_enabled) {
+                if (!AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
+                    AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
+                    Util.logging.Debug("Session started for " + player.getName());
+                }
+                eBeanClass.setSessiontime(timestamp);
+            }
+            AuthDB.database.save(eBeanClass);
+            Util.craftFirePlayer.setInventoryFromStorage(player);
+        }
     }
 
     public static boolean Link(Player player, String name) {
