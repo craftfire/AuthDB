@@ -16,39 +16,29 @@
  */
 package com.authdb.listeners;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.sql.SQLException;
-
+import com.authdb.AuthDB;
+import com.authdb.plugins.ZPermissions;
+import com.authdb.plugins.ZPermissions.Permission;
+import com.authdb.util.Config;
+import com.authdb.util.Messages;
+import com.authdb.util.Messages.Message;
+import com.authdb.util.Processes;
+import com.authdb.util.Util;
+import com.authdb.util.databases.EBean;
+import com.authdb.util.databases.MySQL;
+import com.authdb.util.encryption.Encryption;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.authdb.AuthDB;
-import com.authdb.plugins.ZPermissions;
-import com.authdb.plugins.ZPermissions.Permission;
-import com.authdb.util.Config;
-import com.authdb.util.encryption.Encryption;
-import com.authdb.util.Messages;
-import com.authdb.util.Util;
-import com.authdb.util.Messages.Message;
-import com.authdb.util.Processes;
-import com.authdb.util.databases.EBean;
-import com.authdb.util.databases.MySQL;
+import java.awt.*;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class AuthDBPlayerListener implements Listener {
     private final AuthDB plugin;
@@ -74,6 +64,12 @@ public class AuthDBPlayerListener implements Listener {
         } else {
             EBean.sync(player);
         }
+        
+        if (Config.join_restrict && !plugin.isRegistered("checkguest", player.getName())) {
+             Messages.sendMessage(Message.join_restrict, player, event);
+             return;
+        }
+        
         if (Config.filter_action.equalsIgnoreCase("kick") || Config.filter_action.equalsIgnoreCase("rename")) {
             String name = player.getName();
             if (Util.checkFilter("username", name) == false && Util.checkWhitelist("username", player) == false) {
@@ -303,7 +299,7 @@ public class AuthDBPlayerListener implements Listener {
                 event.setMessage(Config.commands_user_login + " ******");
                 event.setCancelled(true);
             } else { Messages.sendMessage(Message.protection_denied, player, null); }
-        } else if (split[0].equalsIgnoreCase(Config.commands_user_link) || split[0].equalsIgnoreCase(Config.aliases_user_link)) {
+        } else if (!Config.join_restrict && (split[0].equalsIgnoreCase(Config.commands_user_link) || split[0].equalsIgnoreCase(Config.aliases_user_link))) {
             if (Config.link_enabled) {
                 if (ZPermissions.isAllowed(player, Permission.command_link)) {
                     if (split.length == 3) {
@@ -338,7 +334,7 @@ public class AuthDBPlayerListener implements Listener {
                     event.setCancelled(true);
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
             }
-        } else if (split[0].equalsIgnoreCase(Config.commands_user_unlink) || split[0].equalsIgnoreCase(Config.aliases_user_unlink)) {
+        } else if (!Config.join_restrict && (split[0].equalsIgnoreCase(Config.commands_user_unlink) || split[0].equalsIgnoreCase(Config.aliases_user_unlink))) {
             if (Config.unlink_enabled) {
                 if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
                     Messages.sendMessage(Message.unlink_processing, player, null);
@@ -367,7 +363,7 @@ public class AuthDBPlayerListener implements Listener {
                     event.setCancelled(true);
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
             }
-        } else if (split[0].equalsIgnoreCase(Config.commands_user_register) || split[0].equalsIgnoreCase(Config.aliases_user_register)) {
+        } else if (!Config.join_restrict && (split[0].equalsIgnoreCase(Config.commands_user_register) || split[0].equalsIgnoreCase(Config.aliases_user_register))) {
             if (ZPermissions.isAllowed(player, Permission.command_register)) {
                 Messages.sendMessage(Message.register_processing, player, null);
                 Boolean email = true;

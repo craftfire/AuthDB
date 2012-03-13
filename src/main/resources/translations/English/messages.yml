@@ -15,6 +15,8 @@ Core:
     reload:
         success: "AuthDB has successfully reloaded!"
         failure: "AuthDB could not be reloaded!"
+    join:
+        restricted: "{RED}You are not registered, visit {ORANGE}www.craftfire.com {RED}to register."
     register:
         welcome: "{YELLOW}Welcome {WHITE}{PLAYER}{YELLOW}! Please use {REGISTERCMD} password {EMAILREQUIRED}"
         processing: "{YELLOW}Processing registration..."

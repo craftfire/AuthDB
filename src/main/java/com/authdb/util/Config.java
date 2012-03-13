@@ -41,6 +41,8 @@ public class Config {
     public static String custom_table,custom_userfield,custom_passfield,custom_encryption,custom_emailfield;
     public static boolean custom_enabled,custom_autocreate,custom_salt, custom_emailrequired;
 
+    public static boolean join_restrict;
+
     public static boolean register_enabled,register_force;
     public static String register_delay_length,register_delay_time,register_timeout_length,register_timeout_time,register_show_length,register_show_time;
     public static int register_delay,register_timeout,register_show;
@@ -125,6 +127,8 @@ public class Config {
                 custom_emailfield = getConfigString("customdb.emailfield", "email");
                 custom_encryption = getConfigString("customdb.encryption", "md5").toLowerCase();
 
+                join_restrict = getConfigBoolean("join.restrict", false);
+
                 register_enabled = getConfigBoolean("register.enabled", true);
                 register_force = getConfigBoolean("register.force", true);
                 register_delay_length = Util.split(getConfigString("register.delay", "4 seconds"), " ")[0];
@@ -196,25 +200,6 @@ public class Config {
                 filter_username = getConfigString("filter.username", "`~!@#$%^&*()-= + {[]}|\\:;\"<,>.?/");
                 filter_password = getConfigString("filter.password", "$&\"\\");
                 filter_whitelist= getConfigString("filter.whitelist", "");
-            } else if (config.equalsIgnoreCase("plugins")) {
-            	
-            	configFile = plugin.getPluginsConfig();
-
-                CraftIRC_enabled = getConfigBoolean("CraftIRC.enabled", true);
-                CraftIRC_tag = getConfigString("CraftIRC.tag", "admin");
-                CraftIRC_prefix = getConfigString("CraftIRC.prefix", "%b%%green%[{PLUGIN}]%k%%b%");
-/*
-                CraftIRC_messages_enabled = getConfigBoolean("CraftIRC.messages.enabled", true);
-                CraftIRC_messages_welcome_enabled = getConfigBoolean("CraftIRC.messages.welcome", true);
-                CraftIRC_messages_register_enabled = getConfigBoolean("CraftIRC.messages.register", true);
-                CraftIRC_messages_unregister_enabled = getConfigBoolean("CraftIRC.messages.unregister", true);
-                CraftIRC_messages_login_enabled = getConfigBoolean("CraftIRC.messages.login", true);
-                CraftIRC_messages_email_enabled = getConfigBoolean("CraftIRC.messages.email", true);
-                CraftIRC_messages_username_enabled = getConfigBoolean("CraftIRC.messages.username", true);
-                CraftIRC_messages_password_enabled = getConfigBoolean("CraftIRC.messages.password", true);
-                CraftIRC_messages_idle_enabled = getConfigBoolean("CraftIRC.messages.idle", true);
-                */
-
             } else if (config.equalsIgnoreCase("messages")) {
 
             	configFile = plugin.getMessagesConfig();
@@ -234,6 +219,8 @@ public class Config {
 
                 Messages.AuthDB_message_database_failure = Config.getConfigString("Core.database.failure", "{RED}database connection failed! Access is denied! Contact admin.");
 
+                Messages.AuthDB_message_join_restrict = Config.getConfigString("Core.join.restricted", "{RED}You are not registered, visit {ORANGE}www.craftfire.com {RED}to register.");
+                
                 Messages.AuthDB_message_register_welcome = (String)Config.getConfigString("Core.register.welcome", "{YELLOW}Welcome {WHITE}guest{YELLOW}! Please use {REGISTERCMD} password email");
                 Messages.AuthDB_message_register_success = Config.getConfigString("Core.register.success", "{RED}You have been registered!");
                 Messages.AuthDB_message_register_failure = Config.getConfigString("Core.register.failure", "{RED}Registration failed!");

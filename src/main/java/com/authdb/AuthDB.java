@@ -16,62 +16,46 @@
  */
 package com.authdb;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.security.CodeSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import javax.persistence.PersistenceException;
-import com.avaje.ebean.EbeanServer;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.util.Config;
-import com.authdb.util.encryption.Encryption;
 import com.authdb.util.Messages;
-import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.Processes;
+import com.authdb.util.Util;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
-
-import com.nijikokun.bukkit.Permissions.Permissions;
+import com.authdb.util.encryption.Encryption;
+import com.avaje.ebean.EbeanServer;
 import com.ensifera.animosity.craftirc.CraftIRC;
+import com.nijikokun.bukkit.Permissions.Permissions;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import javax.persistence.PersistenceException;
+import java.io.*;
+import java.net.URL;
+import java.security.CodeSource;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class AuthDB extends JavaPlugin {
 
@@ -162,13 +146,6 @@ public class AuthDB extends JavaPlugin {
             DefaultFile("advanced.yml", "config");
         }
         new Config(this, "advanced", "plugins/" + pluginName + "/config/", "advanced.yml");
-
-        f = new File("plugins/" + pluginName + "/config/plugins.yml");
-        if (!f.exists()) {
-            Util.logging.Info("plugins.yml could not be found in plugins/" + pluginName + "/config/! Creating plugins.yml!");
-            DefaultFile("plugins.yml", "config");
-        }
-        new Config(this, "plugins", "plugins/" + pluginName + "/config/", "plugins.yml");
 
         f = new File(getDataFolder() + "/config/customdb.sql");
         if (!f.exists()) {
@@ -334,16 +311,6 @@ public class AuthDB extends JavaPlugin {
 	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
 	            advancedConfig.setDefaults(defConfig);
 	        }
-    	} else if(config.equalsIgnoreCase("plugins")) {
-	        if (pluginsConfigurationFile == null) {
-	        	pluginsConfigurationFile = new File("plugins/" + pluginName + "/config/", "plugins.yml");
-	        }
-	        pluginsConfig = YamlConfiguration.loadConfiguration(pluginsConfigurationFile);
-	        InputStream defConfigStream = getResource("/files/config/plugins.yml");
-	        if (defConfigStream != null) {
-	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-	            pluginsConfig.setDefaults(defConfig);
-	        }
     	} else if(config.equalsIgnoreCase("messages")) {
 	        if (messagesConfigurationFile == null) {
 	        	messagesConfigurationFile = new File("plugins/" + pluginName + "/translations/" + Config.language_messages + "/", "messages.yml");
@@ -381,13 +348,6 @@ public class AuthDB extends JavaPlugin {
         return advancedConfig;
     }
     
-    public FileConfiguration getPluginsConfig() {
-        if (pluginsConfig == null) {
-            reloadCustomConfig("plugins");
-        }
-        return pluginsConfig;
-    }
-    
     public FileConfiguration getMessagesConfig() {
         if (messagesConfig == null) {
             reloadCustomConfig("messages");
@@ -421,17 +381,6 @@ public class AuthDB extends JavaPlugin {
         	advancedConfig.save(advancedConfigurationFile);
         } catch (IOException ex) {
             Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + advancedConfigurationFile, ex);
-        }
-    }
-    
-    public void savePluginsConfig() {
-        if (pluginsConfig == null || pluginsConfigurationFile == null) {
-        	return;
-        }
-        try {
-        	pluginsConfig.save(pluginsConfigurationFile);
-        } catch (IOException ex) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + pluginsConfigurationFile, ex);
         }
     }
     

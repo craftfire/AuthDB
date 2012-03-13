@@ -43,6 +43,11 @@ static AuthDB plugin = new AuthDB();
         public static String AuthDB_message_reload_success;
 
         ///////////////////////////////////////////
+        //               join
+        ///////////////////////////////////////////
+        public static String AuthDB_message_join_restrict;
+    
+        ///////////////////////////////////////////
         //               register
         ///////////////////////////////////////////
         public static String AuthDB_message_register_welcome, AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_offline, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout, AuthDB_message_register_processing;
@@ -143,6 +148,7 @@ static AuthDB plugin = new AuthDB();
         register_timeout (AuthDB_message_register_timeout),
         register_usage (AuthDB_message_register_usage),
         register_processing (AuthDB_message_register_processing),
+        join_restrict (AuthDB_message_join_restrict),
         unregister_success (AuthDB_message_unregister_success),
         unregister_failure (AuthDB_message_unregister_failure),
         unregister_usage (AuthDB_message_unregister_usage),
@@ -299,6 +305,8 @@ static AuthDB plugin = new AuthDB();
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid, player, null));
             } else if (type.equals(Message.session_protected)) {
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, "login"));
+            } else if (type.equals(Message.join_restrict)) {
+                event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_join_restrict, player, "login"));
             } else if (type.equals(Message.login_timeout)) {
                 player.kickPlayer(Util.replaceStrings(AuthDB_message_login_timeout, player, null));
             } else if (type.equals(Message.register_timeout)) {
