@@ -16,6 +16,26 @@
  */
 package com.authdb.util;
 
+import com.authdb.AuthDB;
+import com.authdb.scripts.Custom;
+import com.authdb.scripts.cms.DLE;
+import com.authdb.scripts.cms.Drupal;
+import com.authdb.scripts.cms.Joomla;
+import com.authdb.scripts.cms.WordPress;
+import com.authdb.scripts.forum.*;
+import com.authdb.util.Messages.Message;
+import com.authdb.util.databases.EBean;
+import com.authdb.util.databases.MySQL;
+import com.authdb.util.encryption.Encryption;
+import com.craftfire.util.general.GeneralUtil;
+import com.craftfire.util.managers.CraftFireManager;
+import com.craftfire.util.managers.DatabaseManager;
+import com.craftfire.util.managers.LoggingManager;
+import com.craftfire.util.managers.ServerManager;
+import com.mysql.jdbc.Blob;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -27,36 +47,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
-
-import com.mysql.jdbc.Blob;
-
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
-import com.authdb.AuthDB;
-import com.authdb.scripts.Custom;
-import com.authdb.scripts.cms.DLE;
-import com.authdb.scripts.cms.Drupal;
-import com.authdb.scripts.cms.Joomla;
-import com.authdb.scripts.cms.WordPress;
-import com.authdb.scripts.forum.BBPress;
-import com.authdb.scripts.forum.IPB;
-import com.authdb.scripts.forum.MyBB;
-import com.authdb.scripts.forum.PhpBB;
-import com.authdb.scripts.forum.PunBB;
-import com.authdb.scripts.forum.SMF;
-import com.authdb.scripts.forum.VBulletin;
-import com.authdb.scripts.forum.Vanilla;
-import com.authdb.scripts.forum.XenForo;
-import com.authdb.util.Messages.Message;
-import com.authdb.util.databases.EBean;
-import com.authdb.util.databases.MySQL;
-import com.authdb.util.encryption.Encryption;
-import com.craftfire.util.general.GeneralUtil;
-import com.craftfire.util.managers.CraftFireManager;
-import com.craftfire.util.managers.DatabaseManager;
-import com.craftfire.util.managers.LoggingManager;
-import com.craftfire.util.managers.ServerManager;
 
 public class Util {
     public static LoggingManager logging = new LoggingManager();
@@ -472,7 +462,7 @@ public class Util {
                 }
             } else if (script.equalsIgnoreCase(XenForo.Name) || script.equalsIgnoreCase(XenForo.ShortName)) {
                 usertable = "user";
-                if (checkVersionInRange(XenForo.VersionRange)) {
+                if (checkVersionInRange(XenForo.VersionRange) || checkVersionInRange(XenForo.VersionRange2)) {
                     String userid = MySQL.getfromtable(Config.script_tableprefix + usertable, "`user_id`", "username", player);
                     usernamefield = "username";
                     passwordfield = "password";
@@ -497,7 +487,6 @@ public class Util {
                                     stringBuffer.append(buffer, 0, offset);
                                 }
                             } catch (IOException e) {
-                                // TODO: Auto-generated catch block
                                 logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                             }
                             String cache = stringBuffer.toString();
@@ -520,8 +509,13 @@ public class Util {
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                    XenForo.adduser(number, player, email, password, ipAddress);
-                    EBean.sync(player);
+                    if (checkVersionInRange(XenForo.VersionRange)) {
+                        XenForo.adduser(1, player, email, password, ipAddress);
+                        EBean.sync(player);
+                    } else if (checkVersionInRange(XenForo.VersionRange2)) {
+                        XenForo.adduser(2, player, email, password, ipAddress);
+                        EBean.sync(player);
+                    }
                     return true;
                 } else if (Config.hasForumBoard && type.equalsIgnoreCase("syncpassword") && !Config.custom_enabled) {
                     String userid = MySQL.getfromtable(Config.script_tableprefix + usertable, "`user_id`", "username", player);
