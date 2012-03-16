@@ -132,7 +132,7 @@ public class PlayerManager {
                                 String[] enchOptions = enchatments[a].split("=");
                                 Enchantment ench = Enchantment.getById(Integer.parseInt(enchOptions[0]));
                                 int level = Integer.parseInt(enchOptions[1]);
-                                inventory[i].addEnchantment(ench, level);
+                                inventory[i].addUnsafeEnchantment(ench, level);
                             }
                         }
                     }
