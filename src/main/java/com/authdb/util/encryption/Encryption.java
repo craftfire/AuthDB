@@ -27,7 +27,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class Encryption {
-    public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static String encrypt(String encryption, String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (encryption.equalsIgnoreCase("md5")) {
             return md5(toencrypt);
         } else if (encryption.equalsIgnoreCase("sha1") || encryption.equalsIgnoreCase("sha-1")) {
@@ -46,7 +46,7 @@ public class Encryption {
     		return hash.substring(0, saltPos) + salt + hash.substring(saltPos);
         }
         if (Config.debug_enable) {
-            Util.logging.Info("Could not find encryption method: " + Config.custom_encryption + ", using default: md5");
+            Util.logging.Info("Could not find encryption method: " + encryption + ", using default: md5");
         }
         Config.custom_encryption = "md5";
         return md5(toencrypt);

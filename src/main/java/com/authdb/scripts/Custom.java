@@ -70,10 +70,16 @@ public class Custom {
 
     public static boolean check_hash(String passwordhash, String hash) {
         try {
-            if (hash.startsWith("$SHA$")) {
-                passwordhash = "$SHA$" + passwordhash;
+            String extra = "";
+            if (hash.startsWith("$")) {
+                String[] line = hash.split("\\$");
+                if ((line.length > 3) && (line[1].equals("SHA"))) {
+                    return hash.equals("$SHA$" + line[2] + "$" + Encryption.SHA256(Encryption.SHA256(passwordhash) + line[2]));
+                } else if (line[1].equals("MD5vb")) {
+                    return hash.equals("MD5vb" + line[2] + "$" + Encryption.md5(Encryption.md5(passwordhash) + line[2]));
+                }
             }
-            if (Encryption.encrypt(Config.custom_encryption, passwordhash).equals(hash)) {
+            if ((Encryption.encrypt(Config.custom_encryption, passwordhash)).equals(hash)) {
                 return true;
             }
         } catch (NoSuchAlgorithmException e) {
