@@ -16,15 +16,15 @@
  */
 package com.authdb.scripts;
 
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
+import com.authdb.util.encryption.Encryption;
+
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import com.authdb.util.Config;
-import com.authdb.util.encryption.Encryption;
-import com.authdb.util.Util;
-import com.authdb.util.databases.MySQL;
 
 public class Custom {
     public static void adduser(String player, String email, String password, String ipAddress) throws SQLException {
@@ -70,6 +70,9 @@ public class Custom {
 
     public static boolean check_hash(String passwordhash, String hash) {
         try {
+            if (hash.startsWith("$SHA$")) {
+                passwordhash = "$SHA$" + passwordhash;
+            }
             if (Encryption.encrypt(Config.custom_encryption, passwordhash).equals(hash)) {
                 return true;
             }
