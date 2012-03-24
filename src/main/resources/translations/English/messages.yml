@@ -1,92 +1,93 @@
-time:
-    millisecond: millisecond
-    milliseconds: milliseconds
-    second: second
-    seconds: seconds
-    minute: minute
-    minutes: minutes
-    hour: hour
-    hours: hours
-    day: day
-    days: days
-database:
-    failure: "{RED}Database connection failed! Access is denied! Contact the server admin."
-reload:
-    success: "AuthDB has successfully reloaded!"
-    failure: "AuthDB could not be reloaded!"
-join:
-    restricted: "{RED}You are not registered, visit {ORANGE}www.craftfire.com {RED}to register."
-register:
-    welcome: "{YELLOW}Welcome {WHITE}{PLAYER}{YELLOW}! Please use {REGISTERCMD} password {EMAILREQUIRED}"
-    processing: "{YELLOW}Processing registration..."
-    success: "{BRIGHTGREEN}You have successfully registered! You are now logged in."
-    failure: "{RED}Registration failed!"
-    offline: "{RED}Database is unavailable. Registration is disabled!"
-    exists: "{RED}You are already registered!"
-    disabled: "{RED}Registration is disabled!"
-    timeout: "Kicked because you failed to register within {REGISTERTIMEOUT}."
-    usage: "{YELLOW}Correct usage is: {WHITE}{REGISTERCMD} password email"
-login:
-    normal: "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use {LOGINCMD} password"
-    prompt: "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:"
-    processing: "{YELLOW}Processing login..."
-    success: "{BRIGHTGREEN}Password accepted. Welcome!"
-    failure: "{RED}Password incorrect, please try again."
-    offline: "{RED}Database is unavailable. Unable to verify password!"
-    authorized: "{RED}You are already logged in!"
-    notregistered: "{RED}You are not registered yet!"
-    timeout: "Kicked because you failed to login within {LOGINTIMEOUT}."
-    admin: "You have been logged in by an admin."
-    adminsuccess: "Successfully logged in player, {PLAYER}."
-    adminfailure: "You cannot login player {PLAYER}! That player is already logged in."
-    adminnotfound: "Could not find player, {PLAYER}! Please try again."
-    usage: "{YELLOW}Correct usage is: {WHITE}{LOGINCMD} password"
-logout:
-    processing: "{YELLOW}Attempting to logout..."
-    success: "Successfully logged out!"
-    failure: "You are not logged in!"
-    admin: "You have been logged out by an admin."
-    adminsuccess: "Successfully logged out player, {PLAYER}."
-    adminfailure: "You cannot logout player, {PLAYER}! That player is not logged in."
-    adminnotfound: "Could not find player, {PLAYER}! Please try again."
-    usage: "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}"
-link:
-    welcome: "{NEWLINE}or {LINKCMD} otherusername password"
-    processing: "{YELLOW}Attempting to link username..."
-    success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
-    failure: "{RED}Username linking failed!"
-    exists: "{RED}You are already linked to a username!"
-    duplicate: "{RED}Username is already linked to another player!"
-    registered: "{RED}You cannot link as this username is already registered!"
-    invaliduser: "{RED}You cannot link with yourself!"
-    renamed: "{YELLOW}{PLAYER} has been renamed to {DISPLAYNAME}."
-    usage: "{YELLOW}Correct usage is: {WHITE}{LINKCMD} otherusername password"
-unlink:
-    processing: "{YELLOW}Attempting to unlink username..."
-    success: "{BRIGHTGREEN}Username unlinked successfully!"
-    failure: "{RED}Username unlinking failed!"
-    nonexist: "{RED}You do not have a linked username!"
-    invaliduser: "{RED}Invalid linked username!"
-    invalidpass: "{RED}Invalid linked password!"
-    renamed: "{YELLOW}{DISPLAYNAME} has been renamed to {PLAYER}."
-    usage: "{YELLOW}Correct usage is: {WHITE}{UNLINKCMD} otherusername password"
-email:
-    required: "{RED}Email required for registration!"
-    invalid: "{RED}Email invalid! Please try again!"
-    badcharacters: "{RED}Email contains bad characters! {BADCHARACTERS}!"
-username:
-    minimum: "Your username does not meet the minimum requirement of {USERMIN} characters!"
-    maximum: "Your username does not meet the maximum requirement of {USERMAX} characters!"
-password:
-    minimum: "{RED}Your password does not meet the minimum requirement of {PASSMIN} characters!"
-    maximum: "{RED}Your password does not meet the maximum requirement of {PASSMAX} characters!"
-session:
-    valid: "{BRIGHTGREEN}Hey, I remember you! You are logged in!"
-    protected: "Sorry, a player with that name is already logged in on this server."
-filter:
-    username: "Kicked because username contains bad characters. {USERBADCHARACTERS}!"
-    password: "{RED}Password contains bad characters! {PASSBADCHARACTERS}!"
-    whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
-protection:
-    denied: "{RED}You do not have permission to use that command."
-    notauthorized: "{RED}You are not authorized to do that."
+Core: 
+    time:
+        millisecond: millisecond
+        milliseconds: milliseconds
+        second: second
+        seconds: seconds
+        minute: minute
+        minutes: minutes
+        hour: hour
+        hours: hours
+        day: day
+        days: days
+    database:
+        failure: "{RED}Database connection failed! Access is denied! Contact the server admin."
+    reload:
+        success: "AuthDB has successfully reloaded!"
+        failure: "AuthDB could not be reloaded!"
+    join:
+        restricted: "{RED}You are not registered, visit {ORANGE}www.craftfire.com {RED}to register."
+    register:
+        welcome: "{YELLOW}Welcome {WHITE}{PLAYER}{YELLOW}! Please use {REGISTERCMD} password {EMAILREQUIRED}"
+        processing: "{YELLOW}Processing registration..."
+        success: "{BRIGHTGREEN}You have successfully registered! You are now logged in."
+        failure: "{RED}Registration failed!"
+        offline: "{RED}Database is unavailable. Registration is disabled!"
+        exists: "{RED}You are already registered!"
+        disabled: "{RED}Registration is disabled!"
+        timeout: "Kicked because you failed to register within {REGISTERTIMEOUT}."
+        usage: "{YELLOW}Correct usage is: {WHITE}{REGISTERCMD} password email"
+    login:
+        normal: "{YELLOW}Welcome back {WHITE}{PLAYER}{YELLOW}! Please use {LOGINCMD} password"
+        prompt: "{WHITE}Welcome {TEAL}{PLAYER}{WHITE}! Please enter your password:"
+        processing: "{YELLOW}Processing login..."
+        success: "{BRIGHTGREEN}Password accepted. Welcome!"
+        failure: "{RED}Password incorrect, please try again."
+        offline: "{RED}Database is unavailable. Unable to verify password!"
+        authorized: "{RED}You are already logged in!"
+        notregistered: "{RED}You are not registered yet!"
+        timeout: "Kicked because you failed to login within {LOGINTIMEOUT}."
+        admin: "You have been logged in by an admin."
+        adminsuccess: "Successfully logged in player, {PLAYER}."
+        adminfailure: "You cannot login player {PLAYER}! That player is already logged in."
+        adminnotfound: "Could not find player, {PLAYER}! Please try again."
+        usage: "{YELLOW}Correct usage is: {WHITE}{LOGINCMD} password"
+    logout:
+        processing: "{YELLOW}Attempting to logout..."
+        success: "Successfully logged out!"
+        failure: "You are not logged in!"
+        admin: "You have been logged out by an admin."
+        adminsuccess: "Successfully logged out player, {PLAYER}."
+        adminfailure: "You cannot logout player, {PLAYER}! That player is not logged in."
+        adminnotfound: "Could not find player, {PLAYER}! Please try again."
+        usage: "{YELLOW}Correct usage is: {WHITE}{LOGOUTCMD}"
+    link:
+        welcome: "{NEWLINE}or {LINKCMD} otherusername password"
+        processing: "{YELLOW}Attempting to link username..."
+        success: "{BRIGHTGREEN}Username linked successfully!. You are now logged in."
+        failure: "{RED}Username linking failed!"
+        exists: "{RED}You are already linked to a username!"
+        duplicate: "{RED}Username is already linked to another player!"
+        registered: "{RED}You cannot link as this username is already registered!"
+        invaliduser: "{RED}You cannot link with yourself!"
+        renamed: "{YELLOW}{PLAYER} has been renamed to {DISPLAYNAME}."
+        usage: "{YELLOW}Correct usage is: {WHITE}{LINKCMD} otherusername password"
+    unlink:
+        processing: "{YELLOW}Attempting to unlink username..."
+        success: "{BRIGHTGREEN}Username unlinked successfully!"
+        failure: "{RED}Username unlinking failed!"
+        nonexist: "{RED}You do not have a linked username!"
+        invaliduser: "{RED}Invalid linked username!"
+        invalidpass: "{RED}Invalid linked password!"
+        renamed: "{YELLOW}{DISPLAYNAME} has been renamed to {PLAYER}."
+        usage: "{YELLOW}Correct usage is: {WHITE}{UNLINKCMD} otherusername password"
+    email:
+        required: "{RED}Email required for registration!"
+        invalid: "{RED}Email invalid! Please try again!"
+        badcharacters: "{RED}Email contains bad characters! {BADCHARACTERS}!"
+    username:
+        minimum: "Your username does not meet the minimum requirement of {USERMIN} characters!"
+        maximum: "Your username does not meet the maximum requirement of {USERMAX} characters!"
+    password:
+        minimum: "{RED}Your password does not meet the minimum requirement of {PASSMIN} characters!"
+        maximum: "{RED}Your password does not meet the maximum requirement of {PASSMAX} characters!"
+    session:
+        valid: "{BRIGHTGREEN}Hey, I remember you! You are logged in!"
+        protected: "Sorry, a player with that name is already logged in on this server."
+    filter:
+        username: "Kicked because username contains bad characters. {USERBADCHARACTERS}!"
+        password: "{RED}Password contains bad characters! {PASSBADCHARACTERS}!"
+        whitelist: "{BRIGHTGREEN}{PLAYER} is on the filter {WHITE}whitelist{BRIGHTGREEN}, bypassing restrictions!"
+    protection:
+        denied: "{RED}You do not have permission to use that command."
+        notauthorized: "{RED}You are not authorized to do that."
