@@ -16,6 +16,9 @@
  */
 package com.authdb.util.encryption;
 
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -23,16 +26,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.UUID;
 
-import com.authdb.util.Config;
-import com.authdb.util.Util;
-
 public class Encryption {
     public static String encrypt(String encryption,String toencrypt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (encryption.equalsIgnoreCase("md5")) {
             return md5(toencrypt);
-        } else if (encryption.equalsIgnoreCase("sha1")) {
+        } else if (encryption.equalsIgnoreCase("sha1") || encryption.equalsIgnoreCase("sha-1")) {
             return SHA1(toencrypt);
-        } else if (encryption.equalsIgnoreCase("sha512") || encryption.equalsIgnoreCase("sha2")) {
+        } else if (encryption.equalsIgnoreCase("sha256") || encryption.equalsIgnoreCase("sha-256")) {
+            return SHA256(toencrypt);
+        } else if (encryption.equalsIgnoreCase("sha512") || encryption.equalsIgnoreCase("sha2")
+                || encryption.equalsIgnoreCase("sha-512") || encryption.equalsIgnoreCase("sha-2")) {
             return SHA512(toencrypt);
         } else if (encryption.equalsIgnoreCase("whirlpool")) {
             return whirlpool(toencrypt);

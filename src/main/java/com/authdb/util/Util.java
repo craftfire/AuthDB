@@ -104,6 +104,7 @@ public class Util {
                     }
                     String hash = MySQL.getfromtable(Config.custom_table, "`" + Config.custom_passfield + "`", "" + Config.custom_userfield + "", player);
                     EBean.checkPassword(player, hash);
+                    logging.info("Input: " + password + " - " + " Hash: " + hash, "AuthDB");
                     if (Custom.check_hash(password, hash)) {
                         return true;
                     }
