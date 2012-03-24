@@ -87,7 +87,7 @@ public class EBean {
 
     public static void sync(String player) {
         try {
-            Util.logging.Debug("Running Sync thread for user: " + player);
+            Util.logging.Debug("Running Sync for user: " + player);
             if (!Config.database_keepalive) {
                 Util.databaseManager.connect();
             }
