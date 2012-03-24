@@ -91,3 +91,22 @@ Core:
     protection:
         denied: "{RED}You do not have permission to use that command."
         notauthorized: "{RED}You are not authorized to do that."
+
+Plugins:
+    CraftIRC:
+        status:
+            join: "{PLAYER} has joined the server."
+            quit: "{PLAYER} has quit the server."
+        register:
+            success: "{PLAYER} just registered successfully!"
+            failure: "{PLAYER} had some errors while registering!"
+            registered: "{PLAYER} had a lapse in memory and tried to register again."
+        password:
+            success: "{PLAYER} logged in successfully!"
+            failure: "{PLAYER} tried to login with the wrong password!"
+        idle:
+            kicked: "{PLAYER} kicked from failure to login within {IDLELENGTH} {IDLETIME}."
+            whitelist: "{PLAYER} is on the idle whitelist, bypassing restrictions!"
+        filter:
+            kicked: "{PLAYER} was kicked due to bad characters in username!"
+            whitelist: "{PLAYER} is on the filter whitelist, bypassing restrictions!"
