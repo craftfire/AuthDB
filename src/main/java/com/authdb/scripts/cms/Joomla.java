@@ -16,20 +16,20 @@
  */
 package com.authdb.scripts.cms;
 
+import com.authdb.util.Config;
+import com.authdb.util.Util;
+import com.authdb.util.databases.MySQL;
+import com.authdb.util.encryption.Encryption;
+
 import java.security.SecureRandom;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
 
-import com.authdb.util.Config;
-import com.authdb.util.Util;
-import com.authdb.util.encryption.Encryption;
-import com.authdb.util.databases.MySQL;
-
 public class Joomla {
     public static String Name = "joomla";
     public static String ShortName = "jos";
-    public static String VersionRange = "1.5.0-1.5.23";
+    public static String VersionRange = "1.5.0-1.5.25";
     public static String VersionRange2 = "1.6.0-1.6.1";
     public static String LatestVersionRange = VersionRange2;
 
