@@ -76,6 +76,7 @@ public class Processes {
                 player.getInventory().clear();
             }
             Util.logging.Debug("Logged out player: " + player.getName());
+            AuthDB.AuthDB_loggedOut.put(player.getName(), true);
             return true;
         }
         return false;

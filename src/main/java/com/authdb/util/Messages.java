@@ -50,7 +50,7 @@ static AuthDB plugin = new AuthDB();
         ///////////////////////////////////////////
         //               register
         ///////////////////////////////////////////
-        public static String AuthDB_message_register_welcome, AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_offline, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout, AuthDB_message_register_processing;
+        public static String AuthDB_message_register_welcome, AuthDB_message_register_success, AuthDB_message_register_failure, AuthDB_message_register_offline, AuthDB_message_register_exists, AuthDB_message_register_disabled, AuthDB_message_register_usage, AuthDB_message_register_timeout, AuthDB_message_register_processing, AuthDB_message_register_limit;
 
         ///////////////////////////////////////////
         //               unregister
@@ -148,6 +148,7 @@ static AuthDB plugin = new AuthDB();
         register_timeout (AuthDB_message_register_timeout),
         register_usage (AuthDB_message_register_usage),
         register_processing (AuthDB_message_register_processing),
+        register_limit (AuthDB_message_register_limit),
         join_restrict (AuthDB_message_join_restrict),
         unregister_success (AuthDB_message_unregister_success),
         unregister_failure (AuthDB_message_unregister_failure),

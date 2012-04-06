@@ -16,6 +16,7 @@ register:
     force: true                                      # Enable/disable forcing users to register.
     delay: 4 seconds                                 # Amount of time before register message is shown to player.
     timeout: 3 minutes                               # Amount of time a player has to register before the configured action is taken.
+    limit: 3                                         # Amount of times an user can register from a specific IP.
 login:
 #    enabled: true                                    # NOT IMPLEMENTED YET! Enable/disable players being able to login.
     method: prompt                                   # Login method to use. Options are normal and prompt.

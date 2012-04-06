@@ -95,17 +95,17 @@ public class EBean {
             String registered = eBeanClass.getRegistered();
             if (!Util.checkOtherName(player).equals(player)) {
                 eBeanClass.setRegistered("true");
-                eBeanClass.save(eBeanClass);
+                AuthDB.database.save(eBeanClass);
                 registered = "true";
             } else if (Util.checkScript("checkuser", Config.script_name, Util.checkOtherName(player), null, null, null)) {
                 eBeanClass.setRegistered("true");
-                eBeanClass.save(eBeanClass);
+                AuthDB.database.save(eBeanClass);
                 registered = "true";
             } else {
                 if (registered != null && registered.equalsIgnoreCase("true")) {
                     Util.logging.Debug("Registered value for " + player + " in persistence is different than in MySQL, syncing registered value from MySQL.");
                     eBeanClass.setRegistered("false");
-                    eBeanClass.save(eBeanClass);
+                    AuthDB.database.save(eBeanClass);
                     registered = "false";
                 }
             }
@@ -160,6 +160,15 @@ public class EBean {
     
     public static int getUsers() {
         List<EBean> amount = AuthDB.database.find(EBean.class).findList();
+        if (amount.isEmpty()) {
+            return 0;
+        }
+        return amount.size();
+    }
+
+    public static int getAmount(String field, String value) {
+        List<EBean> amount = AuthDB.database.find(EBean.class).where().ieq(field, value).findList();
+        Util.logging.Debug("Found " + amount.size() + " results for value " + value + " in field " + field);
         if (amount.isEmpty()) {
             return 0;
         }

@@ -45,7 +45,7 @@ public class Config {
 
     public static boolean register_enabled,register_force;
     public static String register_delay_length,register_delay_time,register_timeout_length,register_timeout_time,register_show_length,register_show_time;
-    public static int register_delay,register_timeout,register_show;
+    public static int register_delay,register_timeout,register_show, register_limit;
 
     public static boolean login_enabled;
     public static String login_method,login_tries,login_action,login_delay_length,login_delay_time,login_timeout_length,login_timeout_time,login_show_length,login_show_time;
@@ -140,6 +140,7 @@ public class Config {
                 register_timeout_length = Util.split(getConfigString("register.timeout", "3 minutes"), " ")[0];
                 register_timeout_time = Util.split(getConfigString("register.timeout", "3 minutes"), " ")[1];
                 register_timeout = Util.toTicks(register_timeout_time,register_timeout_length);
+                register_limit = getConfigInteger("register.limit", 3);
 
                 login_method = getConfigString("login.method", "prompt");
                 login_tries = getConfigString("login.tries", "3");
@@ -230,7 +231,8 @@ public class Config {
                 Messages.AuthDB_message_register_usage = Config.getConfigString("Core.register.usage", "{RED}Correct usage is: /register password email");
                 Messages.AuthDB_message_register_timeout = Config.getConfigString("Core.register.timeout", "Kicked because you failed to register within {REGISTERTIMEOUT}.");
                 Messages.AuthDB_message_register_processing = Config.getConfigString("Core.register.processing", "{YELLOW}Processing registration...");
-
+                Messages.AuthDB_message_register_limit = Config.getConfigString("Core.register.limit", "{RED}Your IP has reached the limit for user registrations allowed.");
+                
                 Messages.AuthDB_message_unregister_success = Config.getConfigString("Core.unregister.success", "{BRIGHTGREEN}Unregistered successfully!");
                 Messages.AuthDB_message_unregister_failure = Config.getConfigString("Core.unregister.failure", "{RED}An error occurred while unregistering!");
                 Messages.AuthDB_message_unregister_usage = Config.getConfigString("Core.unregister.usage", "{RED}Correct usage is: /unregister password");
@@ -345,15 +347,19 @@ public class Config {
             }
       }
 
-      public static String getConfigString(String key, String defaultvalue) {
-        return configFile.getString(key, defaultvalue);
-      }
+        public static String getConfigString(String key, String defaultvalue) {
+            return configFile.getString(key, defaultvalue);
+        }
 
-      public static boolean getConfigBoolean(String key, boolean defaultvalue) {
-        return configFile.getBoolean(key, defaultvalue);
-      }
+        public static boolean getConfigBoolean(String key, boolean defaultvalue) {
+         return configFile.getBoolean(key, defaultvalue);
+        }
 
-      public String raw(String key, String line) {
-        return configFile.getString(key, line);
-      }
+        public static int getConfigInteger(String key, int defaultvalue) {
+            return configFile.getInt(key, defaultvalue);
+        }
+
+        public String raw(String key, String line) {
+            return configFile.getString(key, line);
+        }
 }

@@ -19,6 +19,7 @@ package com.authdb;
 import com.authdb.listeners.AuthDBBlockListener;
 import com.authdb.listeners.AuthDBEntityListener;
 import com.authdb.listeners.AuthDBPlayerListener;
+import com.authdb.listeners.AuthDBServerListener;
 import com.authdb.plugins.ZPermissions;
 import com.authdb.plugins.ZPermissions.Permission;
 import com.authdb.util.Config;
@@ -72,6 +73,7 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, Integer> AuthDB_Timeouts = new HashMap<String, Integer>();
     public static HashMap<String, Long> AuthDB_Sessions = new HashMap<String, Long>();
     public static HashMap<String, String> AuthDB_Authed = new HashMap<String, String>();
+    public static HashMap<String, Boolean> AuthDB_loggedOut = new HashMap<String, Boolean>();
     public static HashMap<String, Long> AuthDB_AuthTime = new HashMap<String, Long>();
     public static HashMap<String, Long> AuthDB_RemindLogin = new HashMap<String, Long>();
     public static HashMap<String, Integer> AuthDB_SpamMessage = new HashMap<String, Integer>();
@@ -85,9 +87,10 @@ public class AuthDB extends JavaPlugin {
     public static HashMap<String, UUID> AuthDB_GUI_ErrorFieldIDs = new HashMap<String, UUID>();
     public static HashMap<String, String> AuthDB_GUI_TempPasswords = new HashMap<String, String>();
     public static Logger log = Logger.getLogger("Minecraft");
+    public static boolean stop = false;
     
-    private FileConfiguration basicConfig = null, advancedConfig = null, pluginsConfig = null, messagesConfig = null, commandsConfig = null;
-    private File basicConfigurationFile = null, advancedConfigurationFile = null, pluginsConfigurationFile = null, messagesConfigurationFile = null, commandsConfigurationFile = null;
+    private FileConfiguration basicConfig = null, advancedConfig = null, messagesConfig = null, commandsConfig = null;
+    private File basicConfigurationFile = null, advancedConfigurationFile = null, messagesConfigurationFile = null, commandsConfigurationFile = null;
 
     public void onDisable() {
         for (Player p : getServer().getOnlinePlayers()) {
@@ -95,8 +98,12 @@ public class AuthDB extends JavaPlugin {
             if (eBeanClass.getAuthorized() != null && eBeanClass.getAuthorized().equalsIgnoreCase("true")) {
                 eBeanClass.setReloadtime(Util.timeStamp());
                 AuthDB.database.save(eBeanClass);
+                Processes.Logout(p, false);
+            } else if (isRegistered("disable", p.getName()) && AuthDB_loggedOut.containsKey(p.getName()) && stop) {
+                Util.craftFirePlayer.setInventoryFromStorage(p);
+            } else {
+                Processes.Logout(p, false);
             }
-            Processes.Logout(p, false);
         }
         Util.logging.Info(pluginVersion + " has been disabled");
         authorizedNames.clear();
@@ -115,6 +122,7 @@ public class AuthDB extends JavaPlugin {
         AuthDB_Timeouts.clear();
         AuthDB_Sessions.clear();
         AuthDB_Authed.clear();
+        AuthDB_loggedOut.clear();
         Util.databaseManager.close();
      }
 
@@ -205,6 +213,9 @@ public class AuthDB extends JavaPlugin {
 		final AuthDBBlockListener blockListener = new AuthDBBlockListener(this);
 		pm.registerEvents(blockListener, this);
 
+        final AuthDBServerListener serverListener = new AuthDBServerListener();
+        pm.registerEvents(serverListener, this);
+
         Config.onlineMode = getServer().getOnlineMode();
 
         Util.logging.Debug("Online mode: " + Config.onlineMode);
@@ -238,7 +249,7 @@ public class AuthDB extends JavaPlugin {
                 try {
                     MySQL.query("" + query);
                     Util.logging.Info("Sucessfully created table " + Config.custom_table);
-                    PreparedStatement ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `" + Config.custom_table + "`");
+                    PreparedStatement ps = MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `" + Config.custom_table + "`");
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
                         Util.logging.Info("Found " + rs.getInt("countit") + " user registrations in the database.");

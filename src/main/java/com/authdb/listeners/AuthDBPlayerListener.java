@@ -273,13 +273,16 @@ public class AuthDBPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if(event.getMessage().equalsIgnoreCase("stop") && event.getPlayer().hasPermission("bukkit.command.stop")) {
+            AuthDB.stop = true;
+        }
         long start = Util.timeMS();
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
         if (split[0].equalsIgnoreCase(Config.commands_user_login) || split[0].equalsIgnoreCase(Config.aliases_user_login)) {
             if (ZPermissions.isAllowed(player, Permission.command_login)) {
                 Messages.sendMessage(Message.login_processing, player, null);
-                if (this.plugin.isRegistered("command",Util.checkOtherName(player.getName())) == false) {
+                if (!this.plugin.isRegistered("command",Util.checkOtherName(player.getName()))) {
                     Messages.sendMessage(Message.login_notregistered, player, null);
                 } else if (plugin.isAuthorized(player)) {
                     Messages.sendMessage(Message.login_authorized, player, null);
@@ -305,7 +308,7 @@ public class AuthDBPlayerListener implements Listener {
                     if (split.length == 3) {
                         if (!player.getName().equals(split[1])) {
                             Messages.sendMessage(Message.link_processing, player, null);
-                            if (this.plugin.isRegistered("link",player.getName()) == false) {
+                            if (!this.plugin.isRegistered("link",player.getName())) {
                                if (Util.checkOtherName(player.getName()).equals(player.getName())) {
                                    EBean eBeanClass = EBean.checkPlayer(split[1], true);
                                    String linkedname = eBeanClass.getLinkedname();
@@ -369,7 +372,7 @@ public class AuthDBPlayerListener implements Listener {
                 Boolean email = true;
                 if (Config.custom_enabled) {
                     email = Config.custom_emailrequired;
-                    if (Config.custom_emailfield == null || Config.custom_emailfield == "") { 
+                    if (Config.custom_emailfield == null || Config.custom_emailfield.equals("")) { 
                 		email = false;
                 	}
                 }
@@ -377,6 +380,10 @@ public class AuthDBPlayerListener implements Listener {
                     Messages.sendMessage(Message.register_disabled, player, null);
                 } else if (this.plugin.isRegistered("register-command",player.getName()) || this.plugin.isRegistered("register-command",Util.checkOtherName(player.getName()))) {
                     Messages.sendMessage(Message.register_exists, player, null);
+                } else if (Config.register_limit > 0 && 
+                        EBean.getAmount("ip", player.getAddress().getAddress().toString().substring(1)) > 
+                        Config.register_limit) { 
+                    Messages.sendMessage(Message.register_limit, player, null);
                 } else if (split.length < 2) {
                     Messages.sendMessage(Message.register_usage, player, null);
                 } else if (split.length < 3 && email) {
