@@ -16,19 +16,14 @@
  */
 package com.authdb.util.databases;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import com.mysql.jdbc.Blob;
-
 import com.authdb.util.Config;
 import com.authdb.util.Messages;
-import com.authdb.util.Util;
 import com.authdb.util.Messages.Message;
+import com.authdb.util.Util;
 import com.craftfire.util.managers.LoggingManager;
+import com.mysql.jdbc.Blob;
+
+import java.sql.*;
 
 public class MySQL {
     static LoggingManager logging = new LoggingManager();
@@ -161,77 +156,44 @@ public class MySQL {
 
     public static String getQuery(String query) {
         Util.logging.mySQL(query);
-        String dupe = "fail";
-        Statement stmt;
-        try {
-            stmt = mysql.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            if (rs.next()) {
-                dupe = rs.getString(1);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
+        if (isConnected()) {
+            String dupe = "fail";
+            Statement stmt;
+            try {
+                stmt = mysql.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    dupe = rs.getString(1);
+                }
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
 
-            return "fail";
+                return "fail";
+            }
+            return dupe;
         }
-        return dupe;
+        return "fail";
     }
 
     public static String getfromtable(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` LIKE '%" + value2 + "'% LIMIT 1";
-        Util.logging.mySQL(query);
-        Statement stmt = mysql.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        String dupe = "fail";
-        if (rs.next()) {
-            dupe = rs.getString(1);
-        }
-        rs.close();
-        stmt.close();
-        return dupe;
+        return getQuery(query);
     }
 
     public static String getfromtable2(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` = '" + value2 + "' LIMIT 1";
-        Util.logging.mySQL(query);
-        Statement stmt = mysql.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        String dupe = "fail";
-        if (rs.next()) {
-            dupe = rs.getString(1);
-        }
-        rs.close();
-        stmt.close();
-        return dupe;
+        return getQuery(query);
     }
 
     public static String getfromtablelike(String table,String column1,String column2, String column3, String value, String value2) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' AND `" + column3 + "` LIKE '%" + value2 + "'% LIMIT 1";
-        Util.logging.mySQL(query);
-        Statement stmt = mysql.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        String dupe = "fail";
-        if (rs.next()) {
-            dupe = rs.getString(1);
-        }
-        rs.close();
-        stmt.close();
-        return dupe;
+        return getQuery(query);
     }
 
     public static String getfromtable(String table,String column1,String column2,String value) throws SQLException {
         String query = "SELECT " + column1 + " FROM `" + table + "` WHERE `" + column2 + "` = '" + value + "' LIMIT 1";
-        Util.logging.mySQL(query);
-        Statement stmt = mysql.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        String dupe = "fail";
-        if (rs.next()) {
-            dupe = rs.getString(1);
-        }
-        rs.close();
-        stmt.close();
-        return dupe;
+        return getQuery(query);
     }
 
     public static String Unix_Timestamp() throws SQLException {
