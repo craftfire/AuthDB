@@ -1,10 +1,9 @@
-[![][Project Logo]][Website] by [![][Author Logo]][Website]
-
-AuthDB Legacy
-=============
+[![AuthDB Legacy][Project Logo]][Website] Legacy
+================================================
 Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.
 
-Copyright (c) 2011-2012, CraftFire <<http://www.craftfire.com/>>
+Copyright (c) 2011-2012, CraftFire <<http://www.craftfire.com/>>  
+[![][Author Logo]][Website]
 
 Who is CraftFire?
 -----------------
@@ -46,7 +45,7 @@ Coding and Pull Request Conventions
 
 **Please follow the above conventions if you want your pull request(s) accepted.**
 
-[Project Logo]: http://cdn.craftfire.com/img/logo/authdb_353x93.png
+[Project Logo]: http://cdn.craftfire.com/img/logo/authdb_228x60.png
 [Author Logo]: http://cdn.craftfire.com/img/logo/craftfire_150x38.png
 [License]: http://www.gnu.org/licenses/lgpl.html
 [Website]: http://www.craftfire.com
