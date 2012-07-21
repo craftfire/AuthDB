@@ -1102,7 +1102,9 @@ public class Util {
         logging.Debug("Launching function: checkWhitelist(String whitelist, String username) - " + username);
         StringTokenizer st = null;
         if (whitelist.equalsIgnoreCase("username")) {
-            st = new StringTokenizer(Config.filter_whitelist, ", ");
+            st = new StringTokenizer(Config.filter_whitelist, ",");
+        } else if (whitelist.equalsIgnoreCase("guest")) {
+            st = new StringTokenizer(Config.guests_whitelist, ",");
         }
         while (st != null && st.hasMoreTokens()) {
             String whitelistname = st.nextToken().toLowerCase();

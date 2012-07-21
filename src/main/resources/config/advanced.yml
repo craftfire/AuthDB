@@ -55,6 +55,7 @@ guest:
     pvp: false                                       # Enable/disable guest hurting players.
     mobtargeting: false                              # Enable/disable mobs targeting guest.
     mobdamage: false                                 # Enable/disable mob damage from guest.
+    whitelist:                                       # Usernames to exclude from guest checking, seperate by comma.
 protection:
     freeze:
         enabled: true                                # Enable/disable freezing players on join to prevent movement.

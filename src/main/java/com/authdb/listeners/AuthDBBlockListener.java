@@ -53,17 +53,10 @@ public class AuthDBBlockListener implements Listener {
         }
     }
 
-    /*
-    public void onBlockDamage(BlockBreakEvent event) {
-        if (!AuthDB.isAuthorized(event.getPlayer().getEntityId())) {
-            if (!checkGuest(event.getPlayer(), Config.guests_destroy)) {
-                event.setCancelled(true);
-            }
-        }
-    }*/
-
     boolean checkGuest(Player player, boolean what) {
-        if (what) {
+        if (Util.checkWhitelist("guest", player)) {
+            return true;
+        } else if (what) {
             if (this.plugin.isRegistered("checkguest", player.getName()) == false || this.plugin.isRegistered("checkguest", Util.checkOtherName(player.getName())) == false) {
                 return true;
             }

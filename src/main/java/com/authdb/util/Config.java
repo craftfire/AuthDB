@@ -67,7 +67,8 @@ public class Config {
     public static int session_length;
 
     public static boolean guests_commands,guests_movement,guests_inventory,guests_drop,guests_pickup,guests_health,guests_mobdamage,guests_interact,guests_build,guests_destroy,guests_chat,guests_mobtargeting,guests_pvp;
-
+    public static String guests_whitelist;
+    
     public static boolean protection_notify, protection_freeze;
     public static int protection_notify_delay, protection_freeze_delay;
     public static String protection_notify_delay_time, protection_notify_delay_length, protection_freeze_delay_time, protection_freeze_delay_length;
@@ -190,6 +191,7 @@ public class Config {
                 guests_chat = getConfigBoolean("guest.chat", false);
                 guests_mobtargeting = getConfigBoolean("guest.mobtargeting", false);
                 guests_pvp = getConfigBoolean("guest.pvp", false);
+                guests_whitelist = getConfigString("guest.whitelist", "");
 
                 protection_freeze = getConfigBoolean("protection.freeze.enabled", true);
                 protection_freeze_delay_length = Util.split(getConfigString("protection.freeze.delay", "2 seconds"), " ")[0];
