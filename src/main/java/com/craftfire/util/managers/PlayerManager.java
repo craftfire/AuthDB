@@ -19,10 +19,7 @@
  */
 package com.craftfire.util.managers;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
+import com.authdb.util.databases.EBean;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -30,8 +27,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 
-import com.authdb.util.Util;
-import com.authdb.util.databases.EBean;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class PlayerManager {
     PluginManager pluginManager = new PluginManager();
@@ -210,7 +208,7 @@ public class PlayerManager {
 
     public String getIP(Player player) {
         if(player.getAddress() != null) {
-            return player.getAddress().getAddress().toString().substring(1);
+            return player.getAddress().getAddress().getHostAddress();
         } else {
             return "";
         }
