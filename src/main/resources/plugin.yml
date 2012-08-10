@@ -1,4 +1,4 @@
-name: AuthDB Legacy
+name: AuthDB
 version: ${releaseVersion}.${buildNumber}
 description: Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.
 authors: [CraftFire, Contex, Wulfspider]
