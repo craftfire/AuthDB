@@ -120,7 +120,6 @@ public class WBB {
             try {
                 EBean eBeanClass = EBean.checkPlayer(player, true);
                 String StoredSalt = eBeanClass.getSalt();
-                //self::encrypt($salt . self::getSaltedHash($value, $salt));
                 return Encryption.SHA1(StoredSalt + Encryption.SHA1(StoredSalt + Encryption.SHA1(password)));
             } catch (NoSuchAlgorithmException e) {
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
@@ -129,11 +128,6 @@ public class WBB {
             }
         } else if (action.equalsIgnoreCase("create")) {
             try {
-                Util.logging.Debug("Password: " + password);
-                Util.logging.Debug("Salt: " + salt);
-                Util.logging.Debug("Hashed password: " + Encryption.SHA1(password));
-                Util.logging.Debug("Salt + password: " + Encryption.SHA1(salt + Encryption.SHA1(password)));
-                Util.logging.Debug("Password hash: " + Encryption.SHA1(salt + Encryption.SHA1(salt + Encryption.SHA1(password))));
                 return Encryption.SHA1(salt + Encryption.SHA1(salt + Encryption.SHA1(password)));
             } catch (NoSuchAlgorithmException e) {
                 Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
