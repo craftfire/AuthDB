@@ -38,7 +38,7 @@ public class Config {
     public static boolean autoupdate_enable,debug_enable,usagestats_enabled,logging_enabled;
     public static String language_commands, language_messages, logformat;
 
-    public static String script_name,script_version,script_salt,script_tableprefix;
+    public static String script_name,script_version,script_salt,script_tableprefix,script_tableprefixextra;
     public static boolean script_updatestatus;
 
     public static String custom_table,custom_userfield,custom_passfield,custom_encryption,custom_emailfield;
@@ -75,13 +75,6 @@ public class Config {
 
     public static String filter_action,filter_username,filter_password,filter_whitelist="";
 
-    public static boolean geoip_enabled;
-
-    public static boolean CraftIRC_enabled;
-    public static String CraftIRC_tag,CraftIRC_prefix;
-
-    public static boolean CraftIRC_messages_enabled,CraftIRC_messages_welcome_enabled,CraftIRC_messages_register_enabled,CraftIRC_messages_unregister_enabled,CraftIRC_messages_login_enabled,CraftIRC_messages_email_enabled,CraftIRC_messages_username_enabled,CraftIRC_messages_password_enabled,CraftIRC_messages_idle_enabled;
-
     public static String commands_user_register,commands_user_link,commands_user_unlink,commands_user_login,commands_user_logout;
     public static String commands_admin_login, commands_admin_logout, commands_admin_reload;
     public static String aliases_user_register,aliases_user_link,aliases_user_unlink,aliases_user_login,aliases_user_logout;
@@ -115,6 +108,7 @@ public class Config {
                 script_name = getConfigString("script.name", "phpbb").toLowerCase();
                 script_version = getConfigString("script.version", "3.0.8");
                 script_tableprefix = getConfigString("script.tableprefix", "");
+                script_tableprefixextra = getConfigString("script.tableprefix-extra", "");
                 script_updatestatus = getConfigBoolean("script.updatestatus", true);
                 script_salt = getConfigString("script.salt", "");
 

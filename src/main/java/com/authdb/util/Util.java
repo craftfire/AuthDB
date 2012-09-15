@@ -680,23 +680,34 @@ public class Util {
                     EBean.sync(player);
                     return true;
                 }
-            } /* else if (script.equalsIgnoreCase(Config.Script11_name) || script.equalsIgnoreCase(Config.Script11_shortname)) {
-                usertable = "users";
-                if (checkVersionInRange(Config.Script11_versionrange)) {
+            } else if (script.equalsIgnoreCase(WBB.Name) || script.equalsIgnoreCase(WBB.ShortName)) {
+                usertable = "user";
+                if (checkVersionInRange(WBB.VersionRange)) {
+                    saltfield = "salt";
                     usernamefield = "username";
                     passwordfield = "password";
                     Config.hasForumBoard = true;
+                    caseSensitive = true;
                     number = 1;
                     if (type.equalsIgnoreCase("checkpassword")) {
+                        EBean eBeanClass = EBean.find(player);
+                        String storedPassword = eBeanClass.getPassword();
+                        if (storedPassword != null && WBB.check_hash(WBB.hash("find", player, password, null), storedPassword)) {
+                            return true;
+                        }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
-                        if (XE.check_hash(password, hash)) { return true; }
+                        EBean.checkPassword(player, hash);
+                        if (MyBB.check_hash(MyBB.hash("find", player, password, null), hash)) {
+                            return true;
+                        }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
-                     XE.adduser(number, player, email, password, ipAddress);
-                     return true;
+                    WBB.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
                 }
-            } */
+            }
             if (!Config.hasForumBoard) {
                 if (!Config.custom_enabled) {
                     String tempVers = Config.script_version;
