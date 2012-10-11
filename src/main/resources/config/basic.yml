@@ -19,4 +19,4 @@ script:
     version: 3.0.8                                   # Version of the script you are using.
     tableprefix: phpbb_                              # Database table prefix for the script, if you use one.
     tableprefix-extra: phpbb_                        # Database table prefix for the script, if it has extra prefixes.
-#    passwordsalt:                                    # NOT IMPLEMENTED YET! Unique/custom password salt, if needed by the script.
+    passwordsalt:                                    # Unique/custom password salt, if needed by the script.

@@ -26,6 +26,7 @@ import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
 import com.authdb.scripts.cms.WordPress;
 import com.authdb.scripts.forum.*;
+import com.authdb.scripts.social.Oxwall;
 import com.authdb.util.Messages.Message;
 import com.authdb.util.databases.EBean;
 import com.authdb.util.databases.MySQL;
@@ -697,13 +698,39 @@ public class Util {
                         }
                         String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
                         EBean.checkPassword(player, hash);
-                        if (MyBB.check_hash(MyBB.hash("find", player, password, null), hash)) {
+                        if (WBB.check_hash(WBB.hash("find", player, password, null), hash)) {
                             return true;
                         }
                     }
                 }
                 if (type.equalsIgnoreCase("adduser")) {
                     WBB.adduser(number, player, email, password, ipAddress);
+                    EBean.sync(player);
+                    return true;
+                }
+            } else if (script.equalsIgnoreCase(Oxwall.Name) || script.equalsIgnoreCase(Oxwall.ShortName)) {
+                usertable = "base_user";
+                if (checkVersionInRange(Oxwall.VersionRange)) {
+                    usernamefield = "username";
+                    passwordfield = "password";
+                    Config.hasForumBoard = true;
+                    caseSensitive = true;
+                    number = 1;
+                    if (type.equalsIgnoreCase("checkpassword")) {
+                        EBean eBeanClass = EBean.find(player);
+                        String storedPassword = eBeanClass.getPassword();
+                        if (storedPassword != null && Oxwall.check_hash(Oxwall.hash(password), storedPassword)) {
+                            return true;
+                        }
+                        String hash = MySQL.getfromtable(Config.script_tableprefix + "" + usertable + "", "`" + passwordfield + "`", "" + usernamefield + "", player);
+                        EBean.checkPassword(player, hash);
+                        if (Oxwall.check_hash(Oxwall.hash(password), hash)) {
+                            return true;
+                        }
+                    }
+                }
+                if (type.equalsIgnoreCase("adduser")) {
+                    Oxwall.adduser(number, player, email, password, ipAddress);
                     EBean.sync(player);
                     return true;
                 }
@@ -788,6 +815,10 @@ public class Util {
             return split(IPB.LatestVersionRange, "-")[1];
         } else if (script.equalsIgnoreCase(WordPress.Name) || script.equalsIgnoreCase(WordPress.ShortName)) {
             return split(WordPress.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(WBB.Name) || script.equalsIgnoreCase(WBB.ShortName)) {
+            return split(WBB.LatestVersionRange, "-")[1];
+        } else if (script.equalsIgnoreCase(Oxwall.Name) || script.equalsIgnoreCase(Oxwall.ShortName)) {
+            return split(Oxwall.LatestVersionRange, "-")[1];
         }
         return null;
     }

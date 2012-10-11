@@ -136,6 +136,20 @@ public class MySQL {
         isConnected = true;
     }
 
+    public static int getLastID(String table, String where, String field) throws SQLException {
+        String query = "SELECT `" + field + "` FROM `" + table + "` WHERE " + where + " ORDER BY `" + field + "` DESC LIMIT 1";
+        Util.logging.mySQL(query);
+        Statement stmt = mysql.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+        int dupe = 0;
+        if (rs.next()) {
+            dupe = rs.getInt(1);
+        }
+        rs.close();
+        stmt.close();
+        return dupe;
+    }
+
     public static int countitall(String table) throws SQLException {
         String query = "SELECT LAST_INSERT_ID() FROM `" + table + "` LIMIT 1";
         Util.logging.mySQL(query);

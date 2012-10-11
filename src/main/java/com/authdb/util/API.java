@@ -21,21 +21,13 @@ package com.authdb.util;
 
 import java.sql.SQLException;
 
+import com.authdb.scripts.forum.*;
 import org.bukkit.entity.Player;
 
 import com.authdb.scripts.cms.DLE;
 import com.authdb.scripts.cms.Drupal;
 import com.authdb.scripts.cms.Joomla;
 import com.authdb.scripts.cms.WordPress;
-import com.authdb.scripts.forum.IPB;
-import com.authdb.scripts.forum.PunBB;
-import com.authdb.scripts.forum.SMF;
-import com.authdb.scripts.forum.Vanilla;
-import com.authdb.scripts.forum.XenForo;
-import com.authdb.scripts.forum.BBPress;
-import com.authdb.scripts.forum.MyBB;
-import com.authdb.scripts.forum.PhpBB;
-import com.authdb.scripts.forum.VBulletin;
 import com.authdb.util.databases.MySQL;
 
 public class API {

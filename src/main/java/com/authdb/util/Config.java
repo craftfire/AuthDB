@@ -38,7 +38,7 @@ public class Config {
     public static boolean autoupdate_enable,debug_enable,usagestats_enabled,logging_enabled;
     public static String language_commands, language_messages, logformat;
 
-    public static String script_name,script_version,script_salt,script_tableprefix,script_tableprefixextra;
+    public static String script_name,script_version,script_tableprefix,script_tableprefixextra,script_passwordsalt;
     public static boolean script_updatestatus;
 
     public static String custom_table,custom_userfield,custom_passfield,custom_encryption,custom_emailfield;
@@ -110,7 +110,7 @@ public class Config {
                 script_tableprefix = getConfigString("script.tableprefix", "");
                 script_tableprefixextra = getConfigString("script.tableprefix-extra", "");
                 script_updatestatus = getConfigBoolean("script.updatestatus", true);
-                script_salt = getConfigString("script.salt", "");
+                script_passwordsalt = getConfigString("script.passwordsalt", "");
 
             } else if (config.equalsIgnoreCase("advanced")) {
 
