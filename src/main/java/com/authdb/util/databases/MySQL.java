@@ -213,6 +213,20 @@ public class MySQL {
         return getQuery(query);
     }
 
+    public static Long getUnixTimestamp() throws SQLException {
+        String query = "SELECT UNIX_TIMESTAMP()";
+        Util.logging.mySQL(query);
+        Statement stmt = mysql.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+        long dupe = 0;
+        if (rs.next()) {
+            dupe = rs.getLong(1);
+        }
+        rs.close();
+        stmt.close();
+        return dupe;
+    }
+
     public static String Unix_Timestamp() throws SQLException {
         String query = "SELECT UNIX_TIMESTAMP()";
         Util.logging.mySQL(query);

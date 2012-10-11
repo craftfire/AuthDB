@@ -38,7 +38,7 @@ public class Oxwall {
 
     public static void adduser(int checkid, String player, String email, String password, String ipAddress) throws SQLException {
         if (checkid == 1) {
-            long timestamp = System.currentTimeMillis()/1000;
+            long timestamp = MySQL.getUnixTimestamp();
             String hash = hash(password);
             //
             PreparedStatement ps;
@@ -57,6 +57,58 @@ public class Oxwall {
             ps.close();
 
             int userid = MySQL.countitall(Config.script_tableprefix + "base_user");
+
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_question_data" + "` (`questionName`, `userId`)  VALUES (?, ?)", 1);
+            ps.setString(1, "relationship"); // questionName
+            ps.setInt(2, userid); // userId
+            Util.logging.mySQL(ps.toString());
+            ps.executeUpdate();
+            ps.close();
+
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_question_data" + "` (`questionName`, `userId`)  VALUES (?, ?)", 1);
+            ps.setString(1, "9221d78a4201eac23c972e1d4aa2cee6"); // questionName
+            ps.setInt(2, userid); // userId
+            Util.logging.mySQL(ps.toString());
+            ps.executeUpdate();
+            ps.close();
+
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_question_data" + "` (`questionName`, `userId`)  VALUES (?, ?)", 1);
+            ps.setString(1, "c441a8a9b955647cdf4c81562d39068a"); // questionName
+            ps.setInt(2, userid); // userId
+            Util.logging.mySQL(ps.toString());
+            ps.executeUpdate();
+            ps.close();
+
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_question_data" + "` (`questionName`, `userId`, `textValue`)  VALUES (?, ?, ?)", 1);
+            ps.setString(1, "realname"); // questionName
+            ps.setInt(2, userid); // userId
+            ps.setString(3, player); // textValue
+            Util.logging.mySQL(ps.toString());
+            ps.executeUpdate();
+            ps.close();
+
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_question_data" + "` (`questionName`, `userId`, `intValue`)  VALUES (?, ?, ?)", 1);
+            ps.setString(1, "sex"); // questionName
+            ps.setInt(2, userid); // userId
+            ps.setInt(3, 1); // intValue
+            Util.logging.mySQL(ps.toString());
+            ps.executeUpdate();
+            ps.close();
+
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_question_data" + "` (`questionName`, `userId`)  VALUES (?, ?)", 1);
+            ps.setString(1, "match_sex"); // questionName
+            ps.setInt(2, userid); // userId
+            Util.logging.mySQL(ps.toString());
+            ps.executeUpdate();
+            ps.close();
+
+            ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_question_data" + "` (`questionName`, `userId`, `dateValue`)  VALUES (?, ?, ?)", 1);
+            ps.setString(1, "birthdate"); // questionName
+            ps.setInt(2, userid); // userId
+            ps.setString(3, "1970-01-01 00:00:00"); // dateValue
+            Util.logging.mySQL(ps.toString());
+            ps.executeUpdate();
+            ps.close();
 
             ps = MySQL.mysql.prepareStatement("INSERT INTO `" + Config.script_tableprefix + "base_authorization_user_role" + "` (`userId`, `roleId`)  VALUES (?, ?)", 1);
             ps.setInt(1, userid); // userId
