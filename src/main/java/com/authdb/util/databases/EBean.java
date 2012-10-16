@@ -220,9 +220,6 @@ public class EBean {
         return false;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
     @NotNull
     private String playername;
     private String linkedname;
@@ -239,14 +236,6 @@ public class EBean {
     private int timeoutid;
     private long reloadtime;
     private long sessiontime;
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
 
     public String getPlayername() {
         return playername;
