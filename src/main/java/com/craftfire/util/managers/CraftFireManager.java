@@ -65,7 +65,7 @@ public class CraftFireManager {
         wr.flush();
         wr.close();
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        Util.logging.Debug("Successfully sent usage stats to CraftFire.");
+        Util.logging.debug("Successfully sent usage stats to CraftFire.");
         rd.close();
     }
 }

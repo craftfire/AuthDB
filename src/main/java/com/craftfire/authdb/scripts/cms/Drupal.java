@@ -198,12 +198,12 @@ public class Drupal {
         //double expected = 12 + Math.ceil((8 * len) / 6);
 
         //logging.Debug("HASH DERP:" + output);
-        Util.logging.Debug("TEST 2" + password_base64_encode(hash, len));
-        Util.logging.Debug("TEST 2" + password_base64_encode(hash, len).length());
-        Util.logging.Debug("HASH DERP:" + output.substring(0, 55));
-        Util.logging.Debug("DERP 1 : " + output.length());
-        Util.logging.Debug("DERP 2 : " + "");
-        //Util.logging.Debug("FASCE:" + (output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
+        Util.logging.debug("TEST 2" + password_base64_encode(hash, len));
+        Util.logging.debug("TEST 2" + password_base64_encode(hash, len).length());
+        Util.logging.debug("HASH DERP:" + output.substring(0, 55));
+        Util.logging.debug("DERP 1 : " + output.length());
+        Util.logging.debug("DERP 2 : " + "");
+        //Util.logging.debug("FASCE:" + (output.length() == expected) != null ? output.substring(0, DRUPAL_HASH_LENGTH) : null);
         return (output.length() == 0) ? output.substring(0, DRUPAL_HASH_LENGTH) : null;
     }
 

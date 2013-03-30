@@ -57,16 +57,16 @@ public class Processes {
             }
             if (AuthDB.AuthDB_Timeouts.containsKey(player.getName())) {
                 int TaskID = AuthDB.AuthDB_Timeouts.get(player.getName());
-                Util.logging.Debug(player.getName() + " is in the TimeoutTaskList with ID: " + TaskID);
+                Util.logging.debug(player.getName() + " is in the TimeoutTaskList with ID: " + TaskID);
                 eBeanClass.setTimeoutid(0);
                 if (AuthDB.AuthDB_Timeouts.remove(player.getName()) != null) {
-                    Util.logging.Debug(player.getName() + " was removed from the TimeoutTaskList");
+                    Util.logging.debug(player.getName() + " was removed from the TimeoutTaskList");
                     AuthDB.server.getScheduler().cancelTask(TaskID);
                 } else {
-                    Util.logging.Debug("Could not remove " + player.getName() + " from the timeout list.");
+                    Util.logging.debug("Could not remove " + player.getName() + " from the timeout list.");
                 }
             } else {
-                Util.logging.Debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
+                Util.logging.debug("Could not find " + player.getName() + " in the timeout list, no need to remove.");
             }
             AuthDB.database.save(eBeanClass);
             if (storeInventory) {
@@ -79,7 +79,7 @@ public class Processes {
                 }
                 player.getInventory().clear();
             }
-            Util.logging.Debug("Logged out player: " + player.getName());
+            Util.logging.debug("Logged out player: " + player.getName());
             AuthDB.AuthDB_loggedOut.put(player.getName(), true);
             return true;
         }
@@ -103,7 +103,7 @@ public class Processes {
             if (Config.session_enabled) {
                 if (!AuthDB.AuthDB_Sessions.containsKey(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)))) {
                     AuthDB.AuthDB_Sessions.put(Encryption.md5(player.getName() + Util.craftFirePlayer.getIP(player)), timestamp);
-                    Util.logging.Debug("Session started for " + player.getName());
+                    Util.logging.debug("Session started for " + player.getName());
                 }
                 eBeanClass.setSessiontime(timestamp);
             }

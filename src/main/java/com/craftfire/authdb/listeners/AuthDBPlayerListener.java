@@ -76,7 +76,7 @@ public class AuthDBPlayerListener implements Listener {
         if (Config.filter_action.equalsIgnoreCase("kick") || Config.filter_action.equalsIgnoreCase("rename")) {
             String name = player.getName();
             if (Util.checkFilter("username", name) == false && Util.checkWhitelist("username", player) == false) {
-                Util.logging.Debug(name + " is not in the whitelist and has bad characters in his/her name.");
+                Util.logging.debug(name + " is not in the whitelist and has bad characters in his/her name.");
                 if (Config.filter_action.equalsIgnoreCase("kick")) {
                     Messages.sendMessage(Message.filter_username, player, event);
                     return;
@@ -94,7 +94,7 @@ public class AuthDBPlayerListener implements Listener {
     }
 
     public void checkTimeout(Player player) {
-        Util.logging.Debug("Launching function: checkTimeout(Player player))");
+        Util.logging.debug("Launching function: checkTimeout(Player player))");
         EBean eBeanClass = EBean.checkPlayer(player, true);
         int timeoutid = eBeanClass.getTimeoutid();
         if (plugin.isAuthorized(player) == false && (AuthDB.AuthDB_Timeouts.containsKey(player.getName()) || timeoutid != 0)) {
@@ -125,10 +125,10 @@ public class AuthDBPlayerListener implements Listener {
             long timestamp = System.currentTimeMillis() / 1000;
             if (Util.authDBplayer.sessionTime(player) != 0) {
                 long storedtime = Util.authDBplayer.sessionTime(player);
-                Util.logging.Debug("Found session for " + player.getName() + ", timestamp: " + storedtime);
+                Util.logging.debug("Found session for " + player.getName() + ", timestamp: " + storedtime);
                 long timedifference = timestamp - storedtime;
-                Util.logging.Debug("Difference: " + timedifference);
-                Util.logging.Debug("Session in config: " + Config.session_length);
+                Util.logging.debug("Difference: " + timedifference);
+                Util.logging.debug("Session in config: " + Config.session_length);
                 if (timedifference > Config.session_length) {
                     sessionallow = false;
                 } else {
@@ -143,10 +143,10 @@ public class AuthDBPlayerListener implements Listener {
             if (sessionallow == false) {
                 int time = 0;
                 if (Config.login_timeout > 0 && plugin.isRegistered("checkguest", player.getName())) {
-                    Util.logging.Debug("Login timeout time is: " + Config.login_timeout + " ticks.");
+                    Util.logging.debug("Login timeout time is: " + Config.login_timeout + " ticks.");
                     time = Config.login_timeout;
                 } else if (Config.register_timeout > 0 && !plugin.isRegistered("checkguest", player.getName())) {
-                    Util.logging.Debug("Register timeout time is: " + Config.register_timeout + " ticks.");
+                    Util.logging.debug("Register timeout time is: " + Config.register_timeout + " ticks.");
                     time = Config.register_timeout;
                 }
                 if (time > 0) {
@@ -157,11 +157,11 @@ public class AuthDBPlayerListener implements Listener {
                         }
                     }, time);
                     EBean eBeanClass = EBean.checkPlayer(player, true);
-                    Util.logging.Debug("Adding schedule ID to hashmap and persitence: " + Schedule);
+                    Util.logging.debug("Adding schedule ID to hashmap and persitence: " + Schedule);
                     eBeanClass.setTimeoutid(Schedule);
                     AuthDB.database.save(eBeanClass);
                     if (AuthDB.AuthDB_Timeouts.put(player.getName(), Schedule) != null) {
-                        Util.logging.Debug(player.getName() + " added to the CheckTimeoutTaskList");
+                        Util.logging.debug(player.getName() + " added to the CheckTimeoutTaskList");
                     }
                 }
             }
@@ -180,7 +180,7 @@ public class AuthDBPlayerListener implements Listener {
             if (Config.onlineMode && this.plugin.isRegistered("join", player.getName())) {
                 sessionallow = true;
             } /*else if (!Config.onlineMode) {
-                Util.logging.Debug("Session id: " + Util.server.getSessionId());
+                Util.logging.debug("Session id: " + Util.server.getSessionId());
                 boolean allow = false;
                 URL verify = new URL("http://www.minecraft.net/game/checkserver.jsp?user=" + URLEncoder.encode(player.getName(), "UTF-8") + "&serverId=" + URLEncoder.encode(Util.server.getSessionId(), "UTF-8"));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(verify.openStream()));
@@ -188,7 +188,7 @@ public class AuthDBPlayerListener implements Listener {
                 reader.close();
                 allow = result.equalsIgnoreCase("YES");
                 if (allow) {
-                    Util.logging.Debug("Online mode is off but player '" + player.getName() + "' is authed with minecraft.net and does not have to login.");
+                    Util.logging.debug("Online mode is off but player '" + player.getName() + "' is authed with minecraft.net and does not have to login.");
                     sessionallow = true;
                 }
             }*/
@@ -297,7 +297,7 @@ public class AuthDBPlayerListener implements Listener {
                         Messages.sendMessage(Message.login_offline, player, null);
                     }
                 }
-                Util.logging.Debug(player.getName() + " login ********");
+                Util.logging.debug(player.getName() + " login ********");
                 event.setMessage(Config.commands_user_login + " ******");
                 event.setCancelled(true);
             } else { Messages.sendMessage(Message.protection_denied, player, null); }
@@ -331,7 +331,7 @@ public class AuthDBPlayerListener implements Listener {
                     } else {
                         Messages.sendMessage(Message.link_usage, player, null);
                     }
-                    Util.logging.Debug(player.getName() + " link ******** ********");
+                    Util.logging.debug(player.getName() + " link ******** ********");
                     event.setMessage(Config.commands_user_link + " ****** ********");
                     event.setCancelled(true);
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
@@ -360,7 +360,7 @@ public class AuthDBPlayerListener implements Listener {
                     } else {
                         Messages.sendMessage(Message.unlink_usage, player, null);
                     }
-                    Util.logging.Debug(player.getName() + " unlink ******** ********");
+                    Util.logging.debug(player.getName() + " unlink ******** ********");
                     event.setMessage(Config.commands_user_unlink + " ****** ********");
                     event.setCancelled(true);
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
@@ -411,7 +411,7 @@ public class AuthDBPlayerListener implements Listener {
                         Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                     }
                 }
-                Util.logging.Debug(player.getName() + " register ********");
+                Util.logging.debug(player.getName() + " register ********");
                 event.setMessage(Config.commands_user_register + " *****");
                 event.setCancelled(true);
             } else { Messages.sendMessage(Message.protection_denied, player, null); }
@@ -470,7 +470,7 @@ public class AuthDBPlayerListener implements Listener {
                                 } else {
                                     Messages.sendMessage(Message.login_failure, player, null);
                                 }
-                                Util.logging.Debug(player.getName() + " login ********");
+                                Util.logging.debug(player.getName() + " login ********");
                                 event.setMessage(" has logged in!");
                                 event.setCancelled(true);
                             }

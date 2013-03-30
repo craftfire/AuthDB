@@ -92,7 +92,7 @@ public class EBean {
 
     public static void sync(String player) {
         try {
-            Util.logging.Debug("Running Sync for user: " + player);
+            Util.logging.debug("Running Sync for user: " + player);
             if (!Config.database_keepalive) {
                 Util.databaseManager.connect();
             }
@@ -108,7 +108,7 @@ public class EBean {
                 registered = "true";
             } else {
                 if (registered != null && registered.equalsIgnoreCase("true")) {
-                    Util.logging.Debug("Registered value for " + player + " in persistence is different than in MySQL, syncing registered value from MySQL.");
+                    Util.logging.debug("Registered value for " + player + " in persistence is different than in MySQL, syncing registered value from MySQL.");
                     eBeanClass.setRegistered("false");
                     AuthDB.database.save(eBeanClass);
                     registered = "false";
@@ -129,7 +129,7 @@ public class EBean {
     public static void checkSessiontime(String player, long sessiontime) {
         EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getSessiontime() == 0 || eBeanClass.getSessiontime() != sessiontime) {
-            Util.logging.Debug("Session time in persistence is different than in hashmap, syncing session from hashmap.");
+            Util.logging.debug("Session time in persistence is different than in hashmap, syncing session from hashmap.");
             eBeanClass.setSessiontime(sessiontime);
             AuthDB.database.save(eBeanClass);
         }
@@ -138,7 +138,7 @@ public class EBean {
     public static void checkPassword(String player, String password) {
         EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getPassword() == null || eBeanClass.getPassword().equals(password) == false) {
-            Util.logging.Debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
+            Util.logging.debug("Password in persistence is different than in MySQL, syncing password from MySQL.");
             eBeanClass.setPassword(password);
             AuthDB.database.save(eBeanClass);
         }
@@ -147,7 +147,7 @@ public class EBean {
     public static void checkSalt(String player, String salt) {
         EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getSalt() == null || eBeanClass.getSalt().equals(salt) == false) {
-            Util.logging.Debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
+            Util.logging.debug("Salt in persistence is different than in MySQL, syncing salt from MySQL.");
             eBeanClass.setSalt(salt);
             AuthDB.database.save(eBeanClass);
         }
@@ -156,7 +156,7 @@ public class EBean {
     public static void checkIP(String player, String IP) {
         EBean eBeanClass = checkPlayer(player, true);
         if (eBeanClass.getIp() == null || eBeanClass.getIp().equals(IP) == false) {
-            Util.logging.Debug("IP in persistence is different than the player's IP, removing session and syncing IP's.");
+            Util.logging.debug("IP in persistence is different than the player's IP, removing session and syncing IP's.");
             eBeanClass.setSessiontime(0);
             eBeanClass.setIp(IP);
             AuthDB.database.save(eBeanClass);
@@ -173,7 +173,7 @@ public class EBean {
 
     public static int getAmount(String field, String value) {
         List<EBean> amount = AuthDB.database.find(EBean.class).where().ieq(field, value).findList();
-        Util.logging.Debug("Found " + amount.size() + " results for value " + value + " in field " + field);
+        Util.logging.debug("Found " + amount.size() + " results for value " + value + " in field " + field);
         if (amount.isEmpty()) {
             return 0;
         }

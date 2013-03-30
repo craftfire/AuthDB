@@ -63,7 +63,7 @@ public class AuthDBEntityListener implements Listener {
                 long timestamp = System.currentTimeMillis() / 1000;
                 long difference = timestamp - this.plugin.AuthDB_AuthTime.get(p.getName());
                 if (difference < 5) {
-                    Util.logging.Debug("Time difference: " + difference + ", canceling damage.");
+                    Util.logging.debug("Time difference: " + difference + ", canceling damage.");
                     event.setCancelled(true);
                 }
             }

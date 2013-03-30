@@ -49,7 +49,7 @@ public class Encryption {
             return hash.substring(0, saltPos) + salt + hash.substring(saltPos);
         }
         if (Config.debug_enable) {
-            Util.logging.Info("Could not find encryption method: " + encryption + ", using default: md5");
+            Util.logging.info("Could not find encryption method: " + encryption + ", using default: md5");
         }
         Config.custom_encryption = "md5";
         return md5(toencrypt);

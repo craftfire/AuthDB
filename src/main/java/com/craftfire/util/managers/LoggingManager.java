@@ -63,12 +63,11 @@ public class LoggingManager {
      * Prints debug messages if enabled to console and file.
      *
      * @param line is the line to be printed.
-     * @param pluginName is the prefix of the messages, for example [pluginName] line.
      */
-    public void debug(String line, String pluginName) {
+    public void debug(String line) {
         if (PluginManager.config.debug_enable) {
-            PluginManager.plugin.log.info("[" + pluginName + "] " + line);
-            ToFile(Type.debug, "[" + pluginName + "] " + line, logFolder);
+            PluginManager.plugin.log.info("[AuthDB] " + line);
+            ToFile(Type.debug, "[AuthDB] " + line, logFolder);
         }
     }
 
@@ -76,30 +75,27 @@ public class LoggingManager {
      * Print to console with info level.
      *
      * @param line is the line to be printed.
-     * @param pluginName is the prefix of the messages, for example [pluginName] line.
      */
-    public void info(String line, String pluginName) {
-        PluginManager.plugin.log.info("[" + pluginName + "] " + line);
+    public void info(String line) {
+        PluginManager.plugin.log.info("[AuthDB] " + line);
     }
 
     /**
      * Print to console with severe level.
      *
      * @param line is the line to be printed.
-     * @param pluginName is the prefix of the messages, for example [pluginName] line.
      */
-    public void severe(String line, String pluginName) {
-        PluginManager.plugin.log.severe("[" + pluginName + "] " + line);
+    public void severe(String line) {
+        PluginManager.plugin.log.severe("[AuthDB] " + line);
     }
 
     /**
      * Print to console with warning level.
      *
      * @param line is the line to be printed.
-     * @param pluginName is the prefix of the messages, for example [pluginName] line.
      */
-    public void warning(String line, String pluginName) {
-        PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
+    public void warning(String line) {
+        PluginManager.plugin.log.warning("[AuthDB] " + line);
     }
 
     /**
@@ -300,7 +296,7 @@ public class LoggingManager {
     }
 
     public void timeUsage(long time, String string) {
-        Util.logging.Debug("Took " + (time / 1000) + " seconds (" + time + "ms) to " + string + ".");
+        Util.logging.debug("Took " + (time / 1000) + " seconds (" + time + "ms) to " + string + ".");
     }
 
     private void ToFile(Type type, String line, String logFolder) {
@@ -308,13 +304,13 @@ public class LoggingManager {
             File data = new File(logFolder, "");
             if (!data.exists()) {
                 if (data.mkdir()) {
-                    Util.logging.Debug("Created missing directory: " + logFolder);
+                    Util.logging.debug("Created missing directory: " + logFolder);
                 }
             }
             data = new File(logFolder + type.toString() + "/", "");
             if (!data.exists()) {
                 if (data.mkdir()) {
-                    Util.logging.Debug("Created missing directory: " + logFolder + type.toString());
+                    Util.logging.debug("Created missing directory: " + logFolder + type.toString());
                 }
             }
             DateFormat LogFormat = new SimpleDateFormat(PluginManager.config.logformat);

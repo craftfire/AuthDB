@@ -183,7 +183,7 @@ public class WordPress {
             hash = Encryption.pack(Encryption.md5(hash + password));
         } while (--count > 0);
 
-        Util.logging.Info("Encryption - String packed " + counter + " times.");
+        Util.logging.info("Encryption - String packed " + counter + " times.");
         output = setting.substring(0, 12) + _hash_encode64(hash, 16);
 
         return output;

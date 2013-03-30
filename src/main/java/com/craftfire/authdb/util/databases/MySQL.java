@@ -101,20 +101,20 @@ public class MySQL {
         }
 
         if (Config.debug_enable) {
-            Util.logging.Debug("Lauching function: connect()");
-            Util.logging.Debug("MySQL: " + Config.dbDb);
-            Util.logging.Debug("MySQL driver: " + Config.database_type);
-            Util.logging.Debug("MySQL username: " + Config.database_username);
-            Util.logging.Debug("MySQL password: " + Config.database_password);
-            Util.logging.Debug("MySQL host: " + Config.database_host);
-            Util.logging.Debug("MySQL port: " + Config.database_port);
-            Util.logging.Debug("MySQL database: " + Config.database_database);
+            Util.logging.debug("Lauching function: connect()");
+            Util.logging.debug("MySQL: " + Config.dbDb);
+            Util.logging.debug("MySQL driver: " + Config.database_type);
+            Util.logging.debug("MySQL username: " + Config.database_username);
+            Util.logging.debug("MySQL password: " + Config.database_password);
+            Util.logging.debug("MySQL host: " + Config.database_host);
+            Util.logging.debug("MySQL port: " + Config.database_port);
+            Util.logging.debug("MySQL database: " + Config.database_database);
             if (!Config.custom_enabled) {
-                Util.logging.Debug("MySQL prefix: " + Config.script_tableprefix);
+                Util.logging.debug("MySQL prefix: " + Config.script_tableprefix);
             }
         }
 
-        Util.logging.Debug("MySQL: " + Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
+        Util.logging.debug("MySQL: " + Config.dbDb + "?user=" + Config.database_username + "&password=" + Config.database_password);
         try {
             Config.database_ison = true;
             mysql = DriverManager.getConnection(Config.dbDb, Config.database_username, Config.database_password);
