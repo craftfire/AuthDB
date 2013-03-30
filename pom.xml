@@ -14,7 +14,7 @@
     <!-- Project properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>${project.groupId}.${project.name}</mainClass>
+        <mainClass>${project.groupId}.${project.artifactId}.${project.name}</mainClass>
         <bukkitVersion>1.5.1-R0.1-SNAPSHOT</bukkitVersion>
         <buildNumber>0</buildNumber>
     </properties>
