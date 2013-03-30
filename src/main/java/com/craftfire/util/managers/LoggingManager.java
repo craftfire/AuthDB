@@ -89,7 +89,6 @@ public class LoggingManager {
      * Prints out a nice advanced warning into the console.
      *
      * @param line is the line to be printed.
-     * @deprecated This method will removed in the near future and replaced with advancedWarning(String line, String pluginName).
      */
     public void advancedWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]" + System.getProperty("line.separator")
@@ -104,7 +103,6 @@ public class LoggingManager {
      * Prints out a plain warning into the console.
      *
      * @param line is the line to be printed.
-     * @deprecated This method will removed in the near future and replaced with plainWarning(String line, String pluginName).
      */
     public void plainWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
