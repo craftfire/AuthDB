@@ -49,20 +49,6 @@ public class LoggingManager {
      * Prints debug messages if enabled to console and file.
      *
      * @param line is the line to be printed.
-     * @deprecated This method will removed in the near future and replaced with debug(String line, String pluginName).
-     */
-    @Deprecated
-    public void Debug(String line) {
-        if (PluginManager.config.debug_enable) {
-            PluginManager.plugin.log.info("[" + PluginManager.plugin.pluginName + "] " + line);
-            ToFile(Type.debug, "[" + PluginManager.plugin.pluginName + "] " + line, logFolder);
-        }
-    }
-
-    /**
-     * Prints debug messages if enabled to console and file.
-     *
-     * @param line is the line to be printed.
      */
     public void debug(String line) {
         if (PluginManager.config.debug_enable) {
@@ -98,27 +84,6 @@ public class LoggingManager {
         PluginManager.plugin.log.warning("[AuthDB] " + line);
     }
 
-    /**
-     * Print to console with info level.
-     *
-     * @param line is the line to be printed.
-     * @deprecated This method will removed in the near future and replaced with info(String line, String pluginName).
-     */
-    @Deprecated
-    public void Info(String line) {
-            PluginManager.plugin.log.info("[" + PluginManager.plugin.pluginName + "] " + line);
-    }
-
-    /**
-     * Print to console with severe level.
-     *
-     * @param line is the line to be printed.
-     * @deprecated This method will removed in the near future and replaced with severe(String line, String pluginName).
-     */
-    @Deprecated
-    public void Severe(String line) {
-            PluginManager.plugin.log.severe("[" + PluginManager.plugin.pluginName + "] " + line);
-    }
 
     /**
      * Prints out a nice advanced warning into the console.
@@ -126,7 +91,6 @@ public class LoggingManager {
      * @param line is the line to be printed.
      * @deprecated This method will removed in the near future and replaced with advancedWarning(String line, String pluginName).
      */
-    @Deprecated
     public void advancedWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "]" + System.getProperty("line.separator")
         + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
@@ -142,36 +106,9 @@ public class LoggingManager {
      * @param line is the line to be printed.
      * @deprecated This method will removed in the near future and replaced with plainWarning(String line, String pluginName).
      */
-    @Deprecated
     public void plainWarning(String line) {
         PluginManager.plugin.log.warning("[" + PluginManager.plugin.pluginName + "] " + line);
     }
-
-    /**
-     * Prints out a nice advanced warning into the console.
-     *
-     * @param line is the line to be printed.
-     * @param pluginName is the prefix of the messages, for example [pluginName] line.
-     */
-    public void advancedWarning(String line, String pluginName) {
-        PluginManager.plugin.log.warning("[" + pluginName + "]" + System.getProperty("line.separator")
-        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
-        + "|--------------------------------AUTHDB WARNING-------------------------------|" + System.getProperty("line.separator")
-        + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
-        + "| " + line.toUpperCase() + System.getProperty("line.separator")
-        + "|-----------------------------------------------------------------------------|");
-    }
-
-    /**
-     * Prints out a plain warning into the console.
-     *
-     * @param line is the line to be printed.
-     * @param pluginName is the prefix of the messages, for example [pluginName] line.
-     */
-    public void plainWarning(String line, String pluginName) {
-        PluginManager.plugin.log.warning("[" + pluginName + "] " + line);
-    }
-
     /**
      * Send the MySQL query to debug.
      *
@@ -179,7 +116,7 @@ public class LoggingManager {
      */
     public void mySQL(String query) {
         latestQuery = query;
-        Debug("Executing MySQL query: " + query);
+        debug("Executing MySQL query: " + query);
     }
 
     public void StackTrace(StackTraceElement[] stack, String function, int linenumber, String classname, String file) {
@@ -251,39 +188,13 @@ public class LoggingManager {
         logError("---------------------------- STACKTRACE END ----------------------------");
     }
 
-    public void stackTrace(String pluginName, StackTraceElement[] stack, String function, int linenumber, String classname, String file) {
-        advancedWarning("StackTrace Error", pluginName);
-        plainWarning("Class name: " + classname, pluginName);
-        plainWarning("File name: " + file, pluginName);
-        plainWarning("Function name: " + function, pluginName);
-        plainWarning("Error line: " + linenumber, pluginName);
-        if (PluginManager.config.logging_enabled) {
-            DateFormat LogFormat = new SimpleDateFormat(PluginManager.config.logformat);
-            Date date = new Date();
-            plainWarning("Check log file: " + PluginManager.plugin.getDataFolder() + "\\logs\\error\\" + LogFormat.format(date) + "-error.log", pluginName);
-        } else {
-            plainWarning("Enable logging in the config to get more information about the error.", pluginName);
-        }
-
-        logError("--------------------------- STACKTRACE ERROR ---------------------------", pluginName);
-        logError("Class name: " + classname, pluginName);
-        logError("File name: " + file, pluginName);
-        logError("Function name: " + function, pluginName);
-        logError("Error line: " + linenumber, pluginName);
-        logError("--------------------------- STACKTRACE START ---------------------------", pluginName);
-        for (int i = 0; i < stack.length; i++) {
-            logError(stack[i].toString());
-        }
-        logError("---------------------------- STACKTRACE END ----------------------------", pluginName);
-    }
-
     public void error(String error) {
         plainWarning(error);
         logError(error);
     }
 
     public void error(String error, String pluginName) {
-        plainWarning(error, pluginName);
+        plainWarning(error);
         logError(error, pluginName);
     }
 
