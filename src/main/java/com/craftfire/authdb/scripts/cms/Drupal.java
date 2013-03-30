@@ -197,7 +197,7 @@ public class Drupal {
         // _password_base64_encode() of a 64 byte sha512 will always be 86 characters.
         //double expected = 12 + Math.ceil((8 * len) / 6);
 
-        //logging.Debug("HASH DERP:" + output);
+        //logging.debug("HASH DERP:" + output);
         Util.logging.debug("TEST 2" + password_base64_encode(hash, len));
         Util.logging.debug("TEST 2" + password_base64_encode(hash, len).length());
         Util.logging.debug("HASH DERP:" + output.substring(0, 55));

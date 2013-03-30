@@ -87,7 +87,7 @@ public class Util {
                 eBeanClass.setIp(ipAddress);
             } else if (type.equalsIgnoreCase("numusers")) {
                 int amount = EBean.getUsers();
-                logging.Info(amount + " user registrations in database");
+                logging.info(amount + " user registrations in database");
             }
         } else if (Config.database_ison) {
             String usertable = null, usernamefield = null, passwordfield = null, saltfield = "";
@@ -126,7 +126,7 @@ public class Util {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `" + Config.custom_table + "`");
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
-                        logging.Info(rs.getInt("countit") + " user registrations in database");
+                        logging.info(rs.getInt("countit") + " user registrations in database");
                     }
                 }
             } else if (script.equalsIgnoreCase(PhpBB.Name) || script.equalsIgnoreCase(PhpBB.ShortName)) {
@@ -741,7 +741,7 @@ public class Util {
                 if (!Config.custom_enabled) {
                     String tempVers = Config.script_version;
                     Config.script_version = scriptVersion();
-                    logging.Info(System.getProperty("line.separator")
+                    logging.info(System.getProperty("line.separator")
                             + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
                             + "|--------------------------------AUTHDB WARNING-------------------------------|" + System.getProperty("line.separator")
                             + "|-----------------------------------------------------------------------------|" + System.getProperty("line.separator")
@@ -775,7 +775,7 @@ public class Util {
                             + Config.script_tableprefix + usertable + "`");
                 }
                 ResultSet rs = ps.executeQuery();
-                if (rs.next()) { logging.Info(rs.getInt("countit") + " user registrations in database"); }
+                if (rs.next()) { logging.info(rs.getInt("countit") + " user registrations in database"); }
             } else if (Config.hasForumBoard && type.equalsIgnoreCase("syncpassword") && !Config.custom_enabled) {
                 String hash = MySQL.getfromtable(Config.script_tableprefix + usertable, "`" + passwordfield + "`", usernamefield, player);
                 EBean.checkPassword(player, hash);
@@ -1063,7 +1063,7 @@ public class Util {
     }
 
     public static int toTicks(String time, String length) {
-        logging.Debug("Launching function: toTicks(String time, String length) - " + time + ":" + length);
+        logging.debug("Launching function: toTicks(String time, String length) - " + time + ":" + length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt(length);
         if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
@@ -1079,7 +1079,7 @@ public class Util {
     }
 
     public static int toSeconds(String time, String length) {
-        logging.Debug("Launching function: toSeconds(String time, String length) - " + time + ":" + length);
+        logging.debug("Launching function: toSeconds(String time, String length) - " + time + ":" + length);
         time = time.toLowerCase();
         int lengthint = Integer.parseInt(length);
         if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
@@ -1099,7 +1099,7 @@ public class Util {
         String length = split[0];
         String time = split[1].toLowerCase();
         int lengthint = Integer.parseInt(length);
-        logging.Debug("Launching function: FullStringToSeconds(String time, String length) - " + time + ":" + length);
+        logging.debug("Launching function: FullStringToSeconds(String time, String length) - " + time + ":" + length);
         if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
             return lengthint * 1728000;
         } else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
@@ -1117,7 +1117,7 @@ public class Util {
         String length = split[0];
         String time = split[1].toLowerCase();
         int lengthint = Integer.parseInt(length);
-        logging.Debug("Launching function: StringToSeconds(String time, String length) - " + time + ":" + length);
+        logging.debug("Launching function: StringToSeconds(String time, String length) - " + time + ":" + length);
         if (time.equalsIgnoreCase("days") || time.equalsIgnoreCase("day") || time.equalsIgnoreCase("d")) {
             return lengthint * 86400;
         } else if (time.equalsIgnoreCase("hours") || time.equalsIgnoreCase("hour") || time.equalsIgnoreCase("hr") || time.equalsIgnoreCase("hrs") || time.equalsIgnoreCase("h")) {
@@ -1141,7 +1141,7 @@ public class Util {
 
     public static boolean checkWhitelist(String whitelist, Player player) {
         String username = player.getName().toLowerCase();
-        logging.Debug("Launching function: checkWhitelist(String whitelist, String username) - " + username);
+        logging.debug("Launching function: checkWhitelist(String whitelist, String username) - " + username);
         StringTokenizer st = null;
         if (whitelist.equalsIgnoreCase("username")) {
             st = new StringTokenizer(Config.filter_whitelist, ",");
@@ -1150,9 +1150,9 @@ public class Util {
         }
         while (st != null && st.hasMoreTokens()) {
             String whitelistname = st.nextToken().toLowerCase();
-            logging.Debug("Whitelist: " + whitelistname);
+            logging.debug("Whitelist: " + whitelistname);
             if (whitelistname.equals(username)) {
-                logging.Debug("Found user in whitelist: " + whitelistname);
+                logging.debug("Found user in whitelist: " + whitelistname);
                 if (whitelist.equalsIgnoreCase("username")) {
                     Messages.sendMessage(Message.filter_whitelist, player, null);
                 }
@@ -1163,14 +1163,14 @@ public class Util {
     }
 
     public static void checkIdle(Player player) {
-        logging.Debug("Launching function: CheckIdle(Player player)");
+        logging.debug("Launching function: CheckIdle(Player player)");
         if (!AuthDB.isAuthorized(player)) {
             Messages.sendMessage(Message.kickPlayerIdleLoginMessage, player, null);
         }
     }
 
     public static long ip2Long(String ip) {
-        logging.Debug("Launching function: IP2Long(String IP)");
+        logging.debug("Launching function: IP2Long(String IP)");
         long f1, f2, f3, f4;
         String tokens[] = ip.split("\\.");
         if (tokens.length != 4) {
@@ -1190,7 +1190,7 @@ public class Util {
 
     public static boolean checkFilter(String what, String string) {
         if (what.equalsIgnoreCase("username")) {
-            logging.Debug("Launching function: checkFilter(String what, String string) - " + Config.filter_username);
+            logging.debug("Launching function: checkFilter(String what, String string) - " + Config.filter_username);
             int lengtha = string.length();
             int lengthb = Config.filter_username.length();
             int i = 0;
@@ -1213,7 +1213,7 @@ public class Util {
             Util.logging.debug(string + " does not have bad characters in his/her name.");
             return true;
         } else if (what.equalsIgnoreCase("password")) {
-            logging.Debug("Launching function: checkFilter(String what, String string) - " + Config.filter_password);
+            logging.debug("Launching function: checkFilter(String what, String string) - " + Config.filter_password);
             int lengtha = string.length();
             int lengthb = Config.filter_password.length();
             int i = 0;
@@ -1223,9 +1223,9 @@ public class Util {
                 int a = 0;
                 while (a < lengthb) {
                     thechar2 = Config.filter_password.charAt(a);
-                    //logging.Debug(i + "-" + thechar1 + ":" + a + "-" + thechar2);
+                    //logging.debug(i + "-" + thechar1 + ":" + a + "-" + thechar2);
                     if (thechar1 == thechar2 || thechar1 == '\'' || thechar1 == '\"') {
-                        logging.Debug("FOUND BAD CHARACTER!!: " + thechar2);
+                        logging.debug("FOUND BAD CHARACTER!!: " + thechar2);
                         return false;
                     }
                     a++;
@@ -1261,7 +1261,7 @@ public class Util {
 
     public static String replaceStrings(String string, Player player, String additional) {
         long start = Util.timeMS();
-        logging.Debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
+        logging.debug(("Launching function: replaceStrings(String string, Player player, String additional)"));
         String extra = "";
         if (additional != null) {
             extra = additional;
@@ -1421,7 +1421,7 @@ public class Util {
 
     public static String removeColors(String toremove) {
         long start = Util.timeMS();
-        logging.Debug("Launching function: removeColors");
+        logging.debug("Launching function: removeColors");
         toremove = toremove.replace("?0", "");
         toremove = toremove.replace("?2", "");
         toremove = toremove.replace("?3", "");
@@ -1445,7 +1445,7 @@ public class Util {
     }
 
     public static String removeChar(String s, char c) {
-        logging.Debug("Launching function: removeChar(String s, char c)");
+        logging.debug("Launching function: removeChar(String s, char c)");
         StringBuffer r = new StringBuffer(s.length());
         r.setLength(s.length());
         int current = 0;
