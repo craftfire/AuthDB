@@ -448,10 +448,11 @@ public class AuthDBPlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerChat(PlayerChatEvent event) {
+    public void onPlayerEvent(AsyncPlayerChatEvent event) {
         if (event.isCancelled()) {
             return;
         }
+
         if (!AuthDB.isAuthorized(event.getPlayer())) {
             Player player = event.getPlayer();
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
