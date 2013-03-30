@@ -34,6 +34,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.persistence.PersistenceException;
 
+import com.craftfire.authdb.plugins.ZPermissions;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,17 +46,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebean.EbeanServer;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 import com.craftfire.authdb.listeners.AuthDBBlockListener;
 import com.craftfire.authdb.listeners.AuthDBEntityListener;
 import com.craftfire.authdb.listeners.AuthDBPlayerListener;
 import com.craftfire.authdb.listeners.AuthDBServerListener;
-import com.craftfire.authdb.plugins.ZPermissions;
-import com.craftfire.authdb.plugins.ZPermissions.Permission;
 import com.craftfire.authdb.util.Config;
 import com.craftfire.authdb.util.Messages;
 import com.craftfire.authdb.util.Messages.Message;
@@ -93,6 +95,8 @@ public class AuthDB extends JavaPlugin {
 
     private FileConfiguration basicConfig = null, advancedConfig = null, messagesConfig = null, commandsConfig = null;
     private File basicConfigurationFile = null, advancedConfigurationFile = null, messagesConfigurationFile = null, commandsConfigurationFile = null;
+
+    private static Permission permission = null;
 
     public void onDisable() {
         for (Player p : getServer().getOnlinePlayers()) {
@@ -182,12 +186,8 @@ public class AuthDB extends JavaPlugin {
         } else {
           Util.logging.Debug("Server is running without Buildr.");
         }
-        check = getServer().getPluginManager().getPlugin("bPermissions");
-        if (check != null) {
-          ZPermissions.hasbPermissions = true;
-          Util.logging.Info("Found supported plugin " + check.getDescription().getName() + " " + check.getDescription().getVersion());
-        } else {
-          Util.logging.Debug("Server is running without bPermissions.");
+        if (!setupPermissions()) {
+            Util.logging.Info("Vault could not be found, AuthDB is therefore being disabled. Please install Vault to use AuthDB.");
         }
 
         final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -437,7 +437,7 @@ public class AuthDB extends JavaPlugin {
                 player.sendMessage("§f" + pluginWebsite);
                 return true;
             } else if (command.equalsIgnoreCase(commandString(Config.commands_admin_reload, true)) || command.equalsIgnoreCase(commandString(Config.aliases_admin_reload, true))) {
-                if (ZPermissions.isAllowed(player, Permission.command_admin_reload)) {
+                if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_admin_reload)) {
                     new Config(this, "config", "plugins/" + pluginName + "/config/", "basic.yml");
                     LoadYml("commands", getClass().getProtectionDomain().getCodeSource());
                     LoadYml("messages", getClass().getProtectionDomain().getCodeSource());
@@ -448,7 +448,7 @@ public class AuthDB extends JavaPlugin {
                     return true;
                 }
             } else if (cmd.getName().equalsIgnoreCase(commandString(Config.commands_user_logout, true)) || cmd.getName().equalsIgnoreCase(commandString(Config.aliases_user_logout, true))) {
-                if (ZPermissions.isAllowed(player, Permission.command_logout)) {
+                if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_logout)) {
                     Messages.sendMessage(Message.logout_processing, player, null);
                     if (Processes.Logout(player, true)) {
                         EBean eBeanClass = EBean.checkPlayer(player, true);
@@ -474,7 +474,7 @@ public class AuthDB extends JavaPlugin {
                     return true;
                 }
             } else if (command.startsWith(commandString(Config.commands_admin_logout, true)) || command.startsWith(commandString(Config.aliases_admin_logout, true))) {
-                if (ZPermissions.isAllowed(player, Permission.command_admin_logout)) {
+                if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_admin_logout)) {
                     Messages.sendMessage(Message.logout_processing, player, null);
                     String[] temp = commandString(Config.commands_admin_logout, true).split(" ");
                     if (args.length == temp.length) {
@@ -503,7 +503,7 @@ public class AuthDB extends JavaPlugin {
                     return true;
                 }
             } else if (command.startsWith(commandString(Config.commands_admin_login, true)) || command.startsWith(commandString(Config.aliases_admin_login, true))) {
-                if (ZPermissions.isAllowed(player, Permission.command_admin_login)) {
+                if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_admin_login)) {
                     String[] temp = commandString(Config.commands_admin_login, true).split(" ");
                     if (args.length == temp.length) {
                         String PlayerName = args[temp.length - 1];
@@ -548,29 +548,16 @@ public class AuthDB extends JavaPlugin {
         return list;
     }
 
-    void CheckPermissions() {
-        Plugin Check1 = getServer().getPluginManager().getPlugin("Permissions");
-        if (Check1 != null) {
-            ZPermissions.hasPlugin = true;
-        }
+    public static Permission getPermissions() {
+        return permission;
+    }
 
-        Plugin Check2 = getServer().getPluginManager().getPlugin("PermissionsBukkit");
-        if (Check2 != null) {
-            if (ZPermissions.hasPlugin) {
-                Util.logging.Info("Found 2 supported permissions plugins: " + Check1.getDescription().getName() + " " + Check1.getDescription().getVersion() + " and " + Check2.getDescription().getName() + " " + Check2.getDescription().getVersion());
-                Util.logging.Info("Defaulting permissions to: " + Check2.getDescription().getName() + " " + Check2.getDescription().getVersion());
-            } else {
-                Util.logging.Info("Found supported plugin: " + Check2.getDescription().getName() + " " + Check2.getDescription().getVersion());
-            }
-            ZPermissions.hasPermissionsBukkit = true;
-        } else {
-            if (ZPermissions.hasPlugin) {
-                ZPermissions.permissionsHandler = ((Permissions)Check1).getHandler();
-                Util.logging.Info("Found supported plugin: " + Check1.getDescription().getName() + " " + Check1.getDescription().getVersion());
-            } else {
-                Util.logging.Info("Could not load a permissions plugin, going over to OP!");
-            }
+    private Boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
         }
+        return (permission != null);
     }
 
     void checkOldFiles() {

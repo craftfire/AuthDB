@@ -21,19 +21,13 @@ package com.craftfire.authdb.plugins;
 
 import org.bukkit.entity.Player;
 
-import com.nijiko.permissions.PermissionHandler;
-
 import com.craftfire.authdb.AuthDB;
 
 public class ZPermissions {
-    public static boolean hasPlugin = false;
-    public static boolean hasPermissionsBukkit = false;
-    public static boolean hasbPermissions = false;
-    public static PermissionHandler permissionsHandler;
     static String pluginName = AuthDB.pluginName.toLowerCase();
     static String userPermissions = pluginName + ".command.user.";
     static String adminPermissions = pluginName + ".command.admin.";
-    public enum Permission {
+    public enum ZPermission {
         command_register (userPermissions+"register"),
         command_unregister (userPermissions+"unregister"),
         command_login (userPermissions+"login"),
@@ -50,100 +44,16 @@ public class ZPermissions {
         command_admin_reload (adminPermissions+"reload");
 
         private String permission;
-        Permission(String permission) {
+        ZPermission(String permission) {
             this.permission = permission;
         }
     }
 
-    public static boolean isAllowed(Player player, Permission permission) {
-        if (hasPermissionsBukkit || hasbPermissions) {
-            if (player.hasPermission(permission.permission)) {
-                return true;
-            } else if (player.hasPermission(pluginName + ".*")) {
-                return true;
-            } else if (permission.permission.startsWith(adminPermissions)) {
-                if (player.hasPermission(adminPermissions + "*")) {
-                    return true;
-                }
-            } else if (permission.permission.startsWith(userPermissions)) {
-                if (player.hasPermission(userPermissions + "*")) {
-                    return true;
-                }
-            }
-        } else if (hasPlugin) {
-            if (permissionsHandler.has(player, permission.permission)) {
-                return true;
-            } else if (permissionsHandler.has(player, pluginName + ".*")) {
-                return true;
-            } else if (permission.permission.startsWith(adminPermissions)) {
-                if (permissionsHandler.has(player, adminPermissions + "*")) {
-                    return true;
-                }
-            } else if (permission.permission.startsWith(userPermissions)) {
-                if (permissionsHandler.has(player, userPermissions + "*")) {
-                    return true;
-                }
-            }
-        } else {
-            Permission[] Permissions = Permission.values();
-            for (int i=0; i<Permissions.length; i++) {
-                if (Permissions[i].toString().equals(permission.toString())) {
-                    if (Permissions[i].toString().startsWith(adminPermissions)) {
-                        if (player.isOp()) {
-                            return true;
-                        }
-                        return false;
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
+    public static boolean isAllowed(Player player, ZPermission permission) {
+        return isAllowed(player, permission.permission);
     }
 
     public static boolean isAllowed(Player player, String permission) {
-        if (hasPermissionsBukkit || hasbPermissions) {
-            if (player.hasPermission(permission)) {
-                return true;
-            } else if (player.hasPermission(pluginName + ".*")) {
-                    return true;
-            } else if (permission.startsWith(adminPermissions)) {
-                if (player.hasPermission(adminPermissions + "*")) {
-                    return true;
-                }
-            } else if (permission.startsWith(userPermissions)) {
-                if (player.hasPermission(userPermissions + "*")) {
-                    return true;
-                }
-            }
-        } else if (hasPlugin) {
-            if (permissionsHandler.has(player, permission)) {
-                return true;
-            } else if (permissionsHandler.has(player, pluginName + ".*")) {
-                return true;
-            } else if (permission.startsWith(adminPermissions)) {
-                if (permissionsHandler.has(player, adminPermissions + "*")) {
-                    return true;
-                }
-            } else if (permission.startsWith(userPermissions)) {
-                if (permissionsHandler.has(player, userPermissions + "*")) {
-                    return true;
-                }
-            }
-        } else {
-            Permission[] Permissions = Permission.values();
-            for (int i=0; i<Permissions.length; i++) {
-                if (Permissions[i].toString().equals(permission.toString())) {
-                    if (Permissions[i].toString().startsWith(adminPermissions)) {
-                        if (player.isOp()) {
-                            return true;
-                        }
-                        return false;
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
+         return AuthDB.getPermissions().has(player, permission);
     }
 }

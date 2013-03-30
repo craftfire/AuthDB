@@ -16,6 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>${project.groupId}.${project.artifactId}.${project.name}</mainClass>
         <bukkitVersion>1.5.1-R0.1-SNAPSHOT</bukkitVersion>
+        <vaultVersion>1.2.25-SNAPSHOT</vaultVersion>
         <buildNumber>0</buildNumber>
     </properties>
 
@@ -83,15 +84,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit-permissions</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.nijikokun.bukkit</groupId>
-            <artifactId>Permissions</artifactId>
-            <version>3.1.6</version>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>${vaultVersion}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
