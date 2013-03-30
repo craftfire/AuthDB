@@ -34,7 +34,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.craftfire.authdb.AuthDB;
 import com.craftfire.authdb.plugins.ZPermissions;
-import com.craftfire.authdb.plugins.ZPermissions.Permission;
 import com.craftfire.authdb.util.Config;
 import com.craftfire.authdb.util.Messages;
 import com.craftfire.authdb.util.Messages.Message;
@@ -280,7 +279,7 @@ public class AuthDBPlayerListener implements Listener {
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
         if (split[0].equalsIgnoreCase(Config.commands_user_login) || split[0].equalsIgnoreCase(Config.aliases_user_login)) {
-            if (ZPermissions.isAllowed(player, Permission.command_login)) {
+            if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_login)) {
                 Messages.sendMessage(Message.login_processing, player, null);
                 if (!this.plugin.isRegistered("command",Util.checkOtherName(player.getName()))) {
                     Messages.sendMessage(Message.login_notregistered, player, null);
@@ -304,7 +303,7 @@ public class AuthDBPlayerListener implements Listener {
             } else { Messages.sendMessage(Message.protection_denied, player, null); }
         } else if (!Config.join_restrict && (split[0].equalsIgnoreCase(Config.commands_user_link) || split[0].equalsIgnoreCase(Config.aliases_user_link))) {
             if (Config.link_enabled) {
-                if (ZPermissions.isAllowed(player, Permission.command_link)) {
+                if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_link)) {
                     if (split.length == 3) {
                         if (!player.getName().equals(split[1])) {
                             Messages.sendMessage(Message.link_processing, player, null);
@@ -339,7 +338,7 @@ public class AuthDBPlayerListener implements Listener {
             }
         } else if (!Config.join_restrict && (split[0].equalsIgnoreCase(Config.commands_user_unlink) || split[0].equalsIgnoreCase(Config.aliases_user_unlink))) {
             if (Config.unlink_enabled) {
-                if (ZPermissions.isAllowed(player, Permission.command_unlink)) {
+                if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_unlink)) {
                     Messages.sendMessage(Message.unlink_processing, player, null);
                     if (split.length == 3) {
                         if (Util.checkOtherName(player.getName()).equals(player.getDisplayName())) {
@@ -367,7 +366,7 @@ public class AuthDBPlayerListener implements Listener {
                 } else { Messages.sendMessage(Message.protection_denied, player, null); }
             }
         } else if (!Config.join_restrict && (split[0].equalsIgnoreCase(Config.commands_user_register) || split[0].equalsIgnoreCase(Config.aliases_user_register))) {
-            if (ZPermissions.isAllowed(player, Permission.command_register)) {
+            if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_register)) {
                 Messages.sendMessage(Message.register_processing, player, null);
                 Boolean email = true;
                 if (Config.custom_enabled) {
@@ -458,7 +457,7 @@ public class AuthDBPlayerListener implements Listener {
                 if (Util.toLoginMethod(Config.login_method).equalsIgnoreCase("prompt")) {
                     if (this.plugin.isRegistered("chat", event.getPlayer().getName()) || this.plugin.isRegistered("chat",Util.checkOtherName(event.getPlayer().getName()))) {
                         String[] split = event.getMessage().split(" ");
-                        if (ZPermissions.isAllowed(player, Permission.command_login)) {
+                        if (ZPermissions.isAllowed(player, ZPermissions.ZPermission.command_login)) {
                             Messages.sendMessage(Message.login_processing, player, null);
                             if (this.plugin.isRegistered("chatprompt", player.getName()) || this.plugin.isRegistered("chatprompt",Util.checkOtherName(player.getName()))) {
                                 if (AuthDB.isAuthorized(player)) {
