@@ -25,33 +25,33 @@ public class DatabaseManager {
 
     public String getDatabaseType() {
         String type = PluginManager.config.database_type.toLowerCase();
-        loggingManager.Debug("Database type in config: " + type);
+        loggingManager.debug("Database type in config: " + type);
         if (type.equalsIgnoreCase("mysql")) {
-            loggingManager.Debug("Database type set to MySQL");
+            loggingManager.debug("Database type set to MySQL");
             return "mysql";
         } else if (type.equalsIgnoreCase("ebean")) {
-            loggingManager.Debug("Database type set to eBean");
+            loggingManager.debug("Database type set to eBean");
             return "ebean";
         }
-        loggingManager.Debug("Database type set to MySQL");
+        loggingManager.debug("Database type set to MySQL");
         return "mysql";
     }
 
     public void connect() {
         if (getDatabaseType().equalsIgnoreCase("mysql")) {
-            loggingManager.Debug("Connecting to MySQL....");
+            loggingManager.debug("Connecting to MySQL....");
             PluginManager.mySQL.connect();
         } else {
-            loggingManager.Debug("Could not find any database type to connect to! (mysql etc)...");
+            loggingManager.debug("Could not find any database type to connect to! (mysql etc)...");
         }
     }
 
     public void close() {
         if (getDatabaseType().equalsIgnoreCase("mysql")) {
-            loggingManager.Debug("Closing MySQL connection....");
+            loggingManager.debug("Closing MySQL connection....");
             PluginManager.mySQL.close();
         } else {
-            loggingManager.Debug("Could not find any database type to close! (mysql etc)...");
+            loggingManager.debug("Could not find any database type to close! (mysql etc)...");
         }
     }
 }

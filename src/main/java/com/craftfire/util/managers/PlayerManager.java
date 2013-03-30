@@ -39,12 +39,12 @@ public class PlayerManager {
     public void setInventoryFromStorage(Player player) {
         ItemStack[] inv = getInventory(player);
         if (inv != null) {
-            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s inventory: " + inv.toString());
+            loggingManager.debug("Sucessfully restored " + player.getName() + "'s inventory: " + inv.toString());
             player.getInventory().setContents(inv);
         }
         inv = getArmorInventory(player);
         if (inv != null) {
-            loggingManager.Debug("Sucessfully restored " + player.getName() + "'s armor inventory: " + inv.toString());
+            loggingManager.debug("Sucessfully restored " + player.getName() + "'s armor inventory: " + inv.toString());
             player.getInventory().setArmorContents(inv);
         }
     }
@@ -70,7 +70,7 @@ public class PlayerManager {
             }
         }
 
-        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s inventory: " + inv.toString());
+        loggingManager.debug("Sucessfully stored " + player.getName() + "'s inventory: " + inv.toString());
 
         for (short i = 0; i < armorinventory.length; i = (short)(i + 1)) {
             if (armorinventory[i] != null) {
@@ -90,7 +90,7 @@ public class PlayerManager {
             }
         }
 
-        loggingManager.Debug("Sucessfully stored " + player.getName() + "'s armor inventory: " + armorinv.toString());
+        loggingManager.debug("Sucessfully stored " + player.getName() + "'s armor inventory: " + armorinv.toString());
 
         EBean eBeanClass = EBean.find(player);
         eBeanClass.setInventory(inv.toString());

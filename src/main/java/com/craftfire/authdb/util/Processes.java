@@ -73,7 +73,7 @@ public class Processes {
                 try {
                     Util.craftFirePlayer.storeInventory(player, player.getInventory().getContents(), player.getInventory().getArmorContents());
                 } catch (IOException e) {
-                    Util.logging.Severe("[" + AuthDB.pluginName + "] Inventory file error:");
+                    Util.logging.severe("[" + AuthDB.pluginName + "] Inventory file error:");
                     player.kickPlayer("Inventory protection kicked.");
                     Util.logging.StackTrace(e.getStackTrace(), Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), Thread.currentThread().getStackTrace()[1].getClassName(), Thread.currentThread().getStackTrace()[1].getFileName());
                 }
