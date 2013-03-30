@@ -1,15 +1,15 @@
 /*
- * This file is part of AuthDB Legacy.
+ * This file is part of AuthDB.
  *
- * Copyright (c) 2011-2012, CraftFire <http://www.craftfire.com/>
- * AuthDB Legacy is licensed under the GNU Lesser General Public License.
+ * Copyright (c) 2011 CraftFire <http://www.craftfire.com/>
+ * AuthDB is licensed under the GNU Lesser General Public License.
  *
- * AuthDB Legacy is free software: you can redistribute it and/or modify
+ * AuthDB is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * AuthDB Legacy is distributed in the hope that it will be useful,
+ * AuthDB is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
@@ -33,8 +33,8 @@ import java.util.Date;
 
 import org.bukkit.plugin.Plugin;
 
-import com.authdb.util.Util;
-import com.authdb.util.databases.MySQL;
+import com.craftfire.authdb.util.Util;
+import com.craftfire.authdb.util.databases.MySQL;
 
 public class LoggingManager {
     PluginManager PluginManager = new PluginManager();
@@ -212,7 +212,7 @@ public class LoggingManager {
         if (PluginManager.config.custom_enabled) {
             logError("Script: Custom");
             logError("Custom table: " + PluginManager.config.custom_table);
-            if(PluginManager.config.custom_emailrequired) {
+            if (PluginManager.config.custom_emailrequired) {
                 logError("Custom emailfield: " + PluginManager.config.custom_emailfield);
             }
             logError("Custom passfield: " + PluginManager.config.custom_passfield);

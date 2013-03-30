@@ -1,28 +1,31 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Project information -->
-    <name>AuthDB Legacy</name>
-    <groupId>com.authdb</groupId>
+    <name>AuthDB</name>
+    <groupId>com.craftfire</groupId>
     <artifactId>authdb</artifactId>
-    <version>2.3.7-SNAPSHOT</version>
+    <version>2.3.8-SNAPSHOT</version>
     <url>http://www.authdb.com</url>
     <inceptionYear>2011</inceptionYear>
-    <description>Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.</description>
+    <description>Script and custom MySQL database user authentication and security plugin for CraftBukkit servers.</description>
 
+    <!-- Project properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bukkitVersion>1.2.5-R4.1-SNAPSHOT</bukkitVersion>
+        <mainClass>${project.groupId}.${project.name}</mainClass>
+        <bukkitVersion>1.5.1-R0.1-SNAPSHOT</bukkitVersion>
         <buildNumber>0</buildNumber>
     </properties>
 
-    <!-- Organization -->
+    <!-- Organization information -->
     <organization>
         <name>CraftFire</name>
         <url>http://www.craftfire.com</url>
     </organization>
 
-    <!-- License -->
+    <!-- License information -->
     <licenses>
         <license>
             <name>GNU Lesser General Public License Version 3</name>
@@ -31,26 +34,38 @@
         </license>
     </licenses>
 
-    <!-- Source code -->
+    <!-- Source code access -->
     <scm>
-        <developerConnection>scm:git:git@github.com:CraftFire/AuthDB-Legacy.git</developerConnection>
-        <connection>scm:git:git://github.com/CraftFire/AuthDB-Legacy.git</connection>
-        <url>https://github.com/CraftFire/AuthDB-Legacy</url>
+        <developerConnection>scm:git:git@github.com:CraftFire/AuthDB.git</developerConnection>
+        <connection>scm:git:git://github.com/CraftFire/AuthDB.git</connection>
+        <url>https://github.com/CraftFire/AuthDB</url>
     </scm>
 
-    <!-- Continuous integration -->
+    <!-- Build server -->
     <ciManagement>
         <system>jenkins</system>
-        <url>http://build.craftfire.com/job/AuthDB%20Legacy</url>
+        <url>http://build.craftfire.com/job/AuthDB</url>
     </ciManagement>
 
-    <!-- Repository locations -->
+    <!-- Issue tracker -->
+    <issueManagement>
+        <system>jira</system>
+        <url>http://issues.craftfire.com/browse/AUTHDB</url>
+    </issueManagement>
+
+    <!-- Dependency repositories -->
     <repositories>
         <repository>
             <id>craftfire-repo</id>
             <url>http://repo.craftfire.com</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
+
+    <!-- Build plugin repositories -->
     <pluginRepositories>
         <pluginRepository>
             <id>craftfire-repo</id>
@@ -58,136 +73,124 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <!-- Dependencies -->
+    <!-- Build dependencies -->
     <dependencies>
+        <!-- Provided by third-party -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>${bukkitVersion}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit-permissions</artifactId>
             <version>0.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.nijikokun.bukkit</groupId>
             <artifactId>Permissions</artifactId>
             <version>3.1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ensifera.animosity</groupId>
-            <artifactId>craftirc</artifactId>
-            <version>2.13</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
-    <!-- Build settings -->
+    <!-- Build configuration -->
     <build>
-        <defaultGoal>clean install</defaultGoal>
+        <defaultGoal>clean package</defaultGoal>
 
-        <!-- Resources -->
+        <!-- Resources to include -->
         <resources>
+            <!-- Static resources -->
             <resource>
-                <targetPath>.</targetPath>
                 <filtering>false</filtering>
-                <directory>${basedir}</directory>
+                <directory>${project.basedir}</directory>
+                <targetPath>.</targetPath>
                 <includes>
                     <include>LICENSE.txt</include>
                 </includes>
             </resource>
             <resource>
-                <targetPath>.</targetPath>
+                <filtering>false</filtering>
+                <directory>${project.basedir}/src/main/resources/config</directory>
+                <targetPath>files/config</targetPath>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>${project.basedir}/src/main/resources/translations</directory>
+                <targetPath>files/translations</targetPath>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <!-- Filtered resources -->
+            <resource>
                 <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <targetPath>.</targetPath>
                 <includes>
                     <include>plugin.yml</include>
                 </includes>
             </resource>
-            <resource>
-                <targetPath>files/config</targetPath>
-                <filtering>false</filtering>
-                <directory>${basedir}/src/main/resources/config</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-            <resource>
-                <targetPath>files/translations</targetPath>
-                <filtering>false</filtering>
-                <directory>${basedir}/src/main/resources/translations</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
         </resources>
 
-        <!-- Plugins -->
+        <!-- Build plugins -->
         <plugins>
-            <!-- License header formatting plugin -->
+            <!-- License header plugin -->
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
                 <version>1.10.b1</version>
                 <executions>
                     <execution>
+                        <configuration>
+                            <properties>
+                                <name>${project.name}</name>
+                                <url>${project.organization.url}</url>
+                                <inceptionYear>${project.inceptionYear}</inceptionYear>
+                                <organization>${project.organization.name}</organization>
+                            </properties>
+                            <quiet>true</quiet>
+                            <encoding>UTF-8</encoding>
+                            <strictCheck>true</strictCheck>
+                            <header>${project.basedir}/HEADER.txt</header>
+                            <mapping>
+                                <java>SLASHSTAR_STYLE</java>
+                            </mapping>
+                            <keywords>
+                                <keyword>${project.name}</keyword>
+                                <keyword>license</keyword>
+                            </keywords>
+                            <includes>
+                                <include>src/main/java/**</include>
+                                <include>src/test/java/**</include>
+                            </includes>
+                        </configuration>
                         <phase>clean</phase>
                         <goals>
                             <goal>format</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <quiet>true</quiet>
-                    <encoding>UTF-8</encoding>
-                    <strictCheck>true</strictCheck>
-                    <header>${basedir}/HEADER.txt</header>
-                    <keywords>
-                        <keyword>${project.name}</keyword>
-                        <keyword>license</keyword>
-                    </keywords>
-                    <mapping>
-                        <java>SLASHSTAR_STYLE</java>
-                    </mapping>
-                    <properties>
-                        <name>${project.name}</name>
-                        <url>${project.organization.url}</url>
-                        <license>GNU Lesser General Public License</license>
-                        <licenseUrl>http://www.gnu.org/licenses/lgpl.html</licenseUrl>
-                        <copyright>Copyright (c) ${project.inceptionYear}-2012, ${project.organization.name}</copyright>
-                    </properties>
-                    <includes>
-                        <include>src/main/java/**</include>
-                        <include>src/test/java/**</include>
-                    </includes>
-                </configuration>
             </plugin>
-            <!-- Version strip plugin -->
-            <plugin>
-                <groupId>com.sourcesense.maven</groupId>
-                <artifactId>maven-nosnapshot-plugin</artifactId>
-                <version>0.0.7-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>strip</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>${project.version}</version>
-                    <propertyName>releaseVersion</propertyName>
-                </configuration>
-            </plugin>
-            <!-- Compile plugin -->
+            <!-- Source compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.0</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <compilerArguments>
+                        <O>-Xlint:all</O>
+                        <O>-Xlint:-path</O>
+                    </compilerArguments>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
             <!-- JAR creation plugin -->
@@ -198,43 +201,11 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Class-Path>../lib/mysql.jar ../mysql.jar ../lib/mysql-connector-java-bin.jar ../mysql-connector-java-bin.jar ../lib/mysql-connector-java-5.1.20-bin.jar ../mysql-connector-java-5.1.20-bin.jar</Class-Path>/
+                            <Class-Path>../lib/mysql.jar ../mysql.jar ../lib/mysql-connector-java-bin.jar ../mysql-connector-java-bin.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
-
-        <!-- Plugin management -->
-        <pluginManagement>
-            <plugins>
-                <!-- Eclipse exclusions -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>com.sourcesense.maven</groupId>
-                                        <artifactId>maven-nosnapshot-plugin</artifactId>
-                                        <versionRange>[0.0.7-SNAPSHOT,)</versionRange>
-                                        <goals>
-                                            <goal>strip</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
-
 </project>

@@ -1,10 +1,10 @@
-name: AuthDB
-version: ${releaseVersion}.${buildNumber}
-description: Script and custom MySQL database user authentication and security plugin for Bukkit-based Minecraft servers.
-authors: [CraftFire, Contex, Wulfspider]
-website: http://www.authdb.com
+name: ${project.name}
+version: ${project.version}-b${buildNumber}
+description: ${project.description}
+website: ${project.url}
+author: ${project.organization.name}
 
-main: com.authdb.AuthDB
+main: ${mainClass}
 load: startup
 database: true
 

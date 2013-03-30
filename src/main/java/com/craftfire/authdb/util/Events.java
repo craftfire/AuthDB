@@ -17,7 +17,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.craftfire.util.managers;
+package com.craftfire.authdb.util;
 
-public class CommandManager {
+import org.bukkit.entity.Player;
+
+public class Events {
+    public static void OnAuthDBLogin(Player player) {
+    }
+
+    public static void OnAuthDBLogout(Player player) {
+    }
+
+    public static void OnJoin(Player player) {
+    }
+
+    public static void OnLogin(Player player) {
+    }
 }

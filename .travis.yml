@@ -1,0 +1,6 @@
+language: java
+jdk: openjdk6
+install: mvn clean -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+notifications:
+    email: true
+    irc: "irc.esper.net#craftfire"

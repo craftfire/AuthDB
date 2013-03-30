@@ -17,7 +17,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.craftfire.util.managers;
+package com.craftfire.authdb.listeners;
 
-public class CommandManager {
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerCommandEvent;
+
+import com.craftfire.authdb.AuthDB;
+
+public class AuthDBServerListener implements Listener {
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onServerCommand(ServerCommandEvent event) {
+        if ((event.getCommand().equalsIgnoreCase("stop")) && event.getSender().isOp()) {
+            AuthDB.stop = true;
+        }
+    }
 }

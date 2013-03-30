@@ -1,15 +1,15 @@
 /*
- * This file is part of AuthDB Legacy.
+ * This file is part of AuthDB.
  *
- * Copyright (c) 2011-2012, CraftFire <http://www.craftfire.com/>
- * AuthDB Legacy is licensed under the GNU Lesser General Public License.
+ * Copyright (c) 2011 CraftFire <http://www.craftfire.com/>
+ * AuthDB is licensed under the GNU Lesser General Public License.
  *
- * AuthDB Legacy is free software: you can redistribute it and/or modify
+ * AuthDB is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * AuthDB Legacy is distributed in the hope that it will be useful,
+ * AuthDB is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
@@ -19,7 +19,10 @@
  */
 package com.craftfire.util.managers;
 
-import com.authdb.util.databases.EBean;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -27,9 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map.Entry;
+import com.craftfire.authdb.util.databases.EBean;
 
 public class PlayerManager {
     PluginManager pluginManager = new PluginManager();
@@ -60,7 +61,7 @@ public class PlayerManager {
                     Enchantment enc = key.getKey();
                     enchantment.append(enc.getId() + "=" + inventory[i].getEnchantmentLevel(enc) + "-");
                 }
-                if(enchantment.length() == 0) {
+                if (enchantment.length() == 0) {
                     enchantment.append("0");
                 }
                 inv.append(inventory[i].getTypeId() + ":" + inventory[i].getAmount() + ":" + (inventory[i].getData() == null ? "0" : Byte.valueOf(inventory[i].getData().getData())) + ":" + inventory[i].getDurability() + ":" + enchantment + ",");
@@ -80,7 +81,7 @@ public class PlayerManager {
                     Enchantment enc = key.getKey();
                     enchantment += enc.getId() + "=" + armorinventory[i].getEnchantmentLevel(enc) + "-";
                 }
-                if(enchantment.isEmpty()) {
+                if (enchantment.isEmpty()) {
                     enchantment = "0";
                 }
                 armorinv.append(armorinventory[i].getTypeId() + ":" + armorinventory[i].getAmount() + ":" + (armorinventory[i].getData() == null ? "0" : Byte.valueOf(armorinventory[i].getData().getData())) + ":" + armorinventory[i].getDurability() + ":" + enchantment + ",");
@@ -207,7 +208,7 @@ public class PlayerManager {
     }
 
     public String getIP(Player player) {
-        if(player.getAddress() != null) {
+        if (player.getAddress() != null) {
             return player.getAddress().getAddress().getHostAddress();
         } else {
             return "";
