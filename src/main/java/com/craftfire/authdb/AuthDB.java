@@ -38,6 +38,7 @@ import com.craftfire.authdb.plugins.ZPermissions;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -187,7 +188,9 @@ public class AuthDB extends JavaPlugin {
           Util.logging.debug("Server is running without Buildr.");
         }
         if (!setupPermissions()) {
-            Util.logging.info("Vault could not be found, AuthDB is therefore being disabled. Please install Vault to use AuthDB.");
+            Util.logging.error("Vault could not be found, AuthDB is therefore being disabled. Please install Vault to use AuthDB.");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         final AuthDBPlayerListener playerListener = new AuthDBPlayerListener(this);
@@ -553,9 +556,11 @@ public class AuthDB extends JavaPlugin {
     }
 
     private Boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
-        if (permissionProvider != null) {
-            permission = permissionProvider.getProvider();
+        if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+            RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
+            if (permissionProvider != null) {
+                permission = permissionProvider.getProvider();
+            }
         }
         return (permission != null);
     }
