@@ -276,7 +276,6 @@ static AuthDB plugin = new AuthDB();
             } else if (type.equals(Message.username_maximum)) {
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_username_maximum, player, null));
             } else if (type.equals(Message.session_valid)) {
-                if (Config.hasSpout) { player.sendMessage(""); }
                 player.sendMessage(Util.replaceStrings(AuthDB_message_session_valid, player, null));
             } else if (type.equals(Message.session_protected)) {
                 event.disallow(Result.KICK_OTHER, Util.replaceStrings(AuthDB_message_session_protected, player, "login"));

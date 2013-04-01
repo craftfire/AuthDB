@@ -125,7 +125,9 @@ public class Drupal {
         return output.toString();
     }
 
-    private static int password_get_count_log2(String setting) { return itoa64.indexOf(setting.charAt(3)); }
+    private static int password_get_count_log2(String setting) {
+        return itoa64.indexOf(setting.charAt(3));
+    }
 
     private static int password_enforce_log2_boundaries(int count_log2) {
         if (count_log2 < DRUPAL_MIN_HASH_COUNT) {

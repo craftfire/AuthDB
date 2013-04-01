@@ -35,7 +35,9 @@ public class Vanilla {
     public static int extraCheck = 0;
 
     public static int check() {
-        if (extraCheck > 0) { return extraCheck; }
+        if (extraCheck > 0) {
+            return extraCheck;
+        }
         if (Config.script_tableprefix.equalsIgnoreCase("gdn_")) {
             String check = MySQL.getQuery("SELECT * FROM `GDN_User` LIMIT 1");
             if (check.equalsIgnoreCase("fail")) {

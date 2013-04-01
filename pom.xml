@@ -11,7 +11,7 @@
     <inceptionYear>2011</inceptionYear>
     <description>Script and custom MySQL database user authentication and security plugin for CraftBukkit servers.</description>
 
-    <!-- Project properties -->
+    <!-- Build properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>${project.groupId}.${project.artifactId}.${project.name}</mainClass>

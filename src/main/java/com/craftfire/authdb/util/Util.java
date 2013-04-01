@@ -758,14 +758,20 @@ public class Util {
                 player = player.toLowerCase();
             }
             if (Config.hasForumBoard && type.equalsIgnoreCase("checkuser") && !Config.custom_enabled) {
-                //EBean eBeanClass = EBean.find(player, Column.registered, "true");
-                //if (eBeanClass != null) { return true; }
+                /*EBean eBeanClass = EBean.find(player, Column.registered, "true");
+                if (eBeanClass != null) {
+                    return true;
+                }*/
                 String check = MySQL.getfromtable(Config.script_tableprefix + usertable, usernamefield, usernamefield, player);
-                if (check != "fail") { return true; }
+                if (check != "fail") {
+                    return true;
+                }
                 return false;
             } /*else if (Config.hasForumBoard && type.equalsIgnoreCase("checkban") && !Config.custom_enabled && bantable != null) {
                 String check = MySQL.getfromtable(Config.script_tableprefix + bantable, "*", bannamefield, player);
-                if (check != "fail") { return true; }
+                if (check != "fail") {
+                    return true;
+                }
             }*/ else if (Config.hasForumBoard && type.equalsIgnoreCase("numusers") && !Config.custom_enabled) {
                 if (script.equalsIgnoreCase(PhpBB.Name) || script.equalsIgnoreCase(PhpBB.ShortName)) {
                     ps = (PreparedStatement) MySQL.mysql.prepareStatement("SELECT COUNT(*) as `countit` FROM `"
@@ -775,7 +781,9 @@ public class Util {
                             + Config.script_tableprefix + usertable + "`");
                 }
                 ResultSet rs = ps.executeQuery();
-                if (rs.next()) { logging.info(rs.getInt("countit") + " user registrations in database"); }
+                if (rs.next()) {
+                    logging.info(rs.getInt("countit") + " user registrations in database");
+                }
             } else if (Config.hasForumBoard && type.equalsIgnoreCase("syncpassword") && !Config.custom_enabled) {
                 String hash = MySQL.getfromtable(Config.script_tableprefix + usertable, "`" + passwordfield + "`", usernamefield, player);
                 EBean.checkPassword(player, hash);
@@ -848,8 +856,12 @@ public class Util {
                         AuthDB.AuthDB_SpamMessage.remove(player.getName());
                         AuthDB.AuthDB_SpamMessageTime.remove(player.getName());
                     } else {
-                        if (!AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessage.put(player.getName(), schedule); }
-                        if (!AuthDB.AuthDB_SpamMessageTime.containsKey(player.getName())) { AuthDB.AuthDB_SpamMessageTime.put(player.getName(), timeStamp()); }
+                        if (!AuthDB.AuthDB_SpamMessage.containsKey(player.getName())) {
+                            AuthDB.AuthDB_SpamMessage.put(player.getName(), schedule);
+                        }
+                        if (!AuthDB.AuthDB_SpamMessageTime.containsKey(player.getName())) {
+                            AuthDB.AuthDB_SpamMessageTime.put(player.getName(), timeStamp());
+                        }
                         if ((AuthDB.AuthDB_SpamMessageTime.get(player.getName()) + show) <= timeStamp()) {
                             AuthDB.server.getScheduler().cancelTask(AuthDB.AuthDB_SpamMessage.get(player.getName()));
                             AuthDB.AuthDB_SpamMessage.remove(player.getName());
@@ -903,7 +915,9 @@ public class Util {
         StringTokenizer st = new StringTokenizer(cache, ":");
         int i = 0;
         List<String> array = new ArrayList<String>();
-        while (st.hasMoreTokens()) { array.add(st.nextToken() + ":"); }
+        while (st.hasMoreTokens()) {
+            array.add(st.nextToken() + ":");
+        }
         StringBuffer newcache = new StringBuffer();
         while (array.size() > i) {
             if (array.get(i).equals("\"" + nummember + "\";i:") && nummember != null) {
@@ -969,7 +983,9 @@ public class Util {
         StringTokenizer st = new StringTokenizer(cache, ":");
         int i = 0;
         List<String> array = new ArrayList<String>();
-        while (st.hasMoreTokens()) { array.add(st.nextToken() + ":"); }
+        while (st.hasMoreTokens()) {
+            array.add(st.nextToken() + ":");
+        }
         while (array.size() > i) {
             if (array.get(i).equals("\"" + value + "\";s:") && value != null) {
                 String temp = array.get(i + 2);

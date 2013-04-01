@@ -27,7 +27,7 @@ public class Config {
     public static boolean database_ison, authdb_enabled = true;
     public static boolean has_badcharacters;
     public static boolean hasForumBoard,capitalization;
-    public static boolean hasBackpack = false, hasSpout = false, hasBuildr = false;
+    public static boolean hasBackpack = false, hasBuildr = false;
     public static boolean onlineMode = true;
 
     public static boolean database_keepalive;

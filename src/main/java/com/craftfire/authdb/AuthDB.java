@@ -813,7 +813,9 @@ public class AuthDB extends JavaPlugin {
         EBean eBeanClass = EBean.checkPlayer(player, true);
         if (eBeanClass.getRegistered().equalsIgnoreCase("true")) {
             if (when.equalsIgnoreCase("join")) {
-                if (!Config.database_keepalive) { Util.databaseManager.connect(); }
+                if (!Config.database_keepalive) {
+                    Util.databaseManager.connect();
+                }
                 Config.hasForumBoard = false;
                 try {
                     if (Util.checkScript("checkuser", Config.script_name, player, null, null, null)) {
@@ -831,7 +833,9 @@ public class AuthDB extends JavaPlugin {
                 }
                 return dupe;
             } else if (when.equalsIgnoreCase("command")) {
-                if (!Config.database_keepalive) { Util.databaseManager.connect(); }
+                if (!Config.database_keepalive) {
+                    Util.databaseManager.connect();
+                }
                 Config.hasForumBoard = false;
                 try {
                     if (Util.checkScript("checkuser",Config.script_name, player, null, null, null)) {
@@ -863,7 +867,9 @@ public class AuthDB extends JavaPlugin {
                 } else if (checkneeded) {
                     Util.logging.debug("Check to see if user is registered is needed, performing check");
                     try {
-                        if (!Config.database_keepalive) { Util.databaseManager.connect(); }
+                        if (!Config.database_keepalive) {
+                            Util.databaseManager.connect();
+                        }
                         Config.hasForumBoard = false;
                         if (Util.checkScript("checkuser", Config.script_name, player, null, null, null)) {
                             AuthDB_Authed.put(Encryption.md5(player), "yes");
