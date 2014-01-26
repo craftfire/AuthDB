@@ -12,14 +12,7 @@
     <url>http://www.craftfire.com</url>
     <description>Script and custom MySQL database user authentication and security plugin for CraftBukkit servers.</description>
 
-    <!-- Parent information -->
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
-    <!-- Project properties -->
+    <!-- Build properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>${project.groupId}.${project.artifactId}.${project.name}</mainClass>
@@ -84,10 +77,6 @@
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
         </repository>
     </repositories>
 

@@ -1,5 +1,5 @@
 name: ${project.name}
-version: ${project.version}-b${buildNumber}
+version: ${project.version}+${ciSystem}-b${buildNumber}.git-${commit}
 description: ${project.description}
 website: ${project.url}
 author: ${project.organization.name}
