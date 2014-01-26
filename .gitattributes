@@ -1,4 +1,4 @@
-# LF line endings on repository, OS native locally
+# Normalize as LF in the repository, OS native locally
 * text=auto
 *.java text
 
@@ -6,7 +6,12 @@
 *.dat binary
 *.db binary
 *.gif binary
+*.icns binary
+*.ico binary
+*.jks binary
 *.jpg binary
+*.key binary
 *.png binary
 *.ttf binary
 *.wav binary
+JavaApplicationStub binary

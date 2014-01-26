@@ -1,8 +1,16 @@
-# Compiled source #
-###################
+# Build #
+#########
+MANIFEST.MF
+dependency-reduced-pom.xml
+
+# Compiled #
+############
 bin
+build
+dist
 lib
 out
+run
 target
 *.com
 *.class
@@ -11,53 +19,74 @@ target
 *.o
 *.so
 
-# Git #
-#######
-.git
+# Databases #
+#############
+*.db
+*.sql
+*.sqlite
 
 # Packages #
 ############
 *.7z
 *.dmg
+*.ear
 *.gz
 *.iso
 *.jar
 *.rar
 *.tar
+*.war
 *.zip
 
-# Logs and databases #
-######################
-*.log
-*.sql
-*.sqlite
+# Repository #
+##############
+.git
 
-# OS generated files #
-######################
+# Logging #
+###########
+/logs
+*.log
+
+# Misc #
+########
+*.bak
+*.tmp
+
+# System #
+##########
 .DS_Store
 ehthumbs.db
-Icon?
 Thumbs.db
 
-# Project files #
-#################
+# Project #
+###########
+.buildpath
 .classpath
+.cproject
 .externalToolBuilders
+.gradle
+.idea
 .project
 .settings
-MANIFEST.MF
-
-# Netbeans files #
-##################
-build
-dist
 nbproject
+atlassian-ide-plugin.xml
 build.xml
 nb-configuration.xml
-
-# IntelliJ IDEA files #
-#######################
-.idea
 *.iml
 *.ipr
 *.iws
+*.launch
+*.pydevproject
+
+# Runtime #
+###########
+/cache
+/config
+/data
+/eclipse
+/natives
+/plugins
+/resources
+/update
+/updates
+/worlds

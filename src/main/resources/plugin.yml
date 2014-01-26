@@ -5,7 +5,6 @@ website: ${project.url}
 author: ${project.organization.name}
 
 main: ${mainClass}
-load: startup
 database: true
 depend: [Vault]
 
