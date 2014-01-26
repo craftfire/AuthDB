@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
     <inceptionYear>2011</inceptionYear>
     <url>http://www.craftfire.com</url>
-    <description>Script and custom MySQL database user authentication and security plugin for CraftBukkit servers.</description>
+    <description>Script and custom database user authentication and security plugin for Bukkit-based Minecraft servers.</description>
 
     <!-- Build properties -->
     <properties>
@@ -19,7 +19,7 @@
         <buildNumber>0</buildNumber>
         <ciSystem>unknown</ciSystem>
         <commit>unknown</commit>
-        <bukkitVersion>1.7.2-R0.2-SNAPSHOT</bukkitVersion>
+        <bukkitVersion>1.7.2-R0.2</bukkitVersion>
     </properties>
 
     <!-- Organization information -->
@@ -97,8 +97,14 @@
         <!-- Provided by third-party -->
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
+            <artifactId>bukkit</artifactId>
             <version>${bukkitVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.28</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
