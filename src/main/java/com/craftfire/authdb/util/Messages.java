@@ -26,7 +26,6 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import com.craftfire.authdb.AuthDB;
 
 public class Messages {
-static AuthDB plugin = new AuthDB();
 ///////////////////////////////////////////
 //  messages
 ///////////////////////////////////////////
