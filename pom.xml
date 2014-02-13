@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Project information -->
@@ -15,18 +14,12 @@
     <!-- Build properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>${project.groupId}.${project.artifactId}.${project.name}</mainClass>
         <buildNumber>0</buildNumber>
         <ciSystem>unknown</ciSystem>
         <commit>unknown</commit>
-        <bukkitVersion>1.7.2-R0.2</bukkitVersion>
+        <mainClass>${project.groupId}.${project.artifactId}.${project.name}</mainClass>
+        <bukkitVersion>1.7.2-R0.3</bukkitVersion>
     </properties>
-
-    <!-- Organization information -->
-    <organization>
-        <name>CraftFire</name>
-        <url>http://www.craftfire.com</url>
-    </organization>
 
     <!-- License information -->
     <licenses>
@@ -36,6 +29,31 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <!-- Organization information -->
+    <organization>
+        <name>CraftFire</name>
+        <url>http://www.craftfire.com</url>
+    </organization>
+
+    <!-- Project developers -->
+    <developers>
+        <developer>
+            <id>Contex</id>
+            <name>Contex</name>
+            <email>contexmoh@gmail.com</email>
+        </developer>
+        <developer>
+            <id>Wolf480pl</id>
+            <name>Wolf480pl</name>
+            <email>wolf480@interia.pl</email>
+        </developer>
+        <developer>
+            <id>Wulfspider</id>
+            <name>Luke Spragg</name>
+            <email>the@wulf.im</email>
+        </developer>
+    </developers>
 
     <!-- Source code access -->
     <scm>
@@ -50,7 +68,7 @@
         <url>https://travis-ci.org/CraftFire/AuthDB</url>
     </ciManagement>
 
-    <!-- Issue tracker -->
+    <!-- Issue management -->
     <issueManagement>
         <system>jira</system>
         <url>http://issues.craftfire.com/browse/AUTHDB</url>
@@ -60,7 +78,7 @@
     <repositories>
         <repository>
             <id>sonatype-nexus</id>
-            <url>https://oss.sonatype.org/content/repositories/pubic</url>
+            <url>https://oss.sonatype.org/content/groups/public</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -84,7 +102,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>sonatype-nexus</id>
-            <url>https://oss.sonatype.org/content/repositories/public</url>
+            <url>https://oss.sonatype.org/content/groups/public</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -92,8 +110,15 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <!-- Build dependencies -->
+    <!-- Project dependencies -->
     <dependencies>
+        <!-- Include in final JAR -->
+        <dependency>
+            <groupId>com.craftfire</groupId>
+            <artifactId>craftcommons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- Provided by third-party -->
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -227,6 +252,23 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+            <!-- Dependency addition plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                        </configuration>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- Coveralls reporting plugin  -->
             <plugin>

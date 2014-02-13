@@ -78,15 +78,3 @@ nb-configuration.xml
 *.launch
 *.pydevproject
 
-# Runtime #
-###########
-/cache
-/config
-/data
-/eclipse
-/natives
-/plugins
-/resources
-/update
-/updates
-/worlds
